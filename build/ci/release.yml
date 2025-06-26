@@ -323,7 +323,7 @@ functions:
         <<: *go_options
         env:
           <<: *go_env
-          TAG: ${tag}
+          TAG: ${ref}
           GH_TOKEN: ${gh_token}
           WORKFLOW: ${workflow}
           EVERGREEN_USER: ${evergreen_user}
@@ -529,7 +529,10 @@ buildvariants:
       - name: package_goreleaser
   - name: copybara
     display_name: "Copybara"
-    git_tag_only: true
+    depends_on:
+      - name: package_goreleaser
+        variant: release_atlascli_github
+        patch_optional: true
     tags:
       - foliage_health
     run_on:

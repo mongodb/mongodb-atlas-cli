@@ -65,7 +65,7 @@ docker run \
     -v "${PWD}/.gitconfig:/root/.gitconfig" \
     -v "${PWD}/.git-credentials:/root/.git-credentials" \
     -e "COPYBARA_WORKFLOW=$WORKFLOW" \
-    -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
+    -e "COPYBARA_OPTIONS=--github-api-bearer-auth true --force" \
     google/copybara
 
 PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:[^\ ]+).*$/\1/')
@@ -73,9 +73,10 @@ PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(htt
 rm -rf .git-credentials .gitconfig copy.bara.sky
 docker rm -f copybara-container
 
+echo "Created PR: $PR_URL"
+
 TARGET="$DOCS_SLACK_CHANNEL"
 MSG="Hey team :wave: ${PR_URL} is ready for review :thankyou:"
-echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 curl --header "Api-User:${EVERGREEN_USER:?}" \
     --header "Api-Key:${EVERGREEN_API_KEY:?}" \
     --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \

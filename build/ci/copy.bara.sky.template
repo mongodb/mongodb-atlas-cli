@@ -23,9 +23,10 @@ core.workflow(
         integrates = [],
     ),
     origin_files = glob(["docs/command/**"], exclude = ["docs/command/atlas-completion**"]),
-    destination_files = glob(["source/includes/command/**"], exclude=["source/includes/command/atlas-kubernetes**"]),
+    destination_files = glob(["source/includes/command/**" ,"source/includes/examples/**"], exclude=["source/includes/command/atlas-kubernetes**"]),
     authoring = authoring.pass_thru(author),
     transformations = [
+        core.move("docs/command/includes", "source/includes/examples"),
         core.move("docs/command", "source/includes/command"),
         core.rename(".txt", ".rst", suffix = True)
     ],
@@ -46,9 +47,10 @@ core.workflow(
         integrates = [],
     ),
     origin_files = glob(["docs/command/**"]),
-    destination_files = glob(["content/atlas-cli/current/source/command/**"], exclude=["content/atlas-cli/current/source/command/atlas-api", "content/atlas-cli/current/source/command/atlas-kubernetes**"]),
+    destination_files = glob(["content/atlas-cli/current/source/command/**", "content/atlas-cli/current/source/includes/examples/**"], exclude=["content/atlas-cli/current/source/command/atlas-api", "content/atlas-cli/current/source/command/atlas-kubernetes**"]),
     authoring = authoring.pass_thru(author),
     transformations = [
+        core.move("docs/command/includes", "content/atlas-cli/current/source/includes/examples"),
         core.move("docs/command", "content/atlas-cli/current/source/command"),
     ],
 )

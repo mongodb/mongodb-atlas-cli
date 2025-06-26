@@ -17,6 +17,8 @@ package main
 import (
 	"cmp"
 	_ "embed"
+	"fmt"
+	"os"
 	"regexp"
 	"slices"
 	"strconv"
@@ -138,9 +140,9 @@ func countExamples(examples map[string][]metadatatypes.Example) int {
 	return count
 }
 
-func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string { //nolint:gocyclo // code used by CI
+func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) (string, error) { //nolint:gocyclo // cyclomatic complexity is high, but the code is readable and only used for documentation generation
 	if len(examples) == 0 {
-		return ""
+		return "", nil
 	}
 
 	var sb strings.Builder
@@ -159,6 +161,11 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 	exampleIdx := 0
 	for _, version := range sortedKeys(examples) {
 		for _, ex := range examples[version] {
+			source := strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_"))
+			if ex.Source == "-" {
+				source = "default"
+			}
+
 			if tabs {
 				sb.WriteString("   .. tab:: ")
 				if ex.Name == "" {
@@ -174,11 +181,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				sb.WriteString("\n      :tabid: ")
 				sb.WriteString(version)
 				sb.WriteString("_")
-				if ex.Source == "-" {
-					sb.WriteString("default")
-				} else {
-					sb.WriteString(strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_")))
-				}
+				sb.WriteString(source)
 				sb.WriteString("\n\n")
 			}
 
@@ -186,31 +189,28 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString("Create the file below and save it as ``payload.json``\n\n")
+				sb.WriteString(ex.Description + "\n\n")
 
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString(".. code-block::\n\n")
-				if ex.Description != "" {
-					if tabs {
-						sb.WriteString("      ")
-					}
-					sb.WriteString("   # " + ex.Description + "\n")
+				sb.WriteString("Create the file below and save it as ``payload.json``\n\n")
+
+				includePayloadFileName := fmt.Sprintf("%s-%s-%s-payload.json", strings.ReplaceAll(cmd.CommandPath(), " ", "-"), version, source)
+				const permissions = 0600
+				err := os.WriteFile(fmt.Sprintf("%s/%s", includesLocalPath, includePayloadFileName), []byte(ex.Value), permissions)
+				if err != nil {
+					return "", fmt.Errorf("failed to write payload file %s: %w", includePayloadFileName, err)
 				}
 
-				lines := strings.Split(ex.Value, "\n")
-				for _, line := range lines {
-					if tabs {
-						sb.WriteString("      ")
-					}
-
-					sb.WriteString("   " + line + "\n")
-				}
 				if tabs {
-					sb.WriteString("\n      ")
+					sb.WriteString("      ")
 				}
-				sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
+				sb.WriteString(fmt.Sprintf("   .. literalinclude:: %s/%s\n", includesImportPath, includePayloadFileName))
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("      :language: shell\n")
 				if tabs {
 					sb.WriteString("      ")
 				}
@@ -219,36 +219,34 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				sb.WriteString("      ")
 			}
 
-			if tabs {
-				sb.WriteString("      ")
-			}
-			sb.WriteString(".. code-block::\n\n")
-			if tabs {
-				sb.WriteString("      ")
-			}
-			if ex.Description != "" {
-				sb.WriteString("   # " + ex.Description + "\n")
-			}
-			if tabs {
-				sb.WriteString("      ")
-			}
-			sb.WriteString("   " + cmd.CommandPath())
-			sb.WriteString(" --version " + version)
-			if ex.Value != "" {
-				sb.WriteString(" --file payload.json")
-			}
+			var cmdSB strings.Builder
+
+			cmdSB.WriteString(cmd.CommandPath())
+			cmdSB.WriteString(" --version " + version)
 			for _, flagName := range sortedKeys(ex.Flags) {
-				sb.WriteString(" --" + flagName + " " + ex.Flags[flagName])
+				cmdSB.WriteString(" --" + flagName + " " + ex.Flags[flagName])
 			}
-			sb.WriteString("\n\n")
+			cmdSB.WriteString("\n")
+
+			includeCommandFileName := fmt.Sprintf("%s-%s-%s.sh", strings.ReplaceAll(cmd.CommandPath(), " ", "-"), version, source)
+			const permissions = 0600
+			err := os.WriteFile(fmt.Sprintf("%s/%s", includesLocalPath, includeCommandFileName), []byte(cmdSB.String()), permissions)
+			if err != nil {
+				return "", fmt.Errorf("failed to write file %s: %w", includeCommandFileName, err)
+			}
+
 			if tabs {
 				sb.WriteString("      ")
 			}
-			sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
+			sb.WriteString(fmt.Sprintf(".. literalinclude:: %s/%s\n", includesImportPath, includeCommandFileName))
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString("   :language: shell\n")
 		}
 	}
 
-	return sb.String()
+	return sb.String(), nil
 }
 
 func updateExamples(cmd *cobra.Command) error {
@@ -262,9 +260,10 @@ func updateExamples(cmd *cobra.Command) error {
 		return nil
 	}
 
-	cmd.Example = buildExamples(cmd, cmdMetadata.Examples)
+	var err error
+	cmd.Example, err = buildExamples(cmd, cmdMetadata.Examples)
 
-	return nil
+	return err
 }
 
 func removeCommandsWithOnlyPrivatePreview(cmd *cobra.Command) {

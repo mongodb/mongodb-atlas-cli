@@ -1,0 +1,16 @@
+HTTP/2.0 404 Not Found
+Content-Length: 218
+Content-Type: application/json
+Date: Thu, 26 Jun 2025 05:35:40 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 46
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=bb5adefc81011460ab42465efad2ff5a8114344f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No cluster named backupRestores-571 exists in group 685cd5b90461cf3cf519969b.","error":404,"errorCode":"CLUSTER_NOT_FOUND","parameters":["backupRestores-571","685cd5b90461cf3cf519969b"],"reason":"Not Found"}

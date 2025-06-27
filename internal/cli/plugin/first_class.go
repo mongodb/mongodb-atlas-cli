@@ -17,7 +17,6 @@ package plugin
 import (
 	"fmt"
 
-	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
@@ -90,16 +89,16 @@ func (fcp *FirstClassPlugin) isAlreadyInstalled(plugins *plugin.ValidatedPlugins
 	return false
 }
 
-func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, ghClient *github.Client, plugins *plugin.ValidatedPlugins) error {
+func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, plugins *plugin.ValidatedPlugins) error {
 	installOpts := &InstallOpts{
 		Opts: Opts{
 			plugins: plugins,
 		},
+		ghClient: NewAuthenticatedGithubClient(),
 	}
 	installOpts.githubAsset = &GithubAsset{
-		ghClient: ghClient,
-		owner:    fcp.Github.Owner,
-		name:     fcp.Github.Name,
+		owner: fcp.Github.Owner,
+		name:  fcp.Github.Name,
 	}
 	installOpts.Print("Installing first class plugin " + fcp.Name)
 
@@ -122,7 +121,6 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 
 func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {
 	commands := make([]*cobra.Command, 0, len(fcp.Commands))
-	ghClient := github.NewClient(nil)
 
 	// for every command listed in the first class plugin, create a cobra command that installs the plugin
 	for _, firstClassPluginCommand := range fcp.Commands {
@@ -133,7 +131,7 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 				sourceType: FirstClassSourceType,
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
-				return fcp.runFirstClassPluginCommand(cmd, args, ghClient, plugins)
+				return fcp.runFirstClassPluginCommand(cmd, args, plugins)
 			},
 			DisableFlagParsing: true,
 		}

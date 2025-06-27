@@ -10,6 +10,7 @@
 	"github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys": "apix-2",
 	"github.com/bradleyjkemp/cupaloy/v2": "apix-2",
 	"github.com/briandowns/spinner": "apix-2",
+	"github.com/cli/go-gh/v2": "apix-2",
 	"github.com/creack/pty": "apix-2",
 	"github.com/denisbrodbeck/machineid": "apix-2",
 	"github.com/evergreen-ci/shrub": "apix-2",

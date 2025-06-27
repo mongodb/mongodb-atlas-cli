@@ -35,6 +35,8 @@ pkg:golang/github.com/bodgit/plumbing@v1.3.0
 pkg:golang/github.com/bodgit/sevenzip@v1.6.0
 pkg:golang/github.com/bodgit/windows@v1.0.1
 pkg:golang/github.com/briandowns/spinner@v1.23.2
+pkg:golang/github.com/cli/go-gh/v2@v2.12.1
+pkg:golang/github.com/cli/safeexec@v1.0.0
 pkg:golang/github.com/cloudflare/circl@v1.6.1
 pkg:golang/github.com/denisbrodbeck/machineid@v1.0.1
 pkg:golang/github.com/dsnet/compress@v0.0.2-0.20230904184137-39efe44ab707
@@ -65,7 +67,7 @@ pkg:golang/github.com/klauspost/pgzip@v1.2.6
 pkg:golang/github.com/kylelemons/godebug@v1.1.0
 pkg:golang/github.com/mattn/go-colorable@v0.1.13
 pkg:golang/github.com/mattn/go-isatty@v0.0.20
-pkg:golang/github.com/mgutz/ansi@v0.0.0-20170206155736-9520e82c474b
+pkg:golang/github.com/mgutz/ansi@v0.0.0-20200706080929-d51e80ef957d
 pkg:golang/github.com/mholt/archives@v0.1.2
 pkg:golang/github.com/minio/minlz@v1.0.0
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0

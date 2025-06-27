@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 546
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 27 Jun 2025 05:09:18 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 137
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupIntegrationsResource::createIntegration
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6e5be26db8eee488c97fc80ab8ac5ada61fa6ee1; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685e277b0340bc6723c3ee19/integrations/OPS_GENIE?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"apiKey":"****************************0044","customEndpoint":null,"id":"685e277d0340bc6723c3ee7f","region":"US","sendCollectionLatencyMetrics":false,"sendDatabaseMetrics":false,"_sendUserProvidedResourceTags":false,"type":"DATADOG"},{"apiKey":"********************************3366","id":"685e277e606b1d010d5eec6b","region":"US","type":"OPS_GENIE"}],"totalCount":2}

@@ -1,8 +1,8 @@
 HTTP/2.0 201 Created
 Content-Length: 640
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 26 Jun 2025 05:08:24 GMT
-Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685cd5c80461cf3cf5199999
+Date: Fri, 27 Jun 2025 05:08:48 GMT
+Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685e2760606b1d010d5ee998
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
@@ -11,7 +11,7 @@ X-Envoy-Upstream-Service-Time: 97
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertConfigsResource::addAlertConfig
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=bb5adefc81011460ab42465efad2ff5a8114344f; versionString=master
+X-Mongodb-Service-Version: gitHash=6e5be26db8eee488c97fc80ab8ac5ada61fa6ee1; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"created":"2025-06-26T05:08:24Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"685cd5c80461cf3cf5199999","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685cd5c80461cf3cf5199999","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685cd5c80461cf3cf5199999/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"685cd5c80461cf3cf5199994","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-06-26T05:08:24Z"}
+{"created":"2025-06-27T05:08:48Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"685e2760606b1d010d5ee998","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685e2760606b1d010d5ee998","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/685e2760606b1d010d5ee998/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"685e2760606b1d010d5ee993","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-06-27T05:08:48Z"}

@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 289
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 26 Jun 2025 05:08:23 GMT
+Date: Fri, 27 Jun 2025 05:08:16 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Fri, 31 Jul 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 481
+X-Envoy-Upstream-Service-Time: 178
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationInvitationResource::createInvitations
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=bb5adefc81011460ab42465efad2ff5a8114344f; versionString=master
+X-Mongodb-Service-Version: gitHash=6e5be26db8eee488c97fc80ab8ac5ada61fa6ee1; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"createdAt":"2025-06-26T05:08:23Z","expiresAt":"2025-07-26T05:08:23Z","groupRoleAssignments":[],"id":"685cd5c70461cf3cf519992e","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_MEMBER"],"teamIds":[],"username":"test-919@mongodb.com"}
+{"createdAt":"2025-06-27T05:08:16Z","expiresAt":"2025-07-27T05:08:16Z","groupRoleAssignments":[],"id":"685e2740606b1d010d5ee2d1","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_MEMBER"],"teamIds":[],"username":"test-727@mongodb.com"}

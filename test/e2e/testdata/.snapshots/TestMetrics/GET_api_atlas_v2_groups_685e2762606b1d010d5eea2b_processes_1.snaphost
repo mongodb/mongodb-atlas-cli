@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 27 Jun 2025 05:16:07 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 70
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6e5be26db8eee488c97fc80ab8ac5ada61fa6ee1; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685e2762606b1d010d5eea2b/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-27T05:15:30Z","groupId":"685e2762606b1d010d5eea2b","hostname":"atlas-m25imn-shard-00-00.udvhxn.mongodb-dev.net","id":"atlas-m25imn-shard-00-00.udvhxn.mongodb-dev.net:27017","lastPing":"2025-06-27T05:15:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685e2762606b1d010d5eea2b/processes/atlas-m25imn-shard-00-00.udvhxn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-m25imn-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-587-shard-00-00.udvhxn.mongodb-dev.net","version":"8.0.11"},{"created":"2025-06-27T05:15:30Z","groupId":"685e2762606b1d010d5eea2b","hostname":"atlas-m25imn-shard-00-01.udvhxn.mongodb-dev.net","id":"atlas-m25imn-shard-00-01.udvhxn.mongodb-dev.net:27017","lastPing":"2025-06-27T05:15:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685e2762606b1d010d5eea2b/processes/atlas-m25imn-shard-00-01.udvhxn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-m25imn-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-587-shard-00-01.udvhxn.mongodb-dev.net","version":"8.0.11"},{"created":"2025-06-27T05:15:30Z","groupId":"685e2762606b1d010d5eea2b","hostname":"atlas-m25imn-shard-00-02.udvhxn.mongodb-dev.net","id":"atlas-m25imn-shard-00-02.udvhxn.mongodb-dev.net:27017","lastPing":"2025-06-27T05:15:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685e2762606b1d010d5eea2b/processes/atlas-m25imn-shard-00-02.udvhxn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-m25imn-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-587-shard-00-02.udvhxn.mongodb-dev.net","version":"8.0.11"}],"totalCount":3}

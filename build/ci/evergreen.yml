@@ -499,15 +499,9 @@ functions:
         shell: bash
         script: |
           set -Eeou pipefail
-          if [[ -z "${triggered_by_git_tag}" ]]; then
-            REF="${github_commit}"
-          else
-            REF="${triggered_by_git_tag}"
-          fi
           cat <<EOF > expansions.yaml
           home: $HOME
           tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)
-          ref: $REF
           version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
           EOF
     - command: expansions.update

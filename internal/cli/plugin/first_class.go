@@ -94,6 +94,7 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 		Opts: Opts{
 			plugins: plugins,
 		},
+		ghClient: NewAuthenticatedGithubClient(),
 	}
 	installOpts.githubAsset = &GithubAsset{
 		owner: fcp.Github.Owner,

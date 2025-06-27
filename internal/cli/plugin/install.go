@@ -120,7 +120,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 
 func InstallBuilder(pluginOpts *Opts) *cobra.Command {
 	opts := &InstallOpts{
-		ghClient: github.NewClient(nil),
+		ghClient: NewAuthenticatedGithubClient(),
 	}
 	opts.Opts = *pluginOpts
 

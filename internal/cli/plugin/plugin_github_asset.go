@@ -90,7 +90,10 @@ func (g *GithubAsset) getReleaseAssets(ghClient *github.Client) ([]*github.Relea
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker, %w", g.repository(), err)
+			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker\n"+
+				"if you are using a private repository, you need to set the GH_TOKEN environment variable (needs content read access to the repository) or authenticate with the github cli\n"+
+				"more info about access tokens: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token\n\n"+
+				"error: %w", g.repository(), err)
 		}
 
 		// get the latest release that doesn't have prerelease info or metadata in the version tag

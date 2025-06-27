@@ -259,7 +259,7 @@ func (opts *UpdateOpts) Run(ctx context.Context) error {
 func UpdateBuilder(pluginOpts *Opts) *cobra.Command {
 	opts := &UpdateOpts{
 		UpdateAll: false,
-		ghClient:  github.NewClient(nil),
+		ghClient:  NewAuthenticatedGithubClient(),
 	}
 	opts.Opts = *pluginOpts
 

@@ -31,6 +31,7 @@ type InstallOpts struct {
 	cli.PreRunOpts
 	cli.OutputOpts
 	Opts
+	ghClient    *github.Client
 	githubAsset *GithubAsset
 }
 
@@ -75,7 +76,7 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 
 func (opts *InstallOpts) Run(ctx context.Context) error {
 	// get all plugin assets info from github repository
-	assets, err := opts.githubAsset.getReleaseAssets()
+	assets, err := opts.githubAsset.getReleaseAssets(opts.ghClient)
 	if err != nil {
 		return err
 	}
@@ -87,7 +88,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
-	rc, err := opts.githubAsset.getPluginAssetsAsReadCloser(assetID, signatureID, pubKeyID)
+	rc, err := opts.githubAsset.getPluginAssetsAsReadCloser(opts.ghClient, assetID, signatureID, pubKeyID)
 	if err != nil {
 		return err
 	}
@@ -118,7 +119,9 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 }
 
 func InstallBuilder(pluginOpts *Opts) *cobra.Command {
-	opts := &InstallOpts{}
+	opts := &InstallOpts{
+		ghClient: github.NewClient(nil),
+	}
 	opts.Opts = *pluginOpts
 
 	const use = "install"
@@ -150,7 +153,6 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 				return err
 			}
 			opts.githubAsset = githubAssetRelease
-			opts.githubAsset.ghClient = github.NewClient(nil)
 
 			return opts.PreRunE(opts.checkForDuplicatePlugins)
 		},

@@ -48,6 +48,7 @@ type UpdateOpts struct {
 	UpdateAll           bool
 	pluginSpecifier     string
 	pluginUpdateVersion *semver.Version
+	ghClient            *github.Client
 }
 
 func printPluginUpdateWarning(p *plugin.Plugin, err error) {
@@ -132,7 +133,7 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 
 func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *GithubAsset, existingPlugin *plugin.Plugin) error {
 	// get all plugin assets info from github repository
-	assets, err := githubAssetRelease.getReleaseAssets()
+	assets, err := githubAssetRelease.getReleaseAssets(opts.ghClient)
 	if err != nil {
 		return err
 	}
@@ -144,7 +145,7 @@ func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *Gi
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
-	rc, err := githubAssetRelease.getPluginAssetsAsReadCloser(assetID, signatureID, pubKeyID)
+	rc, err := githubAssetRelease.getPluginAssetsAsReadCloser(opts.ghClient, assetID, signatureID, pubKeyID)
 	if err != nil {
 		return err
 	}
@@ -198,8 +199,6 @@ func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *Gi
 }
 
 func (opts *UpdateOpts) Run(ctx context.Context) error {
-	ghClient := github.NewClient(nil)
-
 	// if update flag is set, update all plugin, if not update only specified plugin
 	if opts.UpdateAll {
 		// try to create GithubAssetRelease from each plugin -  when create use it to update the plugin
@@ -218,7 +217,6 @@ func (opts *UpdateOpts) Run(ctx context.Context) error {
 			}
 
 			// update using GithubAsset
-			githubAsset.ghClient = ghClient
 			err = opts.updatePlugin(ctx, githubAsset, p)
 			if err != nil {
 				printPluginUpdateWarning(p, err)
@@ -249,7 +247,6 @@ func (opts *UpdateOpts) Run(ctx context.Context) error {
 
 		// update using GithubAsset
 		opts.Print(fmt.Sprintf(`Updating plugin "%s"`, existingPlugin.Name))
-		githubAsset.ghClient = ghClient
 		err = opts.updatePlugin(ctx, githubAsset, existingPlugin)
 		if err != nil {
 			return err
@@ -262,6 +259,7 @@ func (opts *UpdateOpts) Run(ctx context.Context) error {
 func UpdateBuilder(pluginOpts *Opts) *cobra.Command {
 	opts := &UpdateOpts{
 		UpdateAll: false,
+		ghClient:  github.NewClient(nil),
 	}
 	opts.Opts = *pluginOpts
 

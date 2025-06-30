@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 630
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Jun 2025 05:25:40 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 107
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupSnapshotsResource::getSnapshot
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=5b4d418468a100fa65252ed8ef1740ac6f6194a6; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"copyRegions":[],"description":"test-snapshot","expiresAt":"2025-07-01T05:25:23Z","frequencyType":"ondemand","id":"68621fc3b061b0401a4c0a5b","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68621bed0fdc646bf5f3a9c8/clusters/backupRestores-570/backup/snapshots/68621fc3b061b0401a4c0a5b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68621bed0fdc646bf5f3a9c8/clusters/backupRestores-570","rel":"https://cloud.mongodb.com/cluster"}],"mongodVersion":"8.0.11","policyItems":[],"replicaSetName":"backupRestores-570","snapshotType":"onDemand","status":"inProgress","storageSizeBytes":0,"type":"replicaSet"}

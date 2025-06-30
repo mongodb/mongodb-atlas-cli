@@ -51,10 +51,9 @@ const (
 )
 
 type GithubAsset struct {
-	ghClient *github.Client
-	owner    string
-	name     string
-	version  *semver.Version
+	owner   string
+	name    string
+	version *semver.Version
 }
 
 func (g *GithubAsset) repository() string {
@@ -77,7 +76,7 @@ func (g *GithubAsset) getPluginDirectoryName() string {
 	return fmt.Sprintf("%s@%s", g.owner, g.name)
 }
 
-func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
+func (g *GithubAsset) getReleaseAssets(ghClient *github.Client) ([]*github.ReleaseAsset, error) {
 	var err error
 	var release *github.RepositoryRelease
 
@@ -85,13 +84,16 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	if g.version == nil {
 		// download the 100 latest releases
 		const MaxPerPage = 100
-		releases, _, err := g.ghClient.Repositories.ListReleases(context.Background(), g.owner, g.name, &github.ListOptions{
+		releases, _, err := ghClient.Repositories.ListReleases(context.Background(), g.owner, g.name, &github.ListOptions{
 			Page:    0,
 			PerPage: MaxPerPage,
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker, %w", g.repository(), err)
+			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker\n"+
+				"if you are using a private repository, you need to set the GH_TOKEN environment variable (needs content read access to the repository) or authenticate with the github cli\n"+
+				"more info about access tokens: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token\n\n"+
+				"error: %w", g.repository(), err)
 		}
 
 		// get the latest release that doesn't have prerelease info or metadata in the version tag
@@ -101,10 +103,10 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 		}
 	} else {
 		// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
-		release, _, err = g.ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, "v"+g.version.String())
+		release, _, err = ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, "v"+g.version.String())
 
 		if release == nil || err != nil {
-			release, _, err = g.ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, g.version.String())
+			release, _, err = ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, g.version.String())
 		}
 
 		if err != nil {
@@ -240,8 +242,8 @@ func getSignatureAssetandKeyID(name string, assets []*github.ReleaseAsset) (int6
 	return *signatureAsset.ID, *pubKeyAsset.ID, nil
 }
 
-func (g *GithubAsset) getPluginAssetsAsReadCloser(assetID, sigAssetID, pubKeyAssetID int64) (io.ReadCloser, error) {
-	rc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
+func (g *GithubAsset) getPluginAssetsAsReadCloser(ghClient *github.Client, assetID, sigAssetID, pubKeyAssetID int64) (io.ReadCloser, error) {
+	rc, _, err := ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
 	if err != nil {
 		return nil, fmt.Errorf("could not download asset with ID %d from %s", assetID, g.repository())
 	}
@@ -253,7 +255,7 @@ func (g *GithubAsset) getPluginAssetsAsReadCloser(assetID, sigAssetID, pubKeyAss
 
 	// Only do verification if IDs are not 0, i.e. when there is signature package available
 	if sigAssetID != 0 && pubKeyAssetID != 0 {
-		err = g.verifyAssetSignature(asset, sigAssetID, pubKeyAssetID)
+		err = g.verifyAssetSignature(ghClient, asset, sigAssetID, pubKeyAssetID)
 		if err != nil {
 			return nil, err
 		}
@@ -264,14 +266,14 @@ func (g *GithubAsset) getPluginAssetsAsReadCloser(assetID, sigAssetID, pubKeyAss
 
 // verifyAssetSignature verifies the asset signature.
 // Returns nil if signature check is successful.
-func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAssetID int64) error {
-	sigRc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, sigAssetID, http.DefaultClient)
+func (g *GithubAsset) verifyAssetSignature(ghClient *github.Client, asset []byte, sigAssetID, pubKeyAssetID int64) error {
+	sigRc, _, err := ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, sigAssetID, http.DefaultClient)
 	if err != nil {
 		return fmt.Errorf("could not download signature asset with ID %d from %s", sigAssetID, g.repository())
 	}
 	defer sigRc.Close()
 
-	keyRc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, pubKeyAssetID, http.DefaultClient)
+	keyRc, _, err := ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, pubKeyAssetID, http.DefaultClient)
 	if err != nil {
 		return fmt.Errorf("could not download public key asset with ID %d from %s", pubKeyAssetID, g.repository())
 	}

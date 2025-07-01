@@ -173,6 +173,7 @@ functions:
         secret_key: ${papertrail_secret_key}
         product: ${product}
         version: ${version}
+        submitter: apix-bot[bot]
         filenames:
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz"
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip"

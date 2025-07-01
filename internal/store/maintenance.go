@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.

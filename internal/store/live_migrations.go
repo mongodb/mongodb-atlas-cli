@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
 // LiveMigrationCreate encapsulates the logic to manage different cloud providers.

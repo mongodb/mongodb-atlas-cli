@@ -19,7 +19,7 @@ package invitations
 import (
 	"testing"
 
-	"go.mongodb.org/atlas-sdk/v20250312004/admin"
+	"go.mongodb.org/atlas-sdk/v20250312005/admin"
 	"go.uber.org/mock/gomock"
 )
 

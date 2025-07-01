@@ -44,7 +44,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
 const (

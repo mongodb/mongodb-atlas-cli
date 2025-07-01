@@ -68,7 +68,8 @@ pkg:golang/github.com/kylelemons/godebug@v1.1.0
 pkg:golang/github.com/mattn/go-colorable@v0.1.13
 pkg:golang/github.com/mattn/go-isatty@v0.0.20
 pkg:golang/github.com/mgutz/ansi@v0.0.0-20200706080929-d51e80ef957d
-pkg:golang/github.com/mholt/archives@v0.1.2
+pkg:golang/github.com/mholt/archives@v0.1.3
+pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.0
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0
 pkg:golang/github.com/montanaflynn/stats@v0.7.1
@@ -88,7 +89,6 @@ pkg:golang/github.com/spf13/pflag@v1.0.6
 pkg:golang/github.com/spf13/viper@v1.20.1
 pkg:golang/github.com/subosito/gotenv@v1.6.0
 pkg:golang/github.com/tangzero/inflector@v1.0.0
-pkg:golang/github.com/therootcompany/xz@v1.0.1
 pkg:golang/github.com/tklauser/go-sysconf@v0.3.12
 pkg:golang/github.com/tklauser/numcpus@v0.6.1
 pkg:golang/github.com/ulikunitz/xz@v0.5.12

@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 47
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Thu, 03 Jul 2025 05:19:22 GMT
+Deprecation: Wed, 23 Oct 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 60
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getAutoScalingMode
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6bc63e907cec3c2850d229b478296b4aba6112bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"autoScalingMode":"INDEPENDENT_SHARD_SCALING"}

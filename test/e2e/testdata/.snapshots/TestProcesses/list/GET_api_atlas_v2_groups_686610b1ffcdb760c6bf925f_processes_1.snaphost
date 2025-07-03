@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 03 Jul 2025 05:18:16 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 102
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6bc63e907cec3c2850d229b478296b4aba6112bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686610b1ffcdb760c6bf925f/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-03T05:17:36Z","groupId":"686610b1ffcdb760c6bf925f","hostname":"atlas-5642tj-shard-00-00.liykzy.mongodb-dev.net","id":"atlas-5642tj-shard-00-00.liykzy.mongodb-dev.net:27017","lastPing":"2025-07-03T05:18:05Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686610b1ffcdb760c6bf925f/processes/atlas-5642tj-shard-00-00.liykzy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5642tj-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-83-shard-00-00.liykzy.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-03T05:17:36Z","groupId":"686610b1ffcdb760c6bf925f","hostname":"atlas-5642tj-shard-00-01.liykzy.mongodb-dev.net","id":"atlas-5642tj-shard-00-01.liykzy.mongodb-dev.net:27017","lastPing":"2025-07-03T05:18:05Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686610b1ffcdb760c6bf925f/processes/atlas-5642tj-shard-00-01.liykzy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5642tj-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-83-shard-00-01.liykzy.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-03T05:17:36Z","groupId":"686610b1ffcdb760c6bf925f","hostname":"atlas-5642tj-shard-00-02.liykzy.mongodb-dev.net","id":"atlas-5642tj-shard-00-02.liykzy.mongodb-dev.net:27017","lastPing":"2025-07-03T05:18:05Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686610b1ffcdb760c6bf925f/processes/atlas-5642tj-shard-00-02.liykzy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5642tj-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-83-shard-00-02.liykzy.mongodb-dev.net","version":"8.0.11"}],"totalCount":3}

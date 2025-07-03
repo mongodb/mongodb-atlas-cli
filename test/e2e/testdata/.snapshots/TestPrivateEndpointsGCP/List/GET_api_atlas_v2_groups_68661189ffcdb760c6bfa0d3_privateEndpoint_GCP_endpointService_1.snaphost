@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 852
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 03 Jul 2025 05:18:03 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6bc63e907cec3c2850d229b478296b4aba6112bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6866118be5d7337cdb5fd336","regionName":"US_WEST_2","serviceAttachmentNames":["projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-0","projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-1","projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-2","projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-3","projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-4","projects/p-icdgzaa8isd12fbljfmysmaj/regions/us-west2/serviceAttachments/sa-us-west2-68661189ffcdb760c6bfa0d3-5"],"status":"AVAILABLE"}]

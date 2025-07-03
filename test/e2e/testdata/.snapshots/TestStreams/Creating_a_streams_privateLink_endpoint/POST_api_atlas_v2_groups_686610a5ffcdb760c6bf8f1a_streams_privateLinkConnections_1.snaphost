@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 278
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Thu, 03 Jul 2025 05:10:03 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 104
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::createPrivateLinkConnection
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6bc63e907cec3c2850d229b478296b4aba6112bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"686610abe5d7337cdb5fc338","dnsDomain":"test-namespace.servicebus.windows.net","provider":"Azure","region":"US_EAST_2","serviceEndpointId":"/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace"}

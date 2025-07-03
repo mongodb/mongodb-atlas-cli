@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 419
+Content-Type: application/vnd.atlas.2023-10-01+json;charset=utf-8
+Date: Thu, 03 Jul 2025 05:10:31 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 154
+X-Frame-Options: DENY
+X-Java-Method: ApiDiskBackupDataProtectionResource::updateDataProtectionSettings
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6bc63e907cec3c2850d229b478296b4aba6112bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"authorizedEmail":"firstname.lastname@example.com","authorizedUserFirstName":"firstname","authorizedUserLastName":"lastname","copyProtectionEnabled":false,"deletable":false,"encryptionAtRestEnabled":false,"onDemandPolicyItem":null,"pitEnabled":false,"projectId":"686610c4e5d7337cdb5fc86d","restoreWindowDays":0,"scheduledPolicyItems":[],"state":"ENABLING","updatedDate":"2025-07-03T05:10:31Z","updatedUser":"nmtxqlkl"}

@@ -27,7 +27,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
-const deliveryTypeDownload = "download"
+var watchTemplate = "\nRestore completed.\n"
+var result *atlasv2.DiskBackupSnapshotRestoreJob
 
 type WatchOpts struct {
 	cli.ProjectOpts
@@ -37,9 +38,6 @@ type WatchOpts struct {
 	isFlexCluster bool
 	store         RestoreJobsDescriber
 }
-
-var watchTemplate = "\nRestore completed.\n"
-var result *atlasv2.DiskBackupSnapshotRestoreJob
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -64,7 +62,7 @@ func stopWatcher(result *atlasv2.DiskBackupSnapshotRestoreJob) bool {
 		return true
 	}
 
-	if result.GetDeliveryType() == deliveryTypeDownload && len(result.GetDeliveryUrl()) > 0 {
+	if result.GetDeliveryType() == DeliveryTypeDownload && len(result.GetDeliveryUrl()) > 0 {
 		return true
 	}
 
@@ -118,7 +116,7 @@ func (opts *WatchOpts) newIsFlexCluster() error {
 		return err
 	}
 
-	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
+	if apiError.ErrorCode != CannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != FeatureUnsupported && apiError.ErrorCode != ClusterNotFoundErrorCode {
 		return err
 	}
 

@@ -20,8 +20,10 @@ import (
 )
 
 const (
-	cannotUseNotFlexWithFlexApisErrorCode = "CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API"
-	featureUnsupported                    = "FEATURE_UNSUPPORTED"
+	CannotUseNotFlexWithFlexApisErrorCode = "CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API"
+	FeatureUnsupported                    = "FEATURE_UNSUPPORTED"
+	ClusterNotFoundErrorCode              = "CLUSTER_NOT_FOUND"
+	DeliveryTypeDownload                  = "download"
 )
 
 func Builder() *cobra.Command {

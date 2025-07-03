@@ -36,7 +36,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 
 	expectedError := &atlasv2.GenericOpenAPIError{}
-	expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: CannotUseNotFlexWithFlexApisErrorCode})
 
 	mockStore.
 		EXPECT().

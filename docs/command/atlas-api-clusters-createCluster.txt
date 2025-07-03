@@ -118,11 +118,11 @@ Examples
 
       Cluster
 
-      Create the file below and save it as ``payload.json``
+      Create the file below and save it as `payload.json`
 
          .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-08-05-cluster-payload.json
             :language: shell
-      After creating ``payload.json``, run the command below in the same directory.
+      After creating `payload.json`, run the command below in the same directory.
 
       .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-08-05-cluster.sh
          :language: shell
@@ -131,11 +131,11 @@ Examples
 
       Cluster
 
-      Create the file below and save it as ``payload.json``
+      Create the file below and save it as `payload.json`
 
          .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-10-23-cluster-payload.json
             :language: shell
-      After creating ``payload.json``, run the command below in the same directory.
+      After creating `payload.json`, run the command below in the same directory.
 
       .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-10-23-cluster.sh
          :language: shell
@@ -144,11 +144,11 @@ Examples
 
       Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
 
-      Create the file below and save it as ``payload.json``
+      Create the file below and save it as `payload.json`
 
          .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-10-23-create_cluster-payload.json
             :language: shell
-      After creating ``payload.json``, run the command below in the same directory.
+      After creating `payload.json`, run the command below in the same directory.
 
       .. literalinclude:: /includes/examples/atlas-api-clusters-createCluster-2024-10-23-create_cluster.sh
          :language: shell

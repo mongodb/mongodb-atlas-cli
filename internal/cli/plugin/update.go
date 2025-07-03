@@ -45,10 +45,11 @@ var (
 type UpdateOpts struct {
 	cli.OutputOpts
 	Opts
-	UpdateAll           bool
-	pluginSpecifier     string
-	pluginUpdateVersion *semver.Version
-	ghClient            *github.Client
+	UpdateAll                 bool
+	pluginSpecifier           string
+	pluginUpdateVersion       *semver.Version
+	ghClient                  *github.Client
+	skipSignatureVerification bool
 }
 
 func printPluginUpdateWarning(p *plugin.Plugin, err error) {
@@ -142,6 +143,12 @@ func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *Gi
 	assetID, signatureID, pubKeyID, err := githubAssetRelease.getIDs(assets)
 	if err != nil {
 		return err
+	}
+
+	// When signatureID and pubKeyID are 0, the signature check is skipped.
+	if opts.skipSignatureVerification {
+		signatureID = 0
+		pubKeyID = 0
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
@@ -308,6 +315,7 @@ Additionally, you can use the "--all" flag to update all plugins.
 	}
 
 	cmd.Flags().BoolVar(&opts.UpdateAll, flag.All, false, usage.UpdateAllPlugins)
+	cmd.Flags().BoolVar(&opts.skipSignatureVerification, flag.SkipSignatureVerification, false, usage.SkipSignatureVerification)
 
 	return cmd
 }

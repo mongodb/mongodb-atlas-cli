@@ -53,7 +53,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	expectedError := &atlasv2.GenericOpenAPIError{}
-	expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: CannotUseNotFlexWithFlexApisErrorCode})
 
 	mockStore.
 		EXPECT().
@@ -88,6 +88,49 @@ func TestList_Run_FlexCluster(t *testing.T) {
 	mockStore.
 		EXPECT().
 		FlexClusterSnapshots(listOpts.newListFlexBackupsAPIParams()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
+}
+
+func TestList_Run_ClusterNotFoundFallback(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockLister(ctrl)
+	buf := new(bytes.Buffer)
+	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
+		Results: &[]atlasv2.DiskBackupReplicaSet{
+			{
+				CloudProvider: pointer.Get("AWS"),
+				Id:            pointer.Get("5f9b0b5e0b5e9d6b6e0b5e9d"),
+				SnapshotType:  pointer.Get("cloud"),
+			},
+			*atlasv2.NewDiskBackupReplicaSet(),
+		},
+	}
+
+	listOpts := &ListOpts{
+		store:       mockStore,
+		clusterName: "Cluster0",
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	expectedError := &atlasv2.GenericOpenAPIError{}
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: ClusterNotFoundErrorCode})
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshots(listOpts.newListFlexBackupsAPIParams()).
+		Return(nil, expectedError).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

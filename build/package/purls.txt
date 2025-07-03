@@ -11,7 +11,7 @@ pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.11.1
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.4.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal@v1.2.0
 pkg:golang/github.com/AzureAD/microsoft-authentication-library-for-go@v1.4.2
-pkg:golang/github.com/Masterminds/semver/v3@v3.3.1
+pkg:golang/github.com/Masterminds/semver/v3@v3.4.0
 pkg:golang/github.com/PaesslerAG/gval@v1.0.0
 pkg:golang/github.com/PaesslerAG/jsonpath@v0.1.1
 pkg:golang/github.com/ProtonMail/go-crypto@v1.3.0

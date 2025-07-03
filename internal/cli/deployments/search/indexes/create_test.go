@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 	"go.uber.org/mock/gomock"
 )
 

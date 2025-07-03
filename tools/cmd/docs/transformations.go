@@ -194,7 +194,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString("Create the file below and save it as ``payload.json``\n\n")
+				sb.WriteString("Create the file below and save it as `payload.json`\n\n")
 
 				includePayloadFileName := fmt.Sprintf("%s-%s-%s-payload.json", strings.ReplaceAll(cmd.CommandPath(), " ", "-"), version, source)
 				const permissions = 0600
@@ -214,7 +214,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString("After creating ``payload.json``, run the command below in the same directory.\n\n")
+				sb.WriteString("After creating `payload.json`, run the command below in the same directory.\n\n")
 			} else if tabs {
 				sb.WriteString("      ")
 			}

@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -214,7 +215,7 @@ func buildDescription(operation *openapi3.Operation) (string, error) {
 		return "", fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	apiURL := fmt.Sprintf("https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/%s/operation/%s", safeSlugify(operation.Tags[0]), safeSlugify(operation.OperationID))
+	apiURL := "https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-" + safeSlugify(strings.ToLower(operation.OperationID))
 	cmdURL := fmt.Sprintf("https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-%s-%s/", strcase.ToLowerCamel(operation.Tags[0]), operation.OperationID)
 
 	// Add the documentation URL to the description

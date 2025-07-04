@@ -22,7 +22,9 @@ import (
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -31,8 +33,9 @@ type InstallOpts struct {
 	cli.PreRunOpts
 	cli.OutputOpts
 	Opts
-	ghClient    *github.Client
-	githubAsset *GithubAsset
+	ghClient                  *github.Client
+	githubAsset               *GithubAsset
+	skipSignatureVerification bool
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
@@ -85,6 +88,12 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 	assetID, signatureID, pubKeyID, err := opts.githubAsset.getIDs(assets)
 	if err != nil {
 		return err
+	}
+
+	// When signatureID and pubKeyID are 0, the signature check is skipped.
+	if opts.skipSignatureVerification {
+		signatureID = 0
+		pubKeyID = 0
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
@@ -160,6 +169,8 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 			return opts.Run(cmd.Context())
 		},
 	}
+
+	cmd.Flags().BoolVar(&opts.skipSignatureVerification, flag.SkipSignatureVerification, false, usage.SkipSignatureVerification)
 
 	return cmd
 }

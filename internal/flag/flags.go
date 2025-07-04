@@ -303,6 +303,7 @@ const (
 	FrequencyType                                 = "frequencyType"                                 // FrequencyType flag
 	FrequencyInterval                             = "frequencyInterval"                             // FrequencyInterval flag
 	All                                           = "all"                                           // All flag
+	SkipSignatureVerification                     = "skipSignatureVerification"                     // SkipSignatureVerification flag
 	RetentionUnit                                 = "retentionUnit"                                 // RetentionUnit flag
 	RetentionValue                                = "retentionValue"                                // RetentionValue flag
 	FederationSettingsID                          = "federationSettingsId"                          // FederationSettingsId flag

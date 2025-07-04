@@ -348,20 +348,6 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
-	`createAtlasResourcePolicy`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-		},
-		Examples: nil,
-	},
 	`createAtlasSearchDeployment`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
@@ -1263,6 +1249,20 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`createOrgResourcePolicy`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -2241,33 +2241,6 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`deleteAtlasResourcePolicy`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-			`resourcePolicyId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2024-08-05`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`orgId`:            `4888442a3354817a7320eb61`,
-					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
-				},
-			},
-			},
-		},
-	},
 	`deleteAtlasSearchDeployment`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
@@ -2846,6 +2819,33 @@ var metadata = metadatatypes.Metadata{
 					`archiveId`:   `[archiveId]`,
 					`clusterName`: `[clusterName]`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`deleteOrgResourcePolicy`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`resourcePolicyId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-08-05`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`:            `4888442a3354817a7320eb61`,
+					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4324,56 +4324,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`processId`: `mongodb.example.com:27017`,
-				},
-			},
-			},
-		},
-	},
-	`getAtlasResourcePolicies`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2024-08-05`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`orgId`: `4888442a3354817a7320eb61`,
-				},
-			},
-			},
-		},
-	},
-	`getAtlasResourcePolicy`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-			`resourcePolicyId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2024-08-05`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`orgId`:            `4888442a3354817a7320eb61`,
-					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6096,6 +6046,33 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getOrgResourcePolicy`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`resourcePolicyId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-08-05`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`:            `4888442a3354817a7320eb61`,
+					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`getOrganization`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -6795,6 +6772,35 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`getProjectTeam`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`teamId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the team for which you want to get.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`teamId`:  `[teamId]`,
 				},
 			},
 			},
@@ -9104,6 +9110,29 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`listOrgResourcePolicies`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-08-05`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -11884,23 +11913,6 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
-	`updateAtlasResourcePolicy`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-			`resourcePolicyId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
-			},
-		},
-		Examples: nil,
-	},
 	`updateAtlasSearchDeployment`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
@@ -12324,6 +12336,23 @@ var metadata = metadatatypes.Metadata{
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateOrgResourcePolicy`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`resourcePolicyId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
 			},
 		},
 		Examples: nil,

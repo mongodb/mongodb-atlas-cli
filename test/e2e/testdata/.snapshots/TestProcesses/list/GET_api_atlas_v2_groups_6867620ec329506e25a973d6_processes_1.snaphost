@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1859
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 04 Jul 2025 05:17:19 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 63
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=1a76e291a707dd99825b84b8b54299038505aa0d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6867620ec329506e25a973d6/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-04T05:16:42Z","groupId":"6867620ec329506e25a973d6","hostname":"atlas-ckvfm4-shard-00-00.gct01v.mongodb-dev.net","id":"atlas-ckvfm4-shard-00-00.gct01v.mongodb-dev.net:27017","lastPing":"2025-07-04T05:17:14Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6867620ec329506e25a973d6/processes/atlas-ckvfm4-shard-00-00.gct01v.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ckvfm4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-559-shard-00-00.gct01v.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-04T05:16:42Z","groupId":"6867620ec329506e25a973d6","hostname":"atlas-ckvfm4-shard-00-01.gct01v.mongodb-dev.net","id":"atlas-ckvfm4-shard-00-01.gct01v.mongodb-dev.net:27017","lastPing":"2025-07-04T05:17:14Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6867620ec329506e25a973d6/processes/atlas-ckvfm4-shard-00-01.gct01v.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ckvfm4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-559-shard-00-01.gct01v.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-04T05:16:42Z","groupId":"6867620ec329506e25a973d6","hostname":"atlas-ckvfm4-shard-00-02.gct01v.mongodb-dev.net","id":"atlas-ckvfm4-shard-00-02.gct01v.mongodb-dev.net:27017","lastPing":"2025-07-04T05:17:14Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6867620ec329506e25a973d6/processes/atlas-ckvfm4-shard-00-02.gct01v.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ckvfm4-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-559-shard-00-02.gct01v.mongodb-dev.net","version":"8.0.11"}],"totalCount":3}

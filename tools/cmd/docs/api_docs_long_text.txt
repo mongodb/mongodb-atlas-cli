@@ -46,7 +46,7 @@ Arguments
        documentation, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        
        For example, in 
-       ``https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listClusters``, 
+       ``https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-listclusters``,
        the operationId is ``listClusters``.
 
 

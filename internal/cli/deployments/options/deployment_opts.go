@@ -44,7 +44,7 @@ import (
 
 const (
 	spinnerSpeed = 100 * time.Millisecond
-	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
+	// based on https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster
 	clusterNamePattern              = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
 	PausedState                     = "PAUSED"
 	StoppedState                    = "STOPPED"

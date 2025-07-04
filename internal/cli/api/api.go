@@ -75,7 +75,7 @@ func createRootAPICommand() *cobra.Command {
 		Long: `This feature in public preview streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 For more information on
-- Atlas Administration API see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/
+- Atlas Administration API see: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
 	}
 

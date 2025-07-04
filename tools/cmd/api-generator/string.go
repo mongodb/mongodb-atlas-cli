@@ -109,11 +109,3 @@ func safeSlugify(value string) string {
 
 	return result
 }
-
-// ToURL creates a URL for the MongoDB Atlas API documentation based on a tag and operationId.
-// Both inputs are processed using safeSlugify before being inserted into the URL.
-func ToURL(tag, operationID string) string {
-	safeTag := safeSlugify(tag)
-	safeOperationID := safeSlugify(operationID)
-	return "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/" + safeTag + "/operation/" + safeOperationID
-}

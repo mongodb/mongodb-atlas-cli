@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 155
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 04 Jul 2025 05:17:44 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 138
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSampleDatasetLoadResource::sampleDatasetLoad
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=1a76e291a707dd99825b84b8b54299038505aa0d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"686763f8c28b745042e7bf9d","clusterName":"cluster-81","completeDate":null,"createDate":"2025-07-04T05:17:44Z","errorMessage":null,"state":"WORKING"}

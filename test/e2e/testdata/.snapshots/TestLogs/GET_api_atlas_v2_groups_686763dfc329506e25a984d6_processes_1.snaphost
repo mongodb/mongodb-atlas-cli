@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 04 Jul 2025 05:25:15 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 65
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=1a76e291a707dd99825b84b8b54299038505aa0d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686763dfc329506e25a984d6/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-04T05:24:33Z","groupId":"686763dfc329506e25a984d6","hostname":"atlas-jgizit-shard-00-00.hdmgtq.mongodb-dev.net","id":"atlas-jgizit-shard-00-00.hdmgtq.mongodb-dev.net:27017","lastPing":"2025-07-04T05:25:12Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686763dfc329506e25a984d6/processes/atlas-jgizit-shard-00-00.hdmgtq.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jgizit-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-741-shard-00-00.hdmgtq.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-04T05:24:33Z","groupId":"686763dfc329506e25a984d6","hostname":"atlas-jgizit-shard-00-01.hdmgtq.mongodb-dev.net","id":"atlas-jgizit-shard-00-01.hdmgtq.mongodb-dev.net:27017","lastPing":"2025-07-04T05:25:12Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686763dfc329506e25a984d6/processes/atlas-jgizit-shard-00-01.hdmgtq.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jgizit-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-741-shard-00-01.hdmgtq.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-04T05:24:34Z","groupId":"686763dfc329506e25a984d6","hostname":"atlas-jgizit-shard-00-02.hdmgtq.mongodb-dev.net","id":"atlas-jgizit-shard-00-02.hdmgtq.mongodb-dev.net:27017","lastPing":"2025-07-04T05:25:12Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/686763dfc329506e25a984d6/processes/atlas-jgizit-shard-00-02.hdmgtq.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jgizit-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-741-shard-00-02.hdmgtq.mongodb-dev.net","version":"8.0.11"}],"totalCount":3}

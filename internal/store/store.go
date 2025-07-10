@@ -55,11 +55,11 @@ type Store struct {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username != "" && s.password != "" {
+	switch {
+	case s.username != "" && s.password != "":
 		t := transport.NewDigestTransport(s.username, s.password, httpTransport)
 		return t.Client()
-	}
-	if s.accessToken != nil {
+	case s.accessToken != nil:
 		tr, err := transport.NewAccessTokenTransport(s.accessToken, httpTransport, func(t *atlasauth.Token) error {
 			config.SetAccessToken(t.AccessToken)
 			config.SetRefreshToken(t.RefreshToken)
@@ -70,9 +70,10 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		}
 
 		return &http.Client{Transport: tr}, nil
+	default:
+		tr := &transport.AuthRequiredRoundTripper{Base: httpTransport}
+		return &http.Client{Transport: tr}, nil
 	}
-
-	return &http.Client{Transport: httpTransport}, nil
 }
 
 func (s *Store) transport() *http.Transport {

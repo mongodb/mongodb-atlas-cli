@@ -28,7 +28,7 @@ import (
 
 const (
 	profileString = "PROFILE NAME"
-	errorMessage  = "Error: this action requires authentication"
+	errorMessage  = "this action requires authentication"
 )
 
 func TestAtlasCLIConfig(t *testing.T) {

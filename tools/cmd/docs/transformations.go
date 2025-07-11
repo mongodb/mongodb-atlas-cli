@@ -43,7 +43,6 @@ var additionalLongTexts = map[string]string{
 
 func addAdditionalLongText(cmd *cobra.Command) {
 	commandPath := cmd.CommandPath()
-	cmd.Long = cli.ExperimentalText + "\n\n" + cmd.Long
 	if additionalLongText, found := additionalLongTexts[commandPath]; found && additionalLongText != "" {
 		cmd.Long += "\n\n"
 		cmd.Long += additionalLongText
@@ -63,6 +62,7 @@ func markExperimentalToAPICommands(cmd *cobra.Command) {
 		return // Skip the root command
 	}
 	cmd.Short = "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short
+	cmd.Long = cli.ExperimentalText + cmd.Long
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {

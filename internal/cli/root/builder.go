@@ -67,11 +67,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -85,6 +87,18 @@ type Notifier struct {
 	filesystem     afero.Fs
 	writer         io.Writer
 }
+
+type AuthRequirements int64
+
+const (
+	// NoAuth command does not require authentication.
+	NoAuth AuthRequirements = 0
+	// RequiredAuth command requires authentication.
+	RequiredAuth AuthRequirements = 1
+	// OptionalAuth command can work with or without authentication,
+	// and if access token is found, try to refresh it.
+	OptionalAuth AuthRequirements = 2
+)
 
 func handleSignal() {
 	sighandle.Notify(func(sig os.Signal) {
@@ -135,7 +149,29 @@ Use the --help flag with any command for more info on that command.`,
 				config.SetService(config.CloudService)
 			}
 
-			return prerun.ExecuteE(opts.InitFlow(config.Default()))
+			authReq := shouldCheckCredentials(cmd)
+			if authReq == NoAuth {
+				return nil
+			}
+
+			if err := prerun.ExecuteE(
+				opts.InitFlow(config.Default()),
+				func() error {
+					err := opts.RefreshAccessToken(cmd.Context())
+					if err != nil && authReq == RequiredAuth {
+						return err
+					}
+					return nil
+				},
+			); err != nil {
+				return err
+			}
+
+			if authReq == RequiredAuth {
+				return validate.Credentials()
+			}
+
+			return nil
 		},
 		// PersistentPostRun only runs if the command is successful
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
@@ -251,6 +287,43 @@ func shouldSetService(cmd *cobra.Command) bool {
 	}
 
 	return true
+}
+
+func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
+	searchByName := []string{
+		"__complete",
+		"help",
+	}
+	for _, n := range searchByName {
+		if cmd.Name() == n {
+			return NoAuth
+		}
+	}
+	customRequirements := map[string]AuthRequirements{
+		fmt.Sprintf("%s %s", atlas, "completion"):  NoAuth,       // completion commands do not require credentials
+		fmt.Sprintf("%s %s", atlas, "config"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "auth"):        NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "login"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "logout"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "whoami"):      NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "plugin"):      NoAuth,       // plugin functionality requires no authentication
+		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login
+		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
+	}
+	for p, r := range customRequirements {
+		if strings.HasPrefix(cmd.CommandPath(), p) {
+			return r
+		}
+	}
+
+	if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
+		return OptionalAuth
+	}
+
+	return RequiredAuth
 }
 
 func formattedVersion() string {

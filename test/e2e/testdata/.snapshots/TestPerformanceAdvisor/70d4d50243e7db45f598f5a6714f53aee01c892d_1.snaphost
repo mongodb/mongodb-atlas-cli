@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 11 Jul 2025 05:17:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 81
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=592c21a26e36e16a65f46905de4e5cd082ef0ec1; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68709ca6e3d03d13150a3688/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-11T05:16:49Z","groupId":"68709ca6e3d03d13150a3688","hostname":"atlas-cdb3o3-shard-00-00.w202rs.mongodb-dev.net","id":"atlas-cdb3o3-shard-00-00.w202rs.mongodb-dev.net:27017","lastPing":"2025-07-11T05:17:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68709ca6e3d03d13150a3688/processes/atlas-cdb3o3-shard-00-00.w202rs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-cdb3o3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-173-shard-00-00.w202rs.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-11T05:16:50Z","groupId":"68709ca6e3d03d13150a3688","hostname":"atlas-cdb3o3-shard-00-01.w202rs.mongodb-dev.net","id":"atlas-cdb3o3-shard-00-01.w202rs.mongodb-dev.net:27017","lastPing":"2025-07-11T05:17:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68709ca6e3d03d13150a3688/processes/atlas-cdb3o3-shard-00-01.w202rs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-cdb3o3-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-173-shard-00-01.w202rs.mongodb-dev.net","version":"8.0.11"},{"created":"2025-07-11T05:16:50Z","groupId":"68709ca6e3d03d13150a3688","hostname":"atlas-cdb3o3-shard-00-02.w202rs.mongodb-dev.net","id":"atlas-cdb3o3-shard-00-02.w202rs.mongodb-dev.net:27017","lastPing":"2025-07-11T05:17:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68709ca6e3d03d13150a3688/processes/atlas-cdb3o3-shard-00-02.w202rs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-cdb3o3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-173-shard-00-02.w202rs.mongodb-dev.net","version":"8.0.11"}],"totalCount":3}

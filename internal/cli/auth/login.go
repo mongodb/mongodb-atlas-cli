@@ -75,22 +75,15 @@ type LoginOpts struct {
 	RefreshToken string
 	IsGov        bool
 	NoBrowser    bool
-	AuthType     string
+	authType     string
 	force        bool
 	SkipConfig   bool
 	config       LoginConfig
 }
 
-func (opts *LoginOpts) validateAuthTypeFlag() error {
-	if opts.AuthType != "" && opts.AuthType != userAccountAuth && opts.AuthType != apiKeysAuth {
-		return fmt.Errorf("the authentication type is invalid: %s", opts.AuthType)
-	}
-	return nil
-}
-
 func (opts *LoginOpts) promptAuthType() error {
 	if opts.force {
-		opts.AuthType = userAccountAuth
+		opts.authType = userAccountAuth
 		return nil
 	}
 	authTypePrompt := &survey.Select{
@@ -101,24 +94,7 @@ func (opts *LoginOpts) promptAuthType() error {
 			return authTypeDescription[value]
 		},
 	}
-	return telemetry.TrackAskOne(authTypePrompt, &opts.AuthType)
-}
-
-func (opts *LoginOpts) validateAndPrompt() error {
-	err := opts.validateAuthTypeFlag()
-	if err != nil {
-		return err
-	}
-
-	// if opts.AuthType is empty, we prompt the user to select an auth type
-	if opts.AuthType == "" {
-		err := opts.promptAuthType()
-		if err != nil {
-			return fmt.Errorf("failed to select authentication type: %w", err)
-		}
-	}
-
-	return nil
+	return telemetry.TrackAskOne(authTypePrompt, &opts.authType)
 }
 
 func (opts *LoginOpts) SetUpAccess() {
@@ -259,11 +235,11 @@ func (opts *LoginOpts) runUserAccountLogin(ctx context.Context) error {
 }
 
 func (opts *LoginOpts) LoginRun(ctx context.Context) error {
-	if err := opts.validateAndPrompt(); err != nil {
-		return err
+	if err := opts.promptAuthType(); err != nil {
+		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
-	if opts.AuthType == apiKeysAuth {
+	if opts.authType == apiKeysAuth {
 		return opts.runAPIKeysLogin(ctx)
 	}
 
@@ -444,14 +420,11 @@ func LoginBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
-	cmd.Flags().StringVar(&opts.AuthType, "authType", "", "Authentication type to use. Valid values are 'UserAccount' and 'APIKeys'.")
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session to authenticate your User Account.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 	_ = cmd.Flags().MarkHidden(flag.Force)
-	_ = cmd.Flags().MarkHidden(flag.Debug)
-
 	return cmd
 }

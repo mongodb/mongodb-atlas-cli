@@ -195,21 +195,3 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 		})
 	}
 }
-
-// func Test_loginOpts_runAPIKeysLogin (t *testing.T) {
-// 	ctrl := gomock.NewController(t)
-// 	mockConfig := NewMockLoginConfig(ctrl)
-// 	mockFlow := mocks.NewMockRefresher(ctrl)
-
-// 	opts := &LoginOpts{
-// 		config:    mockConfig,
-// 		NoBrowser: true,
-// 	}
-// 	opts.WithFlow(mockFlow)
-
-// 	ctx := t.Context()
-// 	mockFlow.
-// 		EXPECT().
-// 		RequestCode(ctx).
-// 		Return(nil, nil, errors.New("failed to request code")).
-// 		Times(1)

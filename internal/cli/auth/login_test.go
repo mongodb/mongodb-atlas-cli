@@ -65,7 +65,7 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	}
 }
 
-func Test_loginOpts_Run(t *testing.T) {
+func Test_loginOpts_runUserAccountLogin(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
@@ -130,7 +130,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		},
 	}
 	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
-	require.NoError(t, opts.LoginRun(ctx))
+	require.NoError(t, opts.runUserAccountLogin(ctx))
 	assert.Equal(t, `
 To verify your account, copy your one-time verification code:
 1234-5678
@@ -195,3 +195,21 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 		})
 	}
 }
+
+// func Test_loginOpts_runAPIKeysLogin (t *testing.T) {
+// 	ctrl := gomock.NewController(t)
+// 	mockConfig := NewMockLoginConfig(ctrl)
+// 	mockFlow := mocks.NewMockRefresher(ctrl)
+
+// 	opts := &LoginOpts{
+// 		config:    mockConfig,
+// 		NoBrowser: true,
+// 	}
+// 	opts.WithFlow(mockFlow)
+
+// 	ctx := t.Context()
+// 	mockFlow.
+// 		EXPECT().
+// 		RequestCode(ctx).
+// 		Return(nil, nil, errors.New("failed to request code")).
+// 		Times(1)

@@ -42,6 +42,10 @@ Options
      - Type
      - Required
      - Description
+   * - --authType
+     - string
+     - false
+     - Authentication type to use. Valid values are 'UserAccount' and 'APIKeys'.
    * - --gov
      - 
      - false
@@ -53,7 +57,7 @@ Options
    * - --noBrowser
      - 
      - false
-     - Don't try to open a browser session.
+     - Don't try to open a browser session to authenticate your User Account.
 
 Inherited Options
 -----------------

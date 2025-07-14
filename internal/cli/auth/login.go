@@ -27,7 +27,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -49,20 +51,135 @@ type LoginConfig interface {
 	ProjectID() string
 }
 
+const (
+	userAccountAuth = "UserAccount"
+	apiKeysAuth     = "APIKeys"
+	atlasName       = "atlas"
+)
+
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
+	authTypeOptions      = []string{userAccountAuth, apiKeysAuth}
+	authTypeDescription  = map[string]string{
+		userAccountAuth: "(best for getting started)",
+		apiKeysAuth:     "(for existing automations)",
+	}
 )
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
+	cli.DigestConfigOpts
 	AccessToken  string
 	RefreshToken string
 	IsGov        bool
 	NoBrowser    bool
+	AuthType     string
+	force        bool
 	SkipConfig   bool
 	config       LoginConfig
+}
+
+func (opts *LoginOpts) validateAuthTypeFlag() error {
+	if opts.AuthType != "" && opts.AuthType != userAccountAuth && opts.AuthType != apiKeysAuth {
+		return fmt.Errorf("the authentication type is invalid: %s", opts.AuthType)
+	}
+	return nil
+}
+
+func (opts *LoginOpts) promptAuthType() error {
+	if opts.force {
+		opts.AuthType = userAccountAuth
+		return nil
+	}
+	authTypePrompt := &survey.Select{
+		Message: "Select authentication type:",
+		Options: authTypeOptions,
+		Default: userAccountAuth,
+		Description: func(value string, _ int) string {
+			return authTypeDescription[value]
+		},
+	}
+	return telemetry.TrackAskOne(authTypePrompt, &opts.AuthType)
+}
+
+func (opts *LoginOpts) validateAndPrompt() error {
+	err := opts.validateAuthTypeFlag()
+	if err != nil {
+		return err
+	}
+
+	// if opts.AuthType is empty, we prompt the user to select an auth type
+	if opts.AuthType == "" {
+		err := opts.promptAuthType()
+		if err != nil {
+			return fmt.Errorf("failed to select authentication type: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func (opts *LoginOpts) SetUpAccess() {
+	opts.Service = config.CloudService
+	if opts.IsGov {
+		opts.Service = config.CloudGovService
+	}
+
+	opts.SetUpServiceAndKeys()
+}
+
+func (opts *LoginOpts) runAPIKeysLogin(ctx context.Context) error {
+	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
+
+All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
+
+Enter [?] on any option to get help.
+
+`, atlasName)
+
+	q := prompt.AccessQuestions()
+	if err := telemetry.TrackAsk(q, opts); err != nil {
+		return err
+	}
+	opts.SetUpAccess()
+
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
+
+	if config.IsAccessSet() {
+		if err := opts.AskOrg(); err != nil {
+			return err
+		}
+		if err := opts.AskProject(); err != nil {
+			return err
+		}
+	} else {
+		q := prompt.TenantQuestions()
+		if err := telemetry.TrackAsk(q, opts); err != nil {
+			return err
+		}
+	}
+	opts.SetUpProject()
+	opts.SetUpOrg()
+
+	if err := telemetry.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+		return err
+	}
+	opts.SetUpOutput()
+
+	if err := config.Save(); err != nil {
+		return err
+	}
+
+	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
+	if config.Name() != config.DefaultProfile {
+		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", atlasName)
+	return nil
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -102,7 +219,7 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 	}
 }
 
-func (opts *LoginOpts) LoginRun(ctx context.Context) error {
+func (opts *LoginOpts) runUserAccountLogin(ctx context.Context) error {
 	if err := opts.oauthFlow(ctx); err != nil {
 		return err
 	}
@@ -139,6 +256,18 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (opts *LoginOpts) LoginRun(ctx context.Context) error {
+	if err := opts.validateAndPrompt(); err != nil {
+		return err
+	}
+
+	if opts.AuthType == apiKeysAuth {
+		return opts.runAPIKeysLogin(ctx)
+	}
+
+	return opts.runUserAccountLogin(ctx)
 }
 
 func (opts *LoginOpts) checkProfile(ctx context.Context) error {
@@ -315,9 +444,14 @@ func LoginBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
+	cmd.Flags().StringVar(&opts.AuthType, "authType", "", "Authentication type to use. Valid values are 'UserAccount' and 'APIKeys'.")
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session to authenticate your User Account.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
+	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
+	_ = cmd.Flags().MarkHidden(flag.Force)
+	_ = cmd.Flags().MarkHidden(flag.Debug)
+
 	return cmd
 }

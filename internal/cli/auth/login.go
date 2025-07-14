@@ -335,6 +335,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	askedToOpenBrowser := false
+	browserWait := 5
 	for {
 		code, _, err := opts.RequestCode(ctx)
 		if err != nil {
@@ -343,6 +344,9 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 
 		opts.printAuthInstructions(code)
 		if !askedToOpenBrowser {
+			fmt.Printf("\nBrowser will be automatically opened in %d seconds...", browserWait)
+			time.Sleep(time.Duration(browserWait) * time.Second)
+
 			opts.handleBrowser(code.VerificationURI)
 			askedToOpenBrowser = true
 		}

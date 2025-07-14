@@ -45,11 +45,15 @@ Options
    * - --gov
      - 
      - false
-     - Create a default profile for atlas for gov
+     - Log in to Atlas for Government.
    * - -h, --help
      - 
      - false
      - help for init
+   * - --noBrowser
+     - 
+     - false
+     - Don't try to open a browser session to authenticate your User Account.
 
 Inherited Options
 -----------------
@@ -73,12 +77,6 @@ Examples
 .. code-block::
    :copyable: false
 
-   # To configure the tool to work with Atlas:
-   atlas config init
+   # Log in to your MongoDB Atlas account in interactive mode:
+   atlas auth login
 
-   
-.. code-block::
-   :copyable: false
-
-   # To configure the tool to work with Atlas for Government:
-   atlas config init --gov

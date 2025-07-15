@@ -53,7 +53,7 @@ Options
    * - --noBrowser
      - 
      - false
-     - Don't try to open a browser session to authenticate your User Account.
+     - Don't automatically open a browser session.
 
 Inherited Options
 -----------------

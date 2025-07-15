@@ -328,6 +328,10 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 		return
 	}
 
+	if !opts.force {
+		_, _ = fmt.Fprintf(opts.OutWriter, "\nPress Enter to open the browser to complete authentication...")
+		_, _ = fmt.Scanln()
+	}
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
 		_, _ = log.Warningln("There was an issue opening your browser")
 	}
@@ -335,7 +339,6 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 
 func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	askedToOpenBrowser := false
-	browserWait := 5
 	for {
 		code, _, err := opts.RequestCode(ctx)
 		if err != nil {
@@ -344,9 +347,6 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 
 		opts.printAuthInstructions(code)
 		if !askedToOpenBrowser {
-			fmt.Printf("\nBrowser will be automatically opened in %d seconds...", browserWait)
-			time.Sleep(time.Duration(browserWait) * time.Second)
-
 			opts.handleBrowser(code.VerificationURI)
 			askedToOpenBrowser = true
 		}
@@ -425,7 +425,7 @@ func LoginBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session to authenticate your User Account.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)

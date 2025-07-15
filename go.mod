@@ -5,7 +5,7 @@ go 1.24.2
 require (
 	cloud.google.com/go/kms v1.22.0
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.18.1
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.10.1
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.4.0
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -55,7 +55,7 @@ require (
 	golang.org/x/net v0.42.0
 	golang.org/x/sys v0.34.0
 	golang.org/x/tools v0.35.0
-	google.golang.org/api v0.240.0
+	google.golang.org/api v0.241.0
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v3 v3.0.1

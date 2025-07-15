@@ -36,7 +36,7 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig,TrackAsker
 
 type SetSaver interface {
 	Set(string, any)
@@ -49,6 +49,11 @@ type LoginConfig interface {
 	AccessTokenSubject() (string, error)
 	OrgID() string
 	ProjectID() string
+}
+
+type TrackAsker interface {
+	TrackAsk([]*survey.Question, any, ...survey.AskOpt) error
+	TrackAskOne(survey.Prompt, any, ...survey.AskOpt) error
 }
 
 const (
@@ -79,6 +84,7 @@ type LoginOpts struct {
 	force        bool
 	SkipConfig   bool
 	config       LoginConfig
+	Asker        TrackAsker
 }
 
 func (opts *LoginOpts) promptAuthType() error {
@@ -94,13 +100,15 @@ func (opts *LoginOpts) promptAuthType() error {
 			return authTypeDescription[value]
 		},
 	}
-	return telemetry.TrackAskOne(authTypePrompt, &opts.authType)
+	return opts.Asker.TrackAskOne(authTypePrompt, &opts.authType)
 }
 
 func (opts *LoginOpts) SetUpAccess() {
-	opts.Service = config.CloudService
-	if opts.IsGov {
+	switch {
+	case opts.IsGov:
 		opts.Service = config.CloudGovService
+	default:
+		opts.Service = config.CloudService
 	}
 
 	opts.SetUpServiceAndKeys()
@@ -116,7 +124,7 @@ Enter [?] on any option to get help.
 `, atlasName)
 
 	q := prompt.AccessQuestions()
-	if err := telemetry.TrackAsk(q, opts); err != nil {
+	if err := opts.Asker.TrackAsk(q, opts); err != nil {
 		return err
 	}
 	opts.SetUpAccess()
@@ -134,19 +142,19 @@ Enter [?] on any option to get help.
 		}
 	} else {
 		q := prompt.TenantQuestions()
-		if err := telemetry.TrackAsk(q, opts); err != nil {
+		if err := opts.Asker.TrackAsk(q, opts); err != nil {
 			return err
 		}
 	}
 	opts.SetUpProject()
 	opts.SetUpOrg()
 
-	if err := telemetry.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
 		return err
 	}
 	opts.SetUpOutput()
 
-	if err := config.Save(); err != nil {
+	if err := opts.config.Save(); err != nil {
 		return err
 	}
 
@@ -352,7 +360,7 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 
 		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
+		if retry, errRetry := opts.shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
@@ -367,11 +375,11 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
+func (opts *LoginOpts) shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-	err = telemetry.TrackAskOne(p, &retry)
+	err = opts.Asker.TrackAskOne(p, &retry)
 	return retry, err
 }
 
@@ -399,7 +407,9 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := &LoginOpts{}
+	opts := &LoginOpts{
+		Asker: &telemetry.Ask{},
+	}
 
 	cmd := &cobra.Command{
 		Use:   "login",

@@ -142,6 +142,29 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
+func Test_loginOpts_runAPIKeysLogin(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	mockAsker.EXPECT().TrackAsk(gomock.Any(), gomock.Any()).Return(nil).Times(3)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+
+	buf := new(bytes.Buffer)
+	opts := &LoginOpts{
+		config: mockConfig,
+		Asker:  mockAsker,
+	}
+	opts.OutWriter = buf
+	opts.Store = mockStore
+
+	ctx := t.Context()
+	err := opts.runAPIKeysLogin(ctx)
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "Your profile is now configured.")
+}
+
 type confirmMock struct{}
 
 func (confirmMock) Prompt(_ *survey.PromptConfig) (any, error) {
@@ -157,7 +180,10 @@ func (confirmMock) Error(_ *survey.PromptConfig, err error) error {
 }
 
 func Test_shouldRetryAuthenticate(t *testing.T) {
-	t.Setenv("DO_NOT_TRACK", "1")
+	ctrl := gomock.NewController(t)
+	mockAsker := NewMockTrackAsker(ctrl)
+	opts := &LoginOpts{Asker: mockAsker}
+
 	type args struct {
 		err error
 		p   survey.Prompt
@@ -189,7 +215,15 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotRetry, err := shouldRetryAuthenticate(tt.args.err, tt.args.p)
+			mockAsker.EXPECT().TrackAskOne(gomock.Any(), gomock.Any()).DoAndReturn(
+				func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+					if b, ok := answer.(*bool); ok {
+						*b = tt.wantRetry
+					}
+					return nil
+				},
+			).AnyTimes()
+			gotRetry, err := opts.shouldRetryAuthenticate(tt.args.err, tt.args.p)
 			tt.wantErr(t, err, fmt.Sprintf("shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p))
 			assert.Equalf(t, tt.wantRetry, gotRetry, "shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)
 		})

@@ -46,7 +46,7 @@ Options
    * - --noBrowser
      - 
      - false
-     - Don't try to open a browser session.
+     - Don't automatically open a browser session.
 
 Inherited Options
 -----------------

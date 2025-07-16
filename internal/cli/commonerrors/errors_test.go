@@ -68,7 +68,7 @@ func TestCheck(t *testing.T) {
 	}
 }
 
-func TestCheckCommonErrors(t *testing.T) {
+func TestCheckHTTPErrors(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 	testErr := errors.New(`Error: https://cloud.mongodb.com/api/atlas/v2/groups/670e34d35a4f587387db2102/clusters GET: HTTP 401 Unauthorized (Error code: "") Detail: You are not authorized for this resource. Reason: Unauthorized. Params: []`)
 
@@ -80,7 +80,7 @@ func TestCheckCommonErrors(t *testing.T) {
 		{
 			name: "unauthorized error",
 			err:  testErr,
-			want: errUnauthorized,
+			want: ErrUnauthorized,
 		},
 		{
 			name: "arbitrary error",
@@ -91,8 +91,8 @@ func TestCheckCommonErrors(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := CheckHTTPError(tc.err); !errors.Is(got, tc.want) {
-				t.Errorf("CheckHTTPError(%v) = %v, want %v", tc.err, got, tc.want)
+			if got := CheckHTTPErrors(tc.err); !errors.Is(got, tc.want) {
+				t.Errorf("CheckHTTPErrors(%v) = %v, want %v", tc.err, got, tc.want)
 			}
 		})
 	}

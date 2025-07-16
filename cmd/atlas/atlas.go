@@ -37,7 +37,7 @@ func execute(rootCmd *cobra.Command) {
 
 To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/connect-atlas-cli/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
-		errMsg := commonerrors.CheckHTTPError(err)
+		errMsg := commonerrors.CheckHTTPErrors(err)
 		if errMsg != nil {
 			fmt.Println(errMsg)
 		}

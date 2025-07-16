@@ -20,6 +20,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
+type Ask struct{}
+
+func (*Ask) TrackAsk(qs []*survey.Question, response any, opts ...survey.AskOpt) error {
+	return TrackAsk(qs, response, opts...)
+}
+
 func TrackAsk(qs []*survey.Question, response any, opts ...survey.AskOpt) error {
 	err := survey.Ask(qs, response, opts...)
 	if !config.TelemetryEnabled() {
@@ -33,6 +39,10 @@ func TrackAsk(qs []*survey.Question, response any, opts ...survey.AskOpt) error 
 		}
 	}
 	return err
+}
+
+func (*Ask) TrackAskOne(p survey.Prompt, response any, opts ...survey.AskOpt) error {
+	return TrackAskOne(p, response, opts...)
 }
 
 func TrackAskOne(p survey.Prompt, response any, opts ...survey.AskOpt) error {

@@ -78,7 +78,7 @@ func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.Registr
 		}
 
 		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
+		if retry, errRetry := opts.shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue

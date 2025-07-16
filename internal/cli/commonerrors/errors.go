@@ -16,6 +16,7 @@ package commonerrors
 
 import (
 	"errors"
+	"strings"
 
 	"go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
@@ -24,6 +25,9 @@ var (
 	errClusterUnsupported         = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
 	errOutsideVPN                 = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
 	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
+	errUnauthorized               = errors.New(`this action requires authentication
+	
+To log in using your Atlas username and password or to set credentials using API key, run: atlas auth login`)
 )
 
 const (
@@ -47,6 +51,13 @@ func Check(err error) error {
 		}
 	}
 	return err
+}
+
+func CheckHTTPError(err error) error {
+	if strings.Contains(err.Error(), "401") && strings.Contains(err.Error(), "Unauthorized") {
+		return errUnauthorized
+	}
+	return nil
 }
 
 func IsAsymmetricShardUnsupported(err error) bool {

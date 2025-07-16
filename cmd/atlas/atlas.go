@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2/core"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -36,6 +37,10 @@ func execute(rootCmd *cobra.Command) {
 
 To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/connect-atlas-cli/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
+		errMsg := commonerrors.CheckHTTPError(err)
+		if errMsg != nil {
+			fmt.Println(errMsg)
+		}
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, os.Args[1:])
 		}

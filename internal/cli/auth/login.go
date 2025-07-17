@@ -424,7 +424,6 @@ func LoginBuilder() *cobra.Command {
 				opts.SyncWithOAuthAccessProfile(defaultProfile),
 				opts.InitFlow(defaultProfile),
 				opts.LoginPreRun(cmd.Context()),
-				validate.NoAPIKeys,
 				validate.NoAccessToken,
 			)
 		},

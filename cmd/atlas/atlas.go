@@ -37,9 +37,9 @@ func execute(rootCmd *cobra.Command) {
 
 To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/connect-atlas-cli/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
-		errMsg := commonerrors.CheckHTTPErrors(err)
+		errMsg := commonerrors.GetHumanFriendlyErrorMessage(err)
 		if errMsg != nil {
-			fmt.Println(errMsg)
+			fmt.Fprintln(os.Stderr, errMsg)
 		}
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, os.Args[1:])

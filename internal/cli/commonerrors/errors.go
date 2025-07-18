@@ -16,9 +16,11 @@ package commonerrors
 
 import (
 	"errors"
-	"strings"
+	"net/http"
 
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 var (
@@ -40,7 +42,7 @@ func Check(err error) error {
 		return nil
 	}
 
-	apiError, ok := admin.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if ok {
 		switch apiError.GetErrorCode() {
 		case "TENANT_CLUSTER_UPDATE_UNSUPPORTED":
@@ -54,15 +56,43 @@ func Check(err error) error {
 	return err
 }
 
-func CheckHTTPErrors(err error) error {
-	if strings.Contains(err.Error(), "401") && strings.Contains(err.Error(), "Unauthorized") {
+// GetHumanFriendErrorMessage returns a human-friendly error message if error is status code 401.
+func GetHumanFriendlyErrorMessage(err error) error {
+	if err == nil {
+		return nil
+	}
+
+	statusCode := GetErrorStatusCode(err)
+	if statusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}
 	return nil
 }
 
+// GetErrorStatusCode returns the HTTP status code from the error.
+// It checks for v2 SDK, the pinned clusters SDK and the old SDK errors.
+// If the error is not an API error or is nil, it returns 0.
+func GetErrorStatusCode(err error) int {
+	if err == nil {
+		return 0
+	}
+	apiError, ok := atlasv2.AsError(err)
+	if ok {
+		return apiError.GetError()
+	}
+	apiPinnedError, ok := atlasClustersPinned.AsError(err)
+	if ok {
+		return apiPinnedError.GetError()
+	}
+	var atlasErr *atlas.ErrorResponse
+	if errors.As(err, &atlasErr) {
+		return atlasErr.HTTPCode
+	}
+	return 0
+}
+
 func IsAsymmetricShardUnsupported(err error) bool {
-	apiError, ok := admin.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if !ok {
 		return false
 	}
@@ -70,7 +100,7 @@ func IsAsymmetricShardUnsupported(err error) bool {
 }
 
 func IsCannotUseFlexWithClusterApis(err error) bool {
-	apiError, ok := admin.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if !ok {
 		return false
 	}

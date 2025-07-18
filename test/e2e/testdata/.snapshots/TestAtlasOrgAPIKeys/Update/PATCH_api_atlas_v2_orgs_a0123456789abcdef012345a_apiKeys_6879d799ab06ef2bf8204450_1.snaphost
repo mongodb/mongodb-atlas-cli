@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 345
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 18 Jul 2025 05:11:54 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 90
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationApiUsersResource::updateApiUserDescAndRoles
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=5295fe17a4590354d33cfb23201e82275724c2b3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"desc":"e2e-test-atlas-org-updated","id":"6879d799ab06ef2bf8204450","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6879d799ab06ef2bf8204450","rel":"self"}],"privateKey":"********-****-****-282e82fde452","publicKey":"xalkmkco","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}

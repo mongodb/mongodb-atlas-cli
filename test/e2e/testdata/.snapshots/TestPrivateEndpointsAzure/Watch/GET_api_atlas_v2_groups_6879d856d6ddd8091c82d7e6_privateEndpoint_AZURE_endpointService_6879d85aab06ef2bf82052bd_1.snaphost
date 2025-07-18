@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 218
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 18 Jul 2025 05:15:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 64
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=5295fe17a4590354d33cfb23201e82275724c2b3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"AZURE","errorMessage":null,"id":"6879d85aab06ef2bf82052bd","privateEndpoints":[],"privateLinkServiceName":null,"privateLinkServiceResourceId":null,"regionName":"ASIA_SOUTH_EAST","status":"INITIATING"}

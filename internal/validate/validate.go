@@ -24,6 +24,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
@@ -95,8 +96,6 @@ func ObjectID(s string) error {
 	return nil
 }
 
-var ErrMissingCredentials = errors.New("this action requires authentication")
-
 // Credentials validates public and private API keys have been set.
 func Credentials() error {
 	if t, err := config.Token(); t != nil {
@@ -106,13 +105,7 @@ func Credentials() error {
 		return nil
 	}
 
-	return fmt.Errorf(
-		`%w
-
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas config init`,
-		ErrMissingCredentials,
-	)
+	return commonerrors.ErrUnauthorized
 }
 
 var ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")

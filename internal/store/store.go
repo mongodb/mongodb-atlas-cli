@@ -71,8 +71,7 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 
 		return &http.Client{Transport: tr}, nil
 	default:
-		tr := &transport.AuthRequiredRoundTripper{Base: httpTransport}
-		return &http.Client{Transport: tr}, nil
+		return &http.Client{Transport: httpTransport}, nil
 	}
 }
 

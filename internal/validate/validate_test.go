@@ -169,7 +169,7 @@ func TestCredentials(t *testing.T) {
 	})
 }
 
-func TestNoAPIKeyss(t *testing.T) {
+func TestNoAPIKeys(t *testing.T) {
 	t.Run("no credentials", func(t *testing.T) {
 		if err := NoAPIKeys(); err != nil {
 			t.Fatalf("NoAPIKeys() unexpected error %v\n", err)

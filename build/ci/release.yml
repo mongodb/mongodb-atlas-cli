@@ -192,6 +192,7 @@ functions:
           - release_slack_channel
           - revision
           - created_at
+          - unstable
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
     - command: subprocess.exec

@@ -355,10 +355,12 @@ functions:
         <<: *go_options
         script: |
           set -Eeou pipefail
-          if [ -z "$(git status --porcelain)" ]; then
+          OUTPUT=$(git status --porcelain)
+          if [ -z "$OUTPUT" ]; then
             echo "Git is clean"
           else
             echo "Git is dirty"
+            echo "$OUTPUT"
             exit 1
           fi
   "check-required-files":

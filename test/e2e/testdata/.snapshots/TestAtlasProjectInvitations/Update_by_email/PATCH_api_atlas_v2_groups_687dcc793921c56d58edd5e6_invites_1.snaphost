@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 293
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 21 Jul 2025 05:13:33 GMT
+Deprecation: Wed, 4 Oct 2023 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Fri, 31 Jul 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 92
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupInvitationResource::editInvitations
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=14b7f130c6192818b033b877f7ebe7a8534d2b7b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"createdAt":"2025-07-21T05:13:32Z","expiresAt":"2025-08-20T05:13:32Z","groupId":"687dcc793921c56d58edd5e6","groupName":"invitations-e2e-913","id":"687dcc7c3921c56d58edd668","inviterUsername":"nmtxqlkl","roles":["GROUP_DATA_ACCESS_READ_ONLY","GROUP_READ_ONLY"],"username":"test-1@mongodb.com"}

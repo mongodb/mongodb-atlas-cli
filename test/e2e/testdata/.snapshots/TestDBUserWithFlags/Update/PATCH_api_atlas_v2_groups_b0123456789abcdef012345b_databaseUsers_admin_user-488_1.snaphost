@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 454
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 21 Jul 2025 05:14:21 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 819
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::patchUser
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=14b7f130c6192818b033b877f7ebe7a8534d2b7b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"awsIAMType":"NONE","databaseName":"admin","deleteAfterDate":"2025-07-22T05:14:19Z","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/admin/user-488","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"readWrite"}],"scopes":[{"name":"Cluster0","type":"CLUSTER"}],"username":"user-488","x509Type":"NONE"}

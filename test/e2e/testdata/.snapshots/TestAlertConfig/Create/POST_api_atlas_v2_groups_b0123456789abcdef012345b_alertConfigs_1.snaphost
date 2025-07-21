@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 640
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 08 Jul 2025 05:08:41 GMT
-Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/686ca7da4db8053b7bc2d784
+Date: Mon, 21 Jul 2025 05:14:05 GMT
+Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/687dcc9d3921c56d58edda60
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 90
+X-Envoy-Upstream-Service-Time: 109
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertConfigsResource::addAlertConfig
-X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=23243942e80b13dcf265ca785d55edc0086a60c4; versionString=master
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=14b7f130c6192818b033b877f7ebe7a8534d2b7b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"created":"2025-07-08T05:08:41Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"686ca7da4db8053b7bc2d784","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/686ca7da4db8053b7bc2d784","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/686ca7da4db8053b7bc2d784/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"686ca7da4db8053b7bc2d77f","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-07-08T05:08:42Z"}
+{"created":"2025-07-21T05:14:05Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"687dcc9d3921c56d58edda60","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/687dcc9d3921c56d58edda60","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/687dcc9d3921c56d58edda60/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"687dcc9d3921c56d58edda5b","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-07-21T05:14:05Z"}

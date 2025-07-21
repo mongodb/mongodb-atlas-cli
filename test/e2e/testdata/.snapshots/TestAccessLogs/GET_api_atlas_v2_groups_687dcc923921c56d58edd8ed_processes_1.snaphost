@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 21 Jul 2025 05:21:49 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 98
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=14b7f130c6192818b033b877f7ebe7a8534d2b7b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/687dcc923921c56d58edd8ed/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-21T05:21:14Z","groupId":"687dcc923921c56d58edd8ed","hostname":"atlas-a5alp1-shard-00-00.qragy1.mongodb-dev.net","id":"atlas-a5alp1-shard-00-00.qragy1.mongodb-dev.net:27017","lastPing":"2025-07-21T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/687dcc923921c56d58edd8ed/processes/atlas-a5alp1-shard-00-00.qragy1.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a5alp1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-675-shard-00-00.qragy1.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-21T05:21:14Z","groupId":"687dcc923921c56d58edd8ed","hostname":"atlas-a5alp1-shard-00-01.qragy1.mongodb-dev.net","id":"atlas-a5alp1-shard-00-01.qragy1.mongodb-dev.net:27017","lastPing":"2025-07-21T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/687dcc923921c56d58edd8ed/processes/atlas-a5alp1-shard-00-01.qragy1.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a5alp1-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-675-shard-00-01.qragy1.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-21T05:21:14Z","groupId":"687dcc923921c56d58edd8ed","hostname":"atlas-a5alp1-shard-00-02.qragy1.mongodb-dev.net","id":"atlas-a5alp1-shard-00-02.qragy1.mongodb-dev.net:27017","lastPing":"2025-07-21T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/687dcc923921c56d58edd8ed/processes/atlas-a5alp1-shard-00-02.qragy1.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a5alp1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-675-shard-00-02.qragy1.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

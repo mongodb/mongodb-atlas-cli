@@ -27,28 +27,28 @@ if [[ "${unstable}" == "-unstable" ]]; then
 fi
 
 REQUIRED_FILES=(
-    "mongodb-atlas-cli_${version}_linux_arm64.deb"
-    "mongodb-atlas-cli_${version}_linux_arm64.deb.sig"
-    "mongodb-atlas-cli_${version}_linux_arm64.rpm"
-    "mongodb-atlas-cli_${version}_linux_arm64.rpm.sig"
-    "mongodb-atlas-cli_${version}_linux_arm64.tar.gz"
-    "mongodb-atlas-cli_${version}_linux_arm64.tar.gz.sig"
-    "mongodb-atlas-cli_${version}_linux_x86_64.deb"
-    "mongodb-atlas-cli_${version}_linux_x86_64.deb.sig"
-    "mongodb-atlas-cli_${version}_linux_x86_64.rpm"
-    "mongodb-atlas-cli_${version}_linux_x86_64.rpm.sig"
-    "mongodb-atlas-cli_${version}_linux_x86_64.tar.gz"
-    "mongodb-atlas-cli_${version}_linux_x86_64.tar.gz.sig"
-    "mongodb-atlas-cli_${version}_macos_arm64.zip"
-    "mongodb-atlas-cli_${version}_macos_x86_64.zip"
-    "mongodb-atlas-cli_${version}_windows_x86_64.msi"
-    "mongodb-atlas-cli_${version}_windows_x86_64.zip"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.deb"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.deb.sig"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.rpm"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.rpm.sig"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.tar.gz"
+    "dist/mongodb-atlas-cli_${version}_linux_arm64.tar.gz.sig"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.deb"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.deb.sig"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.rpm"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.rpm.sig"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.tar.gz"
+    "dist/mongodb-atlas-cli_${version}_linux_x86_64.tar.gz.sig"
+    "dist/mongodb-atlas-cli_${version}_macos_arm64.zip"
+    "dist/mongodb-atlas-cli_${version}_macos_x86_64.zip"
+    "dist/mongodb-atlas-cli_${version}_windows_x86_64.msi"
+    "dist/mongodb-atlas-cli_${version}_windows_x86_64.zip"
     "sbom.json"
 )
 
 for file in "${REQUIRED_FILES[@]}"; do
-    if [[ ! -f "dist/${file}" ]]; then
-        echo "dist/${file} is missing"
+    if [[ ! -f "${file}" ]]; then
+        echo "${file} is missing"
         exit 1
     fi
 done

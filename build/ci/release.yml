@@ -355,6 +355,7 @@ functions:
         <<: *go_options
         script: |
           set -Eeou pipefail
+          git checkout -- dist/.keep
           OUTPUT=$(git status --porcelain)
           if [ -z "$OUTPUT" ]; then
             echo "Git is clean"
@@ -388,7 +389,6 @@ tasks:
       - func: "package"
         vars:
           unstable: ${unstable}
-      - func: "check-git-dirty"
       - func: "rename pkg"
         vars:
           unstable: ${unstable}
@@ -448,6 +448,7 @@ tasks:
         vars:
           unstable: ${unstable}
           version: ${version}
+      - func: "check-git-dirty"
       - func: "trace artifacts"
         vars:
           unstable: ${unstable}

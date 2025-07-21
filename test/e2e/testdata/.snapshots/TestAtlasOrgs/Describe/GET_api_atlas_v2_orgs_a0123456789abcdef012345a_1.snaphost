@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 575
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 08 Jul 2025 05:08:46 GMT
+Date: Mon, 21 Jul 2025 05:13:22 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 41
+X-Envoy-Upstream-Service-Time: 42
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationsResource::getOrg
-X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=23243942e80b13dcf265ca785d55edc0086a60c4; versionString=master
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=14b7f130c6192818b033b877f7ebe7a8534d2b7b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"id":"a0123456789abcdef012345a","isDeleted":false,"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/groups","rel":"https://cloud.mongodb.com/groups"},{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams","rel":"https://cloud.mongodb.com/teams"},{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/users","rel":"https://cloud.mongodb.com/users"}],"name":"Atlas CLI E2E","skipDefaultAlertsSettings":false}

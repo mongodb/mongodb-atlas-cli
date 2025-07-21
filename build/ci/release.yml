@@ -450,11 +450,7 @@ tasks:
           version: ${version}
       - func: "check-git-dirty"
       - func: "trace artifacts"
-        vars:
-          unstable: ${unstable}
       - func: "send slack notification"
-        vars:
-          unstable: ${unstable}
   - name: push_atlascli_generate
     patchable: false
     stepback: false

@@ -21,6 +21,7 @@ if [[ -z "${version}" ]]; then
     exit 1
 fi
 
+# shellcheck disable=SC2154 # unstable is set by evergreen
 if [[ "${unstable}" == "-unstable" ]]; then
     version="${version}-next"
 fi

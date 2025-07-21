@@ -453,9 +453,8 @@ tasks:
         vars:
           unstable: ${unstable}
       - func: "send slack notification"
-        params:
-          build_variants:
-            - release_atlascli_github
+        vars:
+          unstable: ${unstable}
   - name: push_atlascli_generate
     patchable: false
     stepback: false

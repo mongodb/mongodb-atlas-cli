@@ -15,11 +15,6 @@
 
 set -Eeou pipefail
 
-if [[ "${unstable-}" == "-unstable" ]]; then
-  echo "skip notification"
-  exit 0
-fi
-
 VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
 curl --header "Api-User:${evergreen_user:?}" \

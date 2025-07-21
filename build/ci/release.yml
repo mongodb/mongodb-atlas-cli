@@ -192,7 +192,6 @@ functions:
           - release_slack_channel
           - revision
           - created_at
-          - unstable
         binary: build/package/send-slack-notification.sh
   "generate download archive json":
     - command: subprocess.exec
@@ -350,6 +349,25 @@ functions:
           set -Eeou pipefail
           echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
           chmod 0600 ./build/ci/ssh_id
+  "check-git-dirty":
+    - command: shell.exec
+      params:
+        script: |
+          set -Eeou pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Git is clean"
+          else
+            echo "Git is dirty"
+            exit 1
+          fi
+  "check-required-files":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - unstable
+          - version
+        binary: build/ci/check-release-files.sh
 tasks:
   - name: package_goreleaser
     tags: ["packaging"]
@@ -367,6 +385,7 @@ tasks:
       - func: "package"
         vars:
           unstable: ${unstable}
+      - func: "check-git-dirty"
       - func: "rename pkg"
         vars:
           unstable: ${unstable}
@@ -417,16 +436,22 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
           remote_file: mongocli/
           build_variants:
-            - release_mongocli_github
             - release_atlascli_github
           bucket: cdn-origin-mongocli
           permissions: private
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
+      - func: "check-required-files"
+        vars:
+          unstable: ${unstable}
+          version: ${version}
       - func: "trace artifacts"
         vars:
           unstable: ${unstable}
       - func: "send slack notification"
+        params:
+          build_variants:
+            - release_atlascli_github
   - name: push_atlascli_generate
     patchable: false
     stepback: false

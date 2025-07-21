@@ -352,6 +352,7 @@ functions:
   "check-git-dirty":
     - command: shell.exec
       params:
+        <<: *go_options
         script: |
           set -Eeou pipefail
           if [ -z "$(git status --porcelain)" ]; then

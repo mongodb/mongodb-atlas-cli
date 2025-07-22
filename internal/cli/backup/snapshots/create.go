@@ -19,7 +19,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -59,7 +58,7 @@ func (opts *CreateOpts) Run() error {
 
 	r, err := opts.store.CreateSnapshot(opts.ConfigProjectID(), opts.clusterName, createRequest)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 	return opts.Print(r)
 }

@@ -29,10 +29,14 @@ func TestCheck(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 
 	skderr := &atlasv2.GenericOpenAPIError{}
-	skderr.SetModel(atlasv2.ApiError{ErrorCode: "TENANT_CLUSTER_UPDATE_UNSUPPORTED"})
+	skderr.SetModel(atlasv2.ApiError{ErrorCode: tenantClusterUpdateUnsupportedErrorCode})
 
 	asymmetricShardErr := &atlasv2.GenericOpenAPIError{}
 	asymmetricShardErr.SetModel(atlasv2.ApiError{ErrorCode: asymmetricShardUnsupportedErrorCode})
+
+	unauthErr := &atlas.ErrorResponse{ErrorCode: unauthorizedErrorCode}
+
+	invalidRefreshTokenErr := &atlas.ErrorResponse{ErrorCode: invalidRefreshTokenErrorCode}
 
 	testCases := []struct {
 		name string
@@ -59,6 +63,16 @@ func TestCheck(t *testing.T) {
 			err:  asymmetricShardErr,
 			want: errAsymmetricShardUnsupported,
 		},
+		{
+			name: "unauthorized error",
+			err:  unauthErr,
+			want: ErrUnauthorized,
+		},
+		{
+			name: "invalid refresh token error",
+			err:  invalidRefreshTokenErr,
+			want: ErrInvalidRefreshToken,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -70,38 +84,7 @@ func TestCheck(t *testing.T) {
 	}
 }
 
-func TestGetHumanFriendlyErrorMessage(t *testing.T) {
-	dummyErr := errors.New("dummy error")
-	testErr := &atlasv2.GenericOpenAPIError{}
-	testErr.SetModel(atlasv2.ApiError{Error: 401})
-
-	testCases := []struct {
-		name string
-		err  error
-		want error
-	}{
-		{
-			name: "unauthorized error",
-			err:  testErr,
-			want: ErrUnauthorized,
-		},
-		{
-			name: "arbitrary error",
-			err:  dummyErr,
-			want: nil,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			if got := GetHumanFriendlyErrorMessage(tc.err); !errors.Is(got, tc.want) {
-				t.Errorf("GetHumanFriendlyErrorMessage(%v) = %v, want %v", tc.err, got, tc.want)
-			}
-		})
-	}
-}
-
-func TestGetErrorStatusCode(t *testing.T) {
+func TestGetError(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 
 	unauthorizedCode := 401
@@ -143,8 +126,54 @@ func TestGetErrorStatusCode(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := GetErrorStatusCode(tc.err); got != tc.want {
-				t.Errorf("GetErrorStatusCode(%v) = %v, want %v", tc.err, got, tc.want)
+			if got := getError(tc.err); got != tc.want {
+				t.Errorf("GetError(%v) = %v, want %v", tc.err, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestGetErrorCode(t *testing.T) {
+	dummyErr := errors.New("dummy error")
+
+	atlasErr := &atlas.ErrorResponse{ErrorCode: invalidRefreshTokenErrorCode}
+	atlasv2Err := &atlasv2.GenericOpenAPIError{}
+	atlasv2Err.SetModel(atlasv2.ApiError{ErrorCode: tenantClusterUpdateUnsupportedErrorCode})
+	atlasClustersPinnedErr := &atlasClustersPinned.GenericOpenAPIError{}
+	asymmetricCode := asymmetricShardUnsupportedErrorCode
+	atlasClustersPinnedErr.SetModel(atlasClustersPinned.ApiError{ErrorCode: &asymmetricCode})
+
+	testCases := []struct {
+		name string
+		err  error
+		want string
+	}{
+		{
+			name: "atlas error",
+			err:  atlasErr,
+			want: invalidRefreshTokenErrorCode,
+		},
+		{
+			name: "atlasv2 error",
+			err:  atlasv2Err,
+			want: tenantClusterUpdateUnsupportedErrorCode,
+		},
+		{
+			name: "atlasClusterPinned error",
+			err:  atlasClustersPinnedErr,
+			want: asymmetricShardUnsupportedErrorCode,
+		},
+		{
+			name: "arbitrary error",
+			err:  dummyErr,
+			want: unknownErrorCode,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := getErrorCode(tc.err); got != tc.want {
+				t.Errorf("GetErrorCode(%v) = %v, want %v", tc.err, got, tc.want)
 			}
 		})
 	}

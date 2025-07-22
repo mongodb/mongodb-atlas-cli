@@ -47,7 +47,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
-		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid public key.")
+		assert.Contains(t, string(resp), "this action requires authentication")
 	})
 
 	g.Run("Invalid Private Key", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -60,7 +60,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
-		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid private key.")
+		assert.Contains(t, string(resp), "this action requires authentication")
 	})
 
 	g.Run("Invalid Project ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

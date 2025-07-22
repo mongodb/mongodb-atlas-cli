@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 150
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 22 Jul 2025 05:11:34 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 83
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::getTenantUsageLimit
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=bb9e79411fd875014d78a71092d09e70eba48244; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"currentUsage":0,"lastModifiedDate":"2025-07-22T05:11:34Z","name":"bytesProcessed.query","tenantName":"e2e-data-federation-918","value":118000000000}

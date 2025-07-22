@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1689
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Tue, 22 Jul 2025 05:11:43 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 111
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=bb9e79411fd875014d78a71092d09e70eba48244; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-ekrvc0o-shard-00-00.o55invu.mongodb-dev.net:27017,ac-ekrvc0o-shard-00-01.o55invu.mongodb-dev.net:27017,ac-ekrvc0o-shard-00-02.o55invu.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-y0zbjd-shard-0","standardSrv":"mongodb+srv://cluster-98.o55invu.mongodb-dev.net"},"createDate":"2025-07-22T05:11:37Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"687f1d84a799aa2ae9e805b9","id":"687f1d8944f1ab3f84231521","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/687f1d84a799aa2ae9e805b9/clusters/cluster-98","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/687f1d84a799aa2ae9e805b9/clusters/cluster-98/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/687f1d84a799aa2ae9e805b9/clusters/cluster-98/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.12","name":"cluster-98","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"687f1d8944f1ab3f84231515","numShards":1,"regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0"},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"687f1d8944f1ab3f8423151c","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[{"key":"env","value":"e2etest"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

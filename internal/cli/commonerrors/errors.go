@@ -16,41 +16,113 @@ package commonerrors
 
 import (
 	"errors"
+	"net/http"
 
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 var (
 	errClusterUnsupported         = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
 	errOutsideVPN                 = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
 	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
+	ErrUnauthorized               = errors.New(`this action requires authentication
+	
+To log in using your Atlas username and password, run: atlas auth login
+To set credentials using API keys, run: atlas config init`)
+	ErrInvalidRefreshToken = errors.New(`session expired
+
+Please note that your session expires periodically. 
+If you use Atlas CLI for automation, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-automate/ for best practices.
+To login, run: atlas auth login`)
 )
 
 const (
-	asymmetricShardUnsupportedErrorCode = "ASYMMETRIC_SHARD_UNSUPPORTED"
+	unknownErrorCode                        = "UNKNOWN_ERROR"
+	asymmetricShardUnsupportedErrorCode     = "ASYMMETRIC_SHARD_UNSUPPORTED"
+	tenantClusterUpdateUnsupportedErrorCode = "TENANT_CLUSTER_UPDATE_UNSUPPORTED"
+	globalUserOutsideSubnetErrorCode        = "GLOBAL_USER_OUTSIDE_SUBNET"
+	unauthorizedErrorCode                   = "UNAUTHORIZED"
+	invalidRefreshTokenErrorCode            = "INVALID_REFRESH_TOKEN"
 )
 
+// Check checks the error and returns a more user-friendly error message if applicable.
 func Check(err error) error {
 	if err == nil {
 		return nil
 	}
 
-	apiError, ok := admin.AsError(err)
-	if ok {
-		switch apiError.GetErrorCode() {
-		case "TENANT_CLUSTER_UPDATE_UNSUPPORTED":
-			return errClusterUnsupported
-		case "GLOBAL_USER_OUTSIDE_SUBNET":
-			return errOutsideVPN
-		case asymmetricShardUnsupportedErrorCode:
-			return errAsymmetricShardUnsupported
-		}
+	apiErrorCode := getErrorCode(err)
+
+	switch apiErrorCode {
+	case unauthorizedErrorCode:
+		return ErrUnauthorized
+	case invalidRefreshTokenErrorCode:
+		return ErrInvalidRefreshToken
+	case tenantClusterUpdateUnsupportedErrorCode:
+		return errClusterUnsupported
+	case globalUserOutsideSubnetErrorCode:
+		return errOutsideVPN
+	case asymmetricShardUnsupportedErrorCode:
+		return errAsymmetricShardUnsupported
 	}
+
+	apiError := getError(err) // some `Unauthorized` errors do not have an error code, so we check the HTTP status code
+
+	if apiError == http.StatusUnauthorized {
+		return ErrUnauthorized
+	}
+
 	return err
 }
 
+// getErrorCode extracts the error code from the error if it is an Atlas error.
+// This function checks for v2 SDK, the pinned clusters SDK and the old SDK errors.
+// If the error is not any of these Atlas errors, it returns "UNKNOWN_ERROR".
+func getErrorCode(err error) string {
+	if err == nil {
+		return unknownErrorCode
+	}
+
+	var atlasErr *atlas.ErrorResponse
+	if errors.As(err, &atlasErr) {
+		return atlasErr.ErrorCode
+	}
+	if sdkError, ok := atlasv2.AsError(err); ok {
+		return sdkError.ErrorCode
+	}
+	if sdkPinnedError, ok := atlasClustersPinned.AsError(err); ok {
+		return sdkPinnedError.GetErrorCode()
+	}
+
+	return unknownErrorCode
+}
+
+// getError extracts the HTTP error code from the error if it is an Atlas error.
+// This function checks for v2 SDK, the pinned clusters SDK and the old SDK errors.
+// If the error is not any of these Atlas errors, it returns 0.
+func getError(err error) int {
+	if err == nil {
+		return 0
+	}
+
+	var atlasErr *atlas.ErrorResponse
+	if errors.As(err, &atlasErr) {
+		return atlasErr.HTTPCode
+	}
+	if apiError, ok := atlasv2.AsError(err); ok {
+		return apiError.GetError()
+	}
+	if apiPinnedError, ok := atlasClustersPinned.AsError(err); ok {
+		return apiPinnedError.GetError()
+	}
+
+	return 0
+}
+
 func IsAsymmetricShardUnsupported(err error) bool {
-	apiError, ok := admin.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if !ok {
 		return false
 	}
@@ -58,9 +130,14 @@ func IsAsymmetricShardUnsupported(err error) bool {
 }
 
 func IsCannotUseFlexWithClusterApis(err error) bool {
-	apiError, ok := admin.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if !ok {
 		return false
 	}
 	return apiError.GetErrorCode() == "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
+}
+
+func IsInvalidRefreshToken(err error) bool {
+	errCode := getErrorCode(err)
+	return errCode == invalidRefreshTokenErrorCode
 }

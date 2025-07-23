@@ -22,6 +22,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -397,7 +398,7 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 			// clean up any expired or invalid tokens
 			opts.config.Set(config.AccessTokenField, "")
 
-			if !errors.Is(err, cli.ErrInvalidRefreshToken) {
+			if !commonerrors.IsInvalidRefreshToken(err) {
 				return err
 			}
 		}

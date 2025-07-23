@@ -15,7 +15,6 @@
 package transport
 
 import (
-	"fmt"
 	"net"
 	"net/http"
 	"time"
@@ -23,7 +22,6 @@ import (
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
@@ -111,25 +109,4 @@ func (tr *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	tr.token.SetAuthHeader(req)
 
 	return tr.base.RoundTrip(req)
-}
-
-type AuthRequiredRoundTripper struct {
-	Base http.RoundTripper
-}
-
-func (tr *AuthRequiredRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	resp, err := tr.Base.RoundTrip(req)
-	if resp != nil && resp.StatusCode == http.StatusUnauthorized {
-		return nil, fmt.Errorf(
-			`%w
-
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas config init`,
-			validate.ErrMissingCredentials,
-		)
-	}
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
 }

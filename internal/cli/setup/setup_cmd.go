@@ -28,6 +28,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
@@ -595,7 +596,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		// The error is useful in other components that call `validate.NoAPIKeys()`
 		return nil
 	}
-	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
+	if err := opts.register.RefreshAccessToken(ctx); err != nil && commonerrors.IsInvalidRefreshToken(err) {
 		opts.skipLogin = false
 		return nil
 	}

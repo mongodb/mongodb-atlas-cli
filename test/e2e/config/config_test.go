@@ -81,6 +81,15 @@ func TestConfig(t *testing.T) {
 		if err = cmd.Start(); err != nil {
 			t.Fatal(err)
 		}
+		if _, err = c.ExpectString("Select authentication type"); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := c.Send("\x1B[B"); err != nil {
+			t.Fatalf("Send(Down) = %v", err)
+		}
+		if _, err := c.SendLine(""); err != nil {
+			t.Fatalf("SendLine() = %v", err)
+		}
 
 		if _, err = c.ExpectString("Public API Key"); err != nil {
 			t.Fatal(err)

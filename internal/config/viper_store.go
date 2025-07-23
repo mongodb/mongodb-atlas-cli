@@ -65,10 +65,9 @@ func LoadViperStore(fs afero.Fs) (*ViperConfigStore, error) {
 	if err := v.ReadInConfig(); err != nil {
 		// ignore if it doesn't exists
 		var e viper.ConfigFileNotFoundError
-		if errors.As(err, &e) {
-			return nil, nil
+		if !errors.As(err, &e) {
+			return nil, err
 		}
-		return nil, err
 	}
 	return &ViperConfigStore{
 		viper:     *v,

@@ -211,7 +211,7 @@ func (opts *UpdateOpts) RunDedicatedClusterWideScaling() error {
 
 	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)

@@ -70,6 +70,8 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		}
 
 		return &http.Client{Transport: tr}, nil
+	default:
+		return &http.Client{Transport: httpTransport}, nil
 	}
 
 	return &http.Client{Transport: httpTransport}, nil

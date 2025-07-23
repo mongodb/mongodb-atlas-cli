@@ -19,7 +19,6 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -60,14 +59,14 @@ func (opts *StartOpts) Run() error {
 	if isIndependentShardScaling(opts.autoScalingMode) {
 		r, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.name)
 		if err != nil {
-			return commonerrors.Check(err)
+			return err
 		}
 		return opts.Print(r)
 	}
 
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 	return opts.Print(r)
 }

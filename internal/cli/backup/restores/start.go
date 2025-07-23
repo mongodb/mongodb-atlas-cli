@@ -73,7 +73,7 @@ func (opts *StartOpts) Run() error {
 	if opts.isFlexCluster {
 		r, err := opts.store.CreateRestoreFlexClusterJobs(opts.ConfigProjectID(), opts.clusterName, opts.newFlexBackupRestoreJobCreate())
 		if err != nil {
-			return commonerrors.Check(err)
+			return err
 		}
 		return opts.Print(r)
 	}
@@ -81,7 +81,7 @@ func (opts *StartOpts) Run() error {
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	restoreJob, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(restoreJob)

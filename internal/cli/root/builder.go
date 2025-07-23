@@ -127,7 +127,8 @@ Use the --help flag with any command for more info on that command.`,
 		Example: `  # Display the help menu for the config command:
   atlas config --help
 `,
-		SilenceUsage: true,
+		SilenceUsage:  true,
+		SilenceErrors: true,
 		Annotations: map[string]string{
 			"toc": "true",
 		},

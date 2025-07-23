@@ -29,14 +29,15 @@ import (
 	"github.com/spf13/viper"
 )
 
+// ViperConfigStore implements the config.Store interface
 type ViperConfigStore struct {
 	viper     viper.Viper
 	configDir string
 	fs        afero.Fs
 }
 
-// / ViperConfigStore specific methods
-func LoadViperStore(fs afero.Fs) (*ViperConfigStore, error) {
+// ViperConfigStore specific methods
+func NewViperStore(fs afero.Fs) (*ViperConfigStore, error) {
 	configDir, err := CLIConfigHome()
 	if err != nil {
 		return nil, err
@@ -95,7 +96,7 @@ func (s *ViperConfigStore) Filename() string {
 	return ViperConfigStoreFilename(s.configDir)
 }
 
-/// ConfigStore implementation
+// ConfigStore implementation
 
 func (s *ViperConfigStore) Save() error {
 	exists, err := afero.DirExists(s.fs, s.configDir)

@@ -82,7 +82,7 @@ Related Commands
 * :ref:`atlas-processes` - Manage MongoDB processes for your project.
 * :ref:`atlas-projects` - Manage your Atlas projects.
 * :ref:`atlas-security` - Manage security configuration for your project.
-* :ref:`atlas-setup` - Register, authenticate, create, and access an Atlas cluster.
+* :ref:`atlas-setup` - Login, authenticate, create, and access an Atlas cluster.
 * :ref:`atlas-streams` - Manage your Atlas Stream Processing deployments.
 * :ref:`atlas-teams` - Manage your Atlas teams.
 * :ref:`atlas-users` - Manage your Atlas users.

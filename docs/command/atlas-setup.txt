@@ -12,9 +12,14 @@ atlas setup
    :depth: 1
    :class: singlecol
 
-Register, authenticate, create, and access an Atlas cluster.
+Login, authenticate, create, and access an Atlas cluster.
 
-This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.
+Public Preview: The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
+
+
+This command takes you through login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.
 
 Syntax
 ------
@@ -74,7 +79,7 @@ Options
    * - --gov
      - 
      - false
-     - Register with Atlas for Government.
+     - Login with Atlas for Government.
    * - -h, --help
      - 
      - false

@@ -29,8 +29,7 @@ var (
 	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
 	ErrUnauthorized               = errors.New(`this action requires authentication
 	
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas config init`)
+To log in using your Atlas username and password or to set credentials using API keys, run: atlas auth login`)
 	ErrInvalidRefreshToken = errors.New(`session expired
 
 Please note that your session expires periodically. 

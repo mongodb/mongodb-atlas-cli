@@ -56,7 +56,7 @@ func loadConfig() (*config.Profile, error) {
 	configStore, initErr := config.LoadViperStore(afero.NewOsFs())
 
 	if initErr != nil {
-		return nil, fmt.Errorf("error loading config: %w. Please run `atlas config init` to reconfigure your profile", initErr)
+		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
 	}
 
 	profile := config.NewProfile(config.DefaultProfile, configStore)

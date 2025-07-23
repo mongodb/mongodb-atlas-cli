@@ -79,7 +79,7 @@ Options
    * - --gov
      - 
      - false
-     - Register with Atlas for Government.
+     - Login with Atlas for Government.
    * - -h, --help
      - 
      - false

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 23 Jul 2025 05:21:43 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 80
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=1346296ae7c579ef44da4096c376701cf7797d7a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-23T05:21:08Z","groupId":"68806f79791da5496c01990c","hostname":"atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net","id":"atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017","lastPing":"2025-07-23T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes/atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-b8haiy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-854-shard-00-00.ilvell.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-23T05:21:08Z","groupId":"68806f79791da5496c01990c","hostname":"atlas-b8haiy-shard-00-01.ilvell.mongodb-dev.net","id":"atlas-b8haiy-shard-00-01.ilvell.mongodb-dev.net:27017","lastPing":"2025-07-23T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes/atlas-b8haiy-shard-00-01.ilvell.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-b8haiy-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-854-shard-00-01.ilvell.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-23T05:21:09Z","groupId":"68806f79791da5496c01990c","hostname":"atlas-b8haiy-shard-00-02.ilvell.mongodb-dev.net","id":"atlas-b8haiy-shard-00-02.ilvell.mongodb-dev.net:27017","lastPing":"2025-07-23T05:21:42Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes/atlas-b8haiy-shard-00-02.ilvell.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-b8haiy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-854-shard-00-02.ilvell.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

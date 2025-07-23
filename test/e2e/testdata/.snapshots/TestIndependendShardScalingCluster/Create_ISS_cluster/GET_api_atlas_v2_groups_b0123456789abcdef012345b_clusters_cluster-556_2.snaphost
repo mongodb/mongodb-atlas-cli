@@ -1,0 +1,14 @@
+HTTP/2.0 502 Bad Gateway
+Connection: close
+Content-Type: text/html
+Server: mitmproxy 11.1.3
+
+<html>
+<head>
+    <title>502 Bad Gateway</title>
+</head>
+<body>
+    <h1>502 Bad Gateway</h1>
+    <p>connection closed</p>
+</body>
+</html>

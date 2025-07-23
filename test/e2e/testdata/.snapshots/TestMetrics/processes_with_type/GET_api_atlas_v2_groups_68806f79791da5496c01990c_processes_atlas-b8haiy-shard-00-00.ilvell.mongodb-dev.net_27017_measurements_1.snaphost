@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 814
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 23 Jul 2025 05:21:44 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 88
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getHostMeasurements
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=1346296ae7c579ef44da4096c376701cf7797d7a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"end":"2025-07-23T05:21:23Z","granularity":"PT30M","groupId":"68806f79791da5496c01990c","hostId":"atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes/atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017/measurements?granularity=PT30M&m=MAX_PROCESS_CPU_USER&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68806f79791da5496c01990c/processes/atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2025-07-23T05:21:23Z","value":21.330065601654333}],"name":"MAX_PROCESS_CPU_USER","units":"PERCENT"}],"processId":"atlas-b8haiy-shard-00-00.ilvell.mongodb-dev.net:27017","start":"2025-07-23T05:21:23Z"}

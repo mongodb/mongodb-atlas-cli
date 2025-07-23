@@ -117,7 +117,7 @@ func (s *ViperConfigStore) GetProfileNames() []string {
 
 	profileNames := make([]string, 0, len(allKeys))
 	for _, key := range allKeys {
-		if !slices.Contains(GlobalProperties(), key) {
+		if !slices.Contains(AllProperties(), key) {
 			profileNames = append(profileNames, key)
 		}
 	}

@@ -27,5 +27,6 @@ func InitBuilder() *cobra.Command {
 
   # To configure the tool to work with Atlas for Government:
   atlas config init --gov`
+	cmd.Deprecated = "Please use the 'atlas auth login' command instead."
 	return cmd
 }

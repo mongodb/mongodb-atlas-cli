@@ -231,7 +231,7 @@ func TestProfile_Rename(t *testing.T) {
 			}
 
 			ctrl := gomock.NewController(t)
-			configStore := NewMockConfigStore(ctrl)
+			configStore := NewMockStore(ctrl)
 			if !tt.wantErr {
 				configStore.EXPECT().RenameProfile(DefaultProfile, tt.name).Return(nil).Times(1)
 			}
@@ -278,7 +278,7 @@ func TestProfile_SetName(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			p := &Profile{
 				name:        tt.name,
-				configStore: NewMockConfigStore(ctrl),
+				configStore: NewMockStore(ctrl),
 			}
 			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
 		})

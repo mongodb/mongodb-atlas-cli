@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config ConfigStore
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store
 
 package config
 

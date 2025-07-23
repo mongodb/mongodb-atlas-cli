@@ -338,7 +338,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 	}
 
 	if !opts.force {
-		_, _ = fmt.Fprintf(opts.OutWriter, "\nPress Enter to open the browser to complete authentication...")
+		_, _ = fmt.Fprintf(opts.OutWriter, "\nPress Enter to open the browser and complete authentication...")
 		_, _ = fmt.Scanln()
 	}
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {

@@ -15,22 +15,16 @@
 package config
 
 import (
-	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"os"
-	"path"
-	"path/filepath"
-	"runtime"
 	"slices"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
-	"github.com/pelletier/go-toml"
-	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 	"go.mongodb.org/atlas/auth"
 )
@@ -75,18 +69,45 @@ const (
 	LocalDeploymentImage     = "local_deployment_image" // LocalDeploymentImage is the config key for the MongoDB Local Dev Docker image
 )
 
+// Workaround to keep existing code working
+// We cannot set the profile immediately because of a race condition which breaks all the unit tests
+//
+// The goal is to get rid of this, but we will need to do this gradually, since it's a large change that affects almost every command
+func SetProfile(profile *Profile) {
+	defaultProfile = profile
+}
+
 var (
-	HostName       = getConfigHostnameFromEnvs()
-	UserAgent      = fmt.Sprintf("%s/%s (%s;%s;%s)", AtlasCLI, version.Version, runtime.GOOS, runtime.GOARCH, HostName)
-	CLIUserType    = newCLIUserTypeFromEnvs()
-	defaultProfile = newProfile()
+	defaultProfile = &Profile{
+		name:        DefaultProfile,
+		configStore: NewInMemoryStore(),
+	}
+	profileContextKey = profileKey{}
 )
 
 type Profile struct {
-	name      string
-	configDir string
-	fs        afero.Fs
-	err       error
+	name        string
+	configStore Store
+}
+
+func NewProfile(name string, configStore Store) *Profile {
+	return &Profile{
+		name:        name,
+		configStore: configStore,
+	}
+}
+
+type profileKey struct{}
+
+// Setting a value
+func WithProfile(ctx context.Context, profile *Profile) context.Context {
+	return context.WithValue(ctx, profileContextKey, profile)
+}
+
+// Getting a value
+func ProfileFromContext(ctx context.Context) (*Profile, bool) {
+	profile, ok := ctx.Value(profileContextKey).(*Profile)
+	return profile, ok
 }
 
 func AllProperties() []string {
@@ -138,89 +159,19 @@ func Default() *Profile {
 	return defaultProfile
 }
 
-// List returns the names of available profiles.
-func List() []string {
-	m := viper.AllSettings()
-
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		if !slices.Contains(AllProperties(), k) {
-			keys = append(keys, k)
-		}
-	}
-	// keys in maps are non-deterministic, trying to give users a consistent output
-	sort.Strings(keys)
-	return keys
+func SetDefaultProfile(profile *Profile) {
+	defaultProfile = profile
 }
 
-// Exists returns true if there are any set settings for the profile name.
+// List returns the names of available profiles.
+func List() []string { return Default().List() }
+func (p *Profile) List() []string {
+	return p.configStore.GetProfileNames()
+}
+
+// Exists returns true if a profile with the give name exists.
 func Exists(name string) bool {
 	return slices.Contains(List(), name)
-}
-
-// getConfigHostnameFromEnvs patches the agent hostname based on set env vars.
-func getConfigHostnameFromEnvs() string {
-	var builder strings.Builder
-
-	envVars := []struct {
-		envName  string
-		hostName string
-	}{
-		{AtlasActionHostNameEnv, AtlasActionHostName},
-		{GitHubActionsHostNameEnv, GitHubActionsHostName},
-		{ContainerizedHostNameEnv, DockerContainerHostName},
-	}
-
-	for _, envVar := range envVars {
-		if envIsTrue(envVar.envName) {
-			appendToHostName(&builder, envVar.hostName)
-		} else {
-			appendToHostName(&builder, "-")
-		}
-	}
-	configHostName := builder.String()
-
-	if isDefaultHostName(configHostName) {
-		return NativeHostName
-	}
-	return configHostName
-}
-
-// newCLIUserTypeFromEnvs patches the user type information based on set env vars.
-func newCLIUserTypeFromEnvs() string {
-	if value, ok := os.LookupEnv(CLIUserTypeEnv); ok {
-		return value
-	}
-
-	return DefaultUser
-}
-
-func envIsTrue(env string) bool {
-	return IsTrue(os.Getenv(env))
-}
-
-func appendToHostName(builder *strings.Builder, configVal string) {
-	if builder.Len() > 0 {
-		builder.WriteString("|")
-	}
-	builder.WriteString(configVal)
-}
-
-// isDefaultHostName checks if the hostname is the default placeholder.
-func isDefaultHostName(hostname string) bool {
-	// Using strings.Count for a more dynamic approach.
-	return strings.Count(hostname, "-") == strings.Count(hostname, "|")+1
-}
-
-func newProfile() *Profile {
-	configDir, err := CLIConfigHome()
-	np := &Profile{
-		name:      DefaultProfile,
-		configDir: configDir,
-		fs:        afero.NewOsFs(),
-		err:       err,
-	}
-	return np
 }
 
 func Name() string { return Default().Name() }
@@ -251,23 +202,17 @@ func (p *Profile) SetName(name string) error {
 
 func Set(name string, value any) { Default().Set(name, value) }
 func (p *Profile) Set(name string, value any) {
-	settings := viper.GetStringMap(p.Name())
-	settings[name] = value
-	viper.Set(p.name, settings)
+	p.configStore.SetProfileValue(p.Name(), name, value)
 }
 
-func SetGlobal(name string, value any) { viper.Set(name, value) }
-func (*Profile) SetGlobal(name string, value any) {
-	SetGlobal(name, value)
+func SetGlobal(name string, value any) { Default().SetGlobal(name, value) }
+func (p *Profile) SetGlobal(name string, value any) {
+	p.configStore.SetGlobalValue(name, value)
 }
 
 func Get(name string) any { return Default().Get(name) }
 func (p *Profile) Get(name string) any {
-	if viper.IsSet(name) && viper.Get(name) != "" {
-		return viper.Get(name)
-	}
-	settings := viper.GetStringMap(p.Name())
-	return settings[name]
+	return p.configStore.GetHierarchicalValue(p.Name(), name)
 }
 
 func GetString(name string) string { return Default().GetString(name) }
@@ -298,12 +243,13 @@ func (p *Profile) GetBoolWithDefault(name string, defaultValue bool) bool {
 // Service get configured service.
 func Service() string { return Default().Service() }
 func (p *Profile) Service() string {
-	if viper.IsSet(service) {
-		return viper.GetString(service)
+	if p.configStore.IsSetGlobal(service) {
+		serviceValue, _ := p.configStore.GetGlobalValue(service).(string)
+		return serviceValue
 	}
 
-	settings := viper.GetStringMapString(p.Name())
-	return settings[service]
+	serviceValue, _ := p.configStore.GetProfileValue(p.Name(), service).(string)
+	return serviceValue
 }
 
 func IsCloud() bool {
@@ -584,39 +530,7 @@ func (p *Profile) SortedKeys() []string {
 // this edits the file directly.
 func Delete() error { return Default().Delete() }
 func (p *Profile) Delete() error {
-	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
-	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	settings := viper.AllSettings()
-
-	t, err := toml.TreeFromMap(settings)
-	if err != nil {
-		return err
-	}
-
-	// Delete from the toml manually
-	err = t.Delete(p.Name())
-	if err != nil {
-		return err
-	}
-
-	s := t.String()
-
-	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	_, err = f.WriteString(s)
-	return err
-}
-
-func (p *Profile) Filename() string {
-	return filepath.Join(p.configDir, "config.toml")
-}
-
-func Filename() string {
-	return Default().Filename()
+	return p.configStore.DeleteProfile(p.Name())
 }
 
 // Rename replaces the Profile to a new Profile name, overwriting any Profile that existed before.
@@ -626,126 +540,13 @@ func (p *Profile) Rename(newProfileName string) error {
 		return err
 	}
 
-	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
-	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	configurationAfterDelete := viper.AllSettings()
-
-	t, err := toml.TreeFromMap(configurationAfterDelete)
-	if err != nil {
-		return err
-	}
-
-	t.Set(newProfileName, t.Get(p.Name()))
-
-	err = t.Delete(p.Name())
-	if err != nil {
-		return err
-	}
-
-	s := t.String()
-
-	f, err := p.fs.OpenFile(p.Filename(), fileFlags, configPerm)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	if _, err := f.WriteString(s); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func LoadAtlasCLIConfig() error { return Default().LoadAtlasCLIConfig(true) }
-func (p *Profile) LoadAtlasCLIConfig(readEnvironmentVars bool) error {
-	if p.err != nil {
-		return p.err
-	}
-
-	viper.SetConfigName("config")
-
-	if hasMongoCLIEnvVars() {
-		viper.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
-	}
-
-	return p.load(readEnvironmentVars, AtlasCLIEnvPrefix)
-}
-
-func hasMongoCLIEnvVars() bool {
-	envVars := os.Environ()
-	for _, v := range envVars {
-		if strings.HasPrefix(v, MongoCLIEnvPrefix) {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (p *Profile) load(readEnvironmentVars bool, envPrefix string) error {
-	viper.SetConfigType(configType)
-	viper.SetConfigPermissions(configPerm)
-	viper.AddConfigPath(p.configDir)
-	viper.SetFs(p.fs)
-
-	if readEnvironmentVars {
-		viper.SetEnvPrefix(envPrefix)
-		viper.AutomaticEnv()
-	}
-
-	// aliases only work for a config file, this won't work for env variables
-	viper.RegisterAlias(baseURL, OpsManagerURLField)
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
-		// ignore if it doesn't exists
-		var e viper.ConfigFileNotFoundError
-		if errors.As(err, &e) {
-			return nil
-		}
-		return err
-	}
-	return nil
+	return p.configStore.RenameProfile(p.Name(), newProfileName)
 }
 
 // Save the configuration to disk.
 func Save() error { return Default().Save() }
 func (p *Profile) Save() error {
-	exists, err := afero.DirExists(p.fs, p.configDir)
-	if err != nil {
-		return err
-	}
-	if !exists {
-		if err := p.fs.MkdirAll(p.configDir, defaultPermissions); err != nil {
-			return err
-		}
-	}
-
-	return viper.WriteConfigAs(p.Filename())
-}
-
-// CLIConfigHome retrieves configHome path.
-func CLIConfigHome() (string, error) {
-	home, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-
-	return path.Join(home, "atlascli"), nil
-}
-
-func Path(f string) (string, error) {
-	var p bytes.Buffer
-
-	h, err := CLIConfigHome()
-	if err != nil {
-		return "", err
-	}
-
-	p.WriteString(h)
-	p.WriteString(f)
-	return p.String(), nil
+	return p.configStore.Save()
 }
 
 // GetLocalDeploymentImage returns the configured MongoDB Docker image URL.

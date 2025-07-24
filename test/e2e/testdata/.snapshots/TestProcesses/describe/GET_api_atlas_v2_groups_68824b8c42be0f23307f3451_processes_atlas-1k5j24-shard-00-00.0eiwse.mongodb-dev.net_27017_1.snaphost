@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 908
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 24 Jul 2025 15:13:34 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 110
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAtlasProcess
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=8a5d994bc6bc5dc2c9f35e4a815f6c5f6b7e434b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"created":"2025-07-24T15:12:54Z","groupId":"68824b8c42be0f23307f3451","hostname":"atlas-1k5j24-shard-00-00.0eiwse.mongodb-dev.net","id":"atlas-1k5j24-shard-00-00.0eiwse.mongodb-dev.net:27017","lastPing":"2025-07-24T15:13:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68824b8c42be0f23307f3451/processes/atlas-1k5j24-shard-00-00.0eiwse.mongodb-dev.net:27017","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68824b8c42be0f23307f3451","rel":"https://cloud.mongodb.com/group"},{"href":"http://localhost:8080/api/atlas/v2/groups/68824b8c42be0f23307f3451/processes/atlas-1k5j24-shard-00-00.0eiwse.mongodb-dev.net:27017/measurements?granularity=PT5M&period=PT24H","rel":"https://cloud.mongodb.com/measurements"}],"port":27017,"replicaSetName":"atlas-1k5j24-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-935-shard-00-00.0eiwse.mongodb-dev.net","version":"8.0.12"}

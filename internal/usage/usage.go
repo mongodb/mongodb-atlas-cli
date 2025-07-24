@@ -38,6 +38,7 @@ const (
 	NExamples                                = "Maximum number of example queries to provide that a suggested index will improve."
 	NIndexes                                 = "Maximum number of indexes to suggest."
 	MDBVersion                               = "Major MongoDB version of the cluster."
+	MDBVersionCreate                         = "Major MongoDB version of the cluster. When no value is specified, the latest stable MongoDB version is used, see: https://www.mongodb.com/resources/products/mongodb-version-history."
 	DeploymentMDBVersion                     = "Major MongoDB version of the deployment."
 	AtlasAuthDB                              = "Authentication database name. If the user authenticates with AWS IAM, x.509, or LDAP, this value should be $external. If the user authenticates with SCRAM-SHA, this value should be admin."
 	Granularity                              = "ISO 8601-formatted duration that specifies the interval between measurement data points. Only the following subset of ISO 8601-formatted time periods are supported: PT10S, PT1M, PT5M, PT1H, P1D. When you specify granularity, you must specify either period or start and end."

@@ -97,9 +97,9 @@ Options
    * - --mdbVersion
      - string
      - false
-     - Major MongoDB version of the cluster.
+     - Major MongoDB version of the cluster. When no value is specified, the latest stable MongoDB version is used, see: https://www.mongodb.com/resources/products/mongodb-version-history.
 
-       Mutually exclusive with --file. This value defaults to "8.0".
+       Mutually exclusive with --file.
    * - -m, --members
      - int
      - false

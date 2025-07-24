@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 423
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 24 Jul 2025 15:15:10 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 89
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasUserSecurityResource::checkLDAPVerifyConnectivityRequestStatus
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=8a5d994bc6bc5dc2c9f35e4a815f6c5f6b7e434b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"groupId":"68824b8d42be0f23307f34b2","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68824b8d42be0f23307f34b2/userSecurity/ldap/verify/68824de1b4489810533470bd","rel":"self"}],"request":{"authzQueryTemplate":"","bindUsername":"cn=admin,dc=example,dc=org","hostname":"localhost","port":19657},"requestId":"68824de1b4489810533470bd","status":"FAILED","validations":[{"status":"FAIL","validationType":"CONNECT"}]}

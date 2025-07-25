@@ -32,6 +32,7 @@ type Store interface {
 
 	SetProfileValue(profileName string, propertyName string, value any)
 	GetProfileValue(profileName string, propertyName string) any
+	GetProfileStringMap(profileName string) map[string]string
 
 	SetGlobalValue(propertyName string, value any)
 	GetGlobalValue(propertyName string) any
@@ -93,6 +94,10 @@ func (s *InMemoryStore) SetProfileValue(profileName string, propertyName string,
 func (s *InMemoryStore) GetProfileValue(profileName string, propertyName string) any {
 	settings := s.v.GetStringMap(profileName)
 	return settings[propertyName]
+}
+
+func (s *InMemoryStore) GetProfileStringMap(profileName string) map[string]string {
+	return s.v.GetStringMapString(profileName)
 }
 
 func (s *InMemoryStore) SetGlobalValue(propertyName string, value any) {

@@ -209,6 +209,10 @@ func (s *ViperConfigStore) GetProfileValue(profileName string, propertyName stri
 	return settings[propertyName]
 }
 
+func (s *ViperConfigStore) GetProfileStringMap(profileName string) map[string]string {
+	return s.viper.GetStringMapString(profileName)
+}
+
 func (s *ViperConfigStore) SetGlobalValue(propertyName string, value any) {
 	s.viper.Set(propertyName, value)
 }

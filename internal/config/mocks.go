@@ -95,6 +95,20 @@ func (mr *MockStoreMockRecorder) GetProfileNames() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfileNames", reflect.TypeOf((*MockStore)(nil).GetProfileNames))
 }
 
+// GetProfileStringMap mocks base method.
+func (m *MockStore) GetProfileStringMap(profileName string) map[string]string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProfileStringMap", profileName)
+	ret0, _ := ret[0].(map[string]string)
+	return ret0
+}
+
+// GetProfileStringMap indicates an expected call of GetProfileStringMap.
+func (mr *MockStoreMockRecorder) GetProfileStringMap(profileName any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfileStringMap", reflect.TypeOf((*MockStore)(nil).GetProfileStringMap), profileName)
+}
+
 // GetProfileValue mocks base method.
 func (m *MockStore) GetProfileValue(profileName, propertyName string) any {
 	m.ctrl.T.Helper()

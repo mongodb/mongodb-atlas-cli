@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -441,8 +440,8 @@ func (*Profile) SetSkipUpdateCheck(v bool) {
 
 // IsTelemetryEnabledSet return true if telemetry_enabled has been set.
 func IsTelemetryEnabledSet() bool { return Default().IsTelemetryEnabledSet() }
-func (*Profile) IsTelemetryEnabledSet() bool {
-	return viper.IsSet(TelemetryEnabledProperty)
+func (p *Profile) IsTelemetryEnabledSet() bool {
+	return p.configStore.IsSetGlobal(TelemetryEnabledProperty)
 }
 
 // TelemetryEnabled get the configured telemetry enabled value.
@@ -501,7 +500,7 @@ func (p *Profile) IsAccessSet() bool {
 // Map returns a map describing the configuration.
 func Map() map[string]string { return Default().Map() }
 func (p *Profile) Map() map[string]string {
-	settings := viper.GetStringMapString(p.Name())
+	settings := p.configStore.GetProfileStringMap(p.Name())
 	profileSettings := make(map[string]string, len(settings)+1)
 	for k, v := range settings {
 		if k == privateAPIKey || k == AccessTokenField || k == RefreshTokenField {

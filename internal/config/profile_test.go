@@ -22,9 +22,9 @@ import (
 	"path"
 	"testing"
 
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCLIConfigHome(t *testing.T) {
@@ -196,37 +196,52 @@ func Test_getConfigHostname(t *testing.T) {
 func TestProfile_Rename(t *testing.T) {
 	tests := []struct {
 		name    string
-		wantErr require.ErrorAssertionFunc
+		wantErr bool
 	}{
 		{
 			name:    "default",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default-123",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default-test",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default.123",
-			wantErr: require.Error,
+			wantErr: true,
 		},
 		{
 			name:    "default.test",
-			wantErr: require.Error,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
+
+			var assertion require.ErrorAssertionFunc
+			if tt.wantErr {
+				assertion = require.Error
+			} else {
+				assertion = require.NoError
 			}
-			tt.wantErr(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
+
+			ctrl := gomock.NewController(t)
+			configStore := NewMockStore(ctrl)
+			if !tt.wantErr {
+				configStore.EXPECT().RenameProfile(DefaultProfile, tt.name).Return(nil).Times(1)
+			}
+
+			p := &Profile{
+				name:        DefaultProfile,
+				configStore: configStore,
+			}
+
+			assertion(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
 		})
 	}
 }
@@ -260,9 +275,10 @@ func TestProfile_SetName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+			ctrl := gomock.NewController(t)
 			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
+				name:        tt.name,
+				configStore: NewMockStore(ctrl),
 			}
 			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
 		})

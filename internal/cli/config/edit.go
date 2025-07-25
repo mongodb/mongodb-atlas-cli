@@ -33,7 +33,15 @@ func (*editOpts) Run() error {
 	} else if e := os.Getenv("EDITOR"); e != "" {
 		editor = e
 	}
-	cmd := exec.Command(editor, config.Filename()) //nolint:gosec // it's ok to let users do this
+
+	// Get the viper config filename
+	configDir, err := config.CLIConfigHome()
+	if err != nil {
+		return err
+	}
+	filename := config.ViperConfigStoreFilename(configDir)
+
+	cmd := exec.Command(editor, filename)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -350,6 +350,29 @@ functions:
           set -Eeou pipefail
           echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
           chmod 0600 ./build/ci/ssh_id
+  "check-git-dirty":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        script: |
+          set -Eeou pipefail
+          git checkout -- dist/.keep
+          OUTPUT=$(git status --porcelain)
+          if [ -z "$OUTPUT" ]; then
+            echo "Git is clean"
+          else
+            echo "Git is dirty"
+            echo "$OUTPUT"
+            exit 1
+          fi
+  "check-required-files":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - unstable
+          - version
+        binary: build/ci/check-release-files.sh
 tasks:
   - name: package_goreleaser
     tags: ["packaging"]
@@ -417,15 +440,14 @@ tasks:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
           remote_file: mongocli/
           build_variants:
-            - release_mongocli_github
             - release_atlascli_github
           bucket: cdn-origin-mongocli
           permissions: private
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-
+      - func: "check-required-files"
+      - func: "check-git-dirty"
       - func: "trace artifacts"
-        vars:
-          unstable: ${unstable}
       - func: "send slack notification"
   - name: push_atlascli_generate
     patchable: false

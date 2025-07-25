@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 25 Jul 2025 05:20:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 103
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=f27938d3a55462f55a445c9a7dab57e39c5c25a3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68831254f9bb9c736a1ab369/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-25T05:19:49Z","groupId":"68831254f9bb9c736a1ab369","hostname":"atlas-18jgca-shard-00-00.wxyhel.mongodb-dev.net","id":"atlas-18jgca-shard-00-00.wxyhel.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68831254f9bb9c736a1ab369/processes/atlas-18jgca-shard-00-00.wxyhel.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-18jgca-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-328-shard-00-00.wxyhel.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-25T05:19:49Z","groupId":"68831254f9bb9c736a1ab369","hostname":"atlas-18jgca-shard-00-01.wxyhel.mongodb-dev.net","id":"atlas-18jgca-shard-00-01.wxyhel.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68831254f9bb9c736a1ab369/processes/atlas-18jgca-shard-00-01.wxyhel.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-18jgca-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-328-shard-00-01.wxyhel.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-25T05:19:49Z","groupId":"68831254f9bb9c736a1ab369","hostname":"atlas-18jgca-shard-00-02.wxyhel.mongodb-dev.net","id":"atlas-18jgca-shard-00-02.wxyhel.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68831254f9bb9c736a1ab369/processes/atlas-18jgca-shard-00-02.wxyhel.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-18jgca-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-328-shard-00-02.wxyhel.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

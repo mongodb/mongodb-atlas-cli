@@ -332,7 +332,11 @@ func (opts *CreateOpts) applyOptsAdvancedCluster(out *atlasClustersPinned.Advanc
 
 	if !opts.isTenant() {
 		out.DiskSizeGB = &opts.diskSizeGB
-		out.MongoDBMajorVersion = &opts.mdbVersion
+
+		// If no MongoDB version is specified, the backend uses the default MongoDB version
+		if opts.mdbVersion != "" {
+			out.MongoDBMajorVersion = &opts.mdbVersion
+		}
 	}
 
 	out.ReplicationSpecs = &[]atlasClustersPinned.ReplicationSpec{replicationSpec}
@@ -588,8 +592,6 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 		},
 	}
 
-	currentMDBVersion, _ := cli.DefaultMongoDBMajorVersion()
-
 	const (
 		defaultMembersSize = 3
 		defaultDiskSize    = 2
@@ -600,7 +602,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasFlex, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
-	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
+	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, "", usage.MDBVersionCreate)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
 	cmd.Flags().BoolVar(&opts.biConnector, flag.BIConnector, false, usage.BIConnector)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.ClusterFilename)

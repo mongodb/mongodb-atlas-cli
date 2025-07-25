@@ -14,11 +14,6 @@ atlas api
 
 `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.
 
-Public Preview: The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
-Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
-
-
-
 This feature in public preview streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 For more information on
@@ -217,6 +212,7 @@ Related Commands
 * :ref:`atlas-api-projectIpAccessList` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes network access limits to database deployments in Atlas.
 * :ref:`atlas-api-projects` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
 * :ref:`atlas-api-pushBasedLogExport` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
+* :ref:`atlas-api-queryShapeInsights` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: 
 * :ref:`atlas-api-resourcePolicies` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Configure and manage Atlas Resource Policies within your organization.
 * :ref:`atlas-api-rollingIndex` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one index to a database deployment in a rolling manner.
 * :ref:`atlas-api-root` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
@@ -272,6 +268,7 @@ Related Commands
    projectIpAccessList </command/atlas-api-projectIpAccessList>
    projects </command/atlas-api-projects>
    pushBasedLogExport </command/atlas-api-pushBasedLogExport>
+   queryShapeInsights </command/atlas-api-queryShapeInsights>
    resourcePolicies </command/atlas-api-resourcePolicies>
    rollingIndex </command/atlas-api-rollingIndex>
    root </command/atlas-api-root>

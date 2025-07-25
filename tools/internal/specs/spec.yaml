@@ -248,6 +248,17 @@ components:
                     schema:
                         $ref: '#/components/schemas/ApiError'
             description: Payment Required.
+        tooManyRequests:
+            content:
+                application/json:
+                    example:
+                        detail: (This is just an example, the exception may not be related to this endpoint)
+                        error: 429
+                        errorCode: RATE_LIMITED
+                        reason: Too Many Requests
+                    schema:
+                        $ref: '#/components/schemas/ApiError'
+            description: Too Many Requests.
         unauthorized:
             content:
                 application/json:
@@ -536,6 +547,7 @@ components:
                             - AP_SOUTH_1
                             - AP_SOUTHEAST_1
                             - AP_SOUTHEAST_2
+                            - AP_NORTHEAST_2
                         type: string
                   type: object
             type: object
@@ -568,6 +580,7 @@ components:
                             - AP_SOUTH_1
                             - AP_SOUTHEAST_1
                             - AP_SOUTHEAST_2
+                            - AP_NORTHEAST_2
                         readOnly: true
                         type: string
                   type: object
@@ -906,6 +919,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                           title: Azure Regions
                           type: string
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
@@ -1369,7 +1388,14 @@ components:
                         - ISRGROOTX1
                     type: string
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of this cluster.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -1962,6 +1988,7 @@ components:
                 - SAOPAULO_BRA
                 - MONTREAL_CAN
                 - TOKYO_JPN
+                - SEOUL_KOR
                 - SINGAPORE_SGP
             type: string
         ApiAtlasFTSAnalyzersViewManual:
@@ -2975,6 +3002,11 @@ components:
                     pattern: ^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}|([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}$
                     readOnly: true
                     type: string
+                targetPublicKey:
+                    description: Public part of the API key that this event targets.
+                    example: zmmrboas
+                    readOnly: true
+                    type: string
                 userId:
                     description: Unique 24-hexadecimal digit string that identifies the console user who triggered the event. If this resource returns this parameter, it doesn't return the **apiKeyId** parameter.
                     example: 32b6e34b3d91647abb20e7b8
@@ -2984,6 +3016,11 @@ components:
                 username:
                     description: Email address for the user who triggered this event. If this resource returns this parameter, it doesn't return the **publicApiKey** parameter.
                     format: email
+                    readOnly: true
+                    type: string
+                whitelistEntry:
+                    description: Entry in the list of source host addresses that the API key accepts and this event targets.
+                    example: 0.0.0.0
                     readOnly: true
                     type: string
             required:
@@ -3059,6 +3096,11 @@ components:
                     pattern: ^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}|([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}$
                     readOnly: true
                     type: string
+                targetPublicKey:
+                    description: Public part of the API key that this event targets.
+                    example: zmmrboas
+                    readOnly: true
+                    type: string
                 userId:
                     description: Unique 24-hexadecimal digit string that identifies the console user who triggered the event. If this resource returns this parameter, it doesn't return the **apiKeyId** parameter.
                     example: 32b6e34b3d91647abb20e7b8
@@ -3068,6 +3110,11 @@ components:
                 username:
                     description: Email address for the user who triggered this event. If this resource returns this parameter, it doesn't return the **publicApiKey** parameter.
                     format: email
+                    readOnly: true
+                    type: string
+                whitelistEntry:
+                    description: Entry in the list of source host addresses that the API key accepts and this event targets.
+                    example: 0.0.0.0
                     readOnly: true
                     type: string
             required:
@@ -3575,6 +3622,7 @@ components:
             enum:
                 - VIRGINIA_USA
                 - AMSTERDAM_NLD
+                - SAOPAULO_BRA
             type: string
         AtlasDataFederationGCPRegion:
             description: Atlas Data Federation GCP Regions.
@@ -4057,7 +4105,14 @@ components:
                         - ISRGROOTX1
                     type: string
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of this cluster.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -4618,6 +4673,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                         externalDocs:
                             description: Azure
                             url: https://docs.atlas.mongodb.com/reference/microsoft-azure/
@@ -4693,6 +4754,7 @@ components:
                         enum:
                             - US_EAST_2
                             - EUROPE_WEST
+                            - BRAZIL_SOUTH
                         type: string
                   type: object
             type: object
@@ -4705,6 +4767,7 @@ components:
                         enum:
                             - US_EAST_2
                             - EUROPE_WEST
+                            - BRAZIL_SOUTH
                         readOnly: true
                         type: string
                   type: object
@@ -4942,6 +5005,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                           title: Azure Regions
                           type: string
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
@@ -8016,6 +8085,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                           title: Azure Regions
                           type: string
                         - description: Google Compute Regions.
@@ -8202,6 +8277,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                           title: Azure Regions
                           type: string
                         - description: Google Compute Regions.
@@ -8812,7 +8893,14 @@ components:
                         - ISRGROOTX1
                     type: string
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of this cluster.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -9576,14 +9664,12 @@ components:
                     type: string
                 caseLevel:
                     default: false
-                    description: |
+                    description: |-
                         Flag that indicates whether to include case comparison when `"strength" : 1` or `"strength" : 2`.
-
-                        | Value | Compare case at level 1 or 2? | Strength Level | Comparisons Include |
-                         |---|---|---|---|
-                         | true | Yes | 1 | Base characters and case. |
-                         |  |  | 2 | Base characters, diacritics (and possible other secondary differences),   and case. |
-                         | false | No |  |  |
+                        - `true` - Include casing in comparison
+                          - Strength Level: 1 - Base characters and case.
+                          - Strength Level: 2 - Base characters, diacritics (and possible other secondary differences),   and case.
+                        - `false` - Case is NOT included in comparison.
                     type: boolean
                 locale:
                     description: 'International Components for Unicode (ICU) code that represents a localized language. To specify simple binary comparison, set `"locale" : "simple"`.'
@@ -9718,16 +9804,16 @@ components:
                     type: boolean
                 strength:
                     default: 3
-                    description: |
-                        Degree of comparison to perform when sorting words. MongoDB Cloud accepts the following values:
+                    description: |-
+                        Degree of comparison to perform when sorting words.
 
-                        | Value | Comparison Level | Comparison Method |
-                        |---|---|---|
-                        | 1 | Primary | Compares the base characters only, ignoring other differences such as diacritics and case. |
-                        | 2 | Secondary | Compares base characters (primary) and diacritics (secondary). Primary differences take precedence over secondary differences. |
-                        | 3 | Tertiary | Compares base characters (primary), diacritics (secondary), and case and variants (tertiary). Differences between base characters takes precedence over secondary differences which take precedence over tertiary differences. |
-                        | 4 | Quaternary | Compares for the specific use case to consider punctuation when levels 1 through 3 ignore punctuation or for processing Japanese text. |
-                        | 5 | Identical | Compares for the specific use case of tie breaker. |
+                        MongoDB Cloud accepts the following _numeric values_ that correspond to the _comparison level_ and what that _comparison method_ is.
+
+                        - `1` - "Primary" - Compares the base characters only, ignoring other differences such as diacritics and case.
+                        - `2` - "Secondary" - Compares base characters (primary) and diacritics (secondary). Primary differences take precedence over secondary differences.
+                        - `3` - "Tertiary" - Compares base characters (primary), diacritics (secondary), and case and variants (tertiary). Differences between base characters takes precedence over secondary differences which take precedence over tertiary differences.
+                        - `4` - "Quaternary" - Compares for the specific use case to consider punctuation when levels 1 through 3 ignore punctuation or for processing Japanese text.
+                        - `5` - "Identical" - Compares for the specific use case of tie breaker.
                     format: int32
                     maximum: 5
                     minimum: 1
@@ -10194,6 +10280,8 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     pattern: ^([a-f0-9]{24})$
                     type: string
+                serviceAccount:
+                    $ref: '#/components/schemas/OrgServiceAccountRequest'
                 skipDefaultAlertsSettings:
                     default: false
                     description: Disables automatic alert creation. When set to true, no organization level alerts will be created automatically.
@@ -10219,6 +10307,8 @@ components:
                     type: string
                 organization:
                     $ref: '#/components/schemas/AtlasOrganization'
+                serviceAccount:
+                    $ref: '#/components/schemas/OrgServiceAccount'
                 skipDefaultAlertsSettings:
                     default: false
                     description: Disables automatic alert creation. When set to true, no organization level alerts will be created automatically.
@@ -12229,6 +12319,10 @@ components:
                     default: false
                     description: Toggle sending database metrics that includes database names and metrics on the number of collections, storage size, and index size.
                     type: boolean
+                sendUserProvidedResourceTags:
+                    default: false
+                    description: Toggle sending user provided group and cluster resource tags with the datadog metrics.
+                    type: boolean
                 type:
                     description: Human-readable label that identifies the service to which you want to integrate with MongoDB Cloud. The value must match the third-party service integration type.
                     enum:
@@ -12455,6 +12549,8 @@ components:
                             - NETWORK_PERMISSION_ENTRY_ADDED
                             - NETWORK_PERMISSION_ENTRY_REMOVED
                             - NETWORK_PERMISSION_ENTRY_UPDATED
+                            - CLUSTER_BLOCK_WRITE
+                            - CLUSTER_UNBLOCK_WRITE
                           title: NDS Audit Types
                           type: string
                         - enum:
@@ -12658,6 +12754,8 @@ components:
                             - NETWORK_PERMISSION_ENTRY_ADDED
                             - NETWORK_PERMISSION_ENTRY_REMOVED
                             - NETWORK_PERMISSION_ENTRY_UPDATED
+                            - CLUSTER_BLOCK_WRITE
+                            - CLUSTER_UNBLOCK_WRITE
                           title: NDS Audit Types
                           type: string
                         - enum:
@@ -13287,6 +13385,14 @@ components:
                             - AZURE_SELF_SERVE_ACCOUNT_LINK_FAILED
                             - GCP_SELF_SERVE_ACCOUNT_LINKED
                             - GCP_SELF_SERVE_ACCOUNT_CANCELLED
+                            - VERCEL_SELF_SERVE_ACCOUNT_LINKED
+                            - VERCEL_SELF_SERVE_ACCOUNT_LINK_PENDING
+                            - VERCEL_SELF_SERVE_ACCOUNT_CANCELLED
+                            - VERCEL_SELF_SERVE_ACCOUNT_LINK_FAILED
+                            - VERCEL_INVOICE_CREATED
+                            - VERCEL_INVOICE_NOT_PAID
+                            - VERCEL_INVOICE_PAID
+                            - VERCEL_INVOICE_REFUNDED
                           title: Partner Event Types
                           type: string
                         - enum:
@@ -13417,7 +13523,7 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     externalDocs:
                         description: Return One Cluster from One Project
-                        url: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getcluster
+                        url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
                     pattern: ^([a-f0-9]{24})$
                     type: string
                     writeOnly: true
@@ -13426,7 +13532,7 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     externalDocs:
                         description: Return One Cluster from One Project
-                        url: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getcluster
+                        url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
                     pattern: ^([a-f0-9]{24})$
                     type: string
                     writeOnly: true
@@ -13455,7 +13561,7 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     externalDocs:
                         description: Return One Cluster from One Project
-                        url: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getcluster
+                        url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
                     pattern: ^([a-f0-9]{24})$
                     type: string
                     writeOnly: true
@@ -13605,7 +13711,7 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     externalDocs:
                         description: Return One Cluster from One Project
-                        url: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getcluster
+                        url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
                     pattern: ^([a-f0-9]{24})$
                     type: string
                 shouldCopyOplogs:
@@ -13648,7 +13754,7 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     externalDocs:
                         description: Return One Cluster From One Project
-                        url: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getcluster
+                        url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
                     pattern: ^([a-f0-9]{24})$
                     type: string
             required:
@@ -14785,6 +14891,12 @@ components:
                             - UAE_CENTRAL
                             - UAE_NORTH
                             - QATAR_CENTRAL
+                            - POLAND_CENTRAL
+                            - ISRAEL_CENTRAL
+                            - ITALY_NORTH
+                            - SPAIN_CENTRAL
+                            - MEXICO_CENTRAL
+                            - NEW_ZEALAND_NORTH
                           title: Azure Regions
                           type: string
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
@@ -15574,6 +15686,8 @@ components:
                     - ATLAS_SQL_SCHEDULED_UPDATE_REMOVED
                     - CLUSTER_INSTANCE_DISABLED
                     - CLUSTER_INSTANCE_ENABLED
+                    - CLUSTER_BLOCK_WRITE
+                    - CLUSTER_UNBLOCK_WRITE
                     - KMIP_KEY_ROTATION_SCHEDULED
                     - SSL_CERTIFICATE_ISSUED
                     - PROJECT_SCHEDULED_MAINTENANCE_OUTSIDE_OF_PROTECTED_HOURS
@@ -15585,6 +15699,9 @@ components:
                     - CLUSTER_IP_ROLLED_BACK
                     - AZ_BALANCING_OVERRIDE_MODIFIED
                     - FTDC_SETTINGS_UPDATED
+                    - MONGOTUNE_ENABLED
+                    - MONGOTUNE_DISABLED
+                    - PROXY_PROTOCOL_FOR_PRIVATE_LINK_MODE_UPDATED
                   title: NDS Audit Types
                   type: string
                 - enum:
@@ -15999,6 +16116,7 @@ components:
                   type: string
                 - enum:
                     - ORG_CREATED
+                    - CUSTOM_SESSION_TIMEOUT_MODIFIED
                     - SECURITY_CONTACT_MODIFIED
                     - ORG_CREDIT_CARD_ADDED
                     - ORG_CREDIT_CARD_UPDATED
@@ -16054,6 +16172,8 @@ components:
                     - ORG_MONGODB_VERSION_EOL_EXTENSION_PENDING
                     - ORG_MONGODB_VERSION_EOL_EXTENSION_CANCELLED
                     - GROUP_MOVED_FROM_ORG
+                    - SANDBOX_ENABLED_FOR_ORG
+                    - SANDBOX_DISABLED_FOR_ORG
                   title: Org Event Types
                   type: string
                 - enum:
@@ -16069,6 +16189,14 @@ components:
                     - AZURE_SELF_SERVE_ACCOUNT_LINK_FAILED
                     - GCP_SELF_SERVE_ACCOUNT_LINKED
                     - GCP_SELF_SERVE_ACCOUNT_CANCELLED
+                    - VERCEL_SELF_SERVE_ACCOUNT_LINKED
+                    - VERCEL_SELF_SERVE_ACCOUNT_LINK_PENDING
+                    - VERCEL_SELF_SERVE_ACCOUNT_CANCELLED
+                    - VERCEL_SELF_SERVE_ACCOUNT_LINK_FAILED
+                    - VERCEL_INVOICE_CREATED
+                    - VERCEL_INVOICE_NOT_PAID
+                    - VERCEL_INVOICE_PAID
+                    - VERCEL_INVOICE_REFUNDED
                   title: Partner Event Types
                   type: string
                 - enum:
@@ -17343,7 +17471,14 @@ components:
                 providerSettings:
                     $ref: '#/components/schemas/FlexProviderSettings20241113'
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of this instance.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -18235,6 +18370,11 @@ components:
                     description: Resource path that displays the key version resource ID for your Google Cloud KMS.
                     example: projects/my-project-common-0/locations/us-east4/keyRings/my-key-ring-0/cryptoKeys/my-key-0/cryptoKeyVersions/1
                     type: string
+                roleId:
+                    description: Unique 24-hexadecimal digit string that identifies the Google Cloud Provider Access Role that MongoDB Cloud uses to access the Google Cloud KMS.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
                 serviceAccountKey:
                     description: JavaScript Object Notation (JSON) object that contains the Google Cloud Key Management Service (KMS). Format the JSON as a string and not as an object.
                     externalDocs:
@@ -18424,9 +18564,8 @@ components:
                     type: array
                 withDefaultAlertsSettings:
                     default: true
-                    description: Flag that indicates whether to create the project with default alert settings.
+                    description: Flag that indicates whether to create the project with default alert settings. This setting cannot be updated after project creation.
                     type: boolean
-                    writeOnly: true
             required:
                 - clusterCount
                 - created
@@ -21283,6 +21422,11 @@ components:
                         - ATLAS_FLEX_GCP_LEGACY_300_USAGE_HOURS
                         - ATLAS_FLEX_GCP_LEGACY_400_USAGE_HOURS
                         - ATLAS_FLEX_GCP_LEGACY_500_USAGE_HOURS
+                        - ATLAS_GCP_STREAM_PROCESSING_INSTANCE_SP10
+                        - ATLAS_GCP_STREAM_PROCESSING_INSTANCE_SP30
+                        - ATLAS_GCP_STREAM_PROCESSING_INSTANCE_SP50
+                        - ATLAS_GCP_STREAM_PROCESSING_DATA_TRANSFER
+                        - ATLAS_GCP_STREAM_PROCESSING_PRIVATELINK
                     readOnly: true
                     type: string
                 startDate:
@@ -21767,7 +21911,14 @@ components:
                     readOnly: true
                     type: string
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of the cluster.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -22060,7 +22211,14 @@ components:
                     readOnly: true
                     type: string
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of the cluster.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -22514,6 +22672,7 @@ components:
                 - ARBITER
                 - MONGOS
                 - CONFIG
+                - MONGOT
             example: STANDALONE
             title: Matcher Host Types
             type: string
@@ -23278,6 +23437,8 @@ components:
                 - ATLAS_SQL_SCHEDULED_UPDATE_REMOVED
                 - CLUSTER_INSTANCE_DISABLED
                 - CLUSTER_INSTANCE_ENABLED
+                - CLUSTER_BLOCK_WRITE
+                - CLUSTER_UNBLOCK_WRITE
                 - KMIP_KEY_ROTATION_SCHEDULED
                 - SSL_CERTIFICATE_ISSUED
                 - PROJECT_SCHEDULED_MAINTENANCE_OUTSIDE_OF_PROTECTED_HOURS
@@ -23289,6 +23450,9 @@ components:
                 - CLUSTER_IP_ROLLED_BACK
                 - AZ_BALANCING_OVERRIDE_MODIFIED
                 - FTDC_SETTINGS_UPDATED
+                - MONGOTUNE_ENABLED
+                - MONGOTUNE_DISABLED
+                - PROXY_PROTOCOL_FOR_PRIVATE_LINK_MODE_UPDATED
             example: CLUSTER_CREATED
             title: NDS Audit Types
             type: string
@@ -24508,6 +24672,7 @@ components:
             description: Unique identifier of event type.
             enum:
                 - ORG_CREATED
+                - CUSTOM_SESSION_TIMEOUT_MODIFIED
                 - SECURITY_CONTACT_MODIFIED
                 - ORG_CREDIT_CARD_ADDED
                 - ORG_CREDIT_CARD_UPDATED
@@ -24563,6 +24728,8 @@ components:
                 - ORG_MONGODB_VERSION_EOL_EXTENSION_PENDING
                 - ORG_MONGODB_VERSION_EOL_EXTENSION_CANCELLED
                 - GROUP_MOVED_FROM_ORG
+                - SANDBOX_ENABLED_FOR_ORG
+                - SANDBOX_DISABLED_FOR_ORG
             example: ORG_CREATED
             title: Org Event Types
             type: string
@@ -24838,6 +25005,7 @@ components:
                 - username
             type: object
         OrgServiceAccount:
+            description: Organization Service Account that Atlas created for the organization.
             properties:
                 clientId:
                     description: The Client ID of the Service Account.
@@ -24874,8 +25042,10 @@ components:
                         $ref: '#/components/schemas/ServiceAccountSecret'
                     type: array
                     uniqueItems: true
+            readOnly: true
             type: object
         OrgServiceAccountRequest:
+            description: Organization Service Account that Atlas creates for this organization. If omitted, Atlas doesn't create an organization Service Account for this organization. If specified, this object requires all body parameters.
             properties:
                 description:
                     description: Human readable description for the Service Account.
@@ -27621,6 +27791,117 @@ components:
                     readOnly: true
                     type: string
             type: object
+        QueryShapeSeenMetadata:
+            description: Metadata about when a query shape was seen.
+            properties:
+                applicationName:
+                    description: The name of the application that this query shape came from. This can be set via the MongoDB connection string. The application name is set to unknown for internal MongoDB queries.
+                    type: string
+                driverName:
+                    description: The name of the MongoDB driver that this query shape was executed from. The driver name is set to unknown for internal MongoDB queries.
+                    type: string
+                driverVersion:
+                    description: The version of the MongoDB driver that this query shape was executed from. The driver version is set to unknown for internal MongoDB queries.
+                    type: string
+                timestamp:
+                    description: Unix epoch milliseconds of the time.
+                    format: int64
+                    type: integer
+            type: object
+        QueryStatsDetailsResponse:
+            description: Metadata and summary statistics for a given query shape.
+            properties:
+                firstSeen:
+                    $ref: '#/components/schemas/QueryShapeSeenMetadata'
+                lastSeen:
+                    $ref: '#/components/schemas/QueryShapeSeenMetadata'
+                queryStats:
+                    $ref: '#/components/schemas/QueryStatsSummary'
+            type: object
+        QueryStatsSummary:
+            description: A summary of execution statistics for a given query shape.
+            properties:
+                avgWorkingMillis:
+                    description: Average total time in milliseconds spent running queries with the given query shape. If the query resulted in getMore commands, this metric includes the time spent processing the getMore requests. This metric does not include time spent waiting for the client.
+                    format: double
+                    type: number
+                bytesRead:
+                    description: The number of bytes read by the given query shape from the disk to the cache.
+                    format: double
+                    type: number
+                command:
+                    description: The MongoDB command issued for this query shape.
+                    enum:
+                        - find
+                        - distinct
+                        - aggregate
+                    type: string
+                docsExamined:
+                    description: Total number of documents examined by queries with the given query shape.
+                    format: double
+                    type: number
+                docsExaminedRatio:
+                    description: Ratio of documents examined to documents returned by queries with the given query shape.
+                    format: double
+                    type: number
+                docsReturned:
+                    description: Total number of documents returned by queries with the given query shape.
+                    format: double
+                    type: number
+                execCount:
+                    description: Total number of times that queries with the given query shape have been executed.
+                    format: double
+                    type: number
+                keysExamined:
+                    description: Total number of in-bounds and out-of-bounds index keys examined by queries with the given query shape.
+                    format: double
+                    type: number
+                keysExaminedRatio:
+                    description: Ratio of in-bounds and out-of-bounds index keys examined to indexes containing documents returned by queries with the given query shape.
+                    format: double
+                    type: number
+                lastExecMicros:
+                    description: Execution runtime in microseconds for the most recent query with the given query shape.
+                    format: double
+                    type: number
+                namespace:
+                    description: Human-readable label that identifies the namespace on the specified host. The resource expresses this parameter value as `<database>.<collection>`.
+                    type: string
+                p50ExecMicros:
+                    description: The 50th percentile value of execution time in microseconds.
+                    format: double
+                    type: number
+                p90ExecMicros:
+                    description: The 90th percentile value of execution time in microseconds.
+                    format: double
+                    type: number
+                p99ExecMicros:
+                    description: The 99th percentile value of execution time in microseconds.
+                    format: double
+                    type: number
+                queryShape:
+                    description: A query shape is a set of specifications that group similar queries together. Specifications can include filters, sorts, projections, aggregation pipeline stages, a namespace, and others. Queries that have similar specifications have the same query shape.
+                    type: string
+                queryShapeHash:
+                    description: A hexadecimal string that represents the hash of a MongoDB query shape.
+                    type: string
+                totalTimeToResponseMicros:
+                    description: Time in microseconds spent from the beginning of query processing to the first server response.
+                    format: double
+                    type: number
+                totalWorkingMillis:
+                    description: Total time in milliseconds spent running queries with the given query shape. If the query resulted in `getMore` commands, this metric includes the time spent processing the `getMore` requests. This metric does not include time spent waiting for the client.
+                    format: double
+                    type: number
+            type: object
+        QueryStatsSummaryListResponse:
+            properties:
+                summaries:
+                    description: List of query shape statistic summaries from Query Shape Insights.
+                    items:
+                        $ref: '#/components/schemas/QueryStatsSummary'
+                    type: array
+            type: object
         RPUMetricThresholdView:
             properties:
                 metricName:
@@ -28344,7 +28625,7 @@ components:
                     type: integer
                 regionConfigs:
                     description: |-
-                        Hardware specifications for nodes set for a given region. Each **regionConfigs** object describes the region's priority in elections and the number and type of MongoDB nodes that MongoDB Cloud deploys to the region. Each **regionConfigs** object must have either an **analyticsSpecs** object, **electableSpecs** object, or **readOnlySpecs** object. Tenant clusters only require **electableSpecs. Dedicated** clusters can specify any of these specifications, but must have at least one **electableSpecs** object within a **replicationSpec**. Every hardware specification must use the same **instanceSize**.
+                        Hardware specifications for nodes set for a given region. Each **regionConfigs** object must be unique by region and cloud provider within the **replicationSpec**. Each **regionConfigs** object describes the region's priority in elections and the number and type of MongoDB nodes that MongoDB Cloud deploys to the region. Each **regionConfigs** object must have either an **analyticsSpecs** object, **electableSpecs** object, or **readOnlySpecs** object. Tenant clusters only require **electableSpecs. Dedicated** clusters can specify any of these specifications, but must have at least one **electableSpecs** object within a **replicationSpec**. Every hardware specification must use the same **instanceSize**.
 
                         **Example:**
 
@@ -28374,7 +28655,7 @@ components:
                     type: string
                 regionConfigs:
                     description: |-
-                        Hardware specifications for nodes set for a given region. Each **regionConfigs** object describes the region's priority in elections and the number and type of MongoDB nodes that MongoDB Cloud deploys to the region. Each **regionConfigs** object must have either an **analyticsSpecs** object, **electableSpecs** object, or **readOnlySpecs** object. Tenant clusters only require **electableSpecs. Dedicated** clusters can specify any of these specifications, but must have at least one **electableSpecs** object within a **replicationSpec**.
+                        Hardware specifications for nodes set for a given region. Each **regionConfigs** object must be unique by region and cloud provider within the **replicationSpec**. Each **regionConfigs** object describes the region's priority in elections and the number and type of MongoDB nodes that MongoDB Cloud deploys to the region. Each **regionConfigs** object must have either an **analyticsSpecs** object, **electableSpecs** object, or **readOnlySpecs** object. Tenant clusters only require **electableSpecs. Dedicated** clusters can specify any of these specifications, but must have at least one **electableSpecs** object within a **replicationSpec**.
 
                         **Example:**
 
@@ -29735,7 +30016,14 @@ components:
                 serverlessBackupOptions:
                     $ref: '#/components/schemas/ClusterServerlessBackupOptions'
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of the serverless instance.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -29792,7 +30080,14 @@ components:
                 serverlessBackupOptions:
                     $ref: '#/components/schemas/ClusterServerlessBackupOptions'
                 stateName:
-                    description: Human-readable label that indicates the current operating condition of the serverless instance.
+                    description: |-
+                        Human-readable label that indicates any current activity being taken on this cluster by the Atlas control plane. With the exception of CREATING and DELETING states, clusters should always be available and have a Primary node even when in states indicating ongoing activity.
+
+                         - `IDLE`: Atlas is making no changes to this cluster and all changes requested via the UI or API can be assumed to have been applied.
+                         - `CREATING`: A cluster being provisioned for the very first time returns state CREATING until it is ready for connections. Ensure IP Access List and DB Users are configured before attempting to connect.
+                         - `UPDATING`: A change requested via the UI, API, AutoScaling, or other scheduled activity is taking place.
+                         - `DELETING`: The cluster is in the process of deletion and will soon be deleted.
+                         - `REPAIRING`: One or more nodes in the cluster are being returned to service by the Atlas control plane. Other nodes should continue to provide service as normal.
                     enum:
                         - IDLE
                         - CREATING
@@ -31023,6 +31318,17 @@ components:
                     description: The name of an S3 bucket used to check authorization of the passed-in IAM role ARN.
                     type: string
             type: object
+        StreamsAWSKinesisDataStreamsConnection:
+            allOf:
+                - $ref: '#/components/schemas/StreamsConnection'
+                - properties:
+                    aws:
+                        $ref: '#/components/schemas/StreamsAWSConnectionConfig'
+                    networking:
+                        $ref: '#/components/schemas/StreamsKafkaNetworking'
+                  type: object
+            description: The configuration for AWS Kinesis Data Stream connections.
+            type: object
         StreamsAWSLambdaConnection:
             allOf:
                 - $ref: '#/components/schemas/StreamsConnection'
@@ -31050,6 +31356,7 @@ components:
             description: Settings that define a connection to an external data store.
             discriminator:
                 mapping:
+                    AWSKinesisDataStreams: '#/components/schemas/StreamsAWSKinesisDataStreamsConnection'
                     AWSLambda: '#/components/schemas/StreamsAWSLambdaConnection'
                     Cluster: '#/components/schemas/StreamsClusterConnection'
                     Https: '#/components/schemas/StreamsHttpsConnection'
@@ -31064,6 +31371,7 @@ components:
                 - $ref: '#/components/schemas/StreamsHttpsConnection'
                 - $ref: '#/components/schemas/StreamsAWSLambdaConnection'
                 - $ref: '#/components/schemas/StreamsS3Connection'
+                - $ref: '#/components/schemas/StreamsAWSKinesisDataStreamsConnection'
             properties:
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
@@ -31085,6 +31393,7 @@ components:
                         - Sample
                         - Https
                         - AWSLambda
+                        - AWSKinesisDataStreams
                     type: string
             readOnly: true
             type: object
@@ -31275,7 +31584,7 @@ components:
                   type: object
             type: object
         StreamsKafkaNetworking:
-            description: Networking Access Type can either be 'PUBLIC' (default) or VPC. VPC type is in public preview, please file a support ticket to enable VPC Network Access.
+            description: Networking configuration for Streams connections.
             properties:
                 access:
                     $ref: '#/components/schemas/StreamsKafkaNetworkingAccess'
@@ -31290,7 +31599,7 @@ components:
                     type: array
             type: object
         StreamsKafkaNetworkingAccess:
-            description: Information about the networking access.
+            description: Information about networking access.
             properties:
                 connectionId:
                     description: Reserved. Will be used by PRIVATE_LINK connection type.
@@ -31512,11 +31821,17 @@ components:
                     type: string
                 vendor:
                     description: |-
-                        Vendor that manages the Kafka cluster. The following are the vendor values per provider:
-                        - MSK and CONFLUENT for the AWS provider.
-                        - EVENTHUB and CONFLUENT for the AZURE provider.
+                        Vendor that manages the cloud service. The following are the vendor values per provider:
+                        - AWS
+                        -- MSK for AWS MSK Kafka clusters
+                        -- CONFLUENT for Confluent Kafka clusters on AWS
+                        -- KINESIS for AWS Kinesis Data Streams (coming soon).
 
-                        **NOTE** Omitting the vendor field will default to using the EVENTHUB vendor for the AZURE provider.
+                        - Azure
+                        -- EVENTHUB for Azure EventHub.
+                        -- CONFLUENT for the Confluent Kafka clusters on Azure
+
+                        **NOTE** Omitting the vendor field will default to using the GENERIC vendor.
                     type: string
             required:
                 - provider
@@ -31615,6 +31930,8 @@ components:
                 - properties:
                     aws:
                         $ref: '#/components/schemas/StreamsAWSConnectionConfig'
+                    networking:
+                        $ref: '#/components/schemas/StreamsKafkaNetworking'
                   type: object
             description: The configuration for S3 connections.
             type: object
@@ -34792,7 +35109,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 26cadc643a40bc7ede7b258112a0df72164b9ce2
+    x-xgen-sha: beb805f09cece4e3ef1fc333a12d507a5967d6ba
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -37389,7 +37706,7 @@ paths:
             description: |-
                 Returns the details for all clusters in the specific project to which you have access. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. This feature is not  available for serverless clusters.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the listFlexClusters endpoint for Flex clusters instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the listFlexClusters endpoint for Flex clusters instead.
             externalDocs:
                 description: listFlexClusters
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Clusters/operation/listFlexClusters
@@ -37658,13 +37975,15 @@ paths:
             summary: Create One Cluster in One Project
             tags:
                 - Clusters
+            x-xgen-changelog:
+                "2025-06-05": Fixed a bug that previously permitted users to configure multiple regionConfigs for the same region and cloud provider within a replicationSpec
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:
         delete:
             description: |-
                 Removes one cluster from the specified project. The cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting Service Account or API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the deleteFlexCluster endpoint for Flex clusters instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the deleteFlexCluster endpoint for Flex clusters instead.
             externalDocs:
                 description: deleteFlexCluster
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Clusters/operation/deleteFlexCluster
@@ -37714,7 +38033,7 @@ paths:
             description: |-
                 Returns the details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. This feature is not available for serverless clusters.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the getFlexCluster endpoint for Flex clusters instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the getFlexCluster endpoint for Flex clusters instead.
             externalDocs:
                 description: getFlexCluster
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Clusters/operation/getFlexCluster
@@ -37838,6 +38157,8 @@ paths:
             summary: Update One Cluster in One Project
             tags:
                 - Clusters
+            x-xgen-changelog:
+                "2025-06-05": Fixed a bug that previously permitted users to configure multiple regionConfigs for the same region and cloud provider within a replicationSpec
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/updateCluster
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/{clusterView}/{databaseName}/{collectionName}/collStats/measurements:
         get:
@@ -38793,7 +39114,7 @@ paths:
             description: |-
                 Requests one snapshot for the specified shared cluster. This resource returns a `snapshotURL` that you can use to download the snapshot. This `snapshotURL` remains active for four hours after you make the request. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the downloadFlexBackup endpoint instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the downloadFlexBackup endpoint instead.
             externalDocs:
                 description: downloadFlexBackup
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Snapshots/operation/downloadFlexBackup
@@ -38847,7 +39168,7 @@ paths:
             description: |-
                 Restores the specified M2 or M5 cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the createFlexBackupRestoreJob endpoint instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the createFlexBackupRestoreJob endpoint instead.
             externalDocs:
                 description: createFlexBackupRestoreJob
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Restore-Jobs/operation/createFlexBackupRestoreJob
@@ -38901,7 +39222,7 @@ paths:
             description: |-
                 Returns all restore jobs for the specified M2 or M5 cluster. Restore jobs restore a cluster using a snapshot. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the listFlexBackupRestoreJobs endpoint instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the listFlexBackupRestoreJobs endpoint instead.
             externalDocs:
                 description: listFlexBackupRestoreJobs
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Restore-Jobs/operation/listFlexBackupRestoreJobs
@@ -38946,7 +39267,7 @@ paths:
             description: |-
                 Returns the specified restore job for the specified M2 or M5 cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackupRestoreJob endpoint instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackupRestoreJob endpoint instead.
             externalDocs:
                 description: getFlexBackupRestoreJob
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Restore-Jobs/operation/getFlexBackupRestoreJob
@@ -38998,7 +39319,7 @@ paths:
             description: |-
                 Returns details for all snapshots for the specified shared cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
-                This API also works for Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters, until January 2026, after which this endpoint will be sunset. Please use the listFlexBackups endpoint instead.
+                This API also works for Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters, until January 2026, after which this endpoint will be sunset. Please use the listFlexBackups endpoint instead.
             externalDocs:
                 description: listFlexBackups
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Snapshots/operation/listFlexBackups
@@ -39043,7 +39364,7 @@ paths:
             description: |-
                 Returns details for one snapshot for the specified shared cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
-                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackup endpoint instead.
+                This endpoint can also be used on Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackup endpoint instead.
             externalDocs:
                 description: getFlexBackup
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Snapshots/operation/getFlexBackup
@@ -40009,6 +40330,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Create One Rolling Index
@@ -40477,6 +40800,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Suggested Indexes to Drop
@@ -40512,6 +40837,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Schema Advice
@@ -40590,6 +40917,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Suggested Indexes
@@ -40701,6 +41030,232 @@ paths:
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/updateClusterAdvancedConfiguration
+    /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/queryShapeInsights/{queryShapeHash}/details:
+        get:
+            description: Returns the metadata and statistics summary for a given query shape hash.
+            operationId: getGroupClusterQueryShapeInsightDetails
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Human-readable label that identifies the cluster.
+                  in: path
+                  name: clusterName
+                  required: true
+                  schema:
+                    pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+                    type: string
+                - description: |-
+                    Date and time from which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+                    - If you don't specify the **until** parameter, the endpoint returns data covering from the **since** value and the current time.
+                    - If you specify neither the **since** nor the **until** parameters, the endpoint returns data from the previous 24 hours.
+                  in: query
+                  name: since
+                  schema:
+                    format: int64
+                    minimum: 1.1991456e+12
+                    type: integer
+                  x-xgen-IPA-exception:
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                - description: |-
+                    Date and time up until which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+                    - If you specify the **until** parameter, you must specify the **since** parameter.
+                    - If you specify neither the **since** nor the **until** parameters, the endpoint returns data from the previous 24 hours.
+                  in: query
+                  name: until
+                  schema:
+                    format: int64
+                    minimum: 1.1991456e+12
+                    type: integer
+                  x-xgen-IPA-exception:
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                - description: ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (`&`) between each processId.
+                  in: query
+                  name: processIds
+                  schema:
+                    items:
+                        pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-f]{1,4}\:){7}([0-9a-f]{1,4})|(([a-z0-9]+\.){1,10}[a-z]+)?(\:[0-9]{4,5})$
+                        type: string
+                    maxItems: 10
+                    type: array
+                  style: form
+                - description: A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.
+                  in: path
+                  name: queryShapeHash
+                  required: true
+                  schema:
+                    pattern: ^([a-fA-F0-9]{64})$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/QueryStatsDetailsResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Query Shape Details
+            tags:
+                - Query Shape Insights
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Query-Shape-Insights/operation/getGroupClusterQueryShapeInsightDetails
+    /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/queryShapeInsights/summaries:
+        get:
+            description: Returns a list of query shape statistics summaries for a given cluster. Query shape statistics provide performance insights about MongoDB queries, helping users identify problematic query patterns and potential optimizations.
+            operationId: getGroupClusterQueryShapeInsightSummaries
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: Human-readable label that identifies the cluster.
+                  in: path
+                  name: clusterName
+                  required: true
+                  schema:
+                    pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+                    type: string
+                - description: |-
+                    Date and time from which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+                    - If you don't specify the **until** parameter, the endpoint returns data covering from the **since** value and the current time.
+                    - If you specify neither the **since** nor the **until** parameters, the endpoint returns data from the previous 24 hours.
+                  in: query
+                  name: since
+                  schema:
+                    format: int64
+                    minimum: 1.1991456e+12
+                    type: integer
+                  x-xgen-IPA-exception:
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                - description: |-
+                    Date and time up until which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+                    - If you specify the **until** parameter, you must specify the **since** parameter.
+                    - If you specify neither the **since** nor the **until** parameters, the endpoint returns data from the previous 24 hours.
+                  in: query
+                  name: until
+                  schema:
+                    format: int64
+                    minimum: 1.1991456e+12
+                    type: integer
+                  x-xgen-IPA-exception:
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                - description: ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (`&`) between each processId.
+                  in: query
+                  name: processIds
+                  schema:
+                    items:
+                        pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-f]{1,4}\:){7}([0-9a-f]{1,4})|(([a-z0-9]+\.){1,10}[a-z]+)?(\:[0-9]{4,5})$
+                        type: string
+                    maxItems: 10
+                    type: array
+                  style: form
+                - description: 'Namespaces from which to retrieve query shape statistics. A namespace consists of one database and one collection resource written as `.`: `<database>.<collection>`. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (`&`) between each namespace. Omit this parameter to return results for all namespaces.'
+                  in: query
+                  name: namespaces
+                  schema:
+                    items:
+                        type: string
+                    maxItems: 10
+                    type: array
+                  style: form
+                - description: Retrieve query shape statistics matching specified MongoDB commands. To include multiple commands, pass the parameter multiple times delimited with an ampersand (`&`) between each command. The currently supported parameters are find, distinct, and aggregate. Omit this parameter to return results for all supported commands.
+                  in: query
+                  name: commands
+                  schema:
+                    description: MongoDB commands from which to retrieve query statistics. To include multiple commands, pass the parameter multiple times delimited with an ampersand (`&`) between each command. Omit this parameter to return results for all supported commands.
+                    items:
+                        enum:
+                            - find
+                            - distinct
+                            - aggregate
+                        type: string
+                    maxItems: 3
+                    type: array
+                    uniqueItems: true
+                  style: form
+                - description: Maximum number of query statistic summaries to return.
+                  in: query
+                  name: nSummaries
+                  schema:
+                    default: 100
+                    format: int64
+                    maximum: 100
+                    minimum: 1
+                    type: integer
+                - description: Query shape statistics data series to retrieve. A series represents a specific metric about query execution. To include multiple series, pass the parameter multiple times delimited with an ampersand (`&`) between each series. Omit this parameter to return results for all available series.
+                  in: query
+                  name: series
+                  schema:
+                    description: Query shape statistics data series to retrieve. A series represents a specific metric about query execution. To include multiple series, pass the parameter multiple times delimited with an ampersand (`&`) between each series. Omit this parameter to return results for all available series.
+                    items:
+                        enum:
+                            - TOTAL_EXECUTION_TIME
+                            - AVG_EXECUTION_TIME
+                            - EXECUTION_COUNT
+                            - KEYS_EXAMINED
+                            - DOCS_EXAMINED
+                            - DOCS_RETURNED
+                            - TOTAL_TIME_TO_RESPONSE
+                            - BYTES_READ
+                            - KEYS_EXAMINED_RETURNED
+                            - DOCS_EXAMINED_RETURNED
+                            - LAST_EXECUTION_TIME
+                            - P50_EXECUTION_TIME
+                            - P90_EXECUTION_TIME
+                            - P99_EXECUTION_TIME
+                        type: string
+                    maxItems: 14
+                    type: array
+                    uniqueItems: true
+                  style: form
+                - description: A list of SHA256 hashes of desired query shapes, output by MongoDB commands like $queryStats and $explain or slow query logs. To include multiple series, pass the parameter multiple times delimited with an ampersand (`&`) between each series. Omit this parameter to return results for all available series.
+                  in: query
+                  name: queryShapeHashes
+                  schema:
+                    description: A list of SHA256 hashes of desired query shapes, output by MongoDB commands like $queryStats and $explain or slow query logs. To include multiple series, pass the parameter multiple times delimited with an ampersand (`&`) between each series. Omit this parameter to return results for all available series.
+                    items:
+                        pattern: ^([a-fA-F0-9]{64})$
+                        type: string
+                    maxItems: 10
+                    type: array
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/QueryStatsSummaryListResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Query Statistic Summaries
+            tags:
+                - Query Shape Insights
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Query-Shape-Insights/operation/getGroupClusterQueryShapeInsightSummaries
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restartPrimaries:
         post:
             description: Starts a failover test for the specified cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster's primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary. To use this resource, the requesting Service Account or API Key must have the Project Cluster Manager role.
@@ -42201,7 +42756,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listCloudProviderRegions
     /api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade:
         post:
-            description: "Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project. To use this resource, the requesting Service Account or API Key must have the Project Cluster Manager role. Each project supports up to 25 clusters. \n\nThis endpoint can also be used to upgrade Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster) API or former M2/M5 clusters that have been migrated to Flex clusters, using instanceSizeName to “M2” or “M5” until January 2026. This functionality will be available until January 2026, after which it will only be available for M0 clusters. Please use the upgradeFlexCluster endpoint instead."
+            description: "Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project. To use this resource, the requesting Service Account or API Key must have the Project Cluster Manager role. Each project supports up to 25 clusters. \n\nThis endpoint can also be used to upgrade Flex clusters that were created using the [createCluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster) API or former M2/M5 clusters that have been migrated to Flex clusters, using instanceSizeName to “M2” or “M5” until January 2026. This functionality will be available until January 2026, after which it will only be available for M0 clusters. Please use the upgradeFlexCluster endpoint instead."
             externalDocs:
                 description: upgradeFlexCluster
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Clusters/operation/upgradeFlexCluster
@@ -43704,6 +44259,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Database Access History for One Cluster by Cluster Name
@@ -43773,6 +44330,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Database Access History for One Cluster by Hostname
@@ -44118,6 +44677,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Events from One Project
@@ -44692,6 +45253,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Atlas Search Metric Types for One Process
@@ -44754,6 +45317,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Atlas Search Metrics for One Index in One Namespace
@@ -44815,6 +45380,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Atlas Search Index Metrics for One Namespace
@@ -44873,6 +45440,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Atlas Search Hardware and Status Metrics
@@ -46013,6 +46582,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Managed Slow Operation Threshold Status
@@ -46039,6 +46610,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Disable Managed Slow Operation Threshold
@@ -46065,6 +46638,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Enable Managed Slow Operation Threshold
@@ -48559,6 +49134,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Namespaces for One Host
@@ -48652,6 +49229,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Slow Queries
@@ -48734,6 +49313,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return All Suggested Indexes
@@ -49306,6 +49887,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Return Serverless Auto-Indexing Status
@@ -49346,6 +49929,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Set Serverless Auto-Indexing Status
@@ -51402,7 +51987,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add Teams to One Project
+            summary: Add One Team to One Project
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/addAllTeamsToProject
@@ -51443,6 +52028,44 @@ paths:
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/removeProjectTeam
+        get:
+            description: Returns one team to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier. All members of the team share the same project access. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
+            operationId: getProjectTeam
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique 24-hexadecimal digit string that identifies the team for which you want to get.
+                  in: path
+                  name: teamId
+                  required: true
+                  schema:
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2023-01-01+json:
+                            schema:
+                                $ref: '#/components/schemas/TeamRole'
+                            x-xgen-IPA-exception:
+                                xgen-IPA-104-get-method-returns-response-suffixed-object: Content predates IPA validation
+                            x-xgen-version: "2023-01-01"
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Team in One Project
+            tags:
+                - Teams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/getProjectTeam
         patch:
             description: Updates the project roles assigned to the specified team. You can grant team roles for specific projects and grant project access roles to users in the team. All members of the team share the same project access. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
             externalDocs:
@@ -51473,6 +52096,8 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/PaginatedTeamRoleView'
+                            x-xgen-IPA-exception:
+                                xgen-IPA-107-update-method-response-is-get-method-response: Content predates IPA validation
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -53639,7 +54264,7 @@ paths:
             externalDocs:
                 description: Atlas Resource Policies
                 url: https://dochub.mongodb.org/core/atlas-resource-policies
-            operationId: getAtlasResourcePolicies
+            operationId: listOrgResourcePolicies
             parameters:
                 - $ref: '#/components/parameters/envelope'
                 - $ref: '#/components/parameters/pretty'
@@ -53673,13 +54298,13 @@ paths:
             summary: Return All Atlas Resource Policies
             tags:
                 - Resource Policies
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getAtlasResourcePolicies
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/listOrgResourcePolicies
         post:
             description: Create one Atlas Resource Policy for an org.
             externalDocs:
                 description: Atlas Resource Policies
                 url: https://dochub.mongodb.org/core/atlas-resource-policies
-            operationId: createAtlasResourcePolicy
+            operationId: createOrgResourcePolicy
             parameters:
                 - $ref: '#/components/parameters/envelope'
                 - $ref: '#/components/parameters/pretty'
@@ -53718,14 +54343,14 @@ paths:
             summary: Create One Atlas Resource Policy
             tags:
                 - Resource Policies
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/createAtlasResourcePolicy
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/createOrgResourcePolicy
     /api/atlas/v2/orgs/{orgId}/resourcePolicies/{resourcePolicyId}:
         delete:
             description: Delete one Atlas Resource Policy for an org.
             externalDocs:
                 description: Atlas Resource Policies
                 url: https://dochub.mongodb.org/core/atlas-resource-policies
-            operationId: deleteAtlasResourcePolicy
+            operationId: deleteOrgResourcePolicy
             parameters:
                 - $ref: '#/components/parameters/envelope'
                 - $ref: '#/components/parameters/pretty'
@@ -53759,13 +54384,13 @@ paths:
             summary: Delete One Atlas Resource Policy
             tags:
                 - Resource Policies
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/deleteAtlasResourcePolicy
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/deleteOrgResourcePolicy
         get:
             description: Return one Atlas Resource Policy for an org.
             externalDocs:
                 description: Atlas Resource Policies
                 url: https://dochub.mongodb.org/core/atlas-resource-policies
-            operationId: getAtlasResourcePolicy
+            operationId: getOrgResourcePolicy
             parameters:
                 - $ref: '#/components/parameters/envelope'
                 - $ref: '#/components/parameters/pretty'
@@ -53803,13 +54428,13 @@ paths:
             summary: Return One Atlas Resource Policy
             tags:
                 - Resource Policies
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getAtlasResourcePolicy
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getOrgResourcePolicy
         patch:
             description: Update one Atlas Resource Policy for an org.
             externalDocs:
                 description: Atlas Resource Policies
                 url: https://dochub.mongodb.org/core/atlas-resource-policies
-            operationId: updateAtlasResourcePolicy
+            operationId: updateOrgResourcePolicy
             parameters:
                 - $ref: '#/components/parameters/envelope'
                 - $ref: '#/components/parameters/pretty'
@@ -53858,7 +54483,7 @@ paths:
             summary: Update One Atlas Resource Policy
             tags:
                 - Resource Policies
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/updateAtlasResourcePolicy
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/updateOrgResourcePolicy
     /api/atlas/v2/orgs/{orgId}/resourcePolicies:validate:
         post:
             description: Validate one Atlas Resource Policy for an org.
@@ -54350,7 +54975,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteServiceAccountSecret
     /api/atlas/v2/orgs/{orgId}/settings:
         get:
-            description: Returns details about the specified organization's settings. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
+            description: Returns details about the specified organization's settings. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
             operationId: getOrganizationSettings
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -54408,6 +55033,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
                 "500":
                     $ref: '#/components/responses/internalServerError'
             summary: Update Settings for One Organization
@@ -55327,6 +55954,10 @@ paths:
                         application/vnd.atlas.2023-11-15+json:
                             schema:
                                 $ref: '#/components/schemas/ControlPlaneIPAddresses'
+                            x-xgen-IPA-exception:
+                                xgen-IPA-110-collections-response-define-links-array: Content predates IPA validation
+                                xgen-IPA-110-collections-response-define-results-array: Content predates IPA validation
+                                xgen-IPA-110-collections-use-paginated-prefix: Content predates IPA validation
                             x-xgen-version: "2023-11-15"
                     description: OK
                 "500":

@@ -123,6 +123,20 @@ func (mr *MockStoreMockRecorder) GetProfileValue(profileName, propertyName any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfileValue", reflect.TypeOf((*MockStore)(nil).GetProfileValue), profileName, propertyName)
 }
 
+// IsSecure mocks base method.
+func (m *MockStore) IsSecure() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsSecure")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsSecure indicates an expected call of IsSecure.
+func (mr *MockStoreMockRecorder) IsSecure() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsSecure", reflect.TypeOf((*MockStore)(nil).IsSecure))
+}
+
 // IsSetGlobal mocks base method.
 func (m *MockStore) IsSetGlobal(propertyName string) bool {
 	m.ctrl.T.Helper()

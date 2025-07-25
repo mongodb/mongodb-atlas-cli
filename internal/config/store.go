@@ -21,7 +21,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store
+
 type Store interface {
+	IsSecure() bool
 	Save() error
 
 	GetProfileNames() []string
@@ -49,6 +52,10 @@ func NewInMemoryStore() *InMemoryStore {
 	return &InMemoryStore{
 		v: viper.New(),
 	}
+}
+
+func (s *InMemoryStore) IsSecure() bool {
+	return true
 }
 
 func (*InMemoryStore) Save() error {

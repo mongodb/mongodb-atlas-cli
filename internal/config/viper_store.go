@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store
-
 package config
 
 import (
@@ -97,6 +95,10 @@ func (s *ViperConfigStore) Filename() string {
 }
 
 // ConfigStore implementation
+
+func (s *ViperConfigStore) IsSecure() bool {
+	return false
+}
 
 func (s *ViperConfigStore) Save() error {
 	exists, err := afero.DirExists(s.fs, s.configDir)

@@ -113,10 +113,10 @@ func (s *ViperConfigStore) Save() error {
 }
 
 func (s *ViperConfigStore) GetProfileNames() []string {
-	allKeys := s.viper.AllKeys()
+	allKeys := s.viper.AllSettings()
 
 	profileNames := make([]string, 0, len(allKeys))
-	for _, key := range allKeys {
+	for key := range allKeys {
 		if !slices.Contains(AllProperties(), key) {
 			profileNames = append(profileNames, key)
 		}

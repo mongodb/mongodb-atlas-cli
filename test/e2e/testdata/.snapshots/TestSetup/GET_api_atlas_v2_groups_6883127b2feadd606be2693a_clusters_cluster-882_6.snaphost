@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1717
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Fri, 25 Jul 2025 05:13:41 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 102
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=f27938d3a55462f55a445c9a7dab57e39c5c25a3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-0tnasxe-shard-00-00.mjhai3t.mongodb-dev.net:27017,ac-0tnasxe-shard-00-01.mjhai3t.mongodb-dev.net:27017,ac-0tnasxe-shard-00-02.mjhai3t.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-pipm7e-shard-0","standardSrv":"mongodb+srv://cluster-882.mjhai3t.mongodb-dev.net"},"createDate":"2025-07-25T05:13:34Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"6883127b2feadd606be2693a","id":"6883127ef9bb9c736a1abc3d","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6883127b2feadd606be2693a/clusters/cluster-882","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6883127b2feadd606be2693a/clusters/cluster-882/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6883127b2feadd606be2693a/clusters/cluster-882/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.12","name":"cluster-882","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"6883127ef9bb9c736a1abc39","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6883127ef9bb9c736a1abc38","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"DELETING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

@@ -62,9 +62,12 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.2 // indirect
 	github.com/cli/safeexec v1.0.0 // indirect
+	github.com/danieljoos/wincred v1.2.2 // indirect
+	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect
@@ -73,6 +76,7 @@ require (
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
+	github.com/zalando/go-keyring v0.2.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 )

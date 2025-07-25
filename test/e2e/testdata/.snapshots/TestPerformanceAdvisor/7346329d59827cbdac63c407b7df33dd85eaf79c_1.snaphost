@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 25 Jul 2025 05:21:08 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 95
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=f27938d3a55462f55a445c9a7dab57e39c5c25a3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6883125c2feadd606be26411/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-07-25T05:20:31Z","groupId":"6883125c2feadd606be26411","hostname":"atlas-jy49l9-shard-00-00.sdhwga.mongodb-dev.net","id":"atlas-jy49l9-shard-00-00.sdhwga.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6883125c2feadd606be26411/processes/atlas-jy49l9-shard-00-00.sdhwga.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jy49l9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-98-shard-00-00.sdhwga.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-25T05:20:31Z","groupId":"6883125c2feadd606be26411","hostname":"atlas-jy49l9-shard-00-01.sdhwga.mongodb-dev.net","id":"atlas-jy49l9-shard-00-01.sdhwga.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6883125c2feadd606be26411/processes/atlas-jy49l9-shard-00-01.sdhwga.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jy49l9-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-98-shard-00-01.sdhwga.mongodb-dev.net","version":"8.0.12"},{"created":"2025-07-25T05:20:31Z","groupId":"6883125c2feadd606be26411","hostname":"atlas-jy49l9-shard-00-02.sdhwga.mongodb-dev.net","id":"atlas-jy49l9-shard-00-02.sdhwga.mongodb-dev.net:27017","lastPing":"2025-07-25T05:20:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6883125c2feadd606be26411/processes/atlas-jy49l9-shard-00-02.sdhwga.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-jy49l9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-98-shard-00-02.sdhwga.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

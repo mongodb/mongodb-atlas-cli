@@ -52,10 +52,20 @@ Related Commands
 ----------------
 
 * :ref:`atlas-streams-workspaces-create` - Create an Atlas Stream Processing workspace for your project
+* :ref:`atlas-streams-workspaces-delete` - Delete an Atlas Stream Processing instance.
+* :ref:`atlas-streams-workspaces-describe` - Describe an Atlas Stream Processing instance for your project.
+* :ref:`atlas-streams-workspaces-download` - Download a compressed file that contains the logs for the specified Atlas Stream Processing instance.
+* :ref:`atlas-streams-workspaces-list` - List all the Atlas Stream Processing instances for your project.
+* :ref:`atlas-streams-workspaces-update` - Updates an Atlas Stream Processing instance for your project.
 
 
 .. toctree::
    :titlesonly:
 
    create </command/atlas-streams-workspaces-create>
+   delete </command/atlas-streams-workspaces-delete>
+   describe </command/atlas-streams-workspaces-describe>
+   download </command/atlas-streams-workspaces-download>
+   list </command/atlas-streams-workspaces-list>
+   update </command/atlas-streams-workspaces-update>
 

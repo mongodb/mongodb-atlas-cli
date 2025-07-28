@@ -128,7 +128,7 @@ func TestWithContext(t *testing.T) {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	if c.ctx != context.Background() { //nolint: usetesting // we test this value
+	if c.ctx != t.Context() {
 		t.Errorf("New() got %v; expected %v", c.ctx, t.Context())
 	}
 

@@ -38,13 +38,11 @@ type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
-	name        string
-	provider    string
-	region      string
-	tier        string
-	defaultTier string
-	maxTierSize string
-	store       StreamsCreator
+	name     string
+	provider string
+	region   string
+	tier     string
+	store    StreamsCreator
 }
 
 const (
@@ -64,12 +62,6 @@ func (opts *CreateOpts) Run() error {
 		tierOrDefault = opts.tier
 	}
 	streamConfig := streamProcessor.GetStreamConfig()
-	if opts.defaultTier != "" {
-		streamConfig.DefaultTier = &opts.defaultTier
-	}
-	if opts.maxTierSize != "" {
-		streamConfig.MaxTierSize = &opts.maxTierSize
-	}
 	streamConfig.Tier = &tierOrDefault
 	streamProcessor.StreamConfig = &streamConfig
 
@@ -168,8 +160,6 @@ func WorkspaceCreateBuilder() *cobra.Command {
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "SP30", usage.StreamsWorkspaceTier)
-	cmd.Flags().StringVar(&opts.defaultTier, flag.DefaultTier, "", usage.StreamsWorkspaceDefaultTier)
-	cmd.Flags().StringVar(&opts.maxTierSize, flag.MaxTierSize, "", usage.StreamsWorkspaceMaxTierSize)
 
 	_ = cmd.MarkFlagRequired(flag.Provider)
 	_ = cmd.MarkFlagRequired(flag.Region)

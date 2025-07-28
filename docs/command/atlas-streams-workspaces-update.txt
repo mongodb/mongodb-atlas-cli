@@ -1,7 +1,7 @@
-.. _atlas-streams-workspaces-create:
+.. _atlas-streams-workspaces-update:
 
 ===============================
-atlas streams workspaces create
+atlas streams workspaces update
 ===============================
 
 .. default-domain:: mongodb
@@ -12,9 +12,10 @@ atlas streams workspaces create
    :depth: 1
    :class: singlecol
 
-Create an Atlas Stream Processing workspace for your project
+Updates an Atlas Stream Processing instance for your project.
 
-To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Stream Processing workspace.To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+Before updating an Atlas Streams Processing instance, you must first stop all processes associated with it.
+To use this command, you must authenticate with a user account or an API key with the Project Owner role.
 
 Syntax
 ------
@@ -22,7 +23,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas streams workspaces create <name> [options]
+   atlas streams workspaces update <name> [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -40,7 +41,7 @@ Arguments
    * - name
      - string
      - true
-     - Name of the Atlas Stream Processing workspace. After creation, you can't change the name of the workspace. The name can contain ASCII letters, numbers, and hyphens.
+     - Name of the Atlas Stream Processing instance. After creation, you can't change the name of the instance. The name can contain ASCII letters, numbers, and hyphens.
 
 Options
 -------
@@ -56,7 +57,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for create
+     - help for update
    * - -o, --output
      - string
      - false
@@ -73,10 +74,6 @@ Options
      - string
      - true
      - Human-readable label that identifies the physical location of your Atlas Stream Processing instance. The region can affect network latency and performance if it is far from your source or sink. For AWS, region name must be in the following format: VIRGINIA_USA. For a list of valid values, see https://www.mongodb.com/docs/atlas/reference/amazon-aws/#std-label-aws-stream-processing-regions. For Azure, region name must be in the following format: eastus. For a list of valid values, see https://www.mongodb.com/docs/atlas/reference/microsoft-azure/#std-label-azure-stream-processing-regions.
-   * - --tier
-     - string
-     - false
-     - Tier for your Stream Workspace. This value defaults to "SP30".
 
 Inherited Options
 -----------------
@@ -101,7 +98,7 @@ If the command succeeds, the CLI returns output similar to the following sample.
 
 .. code-block::
 
-   Atlas Streams Processor Workspace '<Name>' successfully created.
+   Atlas Streams Processor Instance '<Name>' successfully updated.
    
 
 Examples
@@ -110,5 +107,5 @@ Examples
 .. code-block::
    :copyable: false
 
-   # Deploy an Atlas Stream Processing workspace called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
-   atlas streams instance create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA --tier SP10 --defaultTier SP30 --maxTierSize SP50
+   # Modify the Atlas Stream Processing instance configuration with the name MyInstance:
+   atlas streams instance update MyInstance --provider AWS --region VIRGINIA_USA

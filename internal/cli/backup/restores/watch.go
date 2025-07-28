@@ -16,6 +16,7 @@ package restores
 
 import (
 	"context"
+	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -27,8 +28,13 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
+const failedStatus = "FAILED"
+
 var watchTemplate = "\nRestore completed.\n"
 var result *atlasv2.DiskBackupSnapshotRestoreJob
+var errRestoreFailed = errors.New("restore failed")
+var errRestoreExpired = errors.New("restore expired")
+var errRestoreCancelled = errors.New("restore cancelled")
 
 type WatchOpts struct {
 	cli.ProjectOpts
@@ -54,7 +60,7 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 		return nil, false, err
 	}
 
-	return nil, stopWatcher(result), nil
+	return result, stopWatcher(result), nil
 }
 
 func stopWatcher(result *atlasv2.DiskBackupSnapshotRestoreJob) bool {
@@ -74,7 +80,7 @@ func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, result.GetStatus() == "COMPLETED" || result.GetStatus() == "FAILED", nil
+	return result, result.GetStatus() == "COMPLETED" || result.GetStatus() == failedStatus, nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -86,19 +92,47 @@ func (opts *WatchOpts) Run() error {
 }
 
 func (opts *WatchOpts) RunFlexCluster() error {
-	if _, err := opts.Watch(opts.watcherFlexCluster); err != nil {
+	result, err := opts.Watch(opts.watcherFlexCluster)
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	res, ok := result.(*atlasv2.FlexBackupRestoreJob20241113)
+	if !ok {
+		return errRestoreFailed
+	}
+
+	if res.GetStatus() == failedStatus {
+		return errRestoreFailed
+	}
+
+	return opts.Print(result)
 }
 
 func (opts *WatchOpts) RunDedicatedCluster() error {
-	if _, err := opts.Watch(opts.watcher); err != nil {
+	result, err := opts.Watch(opts.watcher)
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	res, ok := result.(*atlasv2.DiskBackupSnapshotRestoreJob)
+	if !ok {
+		return errRestoreFailed
+	}
+
+	if res.GetFailed() {
+		return errRestoreFailed
+	}
+
+	if res.GetExpired() {
+		return errRestoreExpired
+	}
+
+	if res.GetCancelled() {
+		return errRestoreCancelled
+	}
+
+	return opts.Print(result)
 }
 
 // newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is

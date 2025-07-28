@@ -16,6 +16,7 @@ package jobs
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -25,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
 type WatchOpts struct {
@@ -36,6 +38,12 @@ type WatchOpts struct {
 }
 
 var watchTemplate = "\nExport completed.\n"
+var errExportFailed = errors.New("export failed")
+var errExportCancelled = errors.New("export cancelled")
+
+const cancelledState = "Cancelled"
+const failedState = "Failed"
+const successfulState = "Successful"
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -50,12 +58,25 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, result.GetState() == "Successful" || result.GetState() == "Failed" || result.GetState() == "Cancelled", nil
+	return result, result.GetState() == successfulState || result.GetState() == failedState || result.GetState() == cancelledState, nil
 }
 
 func (opts *WatchOpts) Run() error {
-	if _, err := opts.Watch(opts.watcher); err != nil {
+	result, err := opts.Watch(opts.watcher)
+	if err != nil {
 		return err
+	}
+
+	res, ok := result.(*atlasv2.DiskBackupExportJob)
+	if !ok {
+		return errExportFailed
+	}
+
+	switch res.GetState() {
+	case failedState:
+		return errExportFailed
+	case cancelledState:
+		return errExportCancelled
 	}
 
 	return opts.Print(nil)

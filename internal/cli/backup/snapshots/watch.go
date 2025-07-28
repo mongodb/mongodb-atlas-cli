@@ -16,7 +16,9 @@ package snapshots
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -28,6 +30,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
+var errSnapshotFailed = errors.New("snapshot failed")
+
 type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
@@ -38,6 +42,9 @@ type WatchOpts struct {
 }
 
 var watchTemplate = "\nSnapshot changes completed.\n"
+
+const failedStatus = "FAILED"
+const completedStatus = "COMPLETED"
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -52,7 +59,7 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
+	return result, strings.ToUpper(result.GetStatus()) == completedStatus || strings.ToUpper(result.GetStatus()) == failedStatus, nil
 }
 
 func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
@@ -60,7 +67,7 @@ func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return nil, result.GetStatus() == "COMPLETED" || result.GetStatus() == "FAILED", nil
+	return result, strings.ToUpper(result.GetStatus()) == completedStatus || strings.ToUpper(result.GetStatus()) == failedStatus, nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -72,19 +79,39 @@ func (opts *WatchOpts) Run() error {
 }
 
 func (opts *WatchOpts) RunFlexCluster() error {
-	if _, err := opts.Watch(opts.watcherFlexCluster); err != nil {
+	result, err := opts.Watch(opts.watcherFlexCluster)
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	res, ok := result.(*atlasv2.FlexBackupSnapshot20241113)
+	if !ok {
+		return errSnapshotFailed
+	}
+
+	if strings.ToUpper(res.GetStatus()) == failedStatus {
+		return errSnapshotFailed
+	}
+
+	return opts.Print(result)
 }
 
 func (opts *WatchOpts) RunDedicatedCluster() error {
-	if _, err := opts.Watch(opts.watcher); err != nil {
+	result, err := opts.Watch(opts.watcher)
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(nil)
+	res, ok := result.(*atlasv2.DiskBackupReplicaSet)
+	if !ok {
+		return errSnapshotFailed
+	}
+
+	if strings.ToUpper(res.GetStatus()) == failedStatus {
+		return errSnapshotFailed
+	}
+
+	return opts.Print(result)
 }
 
 // newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is

@@ -38,16 +38,19 @@ type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
-	name     string
-	provider string
-	region   string
-	tier     string
-	store    StreamsCreator
+	name        string
+	provider    string
+	region      string
+	tier        string
+	defaultTier string
+	maxTierSize string
+	store       StreamsCreator
 }
 
 const (
-	createTemplate = "Atlas Streams Processor Instance '{{.Name}}' successfully created.\n"
-	defaultTier    = "SP30"
+	createTemplate  = "Atlas Streams Processor Instance '{{.Name}}' successfully created.\n"
+	createWorkspace = "Atlas Streams Processor Workspace '{{.Name}}' successfully created.\n"
+	defaultTier     = "SP30"
 )
 
 func (opts *CreateOpts) Run() error {
@@ -61,6 +64,12 @@ func (opts *CreateOpts) Run() error {
 		tierOrDefault = opts.tier
 	}
 	streamConfig := streamProcessor.GetStreamConfig()
+	if opts.defaultTier != "" {
+		streamConfig.DefaultTier = &opts.defaultTier
+	}
+	if opts.maxTierSize != "" {
+		streamConfig.MaxTierSize = &opts.maxTierSize
+	}
 	streamConfig.Tier = &tierOrDefault
 	streamProcessor.StreamConfig = &streamConfig
 
@@ -118,6 +127,49 @@ func CreateBuilder() *cobra.Command {
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "SP30", usage.StreamsInstanceTier)
+
+	_ = cmd.MarkFlagRequired(flag.Provider)
+	_ = cmd.MarkFlagRequired(flag.Region)
+
+	return cmd
+}
+
+func WorkspaceCreateBuilder() *cobra.Command {
+	opts := &CreateOpts{}
+	cmd := &cobra.Command{
+		Use:   "create <name>",
+		Short: "Create an Atlas Stream Processing workspace for your project",
+		Long:  `To get started quickly, specify a name, a cloud provider, and a region to configure an Atlas Stream Processing workspace.` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Example: `  # Deploy an Atlas Stream Processing workspace called myProcessor for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas streams instance create myProcessor --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region VIRGINIA_USA --tier SP10 --defaultTier SP30 --maxTierSize SP50`,
+		Args: require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Name of the Atlas Stream Processing workspace. After creation, you can't change the name of the workspace. The name can contain ASCII letters, numbers, and hyphens.",
+			"output":   createWorkspace,
+		},
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
+
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), createWorkspace),
+			)
+		},
+		RunE: func(_ *cobra.Command, _ []string) error {
+			return opts.Run()
+		},
+	}
+
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.StreamsProvider)
+	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.StreamsRegion)
+
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddOutputOptFlags(cmd)
+
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "SP30", usage.StreamsWorkspaceTier)
+	cmd.Flags().StringVar(&opts.defaultTier, flag.DefaultTier, "", usage.StreamsWorkspaceDefaultTier)
+	cmd.Flags().StringVar(&opts.maxTierSize, flag.MaxTierSize, "", usage.StreamsWorkspaceMaxTierSize)
 
 	_ = cmd.MarkFlagRequired(flag.Provider)
 	_ = cmd.MarkFlagRequired(flag.Region)

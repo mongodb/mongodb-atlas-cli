@@ -10422,6 +10422,31 @@ components:
                     type: array
             title: Database User TLS Certificate Settings
             type: object
+        DLQRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
         DLSIngestionSink:
             allOf:
                 - $ref: '#/components/schemas/IngestionSink'
@@ -17150,6 +17175,56 @@ components:
                 description: Atlas Search Field Mappings
                 url: https://dochub.mongodb.org/core/field-mapping-definition-fts#define-field-mappings
             type: object
+        FlexAVGCommandExecutionTimeMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/TimeMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexAVGWriteExecutionTimeMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/TimeMetricUnits'
+            required:
+                - metricName
+            type: object
         FlexBackupRestoreJob20241113:
             description: Details for one restore job of a flex cluster.
             properties:
@@ -17579,22 +17654,38 @@ components:
             description: Threshold for the metric that, when exceeded, triggers an alert. The metric threshold pertains to event types which reflects changes of measurements and metrics about the serverless database.
             discriminator:
                 mapping:
-                    FLEX_AVG_COMMAND_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    FLEX_AVG_COMMAND_EXECUTION_TIME: '#/components/schemas/FlexAVGCommandExecutionTimeMetricThresholdView'
                     FLEX_AVG_READ_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
-                    FLEX_AVG_WRITE_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    FLEX_AVG_WRITE_EXECUTION_TIME: '#/components/schemas/FlexAVGWriteExecutionTimeMetricThresholdView'
                     FLEX_CONNECTIONS: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_CONNECTIONS_PERCENT: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_CONNECTIONS_PERCENT: '#/components/schemas/FlexConnectionPercentRawMetricThresholdView'
                     FLEX_DATA_SIZE_TOTAL: '#/components/schemas/DataMetricThresholdView'
-                    FLEX_NETWORK_BYTES_IN: '#/components/schemas/DataMetricThresholdView'
-                    FLEX_NETWORK_BYTES_OUT: '#/components/schemas/DataMetricThresholdView'
-                    FLEX_NETWORK_NUM_REQUESTS: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_CMD: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_DELETE: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_GETMORE: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_INSERT: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_QUERY: '#/components/schemas/RawMetricThresholdView'
-                    FLEX_OPCOUNTER_UPDATE: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_NETWORK_BYTES_IN: '#/components/schemas/FlexNetworkBytesInDataMetricThresholdView'
+                    FLEX_NETWORK_BYTES_OUT: '#/components/schemas/FlexNetworkBytesOutDataMetricThresholdView'
+                    FLEX_NETWORK_NUM_REQUESTS: '#/components/schemas/FlexNetworkNumRequestsRawMetricThresholdView'
+                    FLEX_OPCOUNTER_CMD: '#/components/schemas/FlexOpCounterCMDRawMetricThresholdView'
+                    FLEX_OPCOUNTER_DELETE: '#/components/schemas/FlexOpCounterDeleteRawMetricThresholdView'
+                    FLEX_OPCOUNTER_GETMORE: '#/components/schemas/FlexOpCounterGetMoreRawMetricThresholdView'
+                    FLEX_OPCOUNTER_INSERT: '#/components/schemas/FlexOpCounterInsertRawMetricThresholdView'
+                    FLEX_OPCOUNTER_QUERY: '#/components/schemas/FlexOpCounterQueryRawMetricThresholdView'
+                    FLEX_OPCOUNTER_UPDATE: '#/components/schemas/FlexOpCounterUpdateRawMetricThresholdView'
                 propertyName: metricName
+            oneOf:
+                - $ref: '#/components/schemas/RawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexConnectionPercentRawMetricThresholdView'
+                - $ref: '#/components/schemas/DataMetricThresholdView'
+                - $ref: '#/components/schemas/FlexNetworkBytesInDataMetricThresholdView'
+                - $ref: '#/components/schemas/FlexNetworkBytesOutDataMetricThresholdView'
+                - $ref: '#/components/schemas/FlexNetworkNumRequestsRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterCMDRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterDeleteRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterInsertRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterQueryRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterUpdateRawMetricThresholdView'
+                - $ref: '#/components/schemas/FlexOpCounterGetMoreRawMetricThresholdView'
+                - $ref: '#/components/schemas/TimeMetricThresholdView'
+                - $ref: '#/components/schemas/FlexAVGWriteExecutionTimeMetricThresholdView'
+                - $ref: '#/components/schemas/FlexAVGCommandExecutionTimeMetricThresholdView'
             properties:
                 metricName:
                     description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
@@ -17653,6 +17744,31 @@ components:
             required:
                 - metricName
             title: Flex Cluster Metric Threshold
+            type: object
+        FlexConnectionPercentRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
             type: object
         FlexConnectionStrings20241113:
             description: Collection of Uniform Resource Locators that point to the MongoDB database.
@@ -17749,6 +17865,231 @@ components:
             example: OUTSIDE_FLEX_METRIC_THRESHOLD
             title: Flex Metric Event Types
             type: string
+        FlexNetworkBytesInDataMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/DataMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexNetworkBytesOutDataMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/DataMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexNetworkNumRequestsRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterCMDRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterDeleteRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterGetMoreRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterInsertRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterQueryRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        FlexOpCounterUpdateRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
         FlexProviderSettings20241113:
             description: Group of cloud provider settings that configure the provisioned MongoDB flex cluster.
             properties:
@@ -21481,6 +21822,31 @@ components:
                     readOnly: true
                     type: number
             title: Line Item
+            type: object
+        KafkaRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
             type: object
         LDAPSecuritySettings:
             description: Lightweight Directory Access Protocol (LDAP) over Transport Layer Security (TLS) configuration details that apply to the specified project.
@@ -29622,6 +29988,56 @@ components:
                 - source
             title: Synonym Mapping Definition
             type: object
+        ServerlessAVGCommandExecutionTimeMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/TimeMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessAVGWriteExecutionTimeMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/TimeMetricUnits'
+            required:
+                - metricName
+            type: object
         ServerlessAWSTenantEndpoint:
             description: View for a serverless AWS tenant endpoint.
             properties:
@@ -29923,6 +30339,31 @@ components:
                     readOnly: true
                     type: integer
             type: object
+        ServerlessConnectionPercentageRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
         ServerlessConnectionStringsPrivateEndpointItem:
             description: Details of a private endpoint deployed for this serverless instance.
             properties:
@@ -30198,24 +30639,42 @@ components:
             description: Threshold for the metric that, when exceeded, triggers an alert. The metric threshold pertains to event types which reflects changes of measurements and metrics about the serverless database.
             discriminator:
                 mapping:
-                    SERVERLESS_AVG_COMMAND_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    SERVERLESS_AVG_COMMAND_EXECUTION_TIME: '#/components/schemas/ServerlessAVGCommandExecutionTimeMetricThresholdView'
                     SERVERLESS_AVG_READ_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
-                    SERVERLESS_AVG_WRITE_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    SERVERLESS_AVG_WRITE_EXECUTION_TIME: '#/components/schemas/ServerlessAVGWriteExecutionTimeMetricThresholdView'
                     SERVERLESS_CONNECTIONS: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_CONNECTIONS_PERCENT: '#/components/schemas/RawMetricThresholdView'
+                    SERVERLESS_CONNECTIONS_PERCENT: '#/components/schemas/ServerlessConnectionPercentageRawMetricThresholdView'
                     SERVERLESS_DATA_SIZE_TOTAL: '#/components/schemas/DataMetricThresholdView'
-                    SERVERLESS_NETWORK_BYTES_IN: '#/components/schemas/DataMetricThresholdView'
-                    SERVERLESS_NETWORK_BYTES_OUT: '#/components/schemas/DataMetricThresholdView'
-                    SERVERLESS_NETWORK_NUM_REQUESTS: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_CMD: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_DELETE: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_GETMORE: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_INSERT: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_QUERY: '#/components/schemas/RawMetricThresholdView'
-                    SERVERLESS_OPCOUNTER_UPDATE: '#/components/schemas/RawMetricThresholdView'
+                    SERVERLESS_NETWORK_BYTES_IN: '#/components/schemas/ServerlessNetworkBytesInDataMetricThresholdView'
+                    SERVERLESS_NETWORK_BYTES_OUT: '#/components/schemas/ServerlessNetworkBytesOutDataMetricThresholdView'
+                    SERVERLESS_NETWORK_NUM_REQUESTS: '#/components/schemas/ServerlessNetworkNumRequestRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_CMD: '#/components/schemas/ServerlessOpCounterCDMRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_DELETE: '#/components/schemas/ServerlessOpCounterDeleteRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_GETMORE: '#/components/schemas/ServerlessOpCounterGetMoreRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_INSERT: '#/components/schemas/ServerlessOpCounterInsertRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_QUERY: '#/components/schemas/ServerlessOpCounterQueryRawMetricThresholdView'
+                    SERVERLESS_OPCOUNTER_UPDATE: '#/components/schemas/ServerlessOpCounterUpdateRawMetricThresholdView'
                     SERVERLESS_TOTAL_READ_UNITS: '#/components/schemas/RPUMetricThresholdView'
-                    SERVERLESS_TOTAL_WRITE_UNITS: '#/components/schemas/RPUMetricThresholdView'
+                    SERVERLESS_TOTAL_WRITE_UNITS: '#/components/schemas/ServerlessTotalWriteUnitsRPUMetricThresholdView'
                 propertyName: metricName
+            oneOf:
+                - $ref: '#/components/schemas/ServerlessAVGCommandExecutionTimeMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessAVGWriteExecutionTimeMetricThresholdView'
+                - $ref: '#/components/schemas/TimeMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessTotalWriteUnitsRPUMetricThresholdView'
+                - $ref: '#/components/schemas/RPUMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterUpdateRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterQueryRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterInsertRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterGetMoreRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterDeleteRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessOpCounterCDMRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessNetworkNumRequestRawMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessNetworkBytesOutDataMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessNetworkBytesInDataMetricThresholdView'
+                - $ref: '#/components/schemas/DataMetricThresholdView'
+                - $ref: '#/components/schemas/ServerlessConnectionPercentageRawMetricThresholdView'
+                - $ref: '#/components/schemas/RawMetricThresholdView'
             properties:
                 metricName:
                     description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
@@ -30287,6 +30746,231 @@ components:
             example: RPU
             title: Serverless Metric Units
             type: string
+        ServerlessNetworkBytesInDataMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/DataMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessNetworkBytesOutDataMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/DataMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessNetworkNumRequestRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterCDMRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterDeleteRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterGetMoreRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterInsertRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterQueryRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        ServerlessOpCounterUpdateRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
         ServerlessProviderSettings:
             description: Group of cloud provider settings that configure the provisioned MongoDB serverless instance.
             properties:
@@ -30393,6 +31077,31 @@ components:
                     writeOnly: true
             required:
                 - providerName
+            type: object
+        ServerlessTotalWriteUnitsRPUMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/ServerlessMetricUnits'
+            required:
+                - metricName
             type: object
         ServiceAccountEventTypeViewForNdsGroup:
             description: Unique identifier of event type.
@@ -31239,10 +31948,15 @@ components:
             discriminator:
                 mapping:
                     STREAM_PROCESSOR_CHANGE_STREAM_LAG: '#/components/schemas/TimeMetricThresholdView'
-                    STREAM_PROCESSOR_DLQ_MESSAGE_COUNT: '#/components/schemas/RawMetricThresholdView'
-                    STREAM_PROCESSOR_KAFKA_LAG: '#/components/schemas/RawMetricThresholdView'
+                    STREAM_PROCESSOR_DLQ_MESSAGE_COUNT: '#/components/schemas/DLQRawMetricThresholdView'
+                    STREAM_PROCESSOR_KAFKA_LAG: '#/components/schemas/KafkaRawMetricThresholdView'
                     STREAM_PROCESSOR_OUTPUT_MESSAGE_COUNT: '#/components/schemas/RawMetricThresholdView'
                 propertyName: metricName
+            oneOf:
+                - $ref: '#/components/schemas/KafkaRawMetricThresholdView'
+                - $ref: '#/components/schemas/TimeMetricThresholdView'
+                - $ref: '#/components/schemas/DLQRawMetricThresholdView'
+                - $ref: '#/components/schemas/RawMetricThresholdView'
             properties:
                 metricName:
                     description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
@@ -35112,7 +35826,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: beb805f09cece4e3ef1fc333a12d507a5967d6ba
+    x-xgen-sha: 9abf0f49541367595d56f5c02f93eed2123c61e1
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

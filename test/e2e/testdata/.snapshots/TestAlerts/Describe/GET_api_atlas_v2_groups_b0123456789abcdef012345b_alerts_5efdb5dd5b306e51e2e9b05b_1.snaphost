@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 811
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 28 Jul 2025 05:14:31 GMT
+Date: Tue, 29 Jul 2025 05:14:30 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 71
+X-Envoy-Upstream-Service-Time: 74
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertsResource::getAlert
 X-Java-Version: 17.0.15+6
 X-Mongodb-Service-Version: gitHash=d1fb2095bdaeb1a4a9543932515e8cc5c6199b51; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"alertConfigId":"5efdb59f93fc35705f337179","created":"2020-07-02T10:24:29Z","eventTypeName":"USERS_WITHOUT_MULTI_FACTOR_AUTH","groupId":"b0123456789abcdef012345b","id":"5efdb5dd5b306e51e2e9b05b","lastNotified":"2025-07-25T08:18:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/5efdb5dd5b306e51e2e9b05b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/5efdb59f93fc35705f337179","rel":"http://localhost:8080/alertConfig"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/5efdb5dd5b306e51e2e9b05b/alertConfigs","rel":"http://localhost:8080/alertConfigs"}],"orgId":"a0123456789abcdef012345a","resolved":"2022-03-16T18:39:26Z","status":"CLOSED","updated":"2025-07-25T08:18:22Z"}
+{"alertConfigId":"5efdb59f93fc35705f337179","created":"2020-07-02T10:24:29Z","eventTypeName":"USERS_WITHOUT_MULTI_FACTOR_AUTH","groupId":"b0123456789abcdef012345b","id":"5efdb5dd5b306e51e2e9b05b","lastNotified":"2025-07-28T23:26:05Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/5efdb5dd5b306e51e2e9b05b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/5efdb59f93fc35705f337179","rel":"http://localhost:8080/alertConfig"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/5efdb5dd5b306e51e2e9b05b/alertConfigs","rel":"http://localhost:8080/alertConfigs"}],"orgId":"a0123456789abcdef012345a","resolved":"2022-03-16T18:39:26Z","status":"CLOSED","updated":"2025-07-28T23:26:05Z"}

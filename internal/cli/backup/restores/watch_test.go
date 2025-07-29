@@ -18,6 +18,7 @@ package restores
 
 import (
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
@@ -30,7 +31,8 @@ func TestWatchOpts_Run(t *testing.T) {
 	mockStore := NewMockRestoreJobsDescriber(ctrl)
 
 	expected := &atlasv2.DiskBackupSnapshotRestoreJob{
-		Failed: pointer.Get(true),
+		Failed:     pointer.Get(false),
+		FinishedAt: pointer.Get(time.Now()),
 	}
 
 	describeOpts := &WatchOpts{

@@ -121,7 +121,7 @@ func TestWithAuthentication(t *testing.T) {
 		username: "username",
 		password: "password",
 	}
-	c, err := New(Service("cloud"), WithAuthentication(a))
+	c, err := New(Service("cloud"), WithAuthentication(a, config.APIKeys))
 
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)

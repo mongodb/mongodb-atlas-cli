@@ -53,10 +53,18 @@ Options
      - Type
      - Required
      - Description
+   * - --defaultTier
+     - string
+     - false
+     - Default Tier for your Stream Workspace.
    * - -h, --help
      - 
      - false
      - help for create
+   * - --maxTierSize
+     - string
+     - false
+     - Max Tier Size for your Stream Workspace.
    * - -o, --output
      - string
      - false

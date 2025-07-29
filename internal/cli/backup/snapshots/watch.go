@@ -59,7 +59,7 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return result, strings.ToUpper(result.GetStatus()) == completedStatus || strings.ToUpper(result.GetStatus()) == failedStatus, nil
+	return result, strings.EqualFold(result.GetStatus(), completedStatus) || strings.EqualFold(result.GetStatus(), failedStatus), nil
 }
 
 func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
@@ -67,7 +67,7 @@ func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return result, strings.ToUpper(result.GetStatus()) == completedStatus || strings.ToUpper(result.GetStatus()) == failedStatus, nil
+	return result, strings.EqualFold(result.GetStatus(), completedStatus) || strings.EqualFold(result.GetStatus(), failedStatus), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -89,7 +89,7 @@ func (opts *WatchOpts) RunFlexCluster() error {
 		return errSnapshotFailed
 	}
 
-	if strings.ToUpper(res.GetStatus()) == failedStatus {
+	if strings.EqualFold(res.GetStatus(), failedStatus) {
 		return errSnapshotFailed
 	}
 
@@ -107,7 +107,7 @@ func (opts *WatchOpts) RunDedicatedCluster() error {
 		return errSnapshotFailed
 	}
 
-	if strings.ToUpper(res.GetStatus()) == failedStatus {
+	if strings.EqualFold(res.GetStatus(), failedStatus) {
 		return errSnapshotFailed
 	}
 

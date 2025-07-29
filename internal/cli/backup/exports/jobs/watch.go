@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -58,7 +59,7 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return result, result.GetState() == successfulState || result.GetState() == failedState || result.GetState() == cancelledState, nil
+	return result, strings.EqualFold(result.GetState(), successfulState) || strings.EqualFold(result.GetState(), failedState) || strings.EqualFold(result.GetState(), cancelledState), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -72,14 +73,15 @@ func (opts *WatchOpts) Run() error {
 		return errExportFailed
 	}
 
-	switch res.GetState() {
-	case failedState:
+	if strings.EqualFold(res.GetState(), failedState) {
 		return errExportFailed
-	case cancelledState:
+	}
+
+	if strings.EqualFold(res.GetState(), cancelledState) {
 		return errExportCancelled
 	}
 
-	return opts.Print(nil)
+	return opts.Print(result)
 }
 
 // WatchBuilder atlas backup(s) export(s) job(s) watch <exportJobId>.

@@ -17,6 +17,7 @@ package restores
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -29,6 +30,7 @@ import (
 )
 
 const failedStatus = "FAILED"
+const completedStatus = "COMPLETED"
 
 var watchTemplate = "\nRestore completed.\n"
 var result *atlasv2.DiskBackupSnapshotRestoreJob
@@ -68,7 +70,7 @@ func stopWatcher(result *atlasv2.DiskBackupSnapshotRestoreJob) bool {
 		return true
 	}
 
-	if result.GetDeliveryType() == DeliveryTypeDownload && len(result.GetDeliveryUrl()) > 0 {
+	if strings.EqualFold(result.GetDeliveryType(), DeliveryTypeDownload) && len(result.GetDeliveryUrl()) > 0 {
 		return true
 	}
 
@@ -80,7 +82,7 @@ func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	return result, result.GetStatus() == "COMPLETED" || result.GetStatus() == failedStatus, nil
+	return result, strings.EqualFold(result.GetStatus(), completedStatus) || strings.EqualFold(result.GetStatus(), failedStatus), nil
 }
 
 func (opts *WatchOpts) Run() error {
@@ -102,7 +104,7 @@ func (opts *WatchOpts) RunFlexCluster() error {
 		return errRestoreFailed
 	}
 
-	if res.GetStatus() == failedStatus {
+	if strings.EqualFold(res.GetStatus(), failedStatus) {
 		return errRestoreFailed
 	}
 

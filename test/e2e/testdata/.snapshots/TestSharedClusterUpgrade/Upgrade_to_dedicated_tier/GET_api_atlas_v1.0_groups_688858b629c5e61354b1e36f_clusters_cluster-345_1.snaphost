@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2611
+Content-Type: application/json
+Date: Tue, 29 Jul 2025 05:14:42 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=d1fb2095bdaeb1a4a9543932515e8cc5c6199b51; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-smdqnoe-shard-00-00.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-01.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-02.vax22sr.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-5bq6ts-shard-0","standardSrv":"mongodb+srv://cluster-345.vax22sr.mongodb-dev.net"},"createDate":"2025-07-29T05:14:32Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"688858b629c5e61354b1e36f","id":"688858b8cbd3cf2ab466ba5b","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/688858b629c5e61354b1e36f/clusters/cluster-345","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/688858b629c5e61354b1e36f/clusters/cluster-345/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/688858b629c5e61354b1e36f/clusters/cluster-345/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.12","mongoURI":"mongodb://ac-smdqnoe-shard-00-00.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-01.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-02.vax22sr.mongodb-dev.net:27017","mongoURIUpdated":"2025-07-29T05:14:41Z","mongoURIWithOptions":"mongodb://ac-smdqnoe-shard-00-00.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-01.vax22sr.mongodb-dev.net:27017,ac-smdqnoe-shard-00-02.vax22sr.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-5bq6ts-shard-0","name":"cluster-345","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_2"},"replicationFactor":3,"replicationSpec":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"688858b8cbd3cf2ab466ba3a","numShards":1,"regionsConfig":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","srvAddress":"mongodb+srv://cluster-345.vax22sr.mongodb-dev.net","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

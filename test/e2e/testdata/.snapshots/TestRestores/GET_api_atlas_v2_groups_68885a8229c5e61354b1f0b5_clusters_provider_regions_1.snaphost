@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1548
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 29 Jul 2025 05:22:12 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 100
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCloudProviderRegionsResource::availableRegions
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=d1fb2095bdaeb1a4a9543932515e8cc5c6199b51; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68885a8229c5e61354b1f0b5/clusters/provider/regions?includeCount=true&providers=AWS&tier=M10&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"instanceSizes":[{"availableRegions":[{"default":true,"name":"US_EAST_1"},{"default":false,"name":"US_EAST_2"},{"default":false,"name":"US_WEST_1"},{"default":true,"name":"US_WEST_2"},{"default":false,"name":"CA_CENTRAL_1"},{"default":false,"name":"EU_NORTH_1"},{"default":false,"name":"EU_WEST_1"},{"default":false,"name":"EU_WEST_2"},{"default":false,"name":"EU_WEST_3"},{"default":false,"name":"EU_CENTRAL_1"},{"default":false,"name":"EU_CENTRAL_2"},{"default":false,"name":"SA_EAST_1"},{"default":false,"name":"AP_EAST_1"},{"default":false,"name":"AP_SOUTHEAST_2"},{"default":false,"name":"AP_SOUTHEAST_3"},{"default":false,"name":"AP_SOUTHEAST_4"},{"default":false,"name":"AP_NORTHEAST_1"},{"default":false,"name":"AP_NORTHEAST_2"},{"default":false,"name":"AP_NORTHEAST_3"},{"default":false,"name":"AP_SOUTHEAST_1"},{"default":false,"name":"AP_SOUTH_1"},{"default":false,"name":"AP_SOUTH_2"},{"default":false,"name":"ME_CENTRAL_1"},{"default":false,"name":"ME_SOUTH_1"},{"default":false,"name":"AF_SOUTH_1"},{"default":false,"name":"EU_SOUTH_1"},{"default":false,"name":"EU_SOUTH_2"},{"default":false,"name":"IL_CENTRAL_1"},{"default":false,"name":"CA_WEST_1"},{"default":false,"name":"AP_SOUTHEAST_5"},{"default":false,"name":"AP_SOUTHEAST_7"},{"default":false,"name":"MX_CENTRAL_1"}],"name":"M10"}],"provider":"AWS"}],"totalCount":1}

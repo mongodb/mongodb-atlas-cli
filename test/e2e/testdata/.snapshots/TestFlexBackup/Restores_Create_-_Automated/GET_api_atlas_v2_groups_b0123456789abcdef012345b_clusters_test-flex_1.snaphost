@@ -1,12 +1,12 @@
 HTTP/2.0 400 Bad Request
 Content-Length: 185
 Content-Type: application/json
-Date: Mon, 28 Jul 2025 05:15:00 GMT
+Date: Tue, 29 Jul 2025 05:15:11 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 123
+X-Envoy-Upstream-Service-Time: 109
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
 X-Java-Version: 17.0.15+6

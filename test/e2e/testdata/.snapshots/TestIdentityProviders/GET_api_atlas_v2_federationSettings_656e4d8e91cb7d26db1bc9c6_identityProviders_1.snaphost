@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 665
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 28 Jul 2025 05:15:24 GMT
+Date: Tue, 29 Jul 2025 05:14:45 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 37
+X-Envoy-Upstream-Service-Time: 30
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.15+6
 X-Mongodb-Service-Version: gitHash=d1fb2095bdaeb1a4a9543932515e8cc5c6199b51; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-830","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-07-28T05:15:21Z","description":"CLI TEST Provider","displayName":"idp-830","groupsClaim":"groups","id":"68870769d543ef30ea6bf765","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-244","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-07-29T05:14:43Z","description":"CLI TEST Provider","displayName":"idp-244","groupsClaim":"groups","id":"688858c329c5e61354b1e66f","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}

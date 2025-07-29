@@ -54,14 +54,17 @@ To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/sta
 // loadConfig reads in config file and ENV variables if set.
 func loadConfig() (*config.Profile, error) {
 	configStore, initErr := config.NewViperStore(afero.NewOsFs())
-
 	if initErr != nil {
 		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
 	}
 
 	profile := config.NewProfile(config.DefaultProfile, configStore)
-
 	config.SetProfile(profile)
+
+	if err := profile.MigrateVersions(); err != nil {
+		log.Printf("error migrating config versions: %v", err)
+	}
+
 	return profile, nil
 }
 

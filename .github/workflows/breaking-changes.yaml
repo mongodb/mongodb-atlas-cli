@@ -1,0 +1,55 @@
+name: Detect Breaking Changes
+
+on:
+  pull_request:
+
+jobs:
+  breaking-changes-manifest:
+    name: Generate Breaking Changes Manifest
+    runs-on: ubuntu-latest
+    outputs:
+      breaking-changes: ${{ steps.breakvalidator.outputs.JSON }}
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Install dependencies
+        run: go mod download
+      - name: Run breaking changes validator
+        id: breakvalidator
+        run: |
+          {
+            echo "JSON<<EOF"
+            echo "$(go run tools/cmd/breakvalidator/main.go generate)"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+  detect-breaking-changes:
+    name: Detect Breaking Changes
+    runs-on: ubuntu-latest
+    needs: breaking-changes-manifest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Run breaking changes validator
+        env:
+          JSON: ${{ needs.breaking-changes-manifest.outputs.breaking-changes }}
+        run: |
+          echo "$JSON" > main.json
+          go run tools/cmd/breakvalidator/main.go validate < main.json

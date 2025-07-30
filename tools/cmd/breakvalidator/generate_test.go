@@ -15,37 +15,34 @@
 package main
 
 import (
-	"os"
+	"reflect"
+	"testing"
 
 	"github.com/spf13/cobra"
 )
 
-type flagData struct {
-	Type    string `json:"type"`
-	Default string `json:"default"`
-	Short   string `json:"short"`
-}
-
-type cmdData struct {
-	Aliases []string            `json:"aliases"`
-	Flags   map[string]flagData `json:"flags"`
-}
-
-func buildRootCmd() *cobra.Command {
-	rootCmd := &cobra.Command{
-		Use:   "breakvalidator",
-		Short: "CLI tool to validate breaking changes in the CLI.",
+func TestGenerateCmds(t *testing.T) {
+	cliCmd := &cobra.Command{
+		Use:     "test",
+		Aliases: []string{"testa"},
 	}
-	rootCmd.AddCommand(buildGenerateCmd())
-	rootCmd.AddCommand(buildValidateCmd())
+	cliCmd.Flags().StringP("flag1", "f", "default1", "flag1")
+	generatedData := generateCmds(cliCmd)
 
-	return rootCmd
-}
+	expectedData := map[string]cmdData{
+		"test": {
+			Aliases: []string{"testa"},
+			Flags: map[string]flagData{
+				"flag1": {
+					Type:    "string",
+					Default: "default1",
+					Short:   "f",
+				},
+			},
+		},
+	}
 
-func main() {
-	rootCmd := buildRootCmd()
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
+	if !reflect.DeepEqual(generatedData, expectedData) {
+		t.Fatalf("got: %v, expected: %v", generatedData, expectedData)
 	}
 }

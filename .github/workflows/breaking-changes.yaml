@@ -27,7 +27,7 @@ jobs:
         id: breakvalidator
         run: |
           set -e
-          go run tools/cmd/breakvalidator/main.go generate > main.json
+          go run tools/cmd/breakvalidator generate > main.json
       - name: Upload manifest
         uses: actions/upload-artifact@v4
         with:
@@ -55,4 +55,5 @@ jobs:
       - name: Run breaking changes validator
         run: |
           set -e
-          go run tools/cmd/breakvalidator/main.go validate < main.json
+          go run tools/cmd/breakvalidator generate > changed.json
+          go run tools/cmd/breakvalidator validate -m main.json -c changed.json

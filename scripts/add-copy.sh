@@ -21,6 +21,7 @@ find_files() {
 		\( \
 		-wholename '*mock*' \
 		-o -wholename '*third_party*' \
+		-o -wholename '*docs/command*' \
 		\) -prune \
 		\) \
 		\( -name '*.go' -o -name '*.sh' \)

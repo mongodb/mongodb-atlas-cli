@@ -18,10 +18,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-          cache: true
       - name: Install dependencies
         run: go mod download
       - name: Run breaking changes validator
@@ -30,7 +29,7 @@ jobs:
           set -e
           {
             echo "JSON<<EOF"
-            echo "$(go run tools/cmd/breakvalidator/main.go generate)"
+            go run tools/cmd/breakvalidator/main.go generate
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
   detect-breaking-changes:
@@ -44,10 +43,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-          cache: true
       - name: Run breaking changes validator
         env:
           JSON: ${{ needs.breaking-changes-manifest.outputs.breaking-changes }}

@@ -61,7 +61,7 @@ func loadConfig() (*config.Profile, error) {
 	profile := config.NewProfile(config.DefaultProfile, configStore)
 	config.SetProfile(profile)
 
-	if err := profile.MigrateVersions(); err != nil {
+	if err := config.MigrateVersions(configStore); err != nil {
 		log.Printf("error migrating config versions: %v", err)
 	}
 

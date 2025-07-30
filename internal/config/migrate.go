@@ -18,33 +18,40 @@ const configVersion2 = 2
 
 // MigrateVersions migrates the profile to the latest version.
 // This function can be expanded to support future migrations.
-func MigrateVersions() error { return Default().MigrateVersions() }
-func (p *Profile) MigrateVersions() error {
-	if p.GetVersion() >= configVersion2 {
+func MigrateVersions(store Store) error {
+	if GetVersion() >= configVersion2 {
 		return nil
 	}
 
-	p.SetAuthTypes()
+	setAuthTypes(store, getAuthType)
 
 	// TODO: Remaining migration steps to move credentials to secure storage will be done as a part of CLOUDP-329802
-	p.SetVersion(configVersion2)
+	SetVersion(configVersion2)
 
-	return p.Save()
+	return Save()
 }
 
-// SetAuthTypes sets the auth type for each profile based on the credentials available.
-// "not_logged_in" is used when no or incomplete credentials are present.
-func (p *Profile) SetAuthTypes() {
-	profileNames := p.configStore.GetProfileNames()
+// setAuthTypes sets the auth type for each profile based on the credentials available.
+// Nothing is set if no credentials are found.
+func setAuthTypes(store Store, getAuthType func(*Profile) AuthMechanism) {
+	profileNames := store.GetProfileNames()
 	for _, name := range profileNames {
-		profile := NewProfile(name, p.configStore)
-		switch {
-		case profile.PublicAPIKey() != "" && profile.PrivateAPIKey() != "":
-			profile.SetAuthType(APIKeys)
-		case profile.AccessToken() != "" && profile.RefreshToken() != "":
-			profile.SetAuthType(UserAccount)
-		case profile.ClientID() != "" && profile.ClientSecret() != "":
-			profile.SetAuthType(ServiceAccount)
+		profile := NewProfile(name, store)
+		authType := getAuthType(profile)
+		if authType != "" {
+			profile.SetAuthType(authType)
 		}
 	}
+}
+
+func getAuthType(profile *Profile) AuthMechanism {
+	switch {
+	case profile.PublicAPIKey() != "" && profile.PrivateAPIKey() != "":
+		return APIKeys
+	case profile.AccessToken() != "" && profile.RefreshToken() != "":
+		return UserAccount
+	case profile.ClientID() != "" && profile.ClientSecret() != "":
+		return ServiceAccount
+	}
+	return AuthMechanism("")
 }

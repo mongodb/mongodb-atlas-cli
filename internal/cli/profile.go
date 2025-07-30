@@ -54,7 +54,10 @@ func initAuthType() {
 	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
 		config.SetAuthType(config.APIKeys)
 	}
-	if t, _ := config.Token(); t != nil {
+	if config.AccessToken() != "" && config.RefreshToken() != "" {
 		config.SetAuthType(config.UserAccount)
+	}
+	if config.ClientID() != "" && config.ClientSecret() != "" {
+		config.SetAuthType(config.ServiceAccount)
 	}
 }

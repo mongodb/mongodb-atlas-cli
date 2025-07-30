@@ -289,25 +289,6 @@ func (p *Profile) AuthType() AuthMechanism {
 	return AuthMechanism(p.GetString(AuthTypeField))
 }
 
-// GetAuthType calculates the auth type for backwards compatibility.
-func GetAuthType() AuthMechanism { return Default().GetAuthType() }
-func (p *Profile) GetAuthType() AuthMechanism {
-	if p.AuthType() != "" {
-		return p.AuthType()
-	}
-	if p.PrivateAPIKey() != "" && p.PublicAPIKey() != "" {
-		return APIKeys
-	}
-	if p.AccessToken() != "" && p.RefreshToken() != "" {
-		return UserAccount
-	}
-	if p.ClientID() != "" && p.ClientSecret() != "" {
-		return ServiceAccount
-	}
-	// If no auth type is set, we assume the user is not logged in.
-	return AuthMechanism("")
-}
-
 // SetAuthType sets the configured auth type.
 func SetAuthType(v AuthMechanism) { Default().SetAuthType(v) }
 func (p *Profile) SetAuthType(v AuthMechanism) {

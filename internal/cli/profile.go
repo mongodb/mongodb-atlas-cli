@@ -25,6 +25,7 @@ import (
 var errUnsupportedService = errors.New("unsupported service")
 
 func InitProfile(profile string) error {
+	initAuthType()
 	if profile != "" {
 		return config.SetName(profile)
 	} else if profile = config.GetString(flag.Profile); profile != "" {
@@ -38,4 +39,22 @@ func InitProfile(profile string) error {
 	}
 
 	return nil
+}
+
+// initAuthType initializes the authentication type based on the current configuration.
+// If the user has set credentials via environment variables and has not set
+// 'MONGODB_ATLAS_AUTH_TYPE', it will set the auth type accordingly.
+func initAuthType() {
+	// If the auth type is already set, we don't need to do anything.
+	authType := config.AuthType()
+	if authType != "" {
+		return
+	}
+	// If the auth type is not set, we try to determine it based on the available credentials.
+	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
+		config.SetAuthType(config.APIKeys)
+	}
+	if t, _ := config.Token(); t != nil {
+		config.SetAuthType(config.UserAccount)
+	}
 }

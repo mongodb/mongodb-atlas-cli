@@ -140,9 +140,9 @@ type CredentialsGetter interface {
 }
 
 // WithAuthentication sets the store credentials.
-func WithAuthentication(c CredentialsGetter, authType config.AuthMechanism) Option {
+func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
-		s.authType = authType
+		s.authType = c.AuthType()
 		if s.authType == config.APIKeys {
 			s.username = c.PublicAPIKey()
 			s.password = c.PrivateAPIKey()
@@ -258,7 +258,7 @@ type AuthenticatedConfig interface {
 
 // AuthenticatedPreset is the default Option when connecting to the public API with authentication.
 func AuthenticatedPreset(c AuthenticatedConfig) Option {
-	options := []Option{Service(c.Service()), WithAuthentication(c, config.GetAuthType())}
+	options := []Option{Service(c.Service()), WithAuthentication(c)}
 	if baseURLOpt := baseURLOption(c); baseURLOpt != nil {
 		options = append(options, baseURLOpt)
 	}

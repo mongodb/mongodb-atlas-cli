@@ -132,6 +132,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		test.VerifyOutputTemplate(t, createWorkspace, expected)
 	})
 
+	// Testing the parsing of flags but not passing into StreamConfig object
 	t.Run("stream workspaces create --tier --defaultTier --maxTierSize", func(t *testing.T) {
 		buf := new(bytes.Buffer)
 		opts := &CreateOpts{
@@ -151,9 +152,6 @@ func TestCreateOpts_Run(t *testing.T) {
 			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
 			StreamConfig: &atlasv2.StreamConfig{
 				Tier: &opts.tier,
-				// Testing the parsing of flags but not passing into StreamConfig object
-				// DefaultTier: &opts.defaultTier,
-				// MaxTierSize: &opts.maxTierSize,
 			},
 		}
 

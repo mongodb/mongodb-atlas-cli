@@ -34,7 +34,6 @@ func Builder() *cobra.Command {
 		instance.Builder(),
 		connection.Builder(),
 		privatelink.Builder(),
-		instance.WorkspaceBuilder(),
 	)
 
 	return cmd

@@ -27,11 +27,7 @@ jobs:
         id: breakvalidator
         run: |
           set -e
-          {
-            echo "JSON<<EOF"
-            go run tools/cmd/breakvalidator/main.go generate
-            echo "EOF"
-          } > main.json
+          go run tools/cmd/breakvalidator/main.go generate > main.json
       - name: Upload manifest
         uses: actions/upload-artifact@v4
         with:

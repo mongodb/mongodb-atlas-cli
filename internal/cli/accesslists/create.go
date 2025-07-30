@@ -200,7 +200,7 @@ The command doesn't overwrite existing entries in the access list. Instead, it a
 	}
 
 	cmd.Flags().StringVar(&opts.entryType, flag.TypeFlag, ipAddress, usage.AccessListType)
-	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
+	// cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.AccessListsDeleteAfter)
 	cmd.Flags().BoolVar(&opts.currentIP, flag.CurrentIP, false, usage.CurrentIP)
 

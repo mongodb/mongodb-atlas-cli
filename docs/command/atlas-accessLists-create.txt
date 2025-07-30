@@ -57,10 +57,6 @@ Options
      - Type
      - Required
      - Description
-   * - --comment
-     - string
-     - false
-     - Optional description or comment for the entry.
    * - --currentIp
      - 
      - false

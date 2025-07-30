@@ -27,6 +27,7 @@ jobs:
       - name: Run breaking changes validator
         id: breakvalidator
         run: |
+          set -e
           {
             echo "JSON<<EOF"
             echo "$(go run tools/cmd/breakvalidator/main.go generate)"
@@ -51,5 +52,6 @@ jobs:
         env:
           JSON: ${{ needs.breaking-changes-manifest.outputs.breaking-changes }}
         run: |
+          set -e
           echo "$JSON" > main.json
           go run tools/cmd/breakvalidator/main.go validate < main.json

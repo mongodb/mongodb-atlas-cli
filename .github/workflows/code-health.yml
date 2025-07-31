@@ -78,7 +78,7 @@ jobs:
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -parallel-finish -ignore=test/* -service=github
+        run: goveralls -parallel-finish -debug -ignore=test/* -service=github
 
   libraryOwners:
     runs-on: ubuntu-latest

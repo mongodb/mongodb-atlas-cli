@@ -248,7 +248,7 @@ func WeakPassword(val any) error {
 	return nil
 }
 
-// ValidConfig checks if the config file is valid based on the version and properties.
+// ValidConfig checks if the config file is valid based on the version.
 func ValidConfig(store config.Store) error {
 	version := int64(0)
 	var ok bool
@@ -260,16 +260,22 @@ func ValidConfig(store config.Store) error {
 
 	profileNames := store.GetProfileNames()
 	for _, name := range profileNames {
-		// We do not care if the profile has credentials or not, since all valid profiles should have credentials.
-		auth := store.GetProfileValue(name, "auth_type")
-		hasAuthType := (auth != nil)
+		var hasCreds bool
+
+		if store.GetProfileValue(name, "public_api_key") != nil && store.GetProfileValue(name, "private_api_key") != nil ||
+			store.GetProfileValue(name, "client_id") != nil && store.GetProfileValue(name, "client_secret") != nil ||
+			store.GetProfileValue(name, "access_token") != nil && store.GetProfileValue(name, "refresh_token") != nil {
+			hasCreds = true
+		}
+		hasAuthType := store.GetProfileValue(name, "auth_type") != nil
 
 		switch version {
 		case config.ConfigVersion2:
-			if !hasAuthType {
+			if !hasAuthType && hasCreds {
 				return ErrInvalidConfigVersion
 			}
 		case 0:
+			// config is invalid if authType is set regardless of credentials.
 			if hasAuthType {
 				return ErrInvalidConfigVersion
 			}

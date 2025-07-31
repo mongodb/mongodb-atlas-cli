@@ -563,7 +563,9 @@ func TestValidConfig(t *testing.T) {
 
 			mockStore.EXPECT().GetGlobalValue("version").Return(tt.expectVersion).Times(1)
 			mockStore.EXPECT().GetProfileNames().Return([]string{"test"}).Times(1)
-			mockStore.EXPECT().GetProfileValue("test", "auth_type").Return(tt.expectAuthType).AnyTimes()
+			mockStore.EXPECT().GetProfileValue("test", "public_api_key").Return("public").Times(1)
+			mockStore.EXPECT().GetProfileValue("test", "private_api_key").Return("private").Times(1)
+			mockStore.EXPECT().GetProfileValue("test", "auth_type").Return(tt.expectAuthType).Times(1)
 
 			err := ValidConfig(mockStore)
 

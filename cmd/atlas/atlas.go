@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -56,6 +57,10 @@ func loadConfig() (*config.Profile, error) {
 	configStore, initErr := config.NewViperStore(afero.NewOsFs())
 	if initErr != nil {
 		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
+	}
+
+	if err := validate.ValidConfig(configStore); err != nil {
+		return nil, fmt.Errorf("invalid config file: %w", err)
 	}
 
 	profile := config.NewProfile(config.DefaultProfile, configStore)

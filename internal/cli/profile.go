@@ -25,18 +25,25 @@ import (
 var errUnsupportedService = errors.New("unsupported service")
 
 func InitProfile(profile string) error {
-	initAuthType()
 	if profile != "" {
-		return config.SetName(profile)
+		if err := config.SetName(profile); err != nil {
+			return err
+		}
 	} else if profile = config.GetString(flag.Profile); profile != "" {
-		return config.SetName(profile)
+		if err := config.SetName(profile); err != nil {
+			return err
+		}
 	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
-		return config.SetName(availableProfiles[0])
+		if err := config.SetName(availableProfiles[0]); err != nil {
+			return err
+		}
 	}
 
 	if !config.IsCloud() {
 		return fmt.Errorf("%w: %s", errUnsupportedService, config.Service())
 	}
+
+	initAuthType()
 
 	return nil
 }

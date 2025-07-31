@@ -14,19 +14,19 @@
 
 package config
 
-const configVersion2 = 2
+const ConfigVersion2 = 2
 
 // MigrateVersions migrates the profile to the latest version.
 // This function can be expanded to support future migrations.
 func MigrateVersions(store Store) error {
-	if GetVersion() >= configVersion2 {
+	if GetVersion() >= ConfigVersion2 {
 		return nil
 	}
 
 	setAuthTypes(store, getAuthType)
 
 	// TODO: Remaining migration steps to move credentials to secure storage will be done as a part of CLOUDP-329802
-	SetVersion(configVersion2)
+	SetVersion(ConfigVersion2)
 
 	return Save()
 }
@@ -53,5 +53,5 @@ func getAuthType(profile *Profile) AuthMechanism {
 	case profile.ClientID() != "" && profile.ClientSecret() != "":
 		return ServiceAccount
 	}
-	return AuthMechanism("")
+	return AuthMechanism("") // This should not happen unless profile is not properly initialized.
 }

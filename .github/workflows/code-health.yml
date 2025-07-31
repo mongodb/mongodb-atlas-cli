@@ -46,8 +46,8 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: |
-          go install gotest.tools/gotestsum@latest
-          go install github.com/mattn/goveralls@latest
+          go install gotest.tools/gotestsum@v1.12.3
+          go install github.com/mattn/goveralls@v0.0.12
       - run: make unit-test
       - name: Send coverage
         env:
@@ -74,7 +74,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - name: Install goveralls
-        run: go install github.com/mattn/goveralls@latest
+        run: go install github.com/mattn/goveralls@v0.0.12
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -323,8 +323,8 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: |
-          go install gotest.tools/gotestsum@latest
-          go install github.com/mattn/goveralls@latest
+          go install gotest.tools/gotestsum@v1.12.3
+          go install github.com/mattn/goveralls@v0.0.12
       - name: set Apix Bot token
         id: app-token
         uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42

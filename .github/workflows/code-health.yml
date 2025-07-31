@@ -52,7 +52,7 @@ jobs:
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -parallel -coverprofile="$COVERAGE" -service=github
+        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
@@ -78,7 +78,7 @@ jobs:
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -parallel-finish -service=github
+        run: goveralls -parallel-finish -ignore=test/* -service=github
 
   libraryOwners:
     runs-on: ubuntu-latest
@@ -340,7 +340,7 @@ jobs:
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERAGE: coverage.out
-        run: goveralls -parallel -coverprofile="$COVERAGE" -service=github
+        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
       - name: Test Summary
         if: always()
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

@@ -7,8 +7,6 @@ jobs:
   breaking-changes-manifest:
     name: Generate Breaking Changes Manifest
     runs-on: ubuntu-latest
-    outputs:
-      breaking-changes: ${{ steps.breakvalidator.outputs.JSON }}
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -24,7 +22,6 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Run breaking changes validator
-        id: breakvalidator
         run: |
           set -e
           go run ./tools/cmd/breakvalidator generate > main.json
@@ -51,7 +48,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: breaking-changes-manifest
-          path: main.json
       - name: Run breaking changes validator
         run: |
           set -e

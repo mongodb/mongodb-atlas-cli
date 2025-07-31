@@ -21,14 +21,14 @@ import (
 )
 
 type flagData struct {
-	Type    string `json:"type"`
-	Default string `json:"default"`
-	Short   string `json:"short"`
+	Type    string `json:"type,omitempty"`
+	Default string `json:"default,omitempty"`
+	Short   string `json:"short,omitempty"`
 }
 
 type cmdData struct {
-	Aliases []string            `json:"aliases"`
-	Flags   map[string]flagData `json:"flags"`
+	Aliases []string            `json:"aliases,omitempty"`
+	Flags   map[string]flagData `json:"flags,omitempty"`
 }
 
 func buildRootCmd() *cobra.Command {

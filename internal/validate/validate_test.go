@@ -20,8 +20,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestURL(t *testing.T) {
@@ -517,6 +519,62 @@ func TestWeakPassword(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			wantErr(t, WeakPassword(val))
+		})
+	}
+}
+
+func TestValidConfig(t *testing.T) {
+	tests := []struct {
+		name           string
+		expectVersion  int64
+		expectAuthType any
+		wantError      bool
+	}{
+		{
+			name:           "version 2, profiles with auth_type",
+			expectVersion:  2,
+			expectAuthType: "api_keys",
+			wantError:      false,
+		},
+		{
+			name:           "version 2, profile missing auth_type",
+			expectVersion:  2,
+			expectAuthType: nil,
+			wantError:      true,
+		},
+		{
+			name:           "version 0, profile without auth_type",
+			expectAuthType: nil,
+			wantError:      false,
+		},
+		{
+			name:           "version 0, profile with auth_type",
+			expectVersion:  0,
+			expectAuthType: "api_keys",
+			wantError:      true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockStore := config.NewMockStore(ctrl)
+
+			mockStore.EXPECT().GetGlobalValue("version").Return(tt.expectVersion).Times(1)
+			mockStore.EXPECT().GetProfileNames().Return([]string{"test"}).Times(1)
+			mockStore.EXPECT().GetProfileValue("test", "public_api_key").Return("public").Times(1)
+			mockStore.EXPECT().GetProfileValue("test", "private_api_key").Return("private").Times(1)
+			mockStore.EXPECT().GetProfileValue("test", "auth_type").Return(tt.expectAuthType).Times(1)
+
+			err := ValidConfig(mockStore)
+
+			if tt.wantError {
+				require.Error(t, err)
+				require.ErrorIs(t, err, ErrInvalidConfigVersion)
+			} else {
+				require.NoError(t, err)
+			}
 		})
 	}
 }

@@ -43,6 +43,7 @@ type Store struct {
 	service     string
 	baseURL     string
 	telemetry   bool
+	authType    config.AuthMechanism
 	username    string
 	password    string
 	accessToken *atlasauth.Token
@@ -55,11 +56,11 @@ type Store struct {
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	if s.username != "" && s.password != "" {
+	switch s.authType {
+	case config.APIKeys:
 		t := transport.NewDigestTransport(s.username, s.password, httpTransport)
 		return t.Client()
-	}
-	if s.accessToken != nil {
+	case config.UserAccount:
 		tr, err := transport.NewAccessTokenTransport(s.accessToken, httpTransport, func(t *atlasauth.Token) error {
 			config.SetAccessToken(t.AccessToken)
 			config.SetRefreshToken(t.RefreshToken)
@@ -70,6 +71,9 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		}
 
 		return &http.Client{Transport: tr}, nil
+	case config.ServiceAccount:
+		// TODO: serviceAccount will be implemented in CLOUDP-329787
+		return &http.Client{Transport: httpTransport}, nil
 	default:
 		return &http.Client{Transport: httpTransport}, nil
 	}
@@ -140,10 +144,11 @@ type CredentialsGetter interface {
 // WithAuthentication sets the store credentials.
 func WithAuthentication(c CredentialsGetter) Option {
 	return func(s *Store) error {
-		s.username = c.PublicAPIKey()
-		s.password = c.PrivateAPIKey()
-
-		if s.username == "" && s.password == "" {
+		s.authType = c.AuthType()
+		if s.authType == config.APIKeys {
+			s.username = c.PublicAPIKey()
+			s.password = c.PrivateAPIKey()
+		} else {
 			t, err := c.Token()
 			if err != nil {
 				return err

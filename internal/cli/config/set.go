@@ -58,6 +58,9 @@ func (opts *SetOpts) Run() error {
 		value = config.IsTrue(opts.val)
 	}
 	if slices.Contains(config.GlobalProperties(), opts.prop) {
+		if strings.EqualFold(config.Version, opts.prop) {
+			return fmt.Errorf("the %s property cannot be set manually, it is automatically managed by the CLI", config.Version)
+		}
 		opts.store.SetGlobal(opts.prop, value)
 	} else {
 		opts.store.Set(opts.prop, value)

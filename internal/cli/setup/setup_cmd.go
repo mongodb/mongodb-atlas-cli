@@ -589,7 +589,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 
 	// if profile has access token and refresh token is valid, we can skip login
 	if _, err := auth.AccountWithAccessToken(); err == nil {
-		if err := opts.login.RefreshAccessToken(ctx); err != nil && !commonerrors.IsInvalidRefreshToken(err) {
+		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
 			return nil
 		}
 	}

@@ -112,7 +112,7 @@ func (opts *CreateOpts) validateOAuthRequirements() error {
 	}
 	if len(disallowed) > 0 {
 		return fmt.Errorf(
-			"%s are not allowed when using account to authenticate",
+			"%s are not allowed with your authentication method",
 			strings.Join(disallowed, ", "),
 		)
 	}
@@ -123,10 +123,10 @@ func (opts *CreateOpts) validateAuthType() error {
 	switch config.AuthType() {
 	case config.APIKeys:
 		return opts.validateAPIKeyRequirements()
-	case config.OAuth:
+	case config.UserAccount:
 		return opts.validateOAuthRequirements()
-	case config.NotLoggedIn:
-		return nil // should not happen
+	case config.ServiceAccount:
+		return opts.validateOAuthRequirements()
 	default:
 		return nil
 	}

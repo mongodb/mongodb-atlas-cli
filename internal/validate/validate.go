@@ -28,9 +28,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
-const minPasswordLength = 10
-const clusterWideScaling = "clusterWideScaling"
-const independentShardScaling = "independentShardScaling"
+const (
+	minPasswordLength       = 10
+	clusterWideScaling      = "clusterWideScaling"
+	independentShardScaling = "independentShardScaling"
+)
+
+var (
+	ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
+	ErrAlreadyAuthenticatedToken   = errors.New("already authenticated with an account")
+	ErrInvalidPath                 = errors.New("invalid path")
+	ErrInvalidClusterName          = errors.New("invalid cluster name")
+	ErrInvalidDBUsername           = errors.New("invalid db username")
+	ErrWeakPassword                = errors.New("the password provided is too common")
+	ErrShortPassword               = errors.New("the password provided is too short")
+	ErrInvalidConfigVersion        = errors.New("version is invalid")
+)
 
 // toString tries to cast an interface to string.
 func toString(val any) (string, error) {
@@ -108,8 +121,6 @@ func Credentials() error {
 	return commonerrors.ErrUnauthorized
 }
 
-var ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
-
 // NoAPIKeys there are no API keys in the profile, used for login/register/setup commands.
 func NoAPIKeys() error {
 	if config.PrivateAPIKey() == "" && config.PublicAPIKey() == "" {
@@ -139,8 +150,6 @@ func AutoScalingMode(autoScalingMode string) func() error {
 		return nil
 	}
 }
-
-var ErrAlreadyAuthenticatedToken = errors.New("already authenticated with an account")
 
 // NoAccessToken there is no access token in the profile, used for login/register/setup commands.
 func NoAccessToken() error {
@@ -172,8 +181,6 @@ func ConditionalFlagNotInSlice(conditionalFlag string, conditionalFlagValue stri
 	return fmt.Errorf(`invalid flag "%s" in combination with "%s=%s", not allowed values: "%s"`, flag, conditionalFlag, conditionalFlagValue, strings.Join(invalidFlags, `", "`))
 }
 
-var ErrInvalidPath = errors.New("invalid path")
-
 func Path(val any) error {
 	path, ok := val.(string)
 	if !ok {
@@ -198,8 +205,6 @@ func OptionalPath(val any) error {
 	return Path(val)
 }
 
-var ErrInvalidClusterName = errors.New("invalid cluster name")
-
 func ClusterName(val any) error {
 	name, ok := val.(string)
 	if !ok {
@@ -213,8 +218,6 @@ func ClusterName(val any) error {
 	return fmt.Errorf("%w. Cluster names can only contain ASCII letters, numbers, and hyphens: %s", ErrInvalidClusterName, name)
 }
 
-var ErrInvalidDBUsername = errors.New("invalid db username")
-
 func DBUsername(val any) error {
 	name, ok := val.(string)
 	if !ok {
@@ -227,9 +230,6 @@ func DBUsername(val any) error {
 
 	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
 }
-
-var ErrWeakPassword = errors.New("the password provided is too common")
-var ErrShortPassword = errors.New("the password provided is too short")
 
 func WeakPassword(val any) error {
 	password, ok := val.(string)
@@ -245,5 +245,41 @@ func WeakPassword(val any) error {
 		return ErrWeakPassword
 	}
 
+	return nil
+}
+
+// ValidConfig checks if the config file is valid based on the version.
+func ValidConfig(store config.Store) error {
+	version := int64(0)
+	var ok bool
+	if v := store.GetGlobalValue(config.Version); v != nil {
+		if version, ok = v.(int64); !ok {
+			return errors.New("issue retrieving version")
+		}
+	}
+
+	profileNames := store.GetProfileNames()
+	for _, name := range profileNames {
+		var hasCreds bool
+
+		if store.GetProfileValue(name, "public_api_key") != nil && store.GetProfileValue(name, "private_api_key") != nil ||
+			store.GetProfileValue(name, "client_id") != nil && store.GetProfileValue(name, "client_secret") != nil ||
+			store.GetProfileValue(name, "access_token") != nil && store.GetProfileValue(name, "refresh_token") != nil {
+			hasCreds = true
+		}
+		hasAuthType := store.GetProfileValue(name, "auth_type") != nil
+
+		switch version {
+		case config.ConfigVersion2:
+			if !hasAuthType && hasCreds {
+				return ErrInvalidConfigVersion
+			}
+		case 0:
+			// config is invalid if authType is set regardless of credentials.
+			if hasAuthType {
+				return ErrInvalidConfigVersion
+			}
+		}
+	}
 	return nil
 }

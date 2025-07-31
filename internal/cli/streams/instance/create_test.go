@@ -98,4 +98,73 @@ func TestCreateOpts_Run(t *testing.T) {
 		t.Log(buf.String())
 		test.VerifyOutputTemplate(t, createTemplate, expected)
 	})
+
+	t.Run("stream workspaces create --tier", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		opts := &CreateOpts{
+			store:    mockStore,
+			name:     "ExampleStreamWorkspaces",
+			provider: "AWS",
+			region:   "VIRGINIA_USA",
+			tier:     "SP30",
+		}
+		opts.ProjectID = testProjectID
+
+		expected := &atlasv2.StreamsTenant{
+			Name:              &opts.name,
+			GroupId:           &opts.ProjectID,
+			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
+			StreamConfig: &atlasv2.StreamConfig{
+				Tier: &opts.tier,
+			},
+		}
+
+		mockStore.
+			EXPECT().
+			CreateStream(opts.ProjectID, expected).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, createWorkspace, expected)
+	})
+
+	// Testing the parsing of flags but not passing into StreamConfig object
+	t.Run("stream workspaces create --tier --defaultTier --maxTierSize", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		opts := &CreateOpts{
+			store:       mockStore,
+			name:        "ExampleStreamWorkspaces",
+			provider:    "AWS",
+			region:      "VIRGINIA_USA",
+			tier:        "SP30",
+			defaultTier: "SP30",
+			maxTierSize: "SP50",
+		}
+		opts.ProjectID = testProjectID
+
+		expected := &atlasv2.StreamsTenant{
+			Name:              &opts.name,
+			GroupId:           &opts.ProjectID,
+			DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"},
+			StreamConfig: &atlasv2.StreamConfig{
+				Tier: &opts.tier,
+			},
+		}
+
+		mockStore.
+			EXPECT().
+			CreateStream(opts.ProjectID, expected).
+			Return(expected, nil).
+			Times(1)
+
+		if err := opts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, createWorkspace, expected)
+	})
 }

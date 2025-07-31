@@ -335,9 +335,11 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+          COVERAGE: coverage.out
       - name: Send coverage
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERAGE: coverage.out
         run: goveralls -parallel -coverprofile="$COVERAGE" -service=github
       - name: Test Summary
         if: always()

@@ -34,7 +34,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        if: ${{ matrix.os=='ubuntu-latest' }}
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
@@ -45,22 +44,40 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
+      - run: |
+          go install gotest.tools/gotestsum@latest
+          go install github.com/mattn/goveralls@latest
       - run: make unit-test
+      - name: Send coverage
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: goveralls -parallel -coverprofile="$COVERAGE" -service=github
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: unit-tests.xml
         if: always() && matrix.os == 'ubuntu-latest'
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, e2e-tests]
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
       - name: Install goveralls
-        if: matrix.os == 'ubuntu-latest'
         run: go install github.com/mattn/goveralls@latest
       - name: Send coverage
-        if: matrix.os == 'ubuntu-latest'
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -coverprofile="$COVERAGE" -service=github
+        run: goveralls -parallel-finish -service=github
 
   libraryOwners:
     runs-on: ubuntu-latest
@@ -304,7 +321,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
+      - run: |
+          go install gotest.tools/gotestsum@latest
+          go install github.com/mattn/goveralls@latest
       - name: set Apix Bot token
         id: app-token
         uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
@@ -315,6 +334,10 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+      - name: Send coverage
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: goveralls -parallel -coverprofile="$COVERAGE" -service=github
       - name: Test Summary
         if: always()
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

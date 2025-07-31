@@ -181,6 +181,7 @@ e2e-test: build-debug ## Run E2E tests
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
 	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) -tags="e2eSnap" ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
+	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test
 unit-test: build-debug ## Run unit-tests

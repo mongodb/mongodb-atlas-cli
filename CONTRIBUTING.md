@@ -82,10 +82,12 @@ If you need a new mock please update or add the `//go:generate` instruction to t
 
 #### Compilation in VSCode
 
-Please add the following line to your settings.json file :
-```
+Please add the following line to your `.vscode/settings.json` file :
+```json
+{
     "go.buildTags": "unit,e2e",
     "go.testTags": "unit,e2e"
+}
 ```
 
 This will enable compilation for unit and end-to-end tests.
@@ -95,7 +97,7 @@ This will enable compilation for unit and end-to-end tests.
 To debug in VSCode, you must create a debug configuration for the command with the required arguments.
 Run the following commands to create a new launch.json file for the debugger:
 
-```
+```shell
 touch .vscode/launch.json
 ```
 Then put the following example configuration into the file.
@@ -123,6 +125,36 @@ Review and replace the command name and arguments depending on the command you w
       }
     ]
 } 
+```
+
+To debug e2e tests.
+
+```shell
+touch .vscode/settings.json
+```
+
+Then put the following example configuration into the file.
+Review and replace the atlas settings.
+
+```json
+{
+  "go.buildTags": "unit,e2e",
+  "go.testTags": "unit,e2e",
+  "go.testEnvVars": {
+    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
+    "UPDATE_SNAPSHOTS": "skip",
+    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
+    "GOCOVERDIR": "${workspaceFolder}/cov",
+    "DO_NOT_TRACK": "1",
+    "E2E_SKIP_CLEANUP": "false",
+    "MONGODB_ATLAS_ORG_ID": "<default org id>",
+    "MONGODB_ATLAS_PROJECT_ID": "<default project id>",
+    "MONGODB_ATLAS_PRIVATE_API_KEY": "<private key>",
+    "MONGODB_ATLAS_PUBLIC_API_KEY": "<public key>",
+    "MONGODB_ATLAS_OPS_MANAGER_URL": "https://cloud.mongodb.com/",
+    "MONGODB_ATLAS_SERVICE": "cloud",
+  }
+}
 ```
 
 ### Contributing New Command Group

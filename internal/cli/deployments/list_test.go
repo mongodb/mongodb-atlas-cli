@@ -108,7 +108,7 @@ func TestList_Run(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
+		Return(config.UserAccount).
 		Times(2)
 
 	mockContainerEngine.
@@ -201,7 +201,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
+		Return(config.UserAccount).
 		Times(2)
 
 	mockContainerEngine.
@@ -291,7 +291,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
+		Return(config.UserAccount).
 		Times(2)
 
 	mockContainerEngine.
@@ -345,7 +345,7 @@ func TestListOpts_PostRun(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
+		Return(config.UserAccount).
 		Times(1)
 
 	deploymentsTest.MockDeploymentTelemetry.

@@ -231,7 +231,7 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	if opts.CredStore == nil {
 		opts.CredStore = config.Default()
 	}
-	return opts.CredStore.AuthType() != config.NotLoggedIn
+	return opts.CredStore.AuthType() != ""
 }
 
 func (opts *DeploymentOpts) GetLocalContainers(ctx context.Context) ([]container.Container, error) {

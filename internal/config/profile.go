@@ -39,11 +39,13 @@ const (
 	mongoShellPath           = "mongosh_path"
 	configType               = "toml"
 	service                  = "service"
+	AuthTypeField            = "auth_type"
 	publicAPIKey             = "public_api_key"
 	privateAPIKey            = "private_api_key"
 	AccessTokenField         = "access_token"
 	RefreshTokenField        = "refresh_token"
 	ClientIDField            = "client_id"
+	ClientSecretField        = "client_secret"
 	OpsManagerURLField       = "ops_manager_url"
 	AccountURLField          = "account_url"
 	baseURL                  = "base_url"
@@ -66,6 +68,7 @@ const (
 	GitHubActionsHostName    = "all_github_actions"
 	AtlasActionHostName      = "atlascli_github_action"
 	LocalDeploymentImage     = "local_deployment_image" // LocalDeploymentImage is the config key for the MongoDB Local Dev Docker image
+	Version                  = "version"                // versionField is the key for the configuration version
 )
 
 // Workaround to keep existing code working
@@ -138,6 +141,7 @@ func ProfileProperties() []string {
 
 func GlobalProperties() []string {
 	return []string{
+		Version,
 		LocalDeploymentImage,
 		mongoShellPath,
 		skipUpdateCheck,
@@ -239,6 +243,15 @@ func (p *Profile) GetBoolWithDefault(name string, defaultValue bool) bool {
 	}
 }
 
+func GetInt64(name string) int64 { return Default().GetInt64(name) }
+func (p *Profile) GetInt64(name string) int64 {
+	value := p.Get(name)
+	if value == nil {
+		return 0
+	}
+	return value.(int64)
+}
+
 // Service get configured service.
 func Service() string { return Default().Service() }
 func (p *Profile) Service() string {
@@ -260,6 +273,26 @@ func IsCloud() bool {
 func SetService(v string) { Default().SetService(v) }
 func (p *Profile) SetService(v string) {
 	p.Set(service, v)
+}
+
+type AuthMechanism string
+
+const (
+	APIKeys        AuthMechanism = "api_keys"
+	UserAccount    AuthMechanism = "user_account"
+	ServiceAccount AuthMechanism = "service_account"
+)
+
+// AuthType gets the configured auth type.
+func AuthType() AuthMechanism { return Default().AuthType() }
+func (p *Profile) AuthType() AuthMechanism {
+	return AuthMechanism(p.GetString(AuthTypeField))
+}
+
+// SetAuthType sets the configured auth type.
+func SetAuthType(v AuthMechanism) { Default().SetAuthType(v) }
+func (p *Profile) SetAuthType(v AuthMechanism) {
+	p.Set(AuthTypeField, string(v))
 }
 
 // PublicAPIKey get configured public api key.
@@ -310,25 +343,28 @@ func (p *Profile) SetRefreshToken(v string) {
 	p.Set(RefreshTokenField, v)
 }
 
-type AuthMechanism int
+// ClientID get configured client ID.
+func ClientID() string { return Default().ClientID() }
+func (p *Profile) ClientID() string {
+	return p.GetString(ClientIDField)
+}
 
-const (
-	APIKeys AuthMechanism = iota
+// SetClientID set configured client ID.
+func SetClientID(v string) { Default().SetClientID(v) }
+func (p *Profile) SetClientID(v string) {
+	p.Set(ClientIDField, v)
+}
 
-	OAuth
-	NotLoggedIn
-)
+// ClientSecret get configured client secret.
+func ClientSecret() string { return Default().ClientSecret() }
+func (p *Profile) ClientSecret() string {
+	return p.GetString(ClientSecretField)
+}
 
-// AuthType returns the type of authentication used in the profile.
-func AuthType() AuthMechanism { return Default().AuthType() }
-func (p *Profile) AuthType() AuthMechanism {
-	if p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" {
-		return APIKeys
-	}
-	if p.AccessToken() != "" {
-		return OAuth
-	}
-	return NotLoggedIn
+// SetClientSecret set configured client secret.
+func SetClientSecret(v string) { Default().SetClientSecret(v) }
+func (p *Profile) SetClientSecret(v string) {
+	p.Set(ClientSecretField, v)
 }
 
 // Token gets configured auth.Token.
@@ -482,12 +518,6 @@ func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
 }
 
-// ClientID get configured output format.
-func ClientID() string { return Default().ClientID() }
-func (p *Profile) ClientID() string {
-	return p.GetString(ClientIDField)
-}
-
 // IsAccessSet return true if API keys have been set up.
 // For Ops Manager we also check for the base URL.
 func IsAccessSet() bool { return Default().IsAccessSet() }
@@ -558,4 +588,16 @@ func (p *Profile) GetLocalDeploymentImage() string {
 func SetLocalDeploymentImage(v string) { Default().SetLocalDeploymentImage(v) }
 func (*Profile) SetLocalDeploymentImage(v string) {
 	SetGlobal(LocalDeploymentImage, v)
+}
+
+// GetVersion returns the configuration version.
+func GetVersion() int64 { return Default().GetVersion() }
+func (p *Profile) GetVersion() int64 {
+	return p.GetInt64(Version)
+}
+
+// SetPublicAPIKey sets the configuration version.
+func SetVersion(v int64) { Default().SetVersion(v) }
+func (*Profile) SetVersion(v int64) {
+	SetGlobal(Version, v)
 }

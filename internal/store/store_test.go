@@ -25,9 +25,11 @@ import (
 )
 
 type auth struct {
-	username string
-	password string
-	token    string
+	username     string
+	password     string
+	token        string
+	clientID     string
+	clientSecret string
 }
 
 func (auth) Token() (*atlasauth.Token, error) {
@@ -46,14 +48,25 @@ func (a auth) PrivateAPIKey() string {
 	return a.password
 }
 
+func (a auth) ClientID() string {
+	return a.clientID
+}
+
+func (a auth) ClientSecret() string {
+	return a.clientSecret
+}
+
 func (a auth) AuthType() config.AuthMechanism {
 	if a.username != "" {
 		return config.APIKeys
 	}
 	if a.token != "" {
-		return config.OAuth
+		return config.UserAccount
 	}
-	return config.NotLoggedIn
+	if a.clientID != "" {
+		return config.ServiceAccount
+	}
+	return ""
 }
 
 var _ CredentialsGetter = &auth{}

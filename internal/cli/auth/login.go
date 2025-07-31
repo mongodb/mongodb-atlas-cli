@@ -249,9 +249,11 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	}
 
 	if opts.authType == apiKeysAuth {
+		config.SetAuthType(config.APIKeys)
 		return opts.runAPIKeysLogin(ctx)
 	}
 
+	config.SetAuthType(config.UserAccount)
 	return opts.runUserAccountLogin(ctx)
 }
 

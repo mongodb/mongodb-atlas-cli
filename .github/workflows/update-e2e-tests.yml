@@ -160,44 +160,43 @@ jobs:
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: e2e-tests.xml
-  # commit:
-  #   runs-on: ubuntu-latest
-  #   if: always() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
-  #   needs: update-tests
-  #   steps:
-  #     - name: set Apix Bot token
-  #       id: app-token
-  #       uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
-  #       with:
-  #         app-id: ${{ secrets.APIXBOT_APP_ID }}
-  #         private-key: ${{ secrets.APIXBOT_APP_PEM }}
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         token: ${{ steps.app-token.outputs.token }}
-  #         ref: ${{ github.event.pull_request.head.ref }}
-  #     - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v4.2.1
-  #       with:
-  #         pattern: snapshots_*
-  #         path: test/e2e/testdata/.snapshots
-  #         merge-multiple: true
-  #     - name: commit
-  #       run: |
-  #         git config --global user.name "${{ steps.app-token.outputs.user-name }}"
-  #         git config --global user.email "${{ steps.app-token.outputs.user-email }}"
-  #         git add test/e2e/testdata/.snapshots
-  #         git commit -m "Update snapshots"
-  #         git push
-  #     - uses: actions-ecosystem/action-remove-labels@v1
-  #       with:
-  #         github_token: ${{ steps.app-token.outputs.token }}
-  #         labels: update-snapshots
+  commit:
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
+    needs: update-tests
+    steps:
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.2.1
+        with:
+          pattern: snapshots_*
+          path: test/e2e/testdata/.snapshots
+          merge-multiple: true
+      - name: commit
+        run: |
+          git config --global user.name "${{ steps.app-token.outputs.user-name }}"
+          git config --global user.email "${{ steps.app-token.outputs.user-email }}"
+          git add test/e2e/testdata/.snapshots
+          git commit -m "Update snapshots"
+          git push
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          labels: update-snapshots
   pr:
     runs-on: ubuntu-latest
-    if: success()
-    # if: success() && github.event_name != 'pull_request'
+    if: success() && github.event_name != 'pull_request'
     needs: update-tests
     steps:
       - name: Checkout repository
@@ -287,8 +286,7 @@ jobs:
           gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
   report:
     runs-on: ubuntu-latest
-    if: failure()
-    # if: failure() && github.event_name != 'pull_request'
+    if: failure() && github.event_name != 'pull_request'
     needs: update-tests
     steps:
       - name: Checkout repository
@@ -309,7 +307,7 @@ jobs:
           issue-key: ${{ steps.find.outputs.issue-key }}
           comment: |
             Another attempt to update test snapshots failed.
-            Check github actions logs for more details at: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/${{ github.job }}
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Create JIRA ticket
         uses: mongodb/apix-action/create-jira@3024080388613583e3bd119bfb1ab4b4dbf43c42
         id: create
@@ -321,8 +319,7 @@ jobs:
           issuetype: Bug
           description: |
             Failed to update test snapshots
-
-            Check github actions logs for more details at: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/${{ github.job }}
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           components: AtlasCLI
           assignee: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
           extra-data: |
@@ -342,4 +339,3 @@ jobs:
                   "id": "11861"
                 }
               }
-            }

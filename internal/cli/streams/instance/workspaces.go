@@ -27,7 +27,7 @@ func WorkspaceBuilder() *cobra.Command {
 		Short:   "Manage Atlas Stream Processing workspaces.",
 		Long:    `Create, list, update, and delete your Atlas Stream Processing workspaces.`,
 	}
-	cmd.AddCommand(WorkspaceCreateBuilder())
+	cmd.AddCommand(WorkspaceCreateBuilder(), WorkspaceUpdateBuilder())
 
 	return cmd
 }

@@ -30,6 +30,10 @@ import (
 )
 
 func TestStreamsWithClusters(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	if internal.IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")

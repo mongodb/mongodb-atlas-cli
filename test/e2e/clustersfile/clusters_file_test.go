@@ -36,6 +36,10 @@ const (
 )
 
 func TestClustersFile(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("clustersFile")
 

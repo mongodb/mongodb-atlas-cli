@@ -32,6 +32,10 @@ const (
 )
 
 func TestSchedule(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)

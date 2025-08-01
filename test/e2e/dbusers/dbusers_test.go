@@ -46,6 +46,10 @@ const (
 )
 
 func TestDBUserWithFlags(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
@@ -146,6 +150,10 @@ func TestDBUserWithFlags(t *testing.T) {
 }
 
 func TestDBUsersWithStdin(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 

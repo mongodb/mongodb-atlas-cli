@@ -39,6 +39,10 @@ const (
 var errNoAPIKey = errors.New("the apiKey ID is empty")
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, er := internal.AtlasCLIBin()
 	require.NoError(t, er)

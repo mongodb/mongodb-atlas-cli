@@ -85,8 +85,8 @@ If you need a new mock please update or add the `//go:generate` instruction to t
 Please add the following line to your `.vscode/settings.json` file :
 ```json
 {
-    "go.buildTags": "unit,e2e",
-    "go.testTags": "unit,e2e"
+    "go.buildTags": "e2e",
+    "go.testTags": "e2e"
 }
 ```
 
@@ -138,8 +138,8 @@ Review and replace the atlas settings.
 
 ```json
 {
-  "go.buildTags": "unit,e2e",
-  "go.testTags": "unit,e2e",
+  "go.buildTags": "e2e",
+  "go.testTags": "e2e",
   "go.testEnvVars": {
     "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
     "UPDATE_SNAPSHOTS": "skip",

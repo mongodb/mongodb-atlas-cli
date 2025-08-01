@@ -33,6 +33,10 @@ var filesLocalKey embed.FS
 const localKeyTestsInputDir = "testdata"
 
 func TestDecryptWithLocalKey(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)
 

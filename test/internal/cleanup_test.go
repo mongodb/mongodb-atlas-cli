@@ -36,6 +36,10 @@ func getKeysToDelete() map[string]struct{} {
 }
 
 func TestCleanup(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	req := require.New(t)
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)

@@ -36,6 +36,10 @@ const (
 // They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
 // to create their project once the ticket is completed.
 func TestFlexClustersFile(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)

@@ -35,6 +35,10 @@ const (
 )
 
 func TestAtlasUsers(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)

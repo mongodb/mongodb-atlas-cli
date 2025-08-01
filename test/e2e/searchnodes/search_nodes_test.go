@@ -41,6 +41,10 @@ const (
 const minSearchNodesMDBVersion = "6.0"
 
 func TestSearchNodes(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)

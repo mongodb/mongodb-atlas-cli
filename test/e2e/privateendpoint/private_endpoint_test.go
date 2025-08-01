@@ -47,6 +47,10 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsAWS")
 
@@ -170,6 +174,10 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsAzure")
 
@@ -302,6 +310,10 @@ var regionsGCP = []string{
 }
 
 func TestPrivateEndpointsGCP(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsGPC")
 
@@ -417,6 +429,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("regionalizedPrivateEndpointsSettings")
 

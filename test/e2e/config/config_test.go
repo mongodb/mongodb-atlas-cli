@@ -40,6 +40,10 @@ const (
 )
 
 func TestConfig(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	dir := internal.TempConfigFolder(t)
 
 	configPath := path.Join(dir, "config.toml")

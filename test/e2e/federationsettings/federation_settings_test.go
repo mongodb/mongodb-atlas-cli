@@ -36,6 +36,10 @@ const (
 )
 
 func TestIdentityProviders(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	if internal.IsGov() {
 		t.Skip("Skipping test in Gov environment")
 	}

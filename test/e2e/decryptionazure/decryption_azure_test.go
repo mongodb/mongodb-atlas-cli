@@ -33,6 +33,10 @@ var filesAzure embed.FS
 const azureTestsInputDir = "testdata"
 
 func TestDecryptWithAzure(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)
 

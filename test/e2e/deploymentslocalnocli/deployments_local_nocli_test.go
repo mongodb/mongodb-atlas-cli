@@ -50,6 +50,10 @@ const (
 )
 
 func TestDeploymentsLocalWithNoCLI(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	const (
 		deploymentName = "test-nocli"
 		dbUsername     = "admin"

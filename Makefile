@@ -25,7 +25,6 @@ export SNAPSHOTS_DIR?=$(abspath test/e2e/testdata/.snapshots)
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
-UNIT_TAGS?=unit
 E2E_TEST_PACKAGES?=./test/e2e..
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
@@ -186,7 +185,7 @@ e2e-test-snapshots: build-debug ## Run E2E tests
 .PHONY: unit-test
 unit-test: build-debug ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) -parallel $(E2E_PARALLEL) --tags="$(UNIT_TAGS)" -cover -coverprofile $(COVERAGE) -count=1 ./...
+	$(TEST_CMD) -parallel $(E2E_PARALLEL) -short -cover -coverprofile $(COVERAGE) -count=1 ./...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

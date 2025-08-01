@@ -75,6 +75,10 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 }
 
 func TestPluginInstall(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	_ = internal.TempConfigFolder(t)
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())

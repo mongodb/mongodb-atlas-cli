@@ -2,8 +2,6 @@ version: "2"
 run:
   build-tags:
     - e2e
-    - unit
-    - integration
   modules-download-mode: readonly
   tests: true
 linters:

@@ -44,6 +44,10 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	n := g.MemoryRand("rand", 1000)
 

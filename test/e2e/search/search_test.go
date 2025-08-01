@@ -39,6 +39,10 @@ const (
 const analyzer = "lucene.simple"
 
 func TestSearch(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProjectAndCluster("search")
 	r := require.New(t)
@@ -454,6 +458,10 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchDeprecated(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProjectAndCluster("search")
 	r := require.New(t)

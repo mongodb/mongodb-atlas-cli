@@ -41,6 +41,10 @@ const (
 )
 
 func TestLDAPWithFlags(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProjectAndCluster("ldap")
 
@@ -156,6 +160,10 @@ func TestLDAPWithFlags(t *testing.T) {
 }
 
 func TestLDAPWithStdin(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProjectAndCluster("ldap")
 

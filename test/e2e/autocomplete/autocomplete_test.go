@@ -27,6 +27,10 @@ import (
 const completionEntity = "completion"
 
 func TestAtlasCLIAutocomplete(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	options := []string{"zsh", "bash", "fish", "powershell"}

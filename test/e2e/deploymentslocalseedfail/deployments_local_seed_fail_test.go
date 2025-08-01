@@ -29,6 +29,10 @@ const (
 )
 
 func TestDeploymentsLocalSeedFail(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	const (
 		deploymentName = "test-seed-fail"
 		dbUsername     = "admin"

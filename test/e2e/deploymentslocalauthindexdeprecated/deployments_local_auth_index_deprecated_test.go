@@ -48,6 +48,10 @@ const (
 )
 
 func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	const (
 		deploymentName = "test-auth-deprecated"
 		dbUsername     = "admin"

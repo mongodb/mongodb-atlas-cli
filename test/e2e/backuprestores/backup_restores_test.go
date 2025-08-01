@@ -35,6 +35,10 @@ const (
 )
 
 func TestRestores(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 

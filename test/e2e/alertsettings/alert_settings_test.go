@@ -42,6 +42,10 @@ const (
 )
 
 func TestAlertConfig(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	var alertID string
 

@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.JIRA_API_TOKEN }}
           project-key: CLOUDP
           summary: "[AtlasCLI] Failed to update test snapshots"
-          issuetype: Bug
+          issuetype: Investigation
           description: |
             Failed to update test snapshots
             Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

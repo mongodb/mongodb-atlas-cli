@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 226
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Fri, 01 Aug 2025 05:16:18 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 113
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getSnapshot
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=dc06cedd8ff1ef7d1866009b8a335cfc313a078d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"expiration":"2025-08-01T17:05:10Z","finishTime":"2025-07-24T17:07:14Z","id":"688267f24d7ffc546e23ae85","mongoDBVersion":"8.0.12","scheduledTime":"2025-07-24T17:05:10Z","startTime":"2025-07-24T17:06:00Z","status":"COMPLETED"}

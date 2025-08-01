@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 01 Aug 2025 05:23:35 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 86
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=dc06cedd8ff1ef7d1866009b8a335cfc313a078d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8ae8a9fe143a3b7719/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-01T05:22:54Z","groupId":"688c4d8ae8a9fe143a3b7719","hostname":"atlas-6an0gp-shard-00-00.ws0abs.mongodb-dev.net","id":"atlas-6an0gp-shard-00-00.ws0abs.mongodb-dev.net:27017","lastPing":"2025-08-01T05:23:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8ae8a9fe143a3b7719/processes/atlas-6an0gp-shard-00-00.ws0abs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-6an0gp-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-256-shard-00-00.ws0abs.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-01T05:22:54Z","groupId":"688c4d8ae8a9fe143a3b7719","hostname":"atlas-6an0gp-shard-00-01.ws0abs.mongodb-dev.net","id":"atlas-6an0gp-shard-00-01.ws0abs.mongodb-dev.net:27017","lastPing":"2025-08-01T05:23:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8ae8a9fe143a3b7719/processes/atlas-6an0gp-shard-00-01.ws0abs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-6an0gp-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-256-shard-00-01.ws0abs.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-01T05:22:54Z","groupId":"688c4d8ae8a9fe143a3b7719","hostname":"atlas-6an0gp-shard-00-02.ws0abs.mongodb-dev.net","id":"atlas-6an0gp-shard-00-02.ws0abs.mongodb-dev.net:27017","lastPing":"2025-08-01T05:23:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8ae8a9fe143a3b7719/processes/atlas-6an0gp-shard-00-02.ws0abs.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-6an0gp-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-256-shard-00-02.ws0abs.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

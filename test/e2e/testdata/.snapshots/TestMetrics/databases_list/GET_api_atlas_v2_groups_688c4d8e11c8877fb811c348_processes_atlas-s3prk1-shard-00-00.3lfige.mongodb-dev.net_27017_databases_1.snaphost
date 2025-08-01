@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 662
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 01 Aug 2025 05:24:56 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 111
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getDatabaseMeasurementLinks
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=dc06cedd8ff1ef7d1866009b8a335cfc313a078d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8e11c8877fb811c348/processes/atlas-s3prk1-shard-00-00.3lfige.mongodb-dev.net:27017/databases?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"databaseName":"config","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8e11c8877fb811c348/processes/atlas-s3prk1-shard-00-00.3lfige.mongodb-dev.net:27017/databases/config","rel":"self"}]},{"databaseName":"local","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4d8e11c8877fb811c348/processes/atlas-s3prk1-shard-00-00.3lfige.mongodb-dev.net:27017/databases/local","rel":"self"}]}],"totalCount":2}

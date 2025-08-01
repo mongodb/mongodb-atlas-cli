@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	testProjectID = "create-project-id"
+	createTestProjectID = "create-project-id"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -42,7 +42,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			region:   "VIRGINIA_USA",
 			tier:     "SP30", // Test non default case
 		}
-		opts.ProjectID = testProjectID
+		opts.ProjectID = createTestProjectID
 
 		expected := &atlasv2.StreamsTenant{
 			Name:              &opts.name,
@@ -75,7 +75,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			region:   "VIRGINIA_USA",
 			tier:     "SP10", // Test non default case
 		}
-		opts.ProjectID = testProjectID
+		opts.ProjectID = createTestProjectID
 
 		expected := &atlasv2.StreamsTenant{
 			Name:              &opts.name,
@@ -108,7 +108,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			region:   "VIRGINIA_USA",
 			tier:     "SP30",
 		}
-		opts.ProjectID = testProjectID
+		opts.ProjectID = createTestProjectID
 
 		expected := &atlasv2.StreamsTenant{
 			Name:              &opts.name,
@@ -144,7 +144,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			defaultTier: "SP30",
 			maxTierSize: "SP50",
 		}
-		opts.ProjectID = testProjectID
+		opts.ProjectID = updateTestProjectID
 
 		expected := &atlasv2.StreamsTenant{
 			Name:              &opts.name,

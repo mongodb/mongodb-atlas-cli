@@ -25,30 +25,64 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const (
+	updateTestProjectID = "update-project-id"
+)
+
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockStreamsUpdater(ctrl)
+	t.Run("stream instances update --name --provider --region", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		updateOpts := &UpdateOpts{
+			store:    mockStore,
+			name:     "Example Name",
+			provider: "AWS",
+			region:   "VIRGINIA_USA",
+		}
 
-	buf := new(bytes.Buffer)
-	updateOpts := &UpdateOpts{
-		store:    mockStore,
-		name:     "Example Name",
-		provider: "AWS",
-		region:   "VIRGINIA_USA",
-	}
+		expected := &atlasv2.StreamsTenant{Name: &updateOpts.name, GroupId: &updateOpts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
+		updateOpts.ProjectID = updateTestProjectID
 
-	expected := &atlasv2.StreamsTenant{Name: &updateOpts.name, GroupId: &updateOpts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
-	updateOpts.ProjectID = "update-project-id"
+		mockStore.
+			EXPECT().
+			UpdateStream(updateOpts.ProjectID, updateOpts.name, expected.DataProcessRegion).
+			Return(expected, nil).
+			Times(1)
 
-	mockStore.
-		EXPECT().
-		UpdateStream(updateOpts.ProjectID, updateOpts.name, expected.DataProcessRegion).
-		Return(expected, nil).
-		Times(1)
+		if err := updateOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, updateTemplate, expected)
+	})
 
-	if err := updateOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	t.Log(buf.String())
-	test.VerifyOutputTemplate(t, updateTemplate, expected)
+	// Testing the parsing of flags but not passing into StreamConfig object
+	t.Run("stream workspaces update --tier --defaultTier --maxTierSize", func(t *testing.T) {
+		buf := new(bytes.Buffer)
+		updateOpts := &UpdateOpts{
+			store:       mockStore,
+			name:        "Example Name",
+			provider:    "AWS",
+			region:      "VIRGINIA_USA",
+			tier:        "SP30",
+			defaultTier: "SP30",
+			maxTierSize: "SP30",
+		}
+
+		expected := &atlasv2.StreamsTenant{Name: &updateOpts.name, GroupId: &updateOpts.ProjectID, DataProcessRegion: &atlasv2.StreamsDataProcessRegion{CloudProvider: "AWS", Region: "VIRGINIA_USA"}}
+		updateOpts.ProjectID = updateTestProjectID
+
+		mockStore.
+			EXPECT().
+			UpdateStream(updateOpts.ProjectID, updateOpts.name, expected.DataProcessRegion).
+			Return(expected, nil).
+			Times(1)
+
+		if err := updateOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		t.Log(buf.String())
+		test.VerifyOutputTemplate(t, updateTemplateWorkspace, expected)
+	})
 }

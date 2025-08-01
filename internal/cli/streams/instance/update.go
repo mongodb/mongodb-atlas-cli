@@ -38,14 +38,18 @@ type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
-	name     string
-	provider string
-	region   string
-	store    StreamsUpdater
+	name        string
+	provider    string
+	region      string
+	tier        string
+	defaultTier string
+	maxTierSize string
+	store       StreamsUpdater
 }
 
 const (
-	updateTemplate = "Atlas Streams Processor Instance '{{.Name}}' successfully updated.\n"
+	updateTemplate          = "Atlas Streams Processor Instance '{{.Name}}' successfully updated.\n"
+	updateTemplateWorkspace = "Atlas Streams Processor Workspace '{{.Name}}' successfully updated.\n"
 )
 
 func (opts *UpdateOpts) Run() error {
@@ -119,6 +123,49 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.StreamsProvider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.StreamsRegion)
+
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddOutputOptFlags(cmd)
+
+	_ = cmd.MarkFlagRequired(flag.Provider)
+	_ = cmd.MarkFlagRequired(flag.Region)
+
+	return cmd
+}
+
+func WorkspaceUpdateBuilder() *cobra.Command {
+	opts := &UpdateOpts{}
+	cmd := &cobra.Command{
+		Use:   "update <name>",
+		Short: "Updates an Atlas Stream Processing workspace for your project.",
+		Long: `Before updating an Atlas Streams Processing workspace, you must first stop all processes associated with it.
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args: require.ExactArgs(1),
+		Annotations: map[string]string{
+			"nameDesc": "Name of the Atlas Stream Processing workspace. After creation, you can't change the name of the workspace. The name can contain ASCII letters, numbers, and hyphens.",
+			"output":   updateTemplateWorkspace,
+		},
+		Example: `  # Modify the Atlas Stream Processing workspace configuration with the name MyWorkspace:
+  atlas streams workspace update MyWorkspace --provider AWS --region VIRGINIA_USA`,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			opts.name = args[0]
+
+			return opts.PreRunE(
+				opts.ValidateProjectID,
+				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), updateTemplate),
+			)
+		},
+		RunE: func(_ *cobra.Command, _ []string) error {
+			return opts.Run()
+		},
+	}
+
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.StreamsProvider)
+	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.StreamsRegion)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.StreamsWorkspaceTier)
+	cmd.Flags().StringVar(&opts.defaultTier, flag.DefaultTier, "", usage.StreamsWorkspaceTier)
+	cmd.Flags().StringVar(&opts.maxTierSize, flag.MaxTierSize, "", usage.StreamsWorkspaceMaxTierSize)
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

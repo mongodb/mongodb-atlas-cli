@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 01 Aug 2025 05:24:59 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 91
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=dc06cedd8ff1ef7d1866009b8a335cfc313a078d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4db911c8877fb811f653/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-01T05:24:18Z","groupId":"688c4db911c8877fb811f653","hostname":"atlas-sm3pc9-shard-00-00.vrb4ob.mongodb-dev.net","id":"atlas-sm3pc9-shard-00-00.vrb4ob.mongodb-dev.net:27017","lastPing":"2025-08-01T05:24:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4db911c8877fb811f653/processes/atlas-sm3pc9-shard-00-00.vrb4ob.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-sm3pc9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-920-shard-00-00.vrb4ob.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-01T05:24:19Z","groupId":"688c4db911c8877fb811f653","hostname":"atlas-sm3pc9-shard-00-01.vrb4ob.mongodb-dev.net","id":"atlas-sm3pc9-shard-00-01.vrb4ob.mongodb-dev.net:27017","lastPing":"2025-08-01T05:24:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4db911c8877fb811f653/processes/atlas-sm3pc9-shard-00-01.vrb4ob.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-sm3pc9-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-920-shard-00-01.vrb4ob.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-01T05:24:19Z","groupId":"688c4db911c8877fb811f653","hostname":"atlas-sm3pc9-shard-00-02.vrb4ob.mongodb-dev.net","id":"atlas-sm3pc9-shard-00-02.vrb4ob.mongodb-dev.net:27017","lastPing":"2025-08-01T05:24:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/688c4db911c8877fb811f653/processes/atlas-sm3pc9-shard-00-02.vrb4ob.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-sm3pc9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-920-shard-00-02.vrb4ob.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

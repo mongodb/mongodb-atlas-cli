@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 474
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 01 Aug 2025 05:15:58 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 241
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationApiUsersAccessListResource::addApiUserAccessList
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=dc06cedd8ff1ef7d1866009b8a335cfc313a078d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/688c4d8ce8a9fe143a3b7aa5/accessList?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cidrBlock":"172.214.44.1/32","count":0,"created":"2025-08-01T05:15:58Z","ipAddress":"172.214.44.1","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/688c4d8ce8a9fe143a3b7aa5/accessList/172.214.44.1","rel":"self"}]}],"totalCount":1}

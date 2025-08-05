@@ -1,0 +1,16 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 268
+Content-Type: application/json
+Date: Tue, 05 Aug 2025 05:14:46 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 86
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchDeploymentResource::createSearchDeployment
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=d22adc19da13cf6c881540a9870250607fc06685; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Invalid attribute clusterName specified. Cannot find cluster with the name cluster-403.","error":400,"errorCode":"ATLAS_SEARCH_DEPLOYMENT_INVALID_ATTRIBUTE","parameters":["clusterName","Cannot find cluster with the name cluster-403"],"reason":"Bad Request"}

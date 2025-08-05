@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 05 Aug 2025 05:22:36 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 118
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=d22adc19da13cf6c881540a9870250607fc06685; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68919356d1748e4e09535a1f/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-05T05:21:57Z","groupId":"68919356d1748e4e09535a1f","hostname":"atlas-14arws-shard-00-00.lni39e.mongodb-dev.net","id":"atlas-14arws-shard-00-00.lni39e.mongodb-dev.net:27017","lastPing":"2025-08-05T05:22:35Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68919356d1748e4e09535a1f/processes/atlas-14arws-shard-00-00.lni39e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-14arws-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-488-shard-00-00.lni39e.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-05T05:21:57Z","groupId":"68919356d1748e4e09535a1f","hostname":"atlas-14arws-shard-00-01.lni39e.mongodb-dev.net","id":"atlas-14arws-shard-00-01.lni39e.mongodb-dev.net:27017","lastPing":"2025-08-05T05:22:35Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68919356d1748e4e09535a1f/processes/atlas-14arws-shard-00-01.lni39e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-14arws-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-488-shard-00-01.lni39e.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-05T05:21:58Z","groupId":"68919356d1748e4e09535a1f","hostname":"atlas-14arws-shard-00-02.lni39e.mongodb-dev.net","id":"atlas-14arws-shard-00-02.lni39e.mongodb-dev.net:27017","lastPing":"2025-08-05T05:22:35Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68919356d1748e4e09535a1f/processes/atlas-14arws-shard-00-02.lni39e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-14arws-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-488-shard-00-02.lni39e.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

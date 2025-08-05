@@ -38,9 +38,6 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 	if internal.TestRunMode() != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
-	if internal.TestRunMode() != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("setup")

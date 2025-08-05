@@ -36,9 +36,6 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 	if internal.TestRunMode() != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
-	if internal.TestRunMode() != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
 
 	const (
 		deploymentName = "test-seed-fail"

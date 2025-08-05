@@ -37,6 +37,10 @@ func TestDecryptWithAWS(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
+	if internal.TestRunMode() != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
 	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)
 

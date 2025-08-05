@@ -31,12 +31,12 @@ jobs:
           - atlas/datafederation/db
           - atlas/datafederation/privatenetwork
           - atlas/datafederation/querylimits
-          # - atlas/decrypt # requires live calls to GCP/AWS/Azure
-          # - atlas/deployments/atlasclusters # one assertion connects to DB (needs live mode)
-          # - atlas/deployments/local/auth/deprecated # needs docker to run
-          # - atlas/deployments/local/auth/new # needs docker to run
-          # - atlas/deployments/local/nocli # needs docker to run
-          # - atlas/deployments/local/noauth # needs docker to run
+          - atlas/decrypt
+          - atlas/deployments/atlasclusters
+          - atlas/deployments/local/auth/deprecated
+          - atlas/deployments/local/auth/new
+          - atlas/deployments/local/nocli
+          - atlas/deployments/local/noauth
           - atlas/generic
           - atlas/interactive
           - atlas/ldap
@@ -78,7 +78,6 @@ jobs:
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TAGS: e2e
           E2E_TEST_PACKAGES: ./test/e2e/{{ matrix.packages }}..
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
@@ -137,7 +136,6 @@ jobs:
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TAGS: e2e
           E2E_TEST_PACKAGES: ./test/internal..
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}

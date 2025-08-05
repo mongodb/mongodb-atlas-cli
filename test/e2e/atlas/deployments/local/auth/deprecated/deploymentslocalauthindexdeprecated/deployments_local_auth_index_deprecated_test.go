@@ -52,6 +52,10 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
+	if internal.TestRunMode() != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
 	const (
 		deploymentName = "test-auth-deprecated"
 		dbUsername     = "admin"

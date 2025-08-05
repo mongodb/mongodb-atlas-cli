@@ -174,12 +174,11 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="e2e" ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
 
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
-	PACKAGES=$(shell go list -tags="e2e" ./test/e2e/... | grep -v e2e/atlas/deployments | grep -v e2e/atlas/decrypt)
-	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) -tags="e2e" ${PACKAGES}. $(E2E_EXTRA_ARGS)
+	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
 	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test

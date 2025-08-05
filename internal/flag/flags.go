@@ -51,8 +51,6 @@ const (
 	MembersShort                                  = "m"                                             // MembersShort flag
 	ShardsShort                                   = "s"                                             // ShardsShort flag
 	Tier                                          = "tier"                                          // Tier flag
-	DefaultTier                                   = "defaultTier"                                   // DefaultTier flag
-	MaxTierSize                                   = "maxTierSize"                                   // MaxTierSize flag
 	Forever                                       = "forever"                                       // Forever flag
 	ForeverShort                                  = "F"                                             // ForeverShort flag
 	DiskSizeGB                                    = "diskSizeGB"                                    // DiskSizeGB flag

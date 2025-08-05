@@ -5,9 +5,9 @@ pkg:golang/cloud.google.com/go/iam@v1.5.2
 pkg:golang/cloud.google.com/go/kms@v1.22.0
 pkg:golang/cloud.google.com/go/longrunning@v0.6.7
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
-pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.18.1
+pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.18.2
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.10.1
-pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.11.1
+pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.11.2
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.4.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal@v1.2.0
 pkg:golang/github.com/AzureAD/microsoft-authentication-library-for-go@v1.4.2

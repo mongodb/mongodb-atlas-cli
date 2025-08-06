@@ -19,6 +19,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -39,6 +40,12 @@ func Test_logoutOpts_Run(t *testing.T) {
 		},
 	}
 	ctx := t.Context()
+
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(1)
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
@@ -69,6 +76,12 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		keepConfig: true,
 	}
 	ctx := t.Context()
+
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.OAuth).
+		Times(1)
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).

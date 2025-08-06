@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -39,6 +40,44 @@ func NewMockConfigDeleter(ctrl *gomock.Controller) *MockConfigDeleter {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockConfigDeleter) EXPECT() *MockConfigDeleterMockRecorder {
 	return m.recorder
+}
+
+// AuthType mocks base method.
+func (m *MockConfigDeleter) AuthType() config.AuthMechanism {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthType")
+	ret0, _ := ret[0].(config.AuthMechanism)
+	return ret0
+}
+
+// AuthType indicates an expected call of AuthType.
+func (mr *MockConfigDeleterMockRecorder) AuthType() *MockConfigDeleterAuthTypeCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthType", reflect.TypeOf((*MockConfigDeleter)(nil).AuthType))
+	return &MockConfigDeleterAuthTypeCall{Call: call}
+}
+
+// MockConfigDeleterAuthTypeCall wrap *gomock.Call
+type MockConfigDeleterAuthTypeCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterAuthTypeCall) Return(arg0 config.AuthMechanism) *MockConfigDeleterAuthTypeCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterAuthTypeCall) Do(f func() config.AuthMechanism) *MockConfigDeleterAuthTypeCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterAuthTypeCall) DoAndReturn(f func() config.AuthMechanism) *MockConfigDeleterAuthTypeCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
 }
 
 // Delete mocks base method.

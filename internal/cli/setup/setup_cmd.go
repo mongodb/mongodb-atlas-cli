@@ -579,16 +579,10 @@ func (opts *Opts) promptConnect() error {
 func (opts *Opts) PreRun(ctx context.Context) error {
 	opts.skipLogin = true
 
-	if err := validate.NoAPIKeys(); err != nil {
-		// Why are we ignoring the error?
-		// Because if the user has API keys, we just want to proceed with the flow
-		// Then why not remove the error?
-		// The error is useful in other components that call `validate.NoAPIKeys()`
+	switch config.AuthType() {
+	case config.APIKeys, config.ServiceAccount:
 		return nil
-	}
-
-	// if profile has access token and refresh token is valid, we can skip login
-	if _, err := auth.AccountWithAccessToken(); err == nil {
+	case config.UserAccount:
 		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
 			return nil
 		}

@@ -15,6 +15,7 @@
 package config
 
 const ConfigVersion2 = 2
+const MaxConfigVersion = ConfigVersion2
 
 // MigrateVersions migrates the profile to the latest version.
 // This function can be expanded to support future migrations.

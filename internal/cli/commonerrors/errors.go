@@ -21,6 +21,7 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/oauth2"
 )
 
 var (
@@ -65,6 +66,8 @@ func Check(err error) error {
 		return errOutsideVPN
 	case asymmetricShardUnsupportedErrorCode:
 		return errAsymmetricShardUnsupported
+	case "invalid_client": // oauth2 error
+		return ErrUnauthorized
 	}
 
 	apiError := getError(err) // some `Unauthorized` errors do not have an error code, so we check the HTTP status code
@@ -93,6 +96,10 @@ func getErrorCode(err error) string {
 	}
 	if sdkPinnedError, ok := atlasClustersPinned.AsError(err); ok {
 		return sdkPinnedError.GetErrorCode()
+	}
+	var oauth2Err *oauth2.RetrieveError
+	if errors.As(err, &oauth2Err) {
+		return oauth2Err.ErrorCode
 	}
 
 	return unknownErrorCode

@@ -429,26 +429,6 @@ functions:
         args:
           - -f
           - expansions.yaml
-  "otel":
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - go_proxy
-          - workdir
-          - project_id
-          - project_identifier
-          - otel_trace_id
-          - otel_parent_id
-          - otel_collector_endpoint
-        env:
-          <<: *go_env
-          SPAN: ${span}
-          ATTRS: ${attr}
-        binary: make
-        args:
-          - otel
   "check purls":
     - command: subprocess.exec
       type: test

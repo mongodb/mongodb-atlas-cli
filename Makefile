@@ -121,10 +121,6 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 	@echo "==> Generating docs metadata"
 	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-with-overlays.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
-.PHONY: otel
-otel: ## Generate code
-	go run ./tools/cmd/otel $(SPAN) --attr $(ATTRS)
-
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"

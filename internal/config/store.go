@@ -54,7 +54,7 @@ func NewInMemoryStore() *InMemoryStore {
 	}
 }
 
-func (s *InMemoryStore) IsSecure() bool {
+func (*InMemoryStore) IsSecure() bool {
 	return true
 }
 

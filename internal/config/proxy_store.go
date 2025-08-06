@@ -25,19 +25,19 @@ func NewDefaultStore() (Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	secure := secure.NewSecureStore()
+	secureStore := secure.NewSecureStore()
 
-	return NewStore(insecure, secure), nil
+	return NewStore(insecure, secureStore), nil
 }
 
-func NewStore(insecure Store, secure secure.Store) Store {
-	if !secure.Available() {
-		return insecure
+func NewStore(insecureStore Store, secureStore secure.Store) Store {
+	if !secureStore.Available() {
+		return insecureStore
 	}
 
 	return &ProxyStore{
-		insecure: insecure,
-		secure:   secure,
+		insecure: insecureStore,
+		secure:   secureStore,
 	}
 }
 
@@ -47,7 +47,7 @@ func isSecureProperty(propertyName string) bool {
 
 // Store interface implementation for ProxyStore
 
-func (p *ProxyStore) IsSecure() bool {
+func (*ProxyStore) IsSecure() bool {
 	return true
 }
 

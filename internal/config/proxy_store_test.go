@@ -9,6 +9,11 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const (
+	testProfileName = "test-profile"
+	testValue       = "test-value"
+)
+
 func TestNewStore(t *testing.T) {
 	tests := []struct {
 		name             string
@@ -127,8 +132,8 @@ func TestProxyStore_PropertyRouting(t *testing.T) {
 
 func testGetHierarchicalValue(t *testing.T, store *ProxyStore, propertyName string, isSecure bool) {
 	t.Helper()
-	profileName := "test-profile"
-	expectedValue := "test-value"
+	profileName := testProfileName
+	expectedValue := testValue
 
 	if isSecure {
 		store.secure.(*secure.MockStore).EXPECT().
@@ -146,8 +151,8 @@ func testGetHierarchicalValue(t *testing.T, store *ProxyStore, propertyName stri
 
 func testSetProfileValue(t *testing.T, store *ProxyStore, propertyName string, isSecure bool) {
 	t.Helper()
-	profileName := "test-profile"
-	value := "test-value"
+	profileName := testProfileName
+	value := testValue
 
 	if isSecure {
 		store.secure.(*secure.MockStore).EXPECT().
@@ -163,8 +168,8 @@ func testSetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 
 func testGetProfileValue(t *testing.T, store *ProxyStore, propertyName string, isSecure bool) {
 	t.Helper()
-	profileName := "test-profile"
-	expectedValue := "test-value"
+	profileName := testProfileName
+	expectedValue := testValue
 
 	if isSecure {
 		store.secure.(*secure.MockStore).EXPECT().
@@ -182,7 +187,7 @@ func testGetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 
 func testSetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, isSecure bool) {
 	t.Helper()
-	value := "test-value"
+	value := testValue
 
 	if isSecure {
 		store.secure.(*secure.MockStore).EXPECT().
@@ -198,7 +203,7 @@ func testSetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, is
 
 func testGetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, isSecure bool) {
 	t.Helper()
-	expectedValue := "test-value"
+	expectedValue := testValue
 
 	if isSecure {
 		store.secure.(*secure.MockStore).EXPECT().

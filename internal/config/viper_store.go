@@ -96,7 +96,7 @@ func (s *ViperConfigStore) Filename() string {
 
 // ConfigStore implementation
 
-func (s *ViperConfigStore) IsSecure() bool {
+func (*ViperConfigStore) IsSecure() bool {
 	return false
 }
 

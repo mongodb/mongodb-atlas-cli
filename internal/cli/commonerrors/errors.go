@@ -21,6 +21,7 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/oauth2"
 )
 
 var (
@@ -44,6 +45,7 @@ const (
 	globalUserOutsideSubnetErrorCode        = "GLOBAL_USER_OUTSIDE_SUBNET"
 	unauthorizedErrorCode                   = "UNAUTHORIZED"
 	invalidRefreshTokenErrorCode            = "INVALID_REFRESH_TOKEN"
+	invalidServiceAccountClient             = "invalid_client"
 )
 
 // Check checks the error and returns a more user-friendly error message if applicable.
@@ -65,6 +67,8 @@ func Check(err error) error {
 		return errOutsideVPN
 	case asymmetricShardUnsupportedErrorCode:
 		return errAsymmetricShardUnsupported
+	case invalidServiceAccountClient: // oauth2 error
+		return ErrUnauthorized
 	}
 
 	apiError := getError(err) // some `Unauthorized` errors do not have an error code, so we check the HTTP status code
@@ -77,8 +81,9 @@ func Check(err error) error {
 }
 
 // getErrorCode extracts the error code from the error if it is an Atlas error.
-// This function checks for v2 SDK, the pinned clusters SDK and the old SDK errors.
-// If the error is not any of these Atlas errors, it returns "UNKNOWN_ERROR".
+// This function checks for v2 SDK, the pinned clusters SDK, the old SDK errors
+// and oauth2 errors.
+// If the error is not any of these errors, it returns "UNKNOWN_ERROR".
 func getErrorCode(err error) string {
 	if err == nil {
 		return unknownErrorCode
@@ -93,6 +98,10 @@ func getErrorCode(err error) string {
 	}
 	if sdkPinnedError, ok := atlasClustersPinned.AsError(err); ok {
 		return sdkPinnedError.GetErrorCode()
+	}
+	var oauth2Err *oauth2.RetrieveError
+	if errors.As(err, &oauth2Err) {
+		return oauth2Err.ErrorCode
 	}
 
 	return unknownErrorCode

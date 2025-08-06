@@ -789,7 +789,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/kubernetes/...
+          E2E_TEST_PACKAGES: ./test/e2e/kubernetes/...
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true

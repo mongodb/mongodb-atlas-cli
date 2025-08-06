@@ -36,7 +36,7 @@ const (
 	tierM20        = "M20"
 )
 
-const minSearchNodesMDBVersion = "6.0"
+const minSearchNodesMDBVersion = "7.0"
 
 func TestSearchNodes(t *testing.T) {
 	if testing.Short() {

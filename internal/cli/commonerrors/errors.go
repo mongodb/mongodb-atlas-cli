@@ -45,6 +45,7 @@ const (
 	globalUserOutsideSubnetErrorCode        = "GLOBAL_USER_OUTSIDE_SUBNET"
 	unauthorizedErrorCode                   = "UNAUTHORIZED"
 	invalidRefreshTokenErrorCode            = "INVALID_REFRESH_TOKEN"
+	invalidServiceAccountClient             = "invalid_client"
 )
 
 // Check checks the error and returns a more user-friendly error message if applicable.
@@ -66,7 +67,7 @@ func Check(err error) error {
 		return errOutsideVPN
 	case asymmetricShardUnsupportedErrorCode:
 		return errAsymmetricShardUnsupported
-	case "invalid_client": // oauth2 error
+	case invalidServiceAccountClient: // oauth2 error
 		return ErrUnauthorized
 	}
 
@@ -80,8 +81,9 @@ func Check(err error) error {
 }
 
 // getErrorCode extracts the error code from the error if it is an Atlas error.
-// This function checks for v2 SDK, the pinned clusters SDK and the old SDK errors.
-// If the error is not any of these Atlas errors, it returns "UNKNOWN_ERROR".
+// This function checks for v2 SDK, the pinned clusters SDK, the old SDK errors
+// and oauth2 errors.
+// If the error is not any of these errors, it returns "UNKNOWN_ERROR".
 func getErrorCode(err error) string {
 	if err == nil {
 		return unknownErrorCode

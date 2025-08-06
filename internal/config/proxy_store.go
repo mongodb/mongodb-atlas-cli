@@ -16,7 +16,7 @@ var secureProperties = []string{
 
 type ProxyStore struct {
 	insecure Store
-	secure   secure.Store
+	secure   SecureStore
 }
 
 func NewDefaultStore() (Store, error) {
@@ -30,7 +30,7 @@ func NewDefaultStore() (Store, error) {
 	return NewStore(insecure, secureStore), nil
 }
 
-func NewStore(insecureStore Store, secureStore secure.Store) Store {
+func NewStore(insecureStore Store, secureStore SecureStore) Store {
 	if !secureStore.Available() {
 		return insecureStore
 	}

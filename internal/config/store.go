@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store,SecureStore
 
 type Store interface {
 	IsSecure() bool
@@ -40,6 +40,14 @@ type Store interface {
 	SetGlobalValue(propertyName string, value any)
 	GetGlobalValue(propertyName string) any
 	IsSetGlobal(propertyName string) bool
+}
+
+type SecureStore interface {
+	Available() bool
+	Set(profileName string, propertyName string, value string) error
+	Get(profileName string, propertyName string) (string, error)
+	DeleteKey(profileName string, propertyName string) error
+	DeleteProfile(profileName string) error
 }
 
 // Temporary InMemoryStore to mimick legacy behavior

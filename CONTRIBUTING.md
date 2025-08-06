@@ -78,18 +78,6 @@ We provide a git pre-commit hook to format and check the code, to install it run
 We use [mockgen](go.uber.org/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
-#### Compilation in VSCode
-
-Please add the following line to your `.vscode/settings.json` file :
-```json
-{
-    "go.buildTags": "e2e",
-    "go.testTags": "e2e"
-}
-```
-
-This will enable compilation for unit and end-to-end tests.
-
 #### Debugging in VSCode
 
 To debug in VSCode, you must create a debug configuration for the command with the required arguments.
@@ -136,8 +124,6 @@ Review and replace the atlas settings.
 
 ```json
 {
-  "go.buildTags": "e2e",
-  "go.testTags": "e2e",
   "go.testEnvVars": {
     "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
     "UPDATE_SNAPSHOTS": "skip",

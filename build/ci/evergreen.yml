@@ -572,7 +572,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
           IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas"]
@@ -591,7 +591,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
           IDENTITY_PROVIDER_ID: ${identity_provider_id}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
@@ -611,7 +611,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
   - name: atlas_autogeneration_commands_e2e
     tags: ["e2e","autogeneration","atlas"]
     must_have_test_results: true
@@ -629,7 +629,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration/...
   - name: atlas_clusters_file_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -647,7 +647,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
   - name: atlas_clusters_sharded_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -665,7 +665,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
   - name: atlas_clusters_flex_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -683,7 +683,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex/...
   - name: atlas_clusters_iss_e2e
     tags: ["e2e","clusters","atlas", "iss"]
     must_have_test_results: true
@@ -701,7 +701,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss/...
   - name: atlas_plugin_install
     tags: ["e2e","atlas","plugin","install"]
     must_have_test_results: true
@@ -715,7 +715,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/install..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/install/...
   - name: atlas_plugin_run
     tags: ["e2e","atlas","plugin"]
     must_have_test_results: true
@@ -729,7 +729,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/run..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/run/...
   - name: atlas_plugin_uninstall
     tags: ["e2e","atlas","plugin"]
     must_have_test_results: true
@@ -743,7 +743,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/uninstall..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/uninstall/...
   - name: atlas_plugin_update
     tags: ["e2e","atlas","plugin"]
     must_have_test_results: true
@@ -757,7 +757,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/update..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/update/...
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -775,7 +775,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0/...
   - name: atlas_kubernetes_plugin
     tags: ["e2e","atlas","plugin","kubernetes"]
     must_have_test_results: true
@@ -789,7 +789,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/kubernetes..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/kubernetes/...
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -807,7 +807,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade/...
   - name: atlas_interactive_e2e
     tags: ["e2e","atlas", "interactive"]
     must_have_test_results: true
@@ -825,7 +825,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
   - name: atlas_serverless_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -843,7 +843,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -861,7 +861,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
   - name: atlas_gov_clusters_file_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -879,7 +879,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
   - name: atlas_gov_clusters_sharded_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -897,7 +897,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
     tags: ["e2e","clusters","atlas"]
@@ -916,7 +916,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap/...
   # Logs depend on a cluster running to get logs from
   - name: atlas_logs_e2e
     tags: ["e2e","clusters","atlas"]
@@ -935,7 +935,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
   - name: atlas_gov_logs_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -953,7 +953,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
     tags: ["e2e","clusters","atlas"]
@@ -972,7 +972,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
   - name: atlas_gov_metrics_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -990,7 +990,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
   # Processes depend on a cluster running
   - name: atlas_processes_e2e
     tags: ["e2e","clusters","atlas"]
@@ -1009,7 +1009,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
   - name: atlas_gov_processes_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -1027,7 +1027,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
     tags: ["e2e","clusters","atlas"]
@@ -1046,7 +1046,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive/...
   # Performance Advisor depend on a cluster
   - name: atlas_performance_advisor_e2e
     tags: ["e2e","clusters","atlas"]
@@ -1065,7 +1065,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
   - name: atlas_gov_performance_advisor_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true
@@ -1083,7 +1083,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
     tags: ["e2e","clusters","atlas"]
@@ -1103,7 +1103,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
           E2E_TIMEOUT: 3h
   - name: atlas_gov_search_e2e
     tags: ["e2e","clusters","atlasgov"]
@@ -1122,7 +1122,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
   - name: atlas_search_nodes_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -1140,7 +1140,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes/...
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
     tags: ["e2e","networking","atlas"]
@@ -1159,7 +1159,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/networking..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/networking/...
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_db_e2e
     tags: ["e2e","datafederation","atlas"]
@@ -1178,7 +1178,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/db..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/db/...
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
@@ -1199,7 +1199,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/privatenetwork..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/privatenetwork/...
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
@@ -1220,7 +1220,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/querylimits..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/querylimits/...
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
@@ -1241,7 +1241,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
   - name: atlas_gov_iam_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -1259,7 +1259,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
     # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_live_migrations_link_token_e2e
     tags: ["e2e","atlas","livemigrations"]
@@ -1278,7 +1278,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/livemigrations..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/livemigrations/...
   # Streams commands tests
   - name: atlas_streams
     tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
@@ -1297,7 +1297,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams/...
   - name: atlas_streams_with_cluster
     tags: [ "e2e","streams","atlas","assigned_to_jira_team_cloudp_atlas_streams"]
     must_have_test_results: true
@@ -1315,7 +1315,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams_with_cluster..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams_with_cluster/...
   - name: atlas_decrypt_e2e
     tags: [ "e2e","decrypt" ]
     must_have_test_results: true
@@ -1340,7 +1340,7 @@ tasks:
           AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
           AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
           AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/decrypt..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/decrypt/...
   - name: atlas_backups_snapshots_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1358,7 +1358,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/snapshot..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/snapshot/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_schedule_e2e
@@ -1378,7 +1378,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/schedule..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/schedule/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_exports_buckets_e2e
@@ -1398,7 +1398,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/buckets..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/buckets/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_exports_jobs_e2e
@@ -1418,7 +1418,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/jobs..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/jobs/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_flex_e2e
@@ -1438,7 +1438,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/flex..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/flex/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_FLEX_INSTANCE_NAME: ${e2e_flex_instance_name}
@@ -1461,7 +1461,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/restores..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/restores/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
@@ -1484,7 +1484,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/compliancepolicy..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/compliancepolicy/...
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
@@ -1508,7 +1508,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/internal..
+          E2E_TEST_PACKAGES: ./test/internal/...
           E2E_PARALLEL: 16
           E2E_TIMEOUT: 3h
   - name: atlas_gov_cleanup_e2e
@@ -1531,7 +1531,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_gov_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
-          E2E_TEST_PACKAGES: ./test/internal..
+          E2E_TEST_PACKAGES: ./test/internal/...
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
   - name: atlas_deployments_atlas_clusters_e2e
@@ -1553,7 +1553,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/atlasclusters..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/atlasclusters/...
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
@@ -1572,7 +1572,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/noauth..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/noauth/...
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_seed
@@ -1592,7 +1592,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/seed..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/seed/...
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_nocli_e2e
@@ -1612,7 +1612,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/nocli..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/nocli/...
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_e2e
@@ -1632,7 +1632,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/new..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/new/...
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_deprecated_e2e
@@ -1652,7 +1652,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/deprecated..
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/deprecated/...
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: build_win11_image

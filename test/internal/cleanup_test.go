@@ -38,6 +38,10 @@ func TestCleanup(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
+	if TestRunMode() != TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
 	req := require.New(t)
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)

@@ -78,7 +78,7 @@ jobs:
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TEST_PACKAGES: ./test/e2e/{{ matrix.packages }}..
+          E2E_TEST_PACKAGES: ./test/e2e/{{ matrix.packages }}/...
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
           MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
@@ -136,7 +136,7 @@ jobs:
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TEST_PACKAGES: ./test/internal..
+          E2E_TEST_PACKAGES: ./test/internal/...
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
           MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}

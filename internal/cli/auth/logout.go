@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"io"
 	"net/http"
 
@@ -37,6 +36,8 @@ type ConfigDeleter interface {
 	Delete() error
 	SetAccessToken(string)
 	SetRefreshToken(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
 	SetProjectID(string)
 	SetOrgID(string)
 	AuthType() config.AuthMechanism
@@ -46,8 +47,6 @@ type ConfigDeleter interface {
 type Revoker interface {
 	RevokeToken(context.Context, string, string) (*atlas.Response, error)
 }
-
-var ErrUnauthenticatedWithAccessToken = errors.New("not logged in with an Atlas account access token")
 
 type logoutOpts struct {
 	*cli.DeleteOpts
@@ -68,6 +67,7 @@ func (opts *logoutOpts) initFlow() error {
 func (opts *logoutOpts) Run(ctx context.Context) error {
 	authType := opts.config.AuthType()
 
+	// Handle OAuth authentication - revoke tokens
 	if authType == config.OAuth {
 		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 			return err
@@ -77,8 +77,18 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-	opts.config.SetAccessToken("")
-	opts.config.SetRefreshToken("")
+
+	// Clear credentials based on auth type
+	switch authType {
+	case config.OAuth:
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.NotLoggedIn:
+	}
+
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 	return opts.config.Save()
@@ -103,13 +113,24 @@ func LogoutBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			authType := config.AuthType()
 			if authType == config.NotLoggedIn {
-				return ErrUnauthenticatedWithAccessToken
+				return ErrUnauthenticated
 			}
-			s, err := config.AccessTokenSubject()
-			if err != nil {
-				return err
+
+			var accountIdentifier string
+			var err error
+
+			// Get appropriate account identifier based on auth type
+			switch authType {
+			case config.OAuth:
+				accountIdentifier, err = config.AccessTokenSubject()
+				if err != nil {
+					return err
+				}
+			case config.APIKeys:
+				accountIdentifier = config.PublicAPIKey()
 			}
-			opts.Entry = s
+
+			opts.Entry = accountIdentifier
 			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
 				return err
 			}

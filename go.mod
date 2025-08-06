@@ -33,7 +33,7 @@ require (
 	github.com/mongodb-labs/cobra2snooty v1.19.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
-	github.com/shirou/gopsutil/v4 v4.25.6
+	github.com/shirou/gopsutil/v4 v4.25.7
 	github.com/speakeasy-api/openapi-overlay v0.10.3
 	github.com/spf13/afero v1.14.0
 	github.com/spf13/cobra v1.9.1
@@ -160,8 +160,8 @@ require (
 	github.com/speakeasy-api/jsonpath v0.6.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/tklauser/go-sysconf v0.3.12 // indirect
-	github.com/tklauser/numcpus v0.6.1 // indirect
+	github.com/tklauser/go-sysconf v0.3.15 // indirect
+	github.com/tklauser/numcpus v0.10.0 // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect

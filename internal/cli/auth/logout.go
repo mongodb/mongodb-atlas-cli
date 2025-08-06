@@ -112,14 +112,9 @@ func LogoutBuilder() *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			authType := config.AuthType()
-			if authType == config.NotLoggedIn {
-				return ErrUnauthenticated
-			}
-
 			var accountIdentifier string
 			var err error
 
-			// Get appropriate account identifier based on auth type
 			switch authType {
 			case config.OAuth:
 				accountIdentifier, err = config.AccessTokenSubject()
@@ -128,6 +123,8 @@ func LogoutBuilder() *cobra.Command {
 				}
 			case config.APIKeys:
 				accountIdentifier = config.PublicAPIKey()
+			case config.NotLoggedIn:
+				return ErrUnauthenticated
 			}
 
 			opts.Entry = accountIdentifier

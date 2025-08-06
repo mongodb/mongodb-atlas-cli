@@ -148,91 +148,6 @@ functions:
           DO_NOT_TRACK: "1"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
-    - command: archive.targz_pack
-      params:
-        target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
-        source_dir: src/github.com/mongodb/mongodb-atlas-cli/cov
-        include:
-          - '*'
-        exclude_files:
-          - .gitkeep
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${build_variant}_${task_name}.coverage.tgz
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket coverage.tgz
-  "merge cov":
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        binary: build/ci/merge-cov.sh
-    - command: archive.targz_pack
-      params:
-        target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
-        source_dir: src/github.com/mongodb/mongodb-atlas-cli/
-        include:
-          - 'coverage.out'
-          - 'cov/merged/*'
-        exclude_files:
-          - .gitkeep
-    - command: shell.exec
-      params:
-        <<: *go_options
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          PERCENTAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
-          COUNT=$(ls -1 cov/*.tgz | wc -l)
-          cat <<EOF > expansions.yaml
-          percentage: $PERCENTAGE
-          count: $COUNT
-          EOF
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/expansions.yaml
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/yaml}
-        display_name: internal-bucket expansions.yaml
-    - command: expansions.update
-      params:
-        ignore_missing_file: true
-        file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        binary: rm
-        args:
-          - -f
-          - expansions.yaml
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.tgz
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket e2e.coverage.tgz
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.out
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.out
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket e2e.coverage.out
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -1737,27 +1652,6 @@ tasks:
           user: atlascli
           identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
-  - name: coverage
-    tags: ["coverage"]
-    depends_on:
-      - name: ".e2e"
-        variant: "* !.cron"
-        status: '*'
-    commands:
-      - command: shell.exec
-        params:
-          <<: *go_options
-          env:
-            <<: *go_env
-            AWS_ACCESS_KEY_ID: ${aws_key}
-            AWS_SECRET_ACCESS_KEY: ${aws_secret}
-          script: |
-            aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
-      - func: "merge cov"
-      - func: "otel"
-        vars:
-          span: "coverage"
-          attr: "total=${percentage},count=${count}"
   - name: check_purls
     tags: ["code_health"]
     commands:
@@ -2085,14 +1979,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".packer .windows"
-  - name: coverage
-    display_name: "Coverage"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".coverage"
   - name: snyk
     display_name: Snyk
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

@@ -1,6 +1,6 @@
 pkg:golang/al.essio.dev/pkg/shellescape@v1.5.1
 pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
-pkg:golang/cloud.google.com/go/auth@v0.16.2
+pkg:golang/cloud.google.com/go/auth@v0.16.3
 pkg:golang/cloud.google.com/go/compute/metadata@v0.7.0
 pkg:golang/cloud.google.com/go/iam@v1.5.2
 pkg:golang/cloud.google.com/go/kms@v1.22.0
@@ -58,7 +58,7 @@ pkg:golang/github.com/google/go-querystring@v1.1.0
 pkg:golang/github.com/google/s2a-go@v0.1.9
 pkg:golang/github.com/google/uuid@v1.6.0
 pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.6
-pkg:golang/github.com/googleapis/gax-go/v2@v2.14.2
+pkg:golang/github.com/googleapis/gax-go/v2@v2.15.0
 pkg:golang/github.com/hashicorp/errwrap@v1.1.0
 pkg:golang/github.com/hashicorp/go-multierror@v1.1.1
 pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7
@@ -122,10 +122,10 @@ pkg:golang/golang.org/x/sys@v0.34.0
 pkg:golang/golang.org/x/term@v0.33.0
 pkg:golang/golang.org/x/text@v0.27.0
 pkg:golang/golang.org/x/time@v0.12.0
-pkg:golang/google.golang.org/api@v0.241.0
+pkg:golang/google.golang.org/api@v0.244.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250603155806-513f23925822
-pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250603155806-513f23925822
-pkg:golang/google.golang.org/genproto@v0.0.0-20250505200425-f936aa4a68b2
-pkg:golang/google.golang.org/grpc@v1.73.0
+pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250728155136-f173205681a0
+pkg:golang/google.golang.org/genproto@v0.0.0-20250603155806-513f23925822
+pkg:golang/google.golang.org/grpc@v1.74.2
 pkg:golang/google.golang.org/protobuf@v1.36.6
 pkg:golang/gopkg.in/yaml.v3@v3.0.1

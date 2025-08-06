@@ -85,7 +85,7 @@ pkg:golang/github.com/sourcegraph/conc@v0.3.0
 pkg:golang/github.com/spf13/afero@v1.14.0
 pkg:golang/github.com/spf13/cast@v1.7.1
 pkg:golang/github.com/spf13/cobra@v1.9.1
-pkg:golang/github.com/spf13/pflag@v1.0.6
+pkg:golang/github.com/spf13/pflag@v1.0.7
 pkg:golang/github.com/spf13/viper@v1.20.1
 pkg:golang/github.com/subosito/gotenv@v1.6.0
 pkg:golang/github.com/tangzero/inflector@v1.0.0

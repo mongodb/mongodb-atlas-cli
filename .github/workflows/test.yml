@@ -1,0 +1,39 @@
+---
+on:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create JIRA ticket
+        uses: mongodb/apix-action/create-jira@v12
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "TESTING"
+          issuetype: Task
+          description: |
+            TESTING
+          components: AtlasCLI
+          extra-data: |
+            {
+              "fields": {
+                "fixVersions": [
+                  {
+                    "name": "next-atlascli-release"
+                  }
+                ],
+                "customfield_12751": [
+                  {
+                    "id": "22223"
+                  }
+                ],
+                "customfield_10257": {
+                  "id": "11861"
+                }
+              }
+            }

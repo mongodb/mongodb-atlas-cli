@@ -50,6 +50,7 @@ jobs:
           go install github.com/mattn/goveralls@v0.0.12
       - run: make unit-test
       - name: Send coverage
+        if: matrix.os == 'ubuntu-latest'
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github

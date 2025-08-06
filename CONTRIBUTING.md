@@ -67,10 +67,8 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` to see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
-- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end-to-end tests against an Atlas instance,
+- Run `make e2e-test` will run end-to-end tests,
   please make sure to have set `MCLI_*` variables pointing to that instance.
-- Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end-to-end tests against a Cloud Manager instance.<br />
-  Please remember to: (a) have a running automation agent, and (b) set MCLI\_\* variables to point to your Cloud Manager instance.
 - Run `make build` to generate a local binary in the `./bin` folder.
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks`.

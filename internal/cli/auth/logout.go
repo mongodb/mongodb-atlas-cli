@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net/http"
 
@@ -38,12 +39,15 @@ type ConfigDeleter interface {
 	SetRefreshToken(string)
 	SetProjectID(string)
 	SetOrgID(string)
+	AuthType() config.AuthMechanism
 	Save() error
 }
 
 type Revoker interface {
 	RevokeToken(context.Context, string, string) (*atlas.Response, error)
 }
+
+var ErrUnauthenticatedWithAccessToken = errors.New("not logged in with an Atlas account access token")
 
 type logoutOpts struct {
 	*cli.DeleteOpts
@@ -62,9 +66,12 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
-	// revoking a refresh token revokes the access token
-	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
-		return err
+	authType := opts.config.AuthType()
+
+	if authType == config.OAuth {
+		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+			return err
+		}
 	}
 
 	if !opts.keepConfig {
@@ -94,8 +101,9 @@ func LogoutBuilder() *cobra.Command {
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if config.RefreshToken() == "" {
-				return ErrUnauthenticated
+			authType := config.AuthType()
+			if authType == config.NotLoggedIn {
+				return ErrUnauthenticatedWithAccessToken
 			}
 			s, err := config.AccessTokenSubject()
 			if err != nil {

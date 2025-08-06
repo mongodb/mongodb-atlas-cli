@@ -15,7 +15,7 @@ jobs:
           token: ${{ secrets.JIRA_API_TOKEN }}
           project-key: CLOUDP
           summary: "TESTING"
-          issuetype: Task
+          issuetype: Story
           description: |
             TESTING
           components: AtlasCLI

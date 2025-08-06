@@ -57,13 +57,15 @@ type Store struct {
 	ctx            context.Context
 }
 
-func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
-	switch s.authType {
+func HTTPClient(authType config.AuthMechanism, publicKey, privateKey string,
+	token *atlasauth.Token, clientID, clientSecret string,
+	httpTransport http.RoundTripper) (*http.Client, error) {
+	switch authType {
 	case config.APIKeys:
-		t := transport.NewDigestTransport(s.username, s.password, httpTransport)
+		t := transport.NewDigestTransport(publicKey, privateKey, httpTransport)
 		return t.Client()
 	case config.UserAccount:
-		tr, err := transport.NewAccessTokenTransport(s.accessToken, httpTransport, func(t *atlasauth.Token) error {
+		tr, err := transport.NewAccessTokenTransport(token, httpTransport, func(t *atlasauth.Token) error {
 			config.SetAccessToken(t.AccessToken)
 			config.SetRefreshToken(t.RefreshToken)
 			return config.Save()
@@ -71,14 +73,9 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		if err != nil {
 			return nil, err
 		}
-
 		return &http.Client{Transport: tr}, nil
 	case config.ServiceAccount:
-		tr, err := transport.NewServiceAccountTransport(s.clientID, s.clientSecret, httpTransport)
-		if err != nil {
-			return nil, err
-		}
-		return &http.Client{Transport: tr}, nil
+		return transport.NewServiceAccountTransport(clientID, clientSecret), nil
 	default:
 		return &http.Client{Transport: httpTransport}, nil
 	}
@@ -318,7 +315,15 @@ func New(opts ...Option) (*Store, error) {
 		}
 	}
 
-	client, err := store.httpClient(store.transport())
+	client, err := HTTPClient(
+		store.authType,
+		store.username,
+		store.password,
+		store.accessToken,
+		store.clientID,
+		store.clientSecret,
+		store.transport(),
+	)
 	if err != nil {
 		return nil, err
 	}

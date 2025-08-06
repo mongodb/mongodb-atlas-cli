@@ -66,11 +66,9 @@ func TestNewServiceAccountTransport(t *testing.T) {
 
 	clientID := "mock-client-id"
 	clientSecret := "mock-client-secret" //nolint:gosec
-	base := http.DefaultTransport
 
-	tr, err := NewServiceAccountTransport(clientID, clientSecret, base)
-	require.NoError(t, err)
-	require.NotNil(t, tr)
+	client := NewServiceAccountTransport(clientID, clientSecret)
+	require.NotNil(t, client)
 
 	// Create request to check authentication header
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -207,18 +207,19 @@ func withOS() EventOpt {
 }
 
 type Authenticator interface {
-	PublicAPIKey() string
-	PrivateAPIKey() string
-	AccessToken() string
+	AuthType() config.AuthMechanism
 }
 
 func withAuthMethod(c Authenticator) EventOpt {
 	return func(event Event) {
-		if c.PublicAPIKey() != "" && c.PrivateAPIKey() != "" {
+		switch c.AuthType() {
+		case config.APIKeys:
 			event.Properties["auth_method"] = "api_key"
 			return
-		} else if c.AccessToken() != "" {
+		case config.UserAccount:
 			event.Properties["auth_method"] = "oauth"
+		case config.ServiceAccount:
+			event.Properties["auth_method"] = "service_account"
 		}
 	}
 }

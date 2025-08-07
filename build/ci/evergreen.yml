@@ -136,7 +136,6 @@ functions:
           - AZURE_CLIENT_ID
           - AZURE_CLIENT_SECRET
           - E2E_TIMEOUT
-          - E2E_SERVERLESS_INSTANCE_NAME
           - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
           - IDENTITY_PROVIDER_ID
@@ -146,6 +145,7 @@ functions:
           <<: *go_env
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           DO_NOT_TRACK: "1"
+          TEST_MODE: live
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
   "install gotestsum":

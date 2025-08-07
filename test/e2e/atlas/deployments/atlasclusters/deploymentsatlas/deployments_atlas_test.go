@@ -45,14 +45,17 @@ func TestDeploymentsAtlas(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)

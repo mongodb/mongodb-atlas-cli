@@ -29,8 +29,7 @@ E2E_TEST_PACKAGES?=./test/e2e/...
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
-export UPDATE_SNAPSHOTS?=skip
-export E2E_SKIP_CLEANUP?=false 
+export TEST_MODE?=live
 export MONGODB_ATLAS_ORG_ID?=a0123456789abcdef012345a
 export MONGODB_ATLAS_PROJECT_ID?=b0123456789abcdef012345b
 export MONGODB_ATLAS_PUBLIC_API_KEY?=ABCDEF01
@@ -174,7 +173,7 @@ e2e-test: build-debug ## Run E2E tests
 
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
-	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	TEST_MODE=replay DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
 	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test

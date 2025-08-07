@@ -38,7 +38,12 @@ func TestCleanup(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if TestRunMode() != TestModeLive {
+	mode, err := TestRunMode()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if mode != TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 

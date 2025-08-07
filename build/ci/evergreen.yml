@@ -1319,6 +1319,7 @@ tasks:
   - name: atlas_backups_flex_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
       - name: compile
         variant: "code_health"
@@ -1337,6 +1338,7 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_FLEX_INSTANCE_NAME: ${e2e_flex_instance_name}
+          E2E_TIMEOUT: 3h
   - name: atlas_backups_restores_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true

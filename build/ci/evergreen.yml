@@ -145,6 +145,7 @@ functions:
           <<: *go_env
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           DO_NOT_TRACK: "1"
+          TEST_MODE: live
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
   "install gotestsum":

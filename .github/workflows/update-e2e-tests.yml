@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        packages:
+        package:
           - atlas/autogeneration
           - atlas/backup/compliancepolicy
           - atlas/backup/flex
@@ -78,7 +78,7 @@ jobs:
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TEST_PACKAGES: ./test/e2e/{{ matrix.packages }}/...
+          E2E_TEST_PACKAGES: ./test/e2e/${{ matrix.package }}/...
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
           MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
@@ -102,7 +102,7 @@ jobs:
         if: always()
         id: set-artifact-name
         run: |
-          echo "NAME=snapshots_${{ matrix.packages }}" | sed "s|/|_|g" >> "$GITHUB_OUTPUT"
+          echo "NAME=snapshots_${{ matrix.package }}" | sed "s|/|_|g" >> "$GITHUB_OUTPUT"
       - name: upload artifact
         if: always()
         uses: actions/upload-artifact@v4.6.2

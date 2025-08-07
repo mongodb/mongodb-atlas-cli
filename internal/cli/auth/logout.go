@@ -128,7 +128,7 @@ func LogoutBuilder() *cobra.Command {
 			}
 
 			opts.Entry = entry
-			if err := opts.PromptWithMessage(message); err != nil || !opts.Confirm {
+			if err := opts.PromptWithMessage(message); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

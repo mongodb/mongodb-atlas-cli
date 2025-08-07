@@ -118,6 +118,44 @@ func (c *MockConfigDeleterDeleteCall) DoAndReturn(f func() error) *MockConfigDel
 	return c
 }
 
+// PublicAPIKey mocks base method.
+func (m *MockConfigDeleter) PublicAPIKey() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PublicAPIKey")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// PublicAPIKey indicates an expected call of PublicAPIKey.
+func (mr *MockConfigDeleterMockRecorder) PublicAPIKey() *MockConfigDeleterPublicAPIKeyCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublicAPIKey", reflect.TypeOf((*MockConfigDeleter)(nil).PublicAPIKey))
+	return &MockConfigDeleterPublicAPIKeyCall{Call: call}
+}
+
+// MockConfigDeleterPublicAPIKeyCall wrap *gomock.Call
+type MockConfigDeleterPublicAPIKeyCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterPublicAPIKeyCall) Return(arg0 string) *MockConfigDeleterPublicAPIKeyCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterPublicAPIKeyCall) Do(f func() string) *MockConfigDeleterPublicAPIKeyCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterPublicAPIKeyCall) DoAndReturn(f func() string) *MockConfigDeleterPublicAPIKeyCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // Save mocks base method.
 func (m *MockConfigDeleter) Save() error {
 	m.ctrl.T.Helper()

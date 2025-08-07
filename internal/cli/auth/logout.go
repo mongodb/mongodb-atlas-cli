@@ -37,8 +37,6 @@ type ConfigDeleter interface {
 	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
-	SetPublicAPIKey(string)
-	SetPrivateAPIKey(string)
 	SetProjectID(string)
 	SetOrgID(string)
 	SetPublicAPIKey(string)

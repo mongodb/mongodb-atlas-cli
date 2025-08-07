@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -111,9 +110,6 @@ func LogoutBuilder() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			var message, entry string
 			var err error
-
-			fmt.Println("auth type", opts.config.AuthType())
-			fmt.Println("PROFILE", opts.config)
 
 			if opts.config.AuthType() == config.APIKeys {
 				entry = opts.config.PublicAPIKey()

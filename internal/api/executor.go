@@ -71,20 +71,8 @@ func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter R
 // Executor wired up to use the default profile and static functions on config.
 func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 	profile := config.Default()
-	token, err := profile.Token()
-	if err != nil {
-		return nil, err
-	}
 
-	client, err := store.HTTPClient(
-		profile.AuthType(),
-		profile.PublicAPIKey(),
-		profile.PrivateAPIKey(),
-		token,
-		profile.ClientID(),
-		profile.ClientSecret(),
-		transport.Default(),
-	)
+	client, err := store.HTTPClient(profile, transport.Default())
 	if err != nil {
 		return nil, err
 	}

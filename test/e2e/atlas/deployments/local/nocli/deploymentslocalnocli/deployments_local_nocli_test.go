@@ -53,7 +53,11 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
@@ -64,7 +68,6 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	)
 
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	bin := "docker"

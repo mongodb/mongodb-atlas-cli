@@ -58,10 +58,10 @@ func TestExportJobs(t *testing.T) {
 	r.NoError(err)
 
 	const cloudProvider = "AWS"
-	iamRoleID := os.Getenv("E2E_CLOUD_ROLE_ID")
-	bucketName := os.Getenv("E2E_TEST_BUCKET")
-	r.NotEmpty(iamRoleID)
-	r.NotEmpty(bucketName)
+	iamRoleID, err := internal.CloudRoleID()
+	r.NoError(err)
+	bucketName, err := internal.TestBucketName()
+	r.NoError(err)
 	var bucketID string
 	var exportJobID string
 	var snapshotID string

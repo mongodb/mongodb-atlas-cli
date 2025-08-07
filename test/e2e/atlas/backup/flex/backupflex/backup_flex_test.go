@@ -49,8 +49,8 @@ func TestFlexBackup(t *testing.T) {
 	g.ProjectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
 	generateFlexCluster(t, g)
 
-	clusterName := os.Getenv("E2E_FLEX_INSTANCE_NAME")
-	require.NotEmpty(t, clusterName)
+	clusterName, err := internal.FlexInstanceName()
+	require.NoError(t, err)
 
 	var snapshotID string
 	g.Run("Snapshot List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

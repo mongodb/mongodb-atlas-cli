@@ -43,17 +43,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
-const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
 const redactedToken = "redactedToken"
 const ipMax = 255
-
-type snapshotMode int
-
-const (
-	snapshotModeReplay snapshotMode = iota
-	snapshotModeUpdate
-	snapshotModeSkip
-)
 
 func decompress(r *http.Response) error {
 	var err error
@@ -156,23 +147,22 @@ func compareSnapshots(a *http.Response, b *http.Response) int {
 
 // AtlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type AtlasE2ETestGenerator struct {
-	ProjectID           string
-	projectName         string
-	ClusterName         string
-	clusterRegion       string
-	Tier                string
-	MDBVer              string
-	enableBackup        bool
-	firstProcess        *atlasv2.ApiHostViewAtlas
-	t                   *testing.T
-	fileIDs             map[string]int
-	memoryMap           map[string]any
-	lastSnapshot        *http.Response
-	currentSnapshotMode snapshotMode
-	testName            string
-	skipSnapshots       func(snapshot *http.Response, prevSnapshot *http.Response) bool
-	snapshotNameFunc    func(r *http.Request) string
-	snapshotTargetURI   string
+	ProjectID         string
+	projectName       string
+	ClusterName       string
+	clusterRegion     string
+	Tier              string
+	MDBVer            string
+	enableBackup      bool
+	firstProcess      *atlasv2.ApiHostViewAtlas
+	t                 *testing.T
+	fileIDs           map[string]int
+	memoryMap         map[string]any
+	lastSnapshot      *http.Response
+	testName          string
+	skipSnapshots     func(snapshot *http.Response, prevSnapshot *http.Response) bool
+	snapshotNameFunc  func(r *http.Request) string
+	snapshotTargetURI string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -196,14 +186,13 @@ func (g *AtlasE2ETestGenerator) Logf(format string, args ...any) {
 func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerator)) *AtlasE2ETestGenerator {
 	t.Helper()
 	g := &AtlasE2ETestGenerator{
-		t:                   t,
-		testName:            t.Name(),
-		currentSnapshotMode: snapshotModeSkip,
-		skipSnapshots:       compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
-		fileIDs:             map[string]int{},
-		memoryMap:           map[string]any{},
-		snapshotNameFunc:    defaultSnapshotBaseName,
-		snapshotTargetURI:   os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
+		t:                 t,
+		testName:          t.Name(),
+		skipSnapshots:     compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
+		fileIDs:           map[string]int{},
+		memoryMap:         map[string]any{},
+		snapshotNameFunc:  defaultSnapshotBaseName,
+		snapshotTargetURI: os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
 	}
 	for _, opt := range opts {
 		opt(g)
@@ -465,19 +454,6 @@ func (g *AtlasE2ETestGenerator) RunCommand(args ...string) ([]byte, error) {
 	return RunAndGetStdOut(cmd)
 }
 
-func SkipCleanup() bool {
-	return isTrue(os.Getenv("E2E_SKIP_CLEANUP"))
-}
-
-func isTrue(s string) bool {
-	switch s {
-	case "t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1":
-		return true
-	default:
-		return false
-	}
-}
-
 func (g *AtlasE2ETestGenerator) snapshotBaseDir() string {
 	g.t.Helper()
 
@@ -590,34 +566,6 @@ func (g *AtlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 		g.fileIDs[key] = 0
 		g.t.Fatal("no previous snapshot")
 	}
-}
-
-func updateSnapshots() bool {
-	return isTrue(os.Getenv(updateSnapshotsEnvVarKey))
-}
-
-func skipSnapshots() bool {
-	return os.Getenv(updateSnapshotsEnvVarKey) == "skip"
-}
-
-type TestMode string
-
-const (
-	TestModeLive   TestMode = "live"   // run tests against a live Atlas instance
-	TestModeRecord TestMode = "record" // record snapshots
-	TestModeReplay TestMode = "replay" // replay snapshots
-)
-
-func TestRunMode() TestMode {
-	if skipSnapshots() {
-		return TestModeLive
-	}
-
-	if updateSnapshots() {
-		return TestModeRecord
-	}
-
-	return TestModeReplay
 }
 
 func (g *AtlasE2ETestGenerator) loadMemory() {
@@ -767,7 +715,12 @@ func SkipSimilarSnapshots(snapshot *http.Response, prevSnapshot *http.Response) 
 func (g *AtlasE2ETestGenerator) snapshotServer() {
 	g.t.Helper()
 
-	if skipSnapshots() {
+	mode, err := TestRunMode()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	if mode == TestModeLive {
 		return
 	}
 
@@ -776,14 +729,10 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 		g.t.Fatal(err)
 	}
 
-	if updateSnapshots() {
-		g.currentSnapshotMode = snapshotModeUpdate
-
+	if mode == TestModeRecord {
 		dir := g.snapshotDir()
 		_ = os.RemoveAll(dir)
 	} else {
-		g.currentSnapshotMode = snapshotModeReplay
-
 		g.loadMemory()
 	}
 
@@ -804,7 +753,7 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if g.currentSnapshotMode == snapshotModeUpdate {
+		if mode == TestModeRecord {
 			r.Host = targetURL.Host
 			proxy.ServeHTTP(w, r)
 			return
@@ -826,7 +775,7 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 	}))
 
 	g.t.Cleanup(func() {
-		if g.currentSnapshotMode == snapshotModeUpdate {
+		if mode == TestModeRecord {
 			g.storeMemory()
 		}
 		server.Close()
@@ -844,24 +793,29 @@ func (g *AtlasE2ETestGenerator) Memory(key string, value any) any {
 
 	key = fmt.Sprintf("%s/%s", g.testName, key)
 
-	switch g.currentSnapshotMode {
-	case snapshotModeSkip:
+	mode, err := TestRunMode()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	switch mode {
+	case TestModeLive:
 		return value
-	case snapshotModeUpdate:
+	case TestModeRecord:
 		_, ok := g.memoryMap[key]
 		if ok {
 			g.t.Fatalf("memory key %q already exists", key)
 		}
 		g.memoryMap[key] = value
 		return value
-	case snapshotModeReplay:
+	case TestModeReplay:
 		data, ok := g.memoryMap[key]
 		if !ok {
 			g.t.Fatalf("memory key %q not found", key)
 		}
 		return data
 	default:
-		g.t.Fatalf("unexpected snapshot mode: %v", g.currentSnapshotMode)
+		g.t.Fatalf("unexpected snapshot mode: %v", mode)
 		return nil
 	}
 }
@@ -875,10 +829,15 @@ func (g *AtlasE2ETestGenerator) MemoryFunc(key string, value any, marshal func(v
 
 	key = fmt.Sprintf("%s/%s", g.testName, key)
 
-	switch g.currentSnapshotMode {
-	case snapshotModeSkip:
+	mode, err := TestRunMode()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	switch mode {
+	case TestModeLive:
 		return value
-	case snapshotModeUpdate:
+	case TestModeRecord:
 		_, ok := g.memoryMap[key]
 		if ok {
 			g.t.Fatalf("memory key %q already exists", key)
@@ -889,7 +848,7 @@ func (g *AtlasE2ETestGenerator) MemoryFunc(key string, value any, marshal func(v
 		}
 		g.memoryMap[key] = base64.StdEncoding.EncodeToString(data)
 		return value
-	case snapshotModeReplay:
+	case TestModeReplay:
 		data, ok := g.memoryMap[key]
 		if !ok {
 			g.t.Fatalf("memory key %q not found", key)
@@ -904,7 +863,7 @@ func (g *AtlasE2ETestGenerator) MemoryFunc(key string, value any, marshal func(v
 		}
 		return r
 	default:
-		g.t.Fatalf("unexpected snapshot mode: %v", g.currentSnapshotMode)
+		g.t.Fatalf("unexpected snapshot mode: %v", mode)
 		return nil
 	}
 }

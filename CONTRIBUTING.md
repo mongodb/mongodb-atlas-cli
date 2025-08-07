@@ -126,7 +126,7 @@ Review and replace the atlas settings.
 {
   "go.testEnvVars": {
     "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
-    "UPDATE_SNAPSHOTS": "skip",
+    "TEST_MODE": "live",
     "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
     "GOCOVERDIR": "${workspaceFolder}/cov",
     "DO_NOT_TRACK": "1",

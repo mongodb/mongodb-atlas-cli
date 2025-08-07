@@ -86,8 +86,7 @@ jobs:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
           MONGODB_ATLAS_SERVICE: cloud
           DO_NOT_TRACK: 1
-          UPDATE_SNAPSHOTS: true
-          E2E_SKIP_CLEANUP: true
+          TEST_MODE: record
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}

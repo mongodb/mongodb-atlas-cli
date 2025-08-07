@@ -36,11 +36,8 @@ type ConfigDeleter interface {
 	Delete() error
 	SetAccessToken(string)
 	SetRefreshToken(string)
-	SetPublicAPIKey(string)
-	SetPrivateAPIKey(string)
 	SetProjectID(string)
 	SetOrgID(string)
-	AuthType() config.AuthMechanism
 	Save() error
 }
 
@@ -65,30 +62,16 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
-	authType := opts.config.AuthType()
-
-	// Handle OAuth authentication - revoke tokens
-	if authType == config.OAuth {
-		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
-			return err
-		}
+	// revoking a refresh token revokes the access token
+	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+		return err
 	}
 
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-
-	// Clear credentials based on auth type
-	switch authType {
-	case config.OAuth:
-		opts.config.SetAccessToken("")
-		opts.config.SetRefreshToken("")
-	case config.APIKeys:
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-	case config.NotLoggedIn:
-	}
-
+	opts.config.SetAccessToken("")
+	opts.config.SetRefreshToken("")
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 	return opts.config.Save()
@@ -111,23 +94,14 @@ func LogoutBuilder() *cobra.Command {
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			authType := config.AuthType()
-			var accountIdentifier string
-			var err error
-
-			switch authType {
-			case config.OAuth:
-				accountIdentifier, err = config.AccessTokenSubject()
-				if err != nil {
-					return err
-				}
-			case config.APIKeys:
-				accountIdentifier = config.PublicAPIKey()
-			case config.NotLoggedIn:
+			if config.RefreshToken() == "" {
 				return ErrUnauthenticated
 			}
-
-			opts.Entry = accountIdentifier
+			s, err := config.AccessTokenSubject()
+			if err != nil {
+				return err
+			}
+			opts.Entry = s
 			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
 				return err
 			}

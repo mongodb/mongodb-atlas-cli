@@ -151,11 +151,9 @@ func TestWithAuthentication(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c, err := New(Service("cloud"), WithAuthentication(tt.a))
 			require.NoError(t, err)
-			require.Equal(t, c.username, tt.a.username)
-			require.Equal(t, c.password, tt.a.password)
-			require.Equal(t, c.clientID, tt.a.clientID)
-			require.Equal(t, c.clientSecret, tt.a.clientSecret)
-			require.Equal(t, c.accessToken, tt.a.accessToken)
+			require.NotNil(t, c.httpClient)
+			require.NotNil(t, c.httpClient.Transport)
+			require.NotEqual(t, c.transport(), c.httpClient.Transport) // Check transport is not default
 		})
 	}
 }

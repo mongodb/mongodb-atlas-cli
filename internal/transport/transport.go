@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
 	"go.mongodb.org/atlas-sdk/v20250312005/auth/clientcredentials"
 	atlasauth "go.mongodb.org/atlas/auth"
-	"golang.org/x/oauth2"
 )
 
 const (
@@ -114,17 +113,13 @@ func (tr *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	return tr.base.RoundTrip(req)
 }
 
-func NewServiceAccountTransport(clientID, clientSecret string, base http.RoundTripper) (http.RoundTripper, error) {
+// NewServiceAccountClient creates a new HTTP client configured for service account authentication.
+// This function does not return http.RoundTripper as atlas-sdk already packages a transport with the client.
+func NewServiceAccountClient(clientID, clientSecret string) *http.Client {
 	cfg := clientcredentials.NewConfig(clientID, clientSecret)
 	if config.OpsManagerURL() != "" {
 		cfg.RevokeURL = config.OpsManagerURL() + "api/oauth/revoke"
 		cfg.TokenURL = config.OpsManagerURL() + "api/oauth/token"
 	}
-
-	ctx := context.Background()
-
-	return &oauth2.Transport{
-		Base:   base,
-		Source: cfg.TokenSource(ctx),
-	}, nil
+	return cfg.Client(context.Background())
 }

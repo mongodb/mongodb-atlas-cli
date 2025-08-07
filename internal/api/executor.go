@@ -22,7 +22,8 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	storeTransport "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 )
 
 var (
@@ -71,8 +72,9 @@ func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter R
 func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 	profile := config.Default()
 
-	client := &http.Client{
-		Transport: authenticatedTransport(profile, storeTransport.Default()),
+	client, err := store.HTTPClient(profile, transport.Default())
+	if err != nil {
+		return nil, err
 	}
 
 	configWrapper := NewAuthenticatedConfigWrapper(profile)

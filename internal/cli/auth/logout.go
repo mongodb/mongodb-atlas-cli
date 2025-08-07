@@ -38,6 +38,9 @@ type ConfigDeleter interface {
 	SetRefreshToken(string)
 	SetProjectID(string)
 	SetOrgID(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
+	AuthType() config.AuthMechanism
 	Save() error
 }
 
@@ -62,16 +65,26 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
-	// revoking a refresh token revokes the access token
-	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
-		return err
+	switch opts.config.AuthType() {
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.ServiceAccount:
+		fallthrough
+	case config.UserAccount:
+		// revoking a refresh token revokes the access token
+		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+			return err
+		}
+
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
 	}
 
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-	opts.config.SetAccessToken("")
-	opts.config.SetRefreshToken("")
+
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 	return opts.config.Save()

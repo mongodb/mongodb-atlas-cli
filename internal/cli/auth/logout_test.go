@@ -21,11 +21,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
-func Test_logoutOpts_Run(t *testing.T) {
+func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := NewMockRevoker(ctrl)
 	mockConfig := NewMockConfigDeleter(ctrl)
@@ -41,6 +42,19 @@ func Test_logoutOpts_Run(t *testing.T) {
 		},
 	}
 	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.UserAccount).
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetAccessToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetRefreshToken("").
+		Times(1)
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
@@ -54,7 +68,90 @@ func Test_logoutOpts_Run(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_logoutOpts_Run_Keep(t *testing.T) {
+func Test_logoutOpts_Run_APIKeys(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.APIKeys).
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		SetPublicAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetPrivateAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		Delete().
+		Return(nil).
+		Times(1)
+	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.ServiceAccount).
+		Times(1)
+
+	mockFlow.
+		EXPECT().
+		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		Return(nil, nil).
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		SetAccessToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetRefreshToken("").
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		Delete().
+		Return(nil).
+		Times(1)
+	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := NewMockRevoker(ctrl)
 	mockConfig := NewMockConfigDeleter(ctrl)
@@ -71,6 +168,12 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		keepConfig: true,
 	}
 	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.UserAccount).
+		Times(1)
+
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
@@ -85,6 +188,94 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		EXPECT().
 		SetRefreshToken("").
 		Times(1)
+	mockConfig.
+		EXPECT().
+		SetProjectID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetOrgID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		Save().
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_Keep_APIKeys(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		keepConfig: true,
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.APIKeys).
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		SetPublicAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetPrivateAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetProjectID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetOrgID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		Save().
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		keepConfig: true,
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.ServiceAccount).
+		Times(1)
+
 	mockConfig.
 		EXPECT().
 		SetProjectID("").

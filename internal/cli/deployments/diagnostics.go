@@ -112,7 +112,9 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 		})
 	}
 
-	d.Err = errors.Join(errs...).Error()
+	if len(errs) > 0 {
+		d.Err = errors.Join(errs...).Error()
+	}
 
 	return opts.Print(d)
 }

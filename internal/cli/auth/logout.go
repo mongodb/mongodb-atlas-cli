@@ -41,6 +41,7 @@ type ConfigDeleter interface {
 	SetPublicAPIKey(string)
 	SetPrivateAPIKey(string)
 	AuthType() config.AuthMechanism
+	PublicAPIKey() string
 	Save() error
 }
 
@@ -107,15 +108,27 @@ func LogoutBuilder() *cobra.Command {
 			return opts.initFlow()
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if config.RefreshToken() == "" {
-				return ErrUnauthenticated
+			var message, entry string
+			var err error
+
+			if opts.config.AuthType() == config.APIKeys {
+				entry = opts.config.PublicAPIKey()
+				message = "Are you sure you want to log out of account with public API key %s?"
+			} else {
+				entry, err = config.AccessTokenSubject()
+				if err != nil {
+					return err
+				}
+
+				if config.RefreshToken() == "" {
+					return ErrUnauthenticated
+				}
+
+				message = "Are you sure you want to log out of account %s?"
 			}
-			s, err := config.AccessTokenSubject()
-			if err != nil {
-				return err
-			}
-			opts.Entry = s
-			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
+
+			opts.Entry = entry
+			if err := opts.PromptWithMessage(message); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

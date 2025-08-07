@@ -46,6 +46,15 @@ func TestRunMode() (TestMode, error) {
 	return TestModeLive, fmt.Errorf("invalid value for environment variable TEST_MODE: %s, expected 'live', 'record' or 'replay'", mode)
 }
 
+func ProfileName() string {
+	mode, err := TestRunMode()
+	if err != nil || mode != TestModeReplay {
+		return "__e2e"
+	}
+
+	return "__e2e_snapshot"
+}
+
 func SkipCleanup() bool {
 	mode, err := TestRunMode()
 	if err != nil {

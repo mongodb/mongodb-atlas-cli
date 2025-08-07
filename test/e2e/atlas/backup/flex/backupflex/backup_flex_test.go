@@ -59,7 +59,10 @@ func TestFlexBackup(t *testing.T) {
 			snapshotsEntity,
 			"list",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -80,7 +83,10 @@ func TestFlexBackup(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -97,7 +103,10 @@ func TestFlexBackup(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			clusterName)
+			clusterName,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -120,7 +129,10 @@ func TestFlexBackup(t *testing.T) {
 			g.ClusterName,
 			"--targetProjectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -141,7 +153,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -154,7 +169,10 @@ func TestFlexBackup(t *testing.T) {
 			restoresEntity,
 			"list",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -172,7 +190,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -195,7 +216,10 @@ func TestFlexBackup(t *testing.T) {
 			g.ClusterName,
 			"--targetProjectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -215,7 +239,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -228,7 +255,10 @@ func TestFlexBackup(t *testing.T) {
 			"delete",
 			g.ClusterName,
 			"--force",
-			"--watch")
+			"--watch",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -274,6 +304,8 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 		clusterName,
 		"--region", "US_EAST_1",
 		"--provider", "AWS",
+		"-P",
+		internal.ProfileName(),
 	}
 
 	if projectID != "" {
@@ -290,6 +322,8 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 		clustersEntity,
 		"watch",
 		clusterName,
+		"-P",
+		internal.ProfileName(),
 	}
 
 	if projectID != "" {

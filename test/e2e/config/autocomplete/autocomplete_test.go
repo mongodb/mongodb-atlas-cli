@@ -37,7 +37,7 @@ func TestAtlasCLIAutocomplete(t *testing.T) {
 		o := option
 		t.Run(o, func(t *testing.T) {
 			t.Parallel()
-			cmd := exec.Command(cliPath, completionEntity, o)
+			cmd := exec.Command(cliPath, completionEntity, o, "-P", internal.ProfileName())
 			cmd.Env = os.Environ()
 			resp, err := internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))

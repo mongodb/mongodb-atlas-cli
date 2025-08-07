@@ -423,6 +423,8 @@ func (g *AtlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 		"--projectId",
 		g.ProjectID,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	)
 	if err != nil {
 		return nil, err

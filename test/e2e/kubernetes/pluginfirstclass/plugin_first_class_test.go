@@ -40,7 +40,9 @@ func TestPluginKubernetes(t *testing.T) {
 		removeFirstClassPlugin(t, "atlas-cli-plugin-kubernetes", cliPath)
 
 		cmd := exec.Command(cliPath,
-			"kubernetes")
+			"kubernetes",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
@@ -50,10 +52,12 @@ func TestPluginKubernetes(t *testing.T) {
 
 func removeFirstClassPlugin(t *testing.T, name, cliPath string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
 		"plugin",
 		"uninstall",
-		name)
+		name,
+		"-P",
+		internal.ProfileName())
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
 		require.Contains(t, string(resp), "Error: could not find plugin with name atlas-cli-plugin-kubernetes")

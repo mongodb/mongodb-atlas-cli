@@ -74,6 +74,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--username", dbUserUsername,
 			"--password", dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -94,6 +96,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			"--type", "atlas",
 			"--connectWith", "connectionString",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -126,6 +130,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			clusterName,
 			"--type=ATLAS",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -140,6 +146,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			clusterName,
 			"--type=ATLAS",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -164,6 +172,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			"--collection",
 			collectionNameAtlas,
 			"--watch",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 
@@ -184,6 +194,8 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 			"--watch",
 			"--watchTimeout", "300",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

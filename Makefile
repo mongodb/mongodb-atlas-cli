@@ -205,6 +205,10 @@ update-atlas-sdk: ## Update the atlas-sdk dependency
 update-openapi-spec: ## Update the openapi spec
 	./scripts/update-openapi-spec.sh
 
+.PHONY: add-e2e-profiles
+add-e2e-profiles: build ## Add e2e profiles
+	./scripts/add-e2e-profiles.sh
+
 .PHONY: help
 .DEFAULT_GOAL := help
 help:

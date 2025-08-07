@@ -74,6 +74,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -95,6 +97,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			dbUserPassword,
 			"--bindIpAll",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -111,6 +115,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -125,6 +131,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"list",
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -159,6 +167,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			dbUserPassword,
 			"--connectWith",
 			"connectionString",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -220,6 +230,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--type",
 			"LOCAL",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -247,6 +259,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--file",
 			"testdata/sample_vector_search_deprecated.json",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -277,6 +291,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -304,6 +320,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -386,6 +404,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--password",
 			dbUserPassword,
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

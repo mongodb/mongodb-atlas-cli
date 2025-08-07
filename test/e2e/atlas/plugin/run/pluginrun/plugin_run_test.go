@@ -42,14 +42,18 @@ func TestPluginRun(t *testing.T) {
 	cmd := exec.Command(cliPath,
 		"plugin",
 		"install",
-		"mongodb/atlas-cli-plugin-example")
+		"mongodb/atlas-cli-plugin-example",
+		"-P",
+		internal.ProfileName())
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	g.Run("Hello", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"example",
-			"hello")
+			"hello",
+			"-P",
+			internal.ProfileName())
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -65,7 +69,9 @@ func TestPluginRun(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"example",
 			"echo",
-			echoString)
+			echoString,
+			"-P",
+			internal.ProfileName())
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -85,7 +91,9 @@ func TestPluginRun(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
 			"example",
-			"printenv")
+			"printenv",
+			"-P",
+			internal.ProfileName())
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -111,7 +119,9 @@ func TestPluginRun(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
 			"example",
-			"stdinreader")
+			"stdinreader",
+			"-P",
+			internal.ProfileName())
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 

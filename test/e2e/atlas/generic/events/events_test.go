@@ -48,6 +48,8 @@ func TestEvents(t *testing.T) {
 			"list",
 			"--omitCount",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -66,6 +68,8 @@ func TestEvents(t *testing.T) {
 			"--omitCount",
 			"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02T15:04:05-0700"),
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

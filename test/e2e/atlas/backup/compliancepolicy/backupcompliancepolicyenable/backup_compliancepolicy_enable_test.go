@@ -62,6 +62,8 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 		authorizedEmail,
 		"-o=json",
 		"--force",
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	resp, outputErr := internal.RunAndGetStdOut(cmd)

@@ -87,14 +87,16 @@ func TestOnlineArchives(t *testing.T) {
 
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"rm",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"--force")
+		"--force",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -105,13 +107,15 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"watch",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	_ = cmd.Run()
@@ -126,7 +130,9 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -146,7 +152,9 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -169,7 +177,9 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--clusterName", clusterName,
 		"--projectId", projectID,
 		"--archiveAfter", expireAfterDaysStr,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -192,7 +202,9 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -215,7 +227,9 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 		"list",
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -243,7 +257,9 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		"--archiveAfter=3",
 		"--partition=test",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)

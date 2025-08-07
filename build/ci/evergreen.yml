@@ -109,6 +109,38 @@ functions:
             rm -rf mongodb-database-tools
           fi
   "e2e test":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          CONFIG_PATH=$(EDITOR=echo atlas config edit 2>/dev/null)
+          cat <<EOF > "$CONFIG_PATH"
+          skip_update_check = true
+
+          [__e2e]
+          org_id = '${atlas_org_id}'
+          project_id = '${atlas_project_id}'
+          public_api_key = '${atlas_public_api_key}'
+          private_api_key = '${atlas_private_api_key}'
+          ops_manager_url = '${mcli_ops_manager_url}'
+          service = 'cloud'
+          telemetry_enabled = false
+          output = 'plaintext'
+
+          [__e2e_snapshot]
+          org_id = 'a0123456789abcdef012345a'
+          project_id = 'b0123456789abcdef012345b'
+          public_api_key = 'ABCDEF01'
+          private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+          ops_manager_url = 'http://localhost:8080/'
+          service = 'cloud'
+          telemetry_enabled = false
+          output = 'plaintext'
+          EOF
     - command: subprocess.exec
       type: test
       params:
@@ -116,11 +148,6 @@ functions:
         include_expansions_in_env:
           - go_base_path
           - workdir
-          - MONGODB_ATLAS_ORG_ID
-          - MONGODB_ATLAS_PROJECT_ID
-          - MONGODB_ATLAS_PUBLIC_API_KEY
-          - MONGODB_ATLAS_PRIVATE_API_KEY
-          - MONGODB_ATLAS_SERVICE
           - TEST_CMD
           - E2E_TEST_PACKAGES
           - E2E_TEST_BUCKET

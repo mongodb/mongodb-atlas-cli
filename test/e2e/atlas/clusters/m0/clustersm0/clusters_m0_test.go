@@ -59,7 +59,9 @@ func TestClustersM0Flags(t *testing.T) {
 			"--tier", tierM0,
 			"--provider", e2eClusterProvider,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -77,6 +79,8 @@ func TestClustersM0Flags(t *testing.T) {
 			"watch",
 			clusterName,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -93,6 +97,8 @@ func TestClustersM0Flags(t *testing.T) {
 			clusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -113,6 +119,8 @@ func TestClustersM0Flags(t *testing.T) {
 			clusterName,
 			"--force",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -133,6 +141,8 @@ func TestClustersM0Flags(t *testing.T) {
 			"watch",
 			clusterName,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted

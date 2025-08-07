@@ -60,7 +60,10 @@ func TestExportBuckets(t *testing.T) {
 			cloudProvider,
 			"--iamRoleId",
 			iamRoleID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -78,7 +81,10 @@ func TestExportBuckets(t *testing.T) {
 			exportsEntity,
 			bucketsEntity,
 			"list",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -95,7 +101,10 @@ func TestExportBuckets(t *testing.T) {
 			"describe",
 			"--bucketId",
 			bucketID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -112,7 +121,10 @@ func TestExportBuckets(t *testing.T) {
 			"delete",
 			"--bucketId",
 			bucketID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

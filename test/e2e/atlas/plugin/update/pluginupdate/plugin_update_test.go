@@ -58,10 +58,12 @@ func runPluginUpdateTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPat
 			pluginValue = fmt.Sprintf("%s@%s", pluginValue, updateVersion)
 		}
 
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
 			"plugin",
 			"update",
-			pluginValue)
+			pluginValue,
+			"-P",
+			internal.ProfileName())
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))

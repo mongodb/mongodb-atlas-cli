@@ -52,7 +52,10 @@ func TestBackupCompliancePolicyPoliciesDescribe(t *testing.T) {
 		"describe",
 		"--projectId",
 		g.ProjectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, outputErr := internal.RunAndGetStdOut(cmd)
 

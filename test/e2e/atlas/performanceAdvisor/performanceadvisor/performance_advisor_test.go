@@ -53,6 +53,8 @@ func TestPerformanceAdvisor(t *testing.T) {
 			"--processName", hostname,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -68,6 +70,8 @@ func TestPerformanceAdvisor(t *testing.T) {
 			"--processName", hostname,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -83,6 +87,8 @@ func TestPerformanceAdvisor(t *testing.T) {
 			"--processName", hostname,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -96,6 +102,8 @@ func TestPerformanceAdvisor(t *testing.T) {
 			slowOperationThresholdEntity,
 			"enable",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -109,6 +117,8 @@ func TestPerformanceAdvisor(t *testing.T) {
 			slowOperationThresholdEntity,
 			"disable",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

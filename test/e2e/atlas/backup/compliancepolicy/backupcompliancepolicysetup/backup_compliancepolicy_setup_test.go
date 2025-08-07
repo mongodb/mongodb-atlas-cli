@@ -75,6 +75,8 @@ func TestBackupCompliancePolicySetup(t *testing.T) {
 		"--force",
 		"--file",
 		path,
+		"-P",
+		internal.ProfileName(),
 	)
 
 	cmd.Env = os.Environ()

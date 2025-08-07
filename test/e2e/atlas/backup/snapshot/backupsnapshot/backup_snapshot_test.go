@@ -64,7 +64,10 @@ func TestSnapshots(t *testing.T) {
 			"--region=US_EAST_1",
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", mdbVersion,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -86,7 +89,10 @@ func TestSnapshots(t *testing.T) {
 			clusterName,
 			"--desc",
 			"test-snapshot",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -105,7 +111,10 @@ func TestSnapshots(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			clusterName)
+			clusterName,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -117,7 +126,10 @@ func TestSnapshots(t *testing.T) {
 			snapshotsEntity,
 			"list",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -135,7 +147,10 @@ func TestSnapshots(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -154,7 +169,10 @@ func TestSnapshots(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -171,7 +189,10 @@ func TestSnapshots(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			clusterName)
+			clusterName,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))

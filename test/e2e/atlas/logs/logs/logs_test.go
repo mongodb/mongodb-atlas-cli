@@ -77,6 +77,8 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 		filepath,
 		"--projectId",
 		projectID,
+		"-P",
+		internal.ProfileName(),
 	)
 
 	cmd.Env = os.Environ()
@@ -93,13 +95,15 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 
 func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
 		logsEntity,
 		"download",
 		hostname,
 		logFile,
 		"--projectId",
 		projectID,
+		"-P",
+		internal.ProfileName(),
 	)
 
 	cmd.Env = os.Environ()

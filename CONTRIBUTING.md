@@ -126,11 +126,11 @@ Review and replace the atlas settings.
 {
   "go.testEnvVars": {
     "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
-    "UPDATE_SNAPSHOTS": "skip",
+    "TEST_MODE": "live",
     "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
     "GOCOVERDIR": "${workspaceFolder}/cov",
     "DO_NOT_TRACK": "1",
-    "E2E_SKIP_CLEANUP": "false",
+    "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes",
     "MONGODB_ATLAS_ORG_ID": "<default org id>",
     "MONGODB_ATLAS_PROJECT_ID": "<default project id>",
     "MONGODB_ATLAS_PRIVATE_API_KEY": "<private key>",
@@ -274,7 +274,7 @@ To update simply rename all instances of major version across the repository imp
 
 e.g `v20230201001` => `v20230201002` 
 
-### Update Automation
+### Update SDK Automation
 
 To update Atlas SDK run:
 

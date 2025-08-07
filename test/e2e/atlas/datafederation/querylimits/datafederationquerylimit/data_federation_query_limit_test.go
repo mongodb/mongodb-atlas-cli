@@ -44,10 +44,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 	n := g.MemoryRand("rand", 1000)
 	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
-	testBucket := os.Getenv("E2E_TEST_BUCKET")
-	r.NotEmpty(testBucket)
-	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
-	r.NotEmpty(roleID)
+	testBucket, err := internal.TestBucketName()
+	r.NoError(err)
+	roleID, err := internal.CloudRoleID()
+	r.NoError(err)
 
 	limitName := "bytesProcessed.query"
 

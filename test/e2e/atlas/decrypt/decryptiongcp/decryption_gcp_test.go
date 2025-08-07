@@ -37,7 +37,12 @@ func TestDecryptWithGCP(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	mode, err := internal.TestRunMode()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
@@ -49,8 +54,8 @@ func TestDecryptWithGCP(t *testing.T) {
 
 	tmpDir := t.TempDir()
 
-	GCPCredentialsContent, ok := os.LookupEnv("GCP_CREDENTIALS")
-	req.True(ok, "GCP Credentials not found")
+	GCPCredentialsContent, err := internal.GCPCredentials()
+	req.NoError(err)
 	GCPCredentialsFile := path.Join(tmpDir, "gcp_credentials.json")
 	err = os.WriteFile(GCPCredentialsFile, []byte(GCPCredentialsContent), fs.ModePerm)
 	req.NoError(err)

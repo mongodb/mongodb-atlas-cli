@@ -156,8 +156,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
-	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
-	require.NotEmpty(t, idpID)
+	idpID, err := internal.IdentityProviderID()
+	require.NoError(t, err)
 	oidcUsername := idpID + "/" + username
 
 	cliPath, err := internal.AtlasCLIBin()

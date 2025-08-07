@@ -67,6 +67,8 @@ func TestDBUserWithFlags(t *testing.T) {
 			"--password", pwd,
 			"--scope", scopeClusterDataLake,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		testCreateUserCmd(t, cmd, username)
@@ -76,7 +78,10 @@ func TestDBUserWithFlags(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -94,7 +99,10 @@ func TestDBUserWithFlags(t *testing.T) {
 			dbusersEntity,
 			"ls",
 			"-c",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

@@ -117,7 +117,6 @@ const (
 
 	maxRetryAttempts   = 10
 	sleepTimeInSeconds = 30
-	cloudgov           = "cloudgov"
 
 	// CLI Plugins System constants.
 	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
@@ -595,10 +594,6 @@ func MongoDBMajorVersion() (string, error) {
 	}
 
 	return version, nil
-}
-
-func IsGov() bool {
-	return os.Getenv("MONGODB_ATLAS_SERVICE") == cloudgov
 }
 
 func TempConfigFolder(t *testing.T) string {

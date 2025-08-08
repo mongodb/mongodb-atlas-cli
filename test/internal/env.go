@@ -15,10 +15,16 @@
 package internal
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
+)
+
+const (
+	cloudgov = "cloudgov"
 )
 
 type TestMode string
@@ -116,4 +122,42 @@ func GCPCredentials() (string, error) {
 	}
 
 	return credentials, nil
+}
+
+func ProfileData() (map[string]string, error) {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := exec.Command(
+		cliPath,
+		"config",
+		"describe",
+		ProfileName(),
+		"-o=json",
+	)
+
+	cmd.Stderr = os.Stderr
+
+	buf, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+
+	var profile map[string]string
+	if err := json.Unmarshal(buf, &profile); err != nil {
+		return nil, err
+	}
+
+	return profile, nil
+}
+
+func IsGov() bool {
+	profile, err := ProfileData()
+	if err != nil {
+		return false
+	}
+
+	return profile["service"] == cloudgov
 }

@@ -513,28 +513,8 @@ func SnapshotHashedName(r *http.Request) string {
 	return hash
 }
 
-func (g *AtlasE2ETestGenerator) ProfileData() (map[string]string, error) {
-	buf, err := g.RunCommand(
-		"config",
-		"describe",
-		ProfileName(),
-		"-o=json",
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var profile map[string]string
-	if err := json.Unmarshal(buf, &profile); err != nil {
-		return nil, err
-	}
-
-	return profile, nil
-}
-
 func (g *AtlasE2ETestGenerator) maskString(s string) string {
-	p, err := g.ProfileData()
+	p, err := ProfileData()
 	if err != nil {
 		g.t.Fatal(err)
 	}
@@ -752,7 +732,7 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 		return
 	}
 
-	p, err := g.ProfileData()
+	p, err := ProfileData()
 	if err != nil {
 		g.t.Fatal(err)
 	}

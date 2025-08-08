@@ -46,7 +46,7 @@ func TestFlexBackup(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	profile, err := g.ProfileData()
+	profile, err := internal.ProfileData()
 	require.NoError(t, err)
 
 	g.ProjectID = profile["project_id"]

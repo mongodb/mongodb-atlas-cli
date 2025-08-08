@@ -159,6 +159,7 @@ func IsTrue(s string) bool {
 }
 
 func Default() *Profile {
+	defaultProfile.SetAuthType(NoAuth)
 	return defaultProfile
 }
 

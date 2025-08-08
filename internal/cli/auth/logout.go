@@ -134,7 +134,7 @@ func LogoutBuilder() *cobra.Command {
 				}
 
 				message = "Are you sure you want to log out of account %s?"
-			case config.NoAuth:
+			case config.NoAuth, "":
 				entry = config.Name()
 				message = "Are you sure you want to clear profile %s?"
 			}

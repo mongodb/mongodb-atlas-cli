@@ -74,6 +74,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
+      - run: make build
       - run: rm -rf test/e2e/testdata/.snapshots
       - run: |
           export EDITOR=echo
@@ -151,6 +152,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
+      - run: make build
       - run: |
           export EDITOR=echo
           CONFIG_PATH=$(atlas config edit 2>/dev/null)

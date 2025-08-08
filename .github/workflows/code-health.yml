@@ -330,6 +330,7 @@ jobs:
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - run: make build
       - run: |
           export EDITOR=echo
           CONFIG_PATH=$(atlas config edit 2>/dev/null)

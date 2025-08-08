@@ -24,6 +24,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
 )
 
+const (
+	ServiceAccountAuth = "ServiceAccount"
+	APIKeysAuth        = "APIKeys"
+)
+
 func NewOrgIDInput() survey.Prompt {
 	return &survey.Input{
 		Message: "Default Org ID:",
@@ -40,7 +45,18 @@ func NewProjectIDInput() survey.Prompt {
 	}
 }
 
-func AccessQuestions() []*survey.Question {
+func AccessQuestions(authType string) []*survey.Question {
+	var q []*survey.Question
+	switch authType {
+	case ServiceAccountAuth:
+		q = serviceAccountQuestions()
+	case APIKeysAuth:
+		q = apiKeysQuestions()
+	}
+	return q
+}
+
+func apiKeysQuestions() []*survey.Question {
 	helpLink := "Please provide your API keys. To create new keys, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
 	q := []*survey.Question{
 		{
@@ -55,6 +71,28 @@ func AccessQuestions() []*survey.Question {
 			Name: "privateAPIKey",
 			Prompt: &survey.Password{
 				Message: "Private API Key:",
+				Help:    helpLink,
+			},
+		},
+	}
+	return q
+}
+
+func serviceAccountQuestions() []*survey.Question {
+	helpLink := "Please provide your Service Account client ID and secret. To create a new Service Account, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
+	q := []*survey.Question{
+		{
+			Name: "clientID",
+			Prompt: &survey.Input{
+				Message: "Client ID:",
+				Help:    helpLink,
+				Default: config.ClientID(),
+			},
+		},
+		{
+			Name: "clientSecret",
+			Prompt: &survey.Password{
+				Message: "Client Secret:",
 				Help:    helpLink,
 			},
 		},
@@ -119,26 +157,4 @@ func NewProjectSelect(ids, names []string) survey.Prompt {
 			return strings.HasPrefix(strings.ToLower(names[i]), filter) || strings.HasPrefix(ids[i], filter)
 		},
 	}
-}
-
-func ServiceAccountQuestions() []*survey.Question {
-	helpLink := "Please provide your Service Account client ID and secret. To create a new Service Account, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
-	q := []*survey.Question{
-		{
-			Name: "clientID",
-			Prompt: &survey.Input{
-				Message: "Client ID:",
-				Help:    helpLink,
-				Default: config.ClientID(),
-			},
-		},
-		{
-			Name: "clientSecret",
-			Prompt: &survey.Password{
-				Message: "Client Secret:",
-				Help:    helpLink,
-			},
-		},
-	}
-	return q
 }

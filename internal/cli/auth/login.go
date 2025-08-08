@@ -59,20 +59,18 @@ type TrackAsker interface {
 }
 
 const (
-	userAccountAuth    = "UserAccount"
-	serviceAccountAuth = "ServiceAccount"
-	apiKeysAuth        = "APIKeys"
-	atlasName          = "atlas"
+	userAccountAuth = "UserAccount"
+	atlasName       = "atlas"
 )
 
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, serviceAccountAuth, apiKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
-		userAccountAuth:    "(best for getting started)",
-		serviceAccountAuth: "(best for automation)",
-		apiKeysAuth:        "(for existing automations)",
+		userAccountAuth:           "(best for getting started)",
+		prompt.ServiceAccountAuth: "(best for automation)",
+		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
 
@@ -117,14 +115,15 @@ func (opts *LoginOpts) SetUpAccess() {
 		opts.Service = config.CloudService
 	}
 
-	if opts.authType == serviceAccountAuth {
-		opts.SetUpServiceAccountAccess()
-		return
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		opts.SetUpServiceAndClientCredentials()
+	case prompt.APIKeysAuth:
+		opts.SetUpServiceAndKeys()
 	}
-	opts.SetUpServiceAndKeys()
 }
 
-func (opts *LoginOpts) SetUpServiceAccountAccess() {
+func (opts *LoginOpts) SetUpServiceAndClientCredentials() {
 	config.SetService(opts.Service)
 	if opts.ClientID != "" {
 		config.SetClientID(opts.ClientID)
@@ -143,39 +142,16 @@ Enter [?] on any option to get help.
 
 `, atlasName)
 
-	if opts.authType == serviceAccountAuth {
-		q := prompt.ServiceAccountQuestions()
-		if err := opts.Asker.TrackAsk(q, opts); err != nil {
-			return err
-		}
-		opts.SetUpServiceAccountAccess()
-	} else {
-		q := prompt.AccessQuestions()
-		if err := opts.Asker.TrackAsk(q, opts); err != nil {
-			return err
-		}
-		opts.SetUpAccess()
-	}
-
-	if err := opts.InitStore(ctx); err != nil {
+	q := prompt.AccessQuestions(opts.authType)
+	if err := opts.Asker.TrackAsk(q, opts); err != nil {
 		return err
 	}
+	opts.SetUpAccess()
 
-	if config.IsAccessSet() || config.IsServiceAccountSet() {
-		if err := opts.AskOrg(); err != nil {
-			return err
-		}
-		if err := opts.AskProject(); err != nil {
-			return err
-		}
-	} else {
-		q := prompt.TenantQuestions()
-		if err := opts.Asker.TrackAsk(q, opts); err != nil {
-			return err
-		}
+	err := opts.setUpProfile(ctx)
+	if err != nil {
+		return err
 	}
-	opts.SetUpProject()
-	opts.SetUpOrg()
 
 	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
 		return err
@@ -259,7 +235,7 @@ func (opts *LoginOpts) runUserAccountLogin(ctx context.Context) error {
 		return nil
 	}
 
-	if err := opts.setUpProfile(ctx); err != nil {
+	if err := opts.setUpOauthProfile(ctx); err != nil {
 		return err
 	}
 
@@ -279,10 +255,10 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	case userAccountAuth:
 		config.SetAuthType(config.UserAccount)
 		return opts.runUserAccountLogin(ctx)
-	case serviceAccountAuth:
+	case prompt.ServiceAccountAuth:
 		config.SetAuthType(config.ServiceAccount)
 		return opts.runServiceAccountOrAPIKeysLogin(ctx)
-	case apiKeysAuth:
+	case prompt.APIKeysAuth:
 		config.SetAuthType(config.APIKeys)
 		return opts.runServiceAccountOrAPIKeysLogin(ctx)
 	default:
@@ -304,10 +280,7 @@ func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 	return nil
 }
 
-func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
-	if err := opts.InitStore(ctx); err != nil {
-		return err
-	}
+func (opts *LoginOpts) setUpOauthProfile(ctx context.Context) error {
 	// Initialize the text to be displayed if users are asked to select orgs or projects
 	opts.OnMultipleOrgsOrProjects = func() {
 		if !opts.AskedOrgsOrProjects {
@@ -315,20 +288,10 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		}
 	}
 
-	if opts.config.OrgID() == "" || !opts.OrgExists(opts.config.OrgID()) {
-		if err := opts.AskOrg(); err != nil {
-			return err
-		}
+	err := opts.setUpProfile(ctx)
+	if err != nil {
+		return err
 	}
-
-	opts.SetUpOrg()
-
-	if opts.config.ProjectID() == "" || !opts.ProjectExists(opts.config.ProjectID()) {
-		if err := opts.AskProject(); err != nil {
-			return err
-		}
-	}
-	opts.SetUpProject()
 
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
@@ -476,4 +439,32 @@ func LoginBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 	_ = cmd.Flags().MarkHidden(flag.Force)
 	return cmd
+}
+
+func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
+	if err := opts.InitStore(ctx); err != nil {
+		return err
+	}
+	if config.IsAccessSet() {
+		if opts.config.OrgID() == "" || !opts.OrgExists(opts.config.OrgID()) {
+			if err := opts.AskOrg(); err != nil {
+				return err
+			}
+
+			if opts.config.ProjectID() == "" || !opts.ProjectExists(opts.config.ProjectID()) {
+				if err := opts.AskProject(); err != nil {
+					return err
+				}
+			}
+		}
+	} else {
+		q := prompt.TenantQuestions()
+		if err := opts.Asker.TrackAsk(q, opts); err != nil {
+			return err
+		}
+	}
+	opts.SetUpProject()
+	opts.SetUpOrg()
+
+	return nil
 }

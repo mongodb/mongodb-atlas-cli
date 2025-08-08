@@ -22,6 +22,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 )
 
 const (
@@ -201,4 +203,13 @@ func IsGov() bool {
 	}
 
 	return profile["service"] == cloudgov
+}
+
+func LocalDevImage() string {
+	image, ok := os.LookupEnv("LOCALDEV_IMAGE")
+	if !ok || image == "" {
+		image = options.LocalDevImage
+	}
+
+	return image
 }

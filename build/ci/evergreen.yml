@@ -186,7 +186,6 @@ functions:
           - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
           - IDENTITY_PROVIDER_ID
-          - LOCALDEV_IMAGE
           - revision
         env:
           <<: *go_env
@@ -194,6 +193,7 @@ functions:
           DO_NOT_TRACK: "1"
           TEST_MODE: live
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
         command: make e2e-test
   "install gotestsum":
     - command: shell.exec
@@ -1211,7 +1211,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/noauth/...
           E2E_TIMEOUT: 3h
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_seed
     tags: ["e2e","deployments","local","seed"]
     must_have_test_results: true
@@ -1225,7 +1224,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/seed/...
           E2E_TIMEOUT: 3h
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_nocli_e2e
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true
@@ -1239,7 +1237,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/nocli/...
           E2E_TIMEOUT: 3h
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
@@ -1253,7 +1250,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/new/...
           E2E_TIMEOUT: 3h
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_deprecated_e2e
     tags: ["e2e","deployments","local","auth","deprecated"]
     must_have_test_results: true
@@ -1267,7 +1263,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/deprecated/...
           E2E_TIMEOUT: 3h
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: build_win11_image
     tags: ["packer", "windows", "win11"]
     commands:

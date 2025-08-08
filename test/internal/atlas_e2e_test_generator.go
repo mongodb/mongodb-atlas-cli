@@ -185,15 +185,23 @@ func (g *AtlasE2ETestGenerator) Logf(format string, args ...any) {
 // newAtlasE2ETestGenerator creates a new instance of AtlasE2ETestGenerator struct.
 func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerator)) *AtlasE2ETestGenerator {
 	t.Helper()
+
 	g := &AtlasE2ETestGenerator{
-		t:                 t,
-		testName:          t.Name(),
-		skipSnapshots:     compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
-		fileIDs:           map[string]int{},
-		memoryMap:         map[string]any{},
-		snapshotNameFunc:  defaultSnapshotBaseName,
-		snapshotTargetURI: os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
+		t:                t,
+		testName:         t.Name(),
+		skipSnapshots:    compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
+		fileIDs:          map[string]int{},
+		memoryMap:        map[string]any{},
+		snapshotNameFunc: defaultSnapshotBaseName,
 	}
+
+	p, err := g.profile()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	g.snapshotTargetURI = p["ops_manager_url"]
+
 	for _, opt := range opts {
 		opt(g)
 	}
@@ -512,10 +520,35 @@ func SnapshotHashedName(r *http.Request) string {
 	return hash
 }
 
+func (g *AtlasE2ETestGenerator) profile() (map[string]string, error) {
+	buf, err := g.RunCommand(
+		"config",
+		"describe",
+		ProfileName(),
+		"-o=json",
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var profile map[string]string
+	if err := json.Unmarshal(buf, &profile); err != nil {
+		return nil, err
+	}
+
+	return profile, nil
+}
+
 func (g *AtlasE2ETestGenerator) maskString(s string) string {
+	p, err := g.profile()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
 	o := s
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "a0123456789abcdef012345a")
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "b0123456789abcdef012345b")
+	o = strings.ReplaceAll(o, p["org_id"], "a0123456789abcdef012345a")
+	o = strings.ReplaceAll(o, p["project_id"], "b0123456789abcdef012345b")
 	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "d0123456789abcdef012345d")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "c0123456789abcdef012345c")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")

@@ -129,15 +129,15 @@ Review and replace the atlas settings.
 ```json
 {
   "go.testEnvVars": {
-    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
-    "TEST_MODE": "live",
-    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
-    "GOCOVERDIR": "${workspaceFolder}/cov",
-    "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes",
-    "E2E_CLOUD_ROLE_ID": "<value here>",
-    "E2E_TEST_BUCKET": "<value here>",
-    "E2E_FLEX_INSTANCE_NAME": "<value here>",
-    "IDENTITY_PROVIDER_ID": "<value here>"
+    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas", // required
+    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots", // required
+    "TEST_MODE": "live", // optional default is 'live'
+    "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
+    "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended
+    "E2E_CLOUD_ROLE_ID": "<value here>", // needed just for a few tests
+    "E2E_TEST_BUCKET": "<value here>", // needed just for a few tests
+    "E2E_FLEX_INSTANCE_NAME": "<value here>", // needed just for a few tests
+    "IDENTITY_PROVIDER_ID": "<value here>" // needed just for a few tests
   }
 }
 ```

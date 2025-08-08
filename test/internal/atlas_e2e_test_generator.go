@@ -689,8 +689,6 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 func (g *AtlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
 
-	g.prepareRequest(r)
-
 	filename := g.snapshotName(r)
 
 	g.t.Logf("reading snapshot from %q", filename)

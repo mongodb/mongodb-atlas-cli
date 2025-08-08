@@ -19,6 +19,11 @@ func (*KeyringStore) Available() bool {
 	return err == nil
 }
 
+func (*KeyringStore) Save() error {
+	// TODO: Implement
+	return nil
+}
+
 func (*KeyringStore) Set(profileName string, propertyName string, value string) error {
 	return keyring.Set(createServiceName(profileName), propertyName, value)
 }

@@ -589,15 +589,3 @@ func SetLocalDeploymentImage(v string) { Default().SetLocalDeploymentImage(v) }
 func (*Profile) SetLocalDeploymentImage(v string) {
 	SetGlobal(LocalDeploymentImage, v)
 }
-
-// GetVersion returns the configuration version.
-func GetVersion() int64 { return Default().GetVersion() }
-func (p *Profile) GetVersion() int64 {
-	return p.GetInt64(Version)
-}
-
-// SetPublicAPIKey sets the configuration version.
-func SetVersion(v int64) { Default().SetVersion(v) }
-func (*Profile) SetVersion(v int64) {
-	SetGlobal(Version, v)
-}

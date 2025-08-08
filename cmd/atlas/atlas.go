@@ -25,8 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/migrations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -53,22 +53,20 @@ To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/sta
 
 // loadConfig reads in config file and ENV variables if set.
 func loadConfig() (*config.Profile, error) {
+	// Migrate config to the latest version.
+	migrator := migrations.NewDefaultMigrator()
+	if err := migrator.Migrate(); err != nil {
+		return nil, fmt.Errorf("error migrating config: %w", err)
+	}
+
 	configStore, initErr := config.NewDefaultStore()
 
 	if initErr != nil {
 		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
 	}
 
-	if err := validate.ValidConfig(configStore); err != nil {
-		return nil, fmt.Errorf("invalid config file: %w", err)
-	}
-
 	profile := config.NewProfile(config.DefaultProfile, configStore)
 	config.SetProfile(profile)
-
-	if err := config.MigrateVersions(configStore); err != nil {
-		log.Printf("error migrating config versions: %v", err)
-	}
 
 	return profile, nil
 }

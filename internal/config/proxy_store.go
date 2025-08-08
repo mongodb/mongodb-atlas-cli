@@ -1,17 +1,20 @@
 package config
 
 import (
+	"errors"
 	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/secure"
 	"github.com/spf13/afero"
 )
 
-var secureProperties = []string{
+var SecureProperties = []string{
 	publicAPIKey,
 	privateAPIKey,
 	AccessTokenField,
 	RefreshTokenField,
+	ClientIDField,
+	ClientSecretField,
 }
 
 type ProxyStore struct {
@@ -42,7 +45,7 @@ func NewStore(insecureStore Store, secureStore SecureStore) Store {
 }
 
 func isSecureProperty(propertyName string) bool {
-	return slices.Contains(secureProperties, propertyName)
+	return slices.Contains(SecureProperties, propertyName)
 }
 
 // Store interface implementation for ProxyStore
@@ -52,7 +55,17 @@ func (*ProxyStore) IsSecure() bool {
 }
 
 func (p *ProxyStore) Save() error {
-	return p.insecure.Save()
+	errs := []error{}
+
+	if err := p.insecure.Save(); err != nil {
+		errs = append(errs, err)
+	}
+
+	if err := p.secure.Save(); err != nil {
+		errs = append(errs, err)
+	}
+
+	return errors.Join(errs...)
 }
 
 func (p *ProxyStore) GetProfileNames() []string {

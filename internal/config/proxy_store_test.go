@@ -3,7 +3,6 @@ package config
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/secure"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -37,7 +36,7 @@ func TestNewStore(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mockInsecure := NewMockStore(ctrl)
-			mockSecure := secure.NewMockStore(ctrl)
+			mockSecure := NewMockSecureStore(ctrl)
 
 			mockSecure.EXPECT().Available().Return(tt.secureAvailable)
 
@@ -59,7 +58,7 @@ func TestProxyStore_IsSecure(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	mockInsecure := NewMockStore(ctrl)
-	mockSecure := secure.NewMockStore(ctrl)
+	mockSecure := NewMockSecureStore(ctrl)
 
 	store := &ProxyStore{
 		insecure: mockInsecure,
@@ -117,7 +116,7 @@ func TestProxyStore_PropertyRouting(t *testing.T) {
 				ctrl := gomock.NewController(t)
 
 				mockInsecure := NewMockStore(ctrl)
-				mockSecure := secure.NewMockStore(ctrl)
+				mockSecure := NewMockSecureStore(ctrl)
 
 				store := &ProxyStore{
 					insecure: mockInsecure,
@@ -136,7 +135,7 @@ func testGetHierarchicalValue(t *testing.T, store *ProxyStore, propertyName stri
 	expectedValue := testValue
 
 	if isSecure {
-		store.secure.(*secure.MockStore).EXPECT().
+		store.secure.(*MockSecureStore).EXPECT().
 			Get(profileName, propertyName).
 			Return(expectedValue, nil)
 	} else {
@@ -155,7 +154,7 @@ func testSetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 	value := testValue
 
 	if isSecure {
-		store.secure.(*secure.MockStore).EXPECT().
+		store.secure.(*MockSecureStore).EXPECT().
 			Set(profileName, propertyName, value).
 			Return(nil)
 	} else {
@@ -172,7 +171,7 @@ func testGetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 	expectedValue := testValue
 
 	if isSecure {
-		store.secure.(*secure.MockStore).EXPECT().
+		store.secure.(*MockSecureStore).EXPECT().
 			Get(profileName, propertyName).
 			Return(expectedValue, nil)
 	} else {
@@ -190,7 +189,7 @@ func testSetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, is
 	value := testValue
 
 	if isSecure {
-		store.secure.(*secure.MockStore).EXPECT().
+		store.secure.(*MockSecureStore).EXPECT().
 			Set(DefaultProfile, propertyName, value).
 			Return(nil)
 	} else {
@@ -206,7 +205,7 @@ func testGetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, is
 	expectedValue := testValue
 
 	if isSecure {
-		store.secure.(*secure.MockStore).EXPECT().
+		store.secure.(*MockSecureStore).EXPECT().
 			Get(DefaultProfile, propertyName).
 			Return(expectedValue, nil)
 	} else {

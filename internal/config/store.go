@@ -44,6 +44,8 @@ type Store interface {
 
 type SecureStore interface {
 	Available() bool
+	Save() error
+
 	Set(profileName string, propertyName string, value string) error
 	Get(profileName string, propertyName string) (string, error)
 	DeleteKey(profileName string, propertyName string) error

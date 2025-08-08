@@ -14,25 +14,26 @@
 
 //go:build unit
 
-package config
+package migrations
 
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
-func Test_SetAuthTypes(t *testing.T) {
+func Test_MigrateToVersion2(t *testing.T) {
 	tests := []struct {
 		name             string
-		setupExpect      func(mockStore *MockStore)
-		setupProfile     func(p *Profile)
-		expectedAuthType AuthMechanism
+		setupExpect      func(mockStore *config.MockStore)
+		setupProfile     func(p *config.Profile)
+		expectedAuthType config.AuthMechanism
 	}{
 		{
 			name: "API Keys",
-			setupExpect: func(mockStore *MockStore) {
+			setupExpect: func(mockStore *config.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -51,15 +52,15 @@ func Test_SetAuthTypes(t *testing.T) {
 					Return("api_keys").
 					AnyTimes()
 			},
-			setupProfile: func(p *Profile) {
+			setupProfile: func(p *config.Profile) {
 				p.SetPublicAPIKey("public")
 				p.SetPrivateAPIKey("private")
 			},
-			expectedAuthType: APIKeys,
+			expectedAuthType: config.APIKeys,
 		},
 		{
 			name: "User Account",
-			setupExpect: func(mockStore *MockStore) {
+			setupExpect: func(mockStore *config.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -78,15 +79,15 @@ func Test_SetAuthTypes(t *testing.T) {
 					Return("user_account").
 					AnyTimes()
 			},
-			setupProfile: func(p *Profile) {
+			setupProfile: func(p *config.Profile) {
 				p.SetAccessToken("token")
 				p.SetRefreshToken("token")
 			},
-			expectedAuthType: UserAccount,
+			expectedAuthType: config.UserAccount,
 		},
 		{
 			name: "Service Account",
-			setupExpect: func(mockStore *MockStore) {
+			setupExpect: func(mockStore *config.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -105,15 +106,15 @@ func Test_SetAuthTypes(t *testing.T) {
 					Return("service_account").
 					AnyTimes()
 			},
-			setupProfile: func(p *Profile) {
+			setupProfile: func(p *config.Profile) {
 				p.SetClientID("id")
 				p.SetClientSecret("secret")
 			},
-			expectedAuthType: ServiceAccount,
+			expectedAuthType: config.ServiceAccount,
 		},
 		{
 			name: "Empty Profile",
-			setupExpect: func(mockStore *MockStore) {
+			setupExpect: func(mockStore *config.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -123,20 +124,20 @@ func Test_SetAuthTypes(t *testing.T) {
 					Return("").
 					AnyTimes()
 			},
-			setupProfile:     func(*Profile) {},
-			expectedAuthType: AuthMechanism(""),
+			setupProfile:     func(*config.Profile) {},
+			expectedAuthType: config.AuthMechanism(""),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			mockStore := NewMockStore(ctrl)
+			mockStore := config.NewMockStore(ctrl)
 			tt.setupExpect(mockStore)
 
-			p := NewProfile("test", mockStore)
+			p := config.NewProfile("test", mockStore)
 			tt.setupProfile(p)
-			setAuthTypes(mockStore, func(*Profile) AuthMechanism {
+			setAuthTypes(mockStore, func(*config.Profile) config.AuthMechanism {
 				return tt.expectedAuthType
 			})
 			require.Equal(t, tt.expectedAuthType, p.AuthType())
@@ -147,44 +148,44 @@ func Test_SetAuthTypes(t *testing.T) {
 func Test_GetAuthType(t *testing.T) {
 	tests := []struct {
 		name             string
-		setup            func(p *Profile)
-		expectedAuthType AuthMechanism
+		setup            func(p *config.Profile)
+		expectedAuthType config.AuthMechanism
 	}{
 		{
 			name: "API Keys",
-			setup: func(p *Profile) {
+			setup: func(p *config.Profile) {
 				p.SetPublicAPIKey("public")
 				p.SetPrivateAPIKey("private")
 			},
-			expectedAuthType: APIKeys,
+			expectedAuthType: config.APIKeys,
 		},
 		{
 			name: "User Account",
-			setup: func(p *Profile) {
+			setup: func(p *config.Profile) {
 				p.SetAccessToken("token")
 				p.SetRefreshToken("refresh")
 			},
-			expectedAuthType: UserAccount,
+			expectedAuthType: config.UserAccount,
 		},
 		{
 			name: "Service Account",
-			setup: func(p *Profile) {
+			setup: func(p *config.Profile) {
 				p.SetClientID("id")
 				p.SetClientSecret("secret")
 			},
-			expectedAuthType: ServiceAccount,
+			expectedAuthType: config.ServiceAccount,
 		},
 		{
 			name:             "Empty Profile",
-			setup:            func(*Profile) {},
-			expectedAuthType: AuthMechanism(""),
+			setup:            func(*config.Profile) {},
+			expectedAuthType: config.AuthMechanism(""),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			store := NewInMemoryStore()
-			p := NewProfile("test", store)
+			store := config.NewInMemoryStore()
+			p := config.NewProfile("test", store)
 			tt.setup(p)
 			require.Equal(t, tt.expectedAuthType, getAuthType(p))
 		})

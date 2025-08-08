@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 08 Aug 2025 11:14:07 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 99
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=4f97d362be58b1ccb89e549b7dea9f87fb03b7d2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895d9c3f2717515b6863df2/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-08T11:13:27Z","groupId":"6895d9c3f2717515b6863df2","hostname":"atlas-13ily5-shard-00-00.wtqckx.mongodb-dev.net","id":"atlas-13ily5-shard-00-00.wtqckx.mongodb-dev.net:27017","lastPing":"2025-08-08T11:13:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895d9c3f2717515b6863df2/processes/atlas-13ily5-shard-00-00.wtqckx.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-13ily5-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-63-shard-00-00.wtqckx.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-08T11:13:27Z","groupId":"6895d9c3f2717515b6863df2","hostname":"atlas-13ily5-shard-00-01.wtqckx.mongodb-dev.net","id":"atlas-13ily5-shard-00-01.wtqckx.mongodb-dev.net:27017","lastPing":"2025-08-08T11:13:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895d9c3f2717515b6863df2/processes/atlas-13ily5-shard-00-01.wtqckx.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-13ily5-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-63-shard-00-01.wtqckx.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-08T11:13:27Z","groupId":"6895d9c3f2717515b6863df2","hostname":"atlas-13ily5-shard-00-02.wtqckx.mongodb-dev.net","id":"atlas-13ily5-shard-00-02.wtqckx.mongodb-dev.net:27017","lastPing":"2025-08-08T11:13:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895d9c3f2717515b6863df2/processes/atlas-13ily5-shard-00-02.wtqckx.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-13ily5-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-63-shard-00-02.wtqckx.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

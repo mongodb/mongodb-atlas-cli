@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 751
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Fri, 08 Aug 2025 11:05:31 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 104
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getFlexCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=4f97d362be58b1ccb89e549b7dea9f87fb03b7d2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-zmbche5-shard-00-00.kfxirt9.mongodb-dev.net:27017,ac-zmbche5-shard-00-01.kfxirt9.mongodb-dev.net:27017,ac-zmbche5-shard-00-02.kfxirt9.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-13e6lp-shard-0","standardSrv":"mongodb+srv://cluster-146.kfxirt9.mongodb-dev.net"},"createDate":"2025-08-08T11:05:18Z","groupId":"b0123456789abcdef012345b","id":"6895d9eec75a56329f87a674","mongoDBVersion":"8.0.12","name":"cluster-146","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

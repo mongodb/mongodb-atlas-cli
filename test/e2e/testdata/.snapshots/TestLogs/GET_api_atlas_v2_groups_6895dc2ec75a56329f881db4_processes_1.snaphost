@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 08 Aug 2025 11:23:52 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 94
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=4f97d362be58b1ccb89e549b7dea9f87fb03b7d2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895dc2ec75a56329f881db4/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-08T11:23:15Z","groupId":"6895dc2ec75a56329f881db4","hostname":"atlas-qjkxnm-shard-00-00.eoa59j.mongodb-dev.net","id":"atlas-qjkxnm-shard-00-00.eoa59j.mongodb-dev.net:27017","lastPing":"2025-08-08T11:23:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895dc2ec75a56329f881db4/processes/atlas-qjkxnm-shard-00-00.eoa59j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qjkxnm-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-539-shard-00-00.eoa59j.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-08T11:23:15Z","groupId":"6895dc2ec75a56329f881db4","hostname":"atlas-qjkxnm-shard-00-01.eoa59j.mongodb-dev.net","id":"atlas-qjkxnm-shard-00-01.eoa59j.mongodb-dev.net:27017","lastPing":"2025-08-08T11:23:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895dc2ec75a56329f881db4/processes/atlas-qjkxnm-shard-00-01.eoa59j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qjkxnm-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-539-shard-00-01.eoa59j.mongodb-dev.net","version":"8.0.12"},{"created":"2025-08-08T11:23:15Z","groupId":"6895dc2ec75a56329f881db4","hostname":"atlas-qjkxnm-shard-00-02.eoa59j.mongodb-dev.net","id":"atlas-qjkxnm-shard-00-02.eoa59j.mongodb-dev.net:27017","lastPing":"2025-08-08T11:23:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6895dc2ec75a56329f881db4/processes/atlas-qjkxnm-shard-00-02.eoa59j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qjkxnm-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-539-shard-00-02.eoa59j.mongodb-dev.net","version":"8.0.12"}],"totalCount":3}

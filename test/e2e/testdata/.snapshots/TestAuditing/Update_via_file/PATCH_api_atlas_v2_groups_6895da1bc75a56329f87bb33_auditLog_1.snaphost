@@ -1,0 +1,16 @@
+HTTP/2.0 202 Accepted
+Content-Length: 241
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 08 Aug 2025 11:06:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 109
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasAuditLogResource::patchAuditLog
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=4f97d362be58b1ccb89e549b7dea9f87fb03b7d2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"auditAuthorizationSuccess":true,"auditFilter":"{\n  \"atype\": \"authCheck\",\n  \"param.command\": {\n    \"$in\": [\n      \"insert\",\n      \"update\",\n      \"delete\"\n    ]\n  }\n}","configurationType":"FILTER_JSON","enabled":true}

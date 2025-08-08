@@ -47,6 +47,8 @@ func authTypeAndSubject() (string, string, error) {
 	case config.UserAccount:
 		subject, _ := config.AccessTokenSubject()
 		return "account", subject, nil
+	case config.NoAuth:
+		return "", "", ErrUnauthenticated
 	}
 
 	return "", "", ErrUnauthenticated

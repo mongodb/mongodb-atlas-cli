@@ -119,12 +119,15 @@ func Test_SetAuthTypes(t *testing.T) {
 					Return([]string{"test"}).
 					Times(1)
 				mockStore.EXPECT().
+					SetProfileValue("test", "auth_type", "no_auth").
+					Times(1)
+				mockStore.EXPECT().
 					GetHierarchicalValue("test", "auth_type").
-					Return("").
+					Return("no_auth").
 					AnyTimes()
 			},
 			setupProfile:     func(*Profile) {},
-			expectedAuthType: AuthMechanism(""),
+			expectedAuthType: NoAuth,
 		},
 	}
 
@@ -177,7 +180,7 @@ func Test_GetAuthType(t *testing.T) {
 		{
 			name:             "Empty Profile",
 			setup:            func(*Profile) {},
-			expectedAuthType: AuthMechanism(""),
+			expectedAuthType: NoAuth,
 		},
 	}
 

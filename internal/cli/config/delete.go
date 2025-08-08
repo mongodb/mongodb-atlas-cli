@@ -16,6 +16,8 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -29,20 +31,26 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 }
 
+func (opts *DeleteOpts) executeLogout() error {
+	// Get the current executable path
+	executable, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("failed to get executable path: %w", err)
+	}
+
+	// Execute: atlas auth logout --profile <profile-name> --force
+	cmd := exec.Command(executable, "auth", "logout", "--profile", opts.Entry, "--force")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
+}
+
 func (opts *DeleteOpts) Run() error {
 	if !opts.Confirm {
 		return nil
 	}
-
-	if err := config.SetName(opts.Entry); err != nil {
-		return err
-	}
-
-	if err := config.Delete(); err != nil {
-		return err
-	}
-	fmt.Printf(opts.SuccessMessage(), opts.Entry)
-	return nil
+	return opts.executeLogout()
 }
 
 func DeleteBuilder() *cobra.Command {
@@ -50,10 +58,11 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Profile '%s' deleted\n", "Profile not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
-		Aliases: []string{"rm"},
-		Short:   "Delete a profile.",
-		Args:    require.ExactArgs(1),
+		Use:        "delete <name>",
+		Aliases:    []string{"rm"},
+		Short:      "Delete a profile.",
+		Args:       require.ExactArgs(1),
+		Deprecated: "Please use the 'atlas auth logout' command instead.",
 		Example: `  # Delete the default profile configuration:
   atlas config delete default
 

@@ -281,6 +281,7 @@ const (
 	APIKeys        AuthMechanism = "api_keys"
 	UserAccount    AuthMechanism = "user_account"
 	ServiceAccount AuthMechanism = "service_account"
+	NoAuth         AuthMechanism = "no_auth"
 )
 
 // AuthType gets the configured auth type.

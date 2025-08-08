@@ -586,8 +586,13 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
 			return nil
 		}
+	case config.NoAuth:
+		fallthrough
+	default:
+		opts.skipLogin = false
+		return nil
 	}
-	opts.skipLogin = false
+
 	return nil
 }
 

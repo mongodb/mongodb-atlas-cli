@@ -201,7 +201,7 @@ func TestConfig(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		const expected = "Profile 'renamed' deleted\n"
+		const expected = "Successfully logged out of 'renamed'\n"
 		if string(resp) != expected {
 			t.Errorf("expected %s, got %s\n", expected, string(resp))
 		}

@@ -121,6 +121,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"clusterWideScaling",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

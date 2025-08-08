@@ -48,12 +48,10 @@ func runPluginUninstallTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cli
 
 	internal.InstallExamplePlugin(t, cliPath, "latest")
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
+		cmd := exec.Command(cliPath,
 			"plugin",
 			"uninstall",
-			pluginValue,
-			"-P",
-			internal.ProfileName())
+			pluginValue)
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))

@@ -117,12 +117,10 @@ commands:
 
 func runPluginInstallTest(g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
+		cmd := exec.Command(cliPath,
 			"plugin",
 			"install",
-			pluginValue,
-			"-P",
-			internal.ProfileName())
+			pluginValue)
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))

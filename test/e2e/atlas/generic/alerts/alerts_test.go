@@ -87,6 +87,8 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"list",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

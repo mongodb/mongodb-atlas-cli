@@ -99,7 +99,7 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of account %s\n", " "),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
 	}
 
 	cmd := &cobra.Command{

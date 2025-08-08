@@ -508,9 +508,9 @@ func SnapshotHashedName(r *http.Request) string {
 	return hash
 }
 
-func (g *AtlasE2ETestGenerator) MongoDBMajorVersion() (string, error) {
+func (*AtlasE2ETestGenerator) MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
-	atlasURL := g.snapshotTargetURI
+	atlasURL := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
 	baseURL, err := url.Parse(atlasURL)
 	if err != nil {
 		return "", err

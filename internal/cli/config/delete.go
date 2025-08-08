@@ -16,6 +16,8 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -29,9 +31,30 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 }
 
+func (opts *DeleteOpts) executeLogout() error {
+	// Get the current executable path
+	executable, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("failed to get executable path: %w", err)
+	}
+
+	// Execute: atlas auth logout --profile <profile-name> --force
+	cmd := exec.Command(executable, "auth", "logout", "--profile", opts.Entry, "--force")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	// Execute logout - this now handles all profile types gracefully
+	return cmd.Run()
+}
+
 func (opts *DeleteOpts) Run() error {
 	if !opts.Confirm {
 		return nil
+	}
+
+	// Execute logout command for the profile before deletion
+	if err := opts.executeLogout(); err != nil {
+		return err
 	}
 
 	if err := config.SetName(opts.Entry); err != nil {

@@ -334,7 +334,7 @@ jobs:
       - id: config-path
         env:
           EDITOR: echo
-        run: echo "CONFIG_PATH=$(atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
+        run: echo "CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
       - env:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |

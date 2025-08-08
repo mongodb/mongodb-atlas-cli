@@ -70,23 +70,19 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	case config.APIKeys:
 		opts.config.SetPublicAPIKey("")
 		opts.config.SetPrivateAPIKey("")
-	case config.ServiceAccount:
-		fallthrough
-	case config.UserAccount:
-		// revoking a refresh token revokes the access token
-		if refreshToken := config.RefreshToken(); refreshToken != "" && opts.flow != nil {
-			if _, err := opts.flow.RevokeToken(ctx, refreshToken, "refresh_token"); err != nil {
-				return err
-			}
-		}
-
-		opts.config.SetAccessToken("")
-		opts.config.SetRefreshToken("")
 	case config.NoAuth:
 		// Handle profiles with no authentication configured
 		// Just clear any potential leftover credentials
 		opts.config.SetPublicAPIKey("")
 		opts.config.SetPrivateAPIKey("")
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.ServiceAccount:
+		fallthrough
+	case config.UserAccount:
+		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+			return err
+		}
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
 	}
@@ -144,8 +140,7 @@ func LogoutBuilder() *cobra.Command {
 
 				message = "Are you sure you want to log out of account %s?"
 			case config.NoAuth:
-				// Handle profiles with no authentication configured
-				entry = "profile"
+				entry = config.Name()
 				message = "Are you sure you want to clear profile %s?"
 			}
 

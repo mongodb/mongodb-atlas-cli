@@ -19,8 +19,6 @@ ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
 LOCALDEV_IMAGE?=docker.io/mongodb/mongodb-atlas-local
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${GIT_SHA} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options.LocalDevImage=${LOCALDEV_IMAGE}
-ATLAS_E2E_BINARY?=$(abspath bin/${ATLAS_BINARY_NAME})
-export SNAPSHOTS_DIR?=$(abspath test/e2e/testdata/.snapshots)
 
 DEBUG_FLAGS=all=-N -l
 
@@ -39,7 +37,6 @@ endif
 export TERM := linux-m
 export GO111MODULE := on
 export GOTOOLCHAIN := local
-export ATLAS_E2E_BINARY
 
 .PHONY: pre-commit
 pre-commit:  ## Run pre-commit hook

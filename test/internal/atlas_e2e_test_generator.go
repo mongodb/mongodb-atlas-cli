@@ -32,7 +32,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"regexp"
 	"slices"
 	"strconv"
@@ -460,15 +459,12 @@ func (g *AtlasE2ETestGenerator) RunCommand(args ...string) ([]byte, error) {
 func (g *AtlasE2ETestGenerator) snapshotBaseDir() string {
 	g.t.Helper()
 
-	if os.Getenv("SNAPSHOTS_DIR") == "" {
-		g.t.Fatal("missing env var SNAPSHOTS_DIR")
-	}
-	dir, err := filepath.Abs(os.Getenv("SNAPSHOTS_DIR"))
+	snapshotsDir, err := snapshotBasePath()
 	if err != nil {
 		g.t.Fatal(err)
 	}
 
-	return dir
+	return snapshotsDir
 }
 
 func (g *AtlasE2ETestGenerator) snapshotDir() string {

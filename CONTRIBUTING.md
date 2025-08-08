@@ -117,7 +117,7 @@ To debug e2e tests.
 
 Update e2e profiles by running `make add-e2e-profiles`.
 
-Add needed env vars by:
+Add optional env vars by:
 
 ```shell 
 touch .vscode/settings.json
@@ -129,8 +129,6 @@ Review and replace the atlas settings.
 ```json
 {
   "go.testEnvVars": {
-    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas", // required
-    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots", // required
     "TEST_MODE": "live", // optional default is 'live'
     "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
     "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended

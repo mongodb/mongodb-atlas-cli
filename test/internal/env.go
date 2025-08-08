@@ -154,17 +154,32 @@ func GCPCredentials() (string, error) {
 	return credentials, nil
 }
 
-func AtlasCLIBin() (string, error) {
-	path := os.Getenv("ATLAS_E2E_BINARY")
-	cliPath, err := filepath.Abs(path)
+func repoPath() (string, error) {
+	wd, err := os.Getwd()
 	if err != nil {
-		return "", fmt.Errorf("%w: invalid bin path %q", err, path)
+		return "", err
 	}
 
-	if _, err := os.Stat(cliPath); err != nil {
-		return "", fmt.Errorf("%w: invalid bin %q", err, path)
+	parts := strings.Split(wd, "/test/")
+
+	return parts[0], nil
+}
+
+func AtlasCLIBin() (string, error) {
+	repo, err := repoPath()
+	if err != nil {
+		return "", err
 	}
-	return cliPath, nil
+
+	return filepath.Join(repo, "bin", "atlas"), nil
+}
+
+func snapshotBasePath() (string, error) {
+	repo, err := repoPath()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(repo, "test", "e2e", "testdata", ".snapshots"), nil
 }
 
 func ProfileData() (map[string]string, error) {

@@ -226,6 +226,8 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 		serverlessEntity,
 		"watch",
 		clusterName,
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		watchArgs = append(watchArgs, "--projectId", projectID)
@@ -246,6 +248,8 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 		"delete",
 		clusterName,
 		"--force",
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -276,6 +280,8 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 		"--tier", tier,
 		"--provider", e2eClusterProvider,
 		"--diskSizeGB=30",
+		"-P",
+		ProfileName(),
 	}
 	if enableBackup {
 		args = append(args, "--backup")
@@ -293,6 +299,8 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 		clustersEntity,
 		"watch",
 		clusterName,
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		watchArgs = append(watchArgs, "--projectId", projectID)
@@ -324,6 +332,8 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 		clusterName,
 		"--force",
 		"--watch",
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -345,6 +355,8 @@ func WatchCluster(projectID, clusterName string) error {
 		clustersEntity,
 		"watch",
 		clusterName,
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		watchArgs = append(watchArgs, "--projectId", projectID)
@@ -367,6 +379,8 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 		"update",
 		clusterName,
 		"--disableTerminationProtection",
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -401,6 +415,8 @@ func deleteDatalakeForProject(cliPath, projectID, id string) error {
 		"delete",
 		id,
 		"--force",
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -425,6 +441,8 @@ func NewAvailableRegion(projectID, tier, provider string) (string, error) {
 		"--provider", provider,
 		"--tier", tier,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
@@ -617,6 +635,8 @@ func createProject(projectName string) (string, error) {
 		"create",
 		projectName,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if IsGov() {
 		args = append(args, "--govCloudRegionsOnly")
@@ -638,11 +658,15 @@ func createProject(projectName string) (string, error) {
 
 func listClustersForProject(t *testing.T, cliPath, projectID string) atlasClustersPinned.PaginatedAdvancedClusterDescription {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		clustersEntity,
 		"list",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
@@ -671,11 +695,15 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 
 func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		datalakePipelineEntity,
 		"list",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
@@ -689,6 +717,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		networkingEntity,
 		networkPeeringEntity,
@@ -698,6 +727,8 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		"--projectId",
 		projectID,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -716,6 +747,8 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 			"--projectId",
 			projectID,
 			"--force",
+			"-P",
+			ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err = RunAndGetStdOut(cmd)
@@ -775,6 +808,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 
 func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedApiStreamsTenant {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		streamsEntity,
 		"instance",
@@ -782,6 +816,8 @@ func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.Pagi
 		"--projectId",
 		projectID,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	)
 
 	cmd.Env = os.Environ()
@@ -797,6 +833,7 @@ func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.Pagi
 func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		streamsEntity,
 		"instance",
@@ -806,6 +843,8 @@ func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 		"--projectId",
 		projectID,
 		"--force",
+		"-P",
+		ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -814,6 +853,7 @@ func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
@@ -821,6 +861,8 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 		"--projectId",
 		projectID,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -835,6 +877,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointID string) {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
@@ -843,6 +886,8 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 		"--projectId",
 		projectID,
 		"--force",
+		"-P",
+		ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -858,7 +903,10 @@ func DeleteTeam(teamID string) error {
 		teamsEntity,
 		"delete",
 		teamID,
-		"--force")
+		"--force",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
@@ -876,7 +924,10 @@ func deleteProject(projectID string) error {
 		projectEntity,
 		"delete",
 		projectID,
-		"--force")
+		"--force",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOutAndErr(cmd)
 	if err != nil {
@@ -888,11 +939,15 @@ func deleteProject(projectID string) error {
 func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		datafederationEntity,
 		"list",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log("available datafederations", string(resp))
@@ -908,11 +963,15 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedServerlessInstanceDescription {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		serverlessEntity,
 		"list",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -957,12 +1016,16 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		datafederationEntity,
 		"delete",
 		dataFedName,
 		"--projectId", projectID,
-		"--force")
+		"--force",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1037,6 +1100,8 @@ func EnableCompliancePolicy(projectID string) error {
 		"-o=json",
 		"--force",
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+		"-P",
+		ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	output, outputErr := RunAndGetStdOut(cmd)
@@ -1075,6 +1140,8 @@ func SetupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 		"--file",
 		randomPath,
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+		"-P",
+		ProfileName(),
 	)
 
 	cmd.Env = os.Environ()
@@ -1124,6 +1191,8 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 		federationSettingsEntity,
 		"describe",
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)
@@ -1141,7 +1210,8 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 
 func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.PaginatedFederationIdentityProvider {
 	t.Helper()
-	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json")
+	//nolint:gosec
+	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json", "-P", ProfileName())
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1152,7 +1222,8 @@ func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.Pagin
 
 func deleteIDP(t *testing.T, cliPath string, id string, fedSettingsID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force")
+	//nolint:gosec
+	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force", "-P", ProfileName())
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1183,7 +1254,10 @@ func CreateTeam(teamName string) (string, error) {
 		teamName,
 		"--username",
 		username,
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
@@ -1212,7 +1286,10 @@ func OrgNUser(n int) (username, userID string, err error) {
 		"list",
 		"--limit",
 		strconv.Itoa(n+1),
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
@@ -1234,11 +1311,15 @@ func OrgNUser(n int) (username, userID string, err error) {
 func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		orgEntity,
 		"apiKeys",
 		"ls",
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -1266,7 +1347,10 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 			"apiKeys",
 			"rm",
 			keyID,
-			"--force")
+			"--force",
+			"-P",
+			ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		_, err = RunAndGetStdOutAndErr(cmd)
 		if err != nil && !strings.Contains(err.Error(), "API_KEY_NOT_FOUND") {
@@ -1280,11 +1364,15 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 
 func deleteOrgInvitations(t *testing.T, cliPath string) {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
 		"ls",
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
@@ -1299,10 +1387,14 @@ func deleteOrgInvitations(t *testing.T, cliPath string) {
 func deleteOrgTeams(t *testing.T, cliPath string) {
 	t.Helper()
 
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		teamsEntity,
 		"ls",
-		"-o=json")
+		"-o=json",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
@@ -1316,12 +1408,16 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 
 func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	t.Helper()
+	//nolint:gosec
 	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
 		"delete",
 		id,
-		"--force")
+		"--force",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1344,7 +1440,10 @@ func DeleteOrgAPIKey(id string) error {
 		apiKeysEntity,
 		"rm",
 		id,
-		"--force")
+		"--force",
+		"-P",
+		ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	return cmd.Run()
 }

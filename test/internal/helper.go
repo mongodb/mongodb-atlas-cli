@@ -569,11 +569,14 @@ func RandEntityWithRevision(entity string) (string, error) {
 
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
-	profile, err := ProfileData()
-	if err != nil {
-		return "", err
+	atlasURL := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
+	if atlasURL == "" {
+		profile, err := ProfileData()
+		if err != nil {
+			return "", err
+		}
+		atlasURL = profile["ops_manager_url"]
 	}
-	atlasURL := profile["ops_manager_url"]
 	baseURL, err := url.Parse(atlasURL)
 	if err != nil {
 		return "", err

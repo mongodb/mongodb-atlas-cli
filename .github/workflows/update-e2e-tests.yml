@@ -86,11 +86,11 @@ jobs:
             skip_update_check = true
 
             [__e2e]
-            org_id = '${{ secrets.MONGODB_ATLAS_ORG_ID }}'
-            project_id = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
-            public_api_key = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
-            private_api_key = '${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}'
-            ops_manager_url = '${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}'
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
             telemetry_enabled = false
             output = 'plaintext'
@@ -104,9 +104,18 @@ jobs:
             service = 'cloud'
             telemetry_enabled = false
             output = 'plaintext'
-            EOF
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
+          ./bin/atlas config set org_id "$MONGODB_ATLAS_ORG_ID" -P __e2e
+          ./bin/atlas config set project_id "$MONGODB_ATLAS_PROJECT_ID" -P __e2e
+          ./bin/atlas config set public_api_key "$MONGODB_ATLAS_PUBLIC_API_KEY" -P __e2e
+          ./bin/atlas config set private_api_key "$MONGODB_ATLAS_PRIVATE_API_KEY" -P __e2e
+          ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
@@ -211,7 +220,7 @@ jobs:
           paths: e2e-tests.xml
   commit:
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
+    if: success() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
     needs: update-tests
     steps:
       - name: set Apix Bot token
@@ -243,6 +252,25 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           labels: update-snapshots
+  comment:
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
+    needs: update-tests
+    steps:
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          labels: update-snapshots
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405
+        with:
+          header: test
+          message: "Failed to update test snapshots."
   pr:
     runs-on: ubuntu-latest
     if: success() && github.event_name != 'pull_request'

@@ -73,6 +73,8 @@ func HTTPClient(c CredentialsGetter, httpTransport http.RoundTripper) (*http.Cli
 		return &http.Client{Transport: tr}, nil
 	case config.ServiceAccount:
 		return transport.NewServiceAccountClient(c.ClientID(), c.ClientSecret()), nil
+	case config.NoAuth:
+		fallthrough
 	default:
 		return &http.Client{Transport: httpTransport}, nil
 	}

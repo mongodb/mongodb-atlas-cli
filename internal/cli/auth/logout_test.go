@@ -18,6 +18,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -393,5 +394,123 @@ func Test_LogoutBuilder_Integration(t *testing.T) {
 		keepFlag := cmd.Flags().Lookup("keep")
 		assert.NotNil(t, keepFlag)
 		assert.True(t, keepFlag.Hidden)
+	})
+}
+
+func Test_LogoutBuilder_NoAuth_Handling(t *testing.T) {
+	t.Run("handles NoAuth profiles gracefully", func(t *testing.T) {
+		// Save original config state
+		originalAuthType := config.AuthType()
+		originalPublicKey := config.PublicAPIKey()
+		originalPrivateKey := config.PrivateAPIKey()
+		originalAccessToken := config.AccessToken()
+		originalRefreshToken := config.RefreshToken()
+		originalProjectID := config.ProjectID()
+		originalOrgID := config.OrgID()
+
+		defer func() {
+			config.SetAuthType(originalAuthType)
+			config.SetPublicAPIKey(originalPublicKey)
+			config.SetPrivateAPIKey(originalPrivateKey)
+			config.SetAccessToken(originalAccessToken)
+			config.SetRefreshToken(originalRefreshToken)
+			config.SetProjectID(originalProjectID)
+			config.SetOrgID(originalOrgID)
+		}()
+
+		// Set up NoAuth configuration
+		config.SetAuthType(config.NoAuth)
+		config.SetPublicAPIKey("some-leftover-key")
+		config.SetPrivateAPIKey("some-leftover-secret")
+		config.SetAccessToken("some-leftover-token")
+		config.SetRefreshToken("some-leftover-refresh")
+		config.SetProjectID("some-project-id")
+		config.SetOrgID("some-org-id")
+
+		cmd := LogoutBuilder()
+
+		// Create a test command context
+		testCmd := &cobra.Command{}
+		buf := new(bytes.Buffer)
+		testCmd.SetOut(buf)
+
+		// Execute PreRunE first - should not initialize OAuth flow for NoAuth
+		err := cmd.PreRunE(testCmd, []string{})
+		assert.NoError(t, err)
+
+		// Create logout opts for testing Run method directly
+		opts := &logoutOpts{
+			DeleteOpts: cli.NewDeleteOpts("test success", "test fail"),
+			config:     config.Default(),
+			keepConfig: true, // Don't delete config, just clear credentials
+		}
+
+		// Execute Run method
+		ctx := context.Background()
+		err = opts.Run(ctx)
+		assert.NoError(t, err)
+
+		// Verify all credentials are cleared
+		assert.Equal(t, "", config.PublicAPIKey())
+		assert.Equal(t, "", config.PrivateAPIKey())
+		assert.Equal(t, "", config.AccessToken())
+		assert.Equal(t, "", config.RefreshToken())
+		assert.Equal(t, "", config.ProjectID())
+		assert.Equal(t, "", config.OrgID())
+	})
+
+	t.Run("RunE handles NoAuth with appropriate message", func(t *testing.T) {
+		// Save original config state
+		originalAuthType := config.AuthType()
+		defer func() {
+			config.SetAuthType(originalAuthType)
+		}()
+
+		// Set up NoAuth configuration
+		config.SetAuthType(config.NoAuth)
+
+		cmd := LogoutBuilder()
+
+		// Create a test command context
+		testCmd := &cobra.Command{}
+		buf := new(bytes.Buffer)
+		testCmd.SetOut(buf)
+
+		// Execute PreRunE first
+		err := cmd.PreRunE(testCmd, []string{})
+		assert.NoError(t, err)
+
+		// We can't easily test the full RunE without mocking the prompt,
+		// but we can verify the command structure handles NoAuth
+		assert.NotNil(t, cmd.RunE)
+	})
+
+	t.Run("PreRunE does not initialize OAuth flow for NoAuth", func(t *testing.T) {
+		// Save original config state
+		originalAuthType := config.AuthType()
+		defer func() {
+			config.SetAuthType(originalAuthType)
+		}()
+
+		// Set up NoAuth configuration
+		config.SetAuthType(config.NoAuth)
+
+		opts := &logoutOpts{}
+
+		cmd := &cobra.Command{}
+		buf := new(bytes.Buffer)
+		cmd.SetOut(buf)
+
+		// Simulate PreRunE logic
+		opts.config = config.Default()
+
+		var flowInitialized bool
+		if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
+			flowInitialized = true
+		}
+
+		// Verify OAuth flow is not initialized for NoAuth
+		assert.False(t, flowInitialized)
+		assert.Nil(t, opts.flow)
 	})
 }

@@ -60,7 +60,10 @@ func TestDataFederation(t *testing.T) {
 			roleID,
 			"--awsTestS3Bucket",
 			testBucket,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -77,7 +80,10 @@ func TestDataFederation(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		// this command will only succeed in case one of the tests after this one fails
@@ -91,7 +97,10 @@ func TestDataFederation(t *testing.T) {
 			datafederationEntity,
 			"describe",
 			dataFederationName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -105,7 +114,10 @@ func TestDataFederation(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -123,7 +135,10 @@ func TestDataFederation(t *testing.T) {
 			dataFederationName,
 			"--region",
 			updateRegion,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -144,7 +159,10 @@ func TestDataFederation(t *testing.T) {
 			strconv.FormatInt(time.Now().Add(-10*time.Second).Unix(), 10),
 			"--end",
 			strconv.FormatInt(time.Now().Unix(), 10),
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -157,7 +175,10 @@ func TestDataFederation(t *testing.T) {
 			"logs",
 			dataFederationName,
 			"--out",
-			"testLogFile")
+			"testLogFile",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -169,7 +190,10 @@ func TestDataFederation(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)

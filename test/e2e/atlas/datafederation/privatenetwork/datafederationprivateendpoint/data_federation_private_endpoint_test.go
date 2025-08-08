@@ -56,7 +56,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"comment",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
@@ -76,7 +79,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			vpcID,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -93,7 +99,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -112,7 +121,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			vpcID,
 			"--projectId",
 			g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)

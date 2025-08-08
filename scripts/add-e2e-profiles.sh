@@ -22,7 +22,7 @@ set -euo pipefail
 
 ./bin/atlas config delete __e2e_snapshot --force >/dev/null 2>&1 || true
 
-EDITOR=echo
+export EDITOR=echo
 CONFIG_PATH=$(atlas config edit 2>/dev/null)
 
 cat <<EOF >> "$CONFIG_PATH"

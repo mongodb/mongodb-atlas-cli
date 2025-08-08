@@ -532,6 +532,13 @@ func (p *Profile) IsAccessSet() bool {
 	return isSet
 }
 
+func IsServiceAccountSet() bool { return Default().IsServiceAccountSet() }
+func (p *Profile) IsServiceAccountSet() bool {
+	isSet := p.ClientID() != "" && p.ClientSecret() != ""
+
+	return isSet
+}
+
 // Map returns a map describing the configuration.
 func Map() map[string]string { return Default().Map() }
 func (p *Profile) Map() map[string]string {

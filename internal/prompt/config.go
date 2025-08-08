@@ -120,3 +120,25 @@ func NewProjectSelect(ids, names []string) survey.Prompt {
 		},
 	}
 }
+
+func ServiceAccountQuestions() []*survey.Question {
+	helpLink := "Please provide your Service Account client ID and secret. To create a new Service Account, see the documentation: https://docs.atlas.mongodb.com/configure-api-access/"
+	q := []*survey.Question{
+		{
+			Name: "clientID",
+			Prompt: &survey.Input{
+				Message: "Client ID:",
+				Help:    helpLink,
+				Default: config.ClientID(),
+			},
+		},
+		{
+			Name: "clientSecret",
+			Prompt: &survey.Password{
+				Message: "Client Secret:",
+				Help:    helpLink,
+			},
+		},
+	}
+	return q
+}

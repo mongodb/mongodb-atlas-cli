@@ -133,6 +133,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

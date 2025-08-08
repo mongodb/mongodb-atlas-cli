@@ -195,13 +195,6 @@ func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerato
 		snapshotNameFunc: defaultSnapshotBaseName,
 	}
 
-	p, err := g.ProfileData()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	g.snapshotTargetURI = p["ops_manager_url"]
-
 	for _, opt := range opts {
 		opt(g)
 	}
@@ -758,6 +751,12 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 	if mode == TestModeLive {
 		return
 	}
+
+	p, err := g.ProfileData()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+	g.snapshotTargetURI = p["ops_manager_url"]
 
 	targetURL, err := url.Parse(g.snapshotTargetURI)
 	if err != nil {

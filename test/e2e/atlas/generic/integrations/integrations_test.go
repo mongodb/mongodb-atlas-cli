@@ -66,7 +66,9 @@ func TestIntegrations(t *testing.T) {
 			datadogKey,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -88,7 +90,9 @@ func TestIntegrations(t *testing.T) {
 			opsGenieKey,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -111,7 +115,9 @@ func TestIntegrations(t *testing.T) {
 			pagerDutyKey,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -136,7 +142,9 @@ func TestIntegrations(t *testing.T) {
 			"test",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -159,7 +167,9 @@ func TestIntegrations(t *testing.T) {
 			key,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -177,7 +187,9 @@ func TestIntegrations(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -195,7 +207,9 @@ func TestIntegrations(t *testing.T) {
 			webhookEntity,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -213,7 +227,9 @@ func TestIntegrations(t *testing.T) {
 			webhookEntity,
 			"--force",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

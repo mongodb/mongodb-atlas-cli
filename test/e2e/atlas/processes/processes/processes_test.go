@@ -48,7 +48,10 @@ func TestProcesses(t *testing.T) {
 			processesEntity,
 			"list",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -63,7 +66,10 @@ func TestProcesses(t *testing.T) {
 			"list",
 			"-c",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -79,7 +85,10 @@ func TestProcesses(t *testing.T) {
 			"describe",
 			processes.GetResults()[0].GetId(),
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

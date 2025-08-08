@@ -55,6 +55,8 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"--projectId",
 			g.ProjectID,
 			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := internal.RunAndGetStdOut(cmd)
@@ -78,6 +80,8 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := internal.RunAndGetStdOut(cmd)

@@ -48,7 +48,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	t.Setenv("MONGODB_ATLAS_SERVICE", "")
 
 	t.Run("config ls", func(t *testing.T) {
-		cmd := exec.Command(cliPath, "config", "ls")
+		cmd := exec.Command(cliPath, "config", "ls", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -57,7 +57,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	})
 
 	t.Run("projects ls", func(t *testing.T) {
-		cmd := exec.Command(cliPath, "projects", "ls")
+		cmd := exec.Command(cliPath, "projects", "ls", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		got := string(resp)
@@ -66,7 +66,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	})
 
 	t.Run("help", func(t *testing.T) {
-		cmd := exec.Command(cliPath, "help")
+		cmd := exec.Command(cliPath, "help", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

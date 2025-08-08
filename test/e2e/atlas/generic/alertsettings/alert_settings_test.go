@@ -66,7 +66,9 @@ func TestAlertConfig(t *testing.T) {
 			strconv.Itoa(delayMin),
 			"--notificationSmsEnabled=false",
 			"--notificationEmailEnabled=true",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -91,7 +93,9 @@ func TestAlertConfig(t *testing.T) {
 			settingsEntity,
 			"get",
 			alertID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -105,7 +109,9 @@ func TestAlertConfig(t *testing.T) {
 			alertsEntity,
 			settingsEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -120,7 +126,9 @@ func TestAlertConfig(t *testing.T) {
 			settingsEntity,
 			"ls",
 			"-c",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -145,7 +153,9 @@ func TestAlertConfig(t *testing.T) {
 			strconv.Itoa(delayMin),
 			"--notificationSmsEnabled=true",
 			"--notificationEmailEnabled=true",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -186,9 +196,15 @@ func TestAlertConfig(t *testing.T) {
 			"update",
 			alertID,
 			"--file", fileName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
+
+		t.Cleanup(func() {
+			os.Remove(fileName)
+		})
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -201,7 +217,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force")
+		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -213,7 +229,9 @@ func TestAlertConfig(t *testing.T) {
 			settingsEntity,
 			"fields",
 			"type",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

@@ -49,7 +49,9 @@ func TestCustomDNS(t *testing.T) {
 			"enable",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -68,7 +70,9 @@ func TestCustomDNS(t *testing.T) {
 			"describe",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -87,7 +91,9 @@ func TestCustomDNS(t *testing.T) {
 			"disable",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

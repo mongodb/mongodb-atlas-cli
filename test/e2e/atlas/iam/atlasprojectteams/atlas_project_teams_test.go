@@ -67,7 +67,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"GROUP_READ_ONLY",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -97,7 +100,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			roleName2,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -120,7 +126,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -139,7 +148,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			teamID,
 			"--force",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)

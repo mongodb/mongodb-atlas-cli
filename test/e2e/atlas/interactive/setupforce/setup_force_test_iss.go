@@ -48,7 +48,7 @@ func TestSetupISS(t *testing.T) {
 
 	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
-			setupEntity,
+			"setup",
 			"--clusterName", clusterName,
 			"--username", dbUserUsername,
 			"--skipMongosh",
@@ -58,7 +58,9 @@ func TestSetupISS(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--tag", tagKey+"="+tagValue,
 			"--accessListIp", arbitraryAccessListIP,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -69,11 +71,13 @@ func TestSetupISS(t *testing.T) {
 	})
 	g.Run("Check accessListIp was correctly added", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
-			accessListEntity,
+			"accessList",
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -89,11 +93,13 @@ func TestSetupISS(t *testing.T) {
 
 	g.Run("Describe DB User", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
-			dbusersEntity,
+			"dbusers",
 			"describe",
 			dbUserUsername,
 			"-o=json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -106,13 +112,15 @@ func TestSetupISS(t *testing.T) {
 
 	g.Run("Describe Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
-			clustersEntity,
+			"clusters",
 			"describe",
 			clusterName,
 			"--autoScalingMode",
 			"independentShardScaling",
 			"-o=json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

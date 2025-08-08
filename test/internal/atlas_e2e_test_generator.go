@@ -185,15 +185,16 @@ func (g *AtlasE2ETestGenerator) Logf(format string, args ...any) {
 // newAtlasE2ETestGenerator creates a new instance of AtlasE2ETestGenerator struct.
 func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerator)) *AtlasE2ETestGenerator {
 	t.Helper()
+
 	g := &AtlasE2ETestGenerator{
-		t:                 t,
-		testName:          t.Name(),
-		skipSnapshots:     compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
-		fileIDs:           map[string]int{},
-		memoryMap:         map[string]any{},
-		snapshotNameFunc:  defaultSnapshotBaseName,
-		snapshotTargetURI: os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
+		t:                t,
+		testName:         t.Name(),
+		skipSnapshots:    compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
+		fileIDs:          map[string]int{},
+		memoryMap:        map[string]any{},
+		snapshotNameFunc: defaultSnapshotBaseName,
 	}
+
 	for _, opt := range opts {
 		opt(g)
 	}
@@ -423,6 +424,8 @@ func (g *AtlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 		"--projectId",
 		g.ProjectID,
 		"-o=json",
+		"-P",
+		ProfileName(),
 	)
 	if err != nil {
 		return nil, err
@@ -511,14 +514,19 @@ func SnapshotHashedName(r *http.Request) string {
 }
 
 func (g *AtlasE2ETestGenerator) maskString(s string) string {
+	p, err := ProfileData()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
 	o := s
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "a0123456789abcdef012345a")
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "b0123456789abcdef012345b")
-	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "d0123456789abcdef012345d")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "c0123456789abcdef012345c")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
-	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	o = strings.ReplaceAll(o, p["org_id"], snapshotOrgID)
+	o = strings.ReplaceAll(o, p["project_id"], snapshotProjectID)
+	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), snapshotIdentityProviderID)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), snapshotCloudRoleID)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), snapshotFlexInstanceName)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), snapshotTestBucket)
+	o = strings.ReplaceAll(o, g.snapshotTargetURI, snapshotOpsManagerURL)
 	o = replaceLinkToken(o)
 
 	return o
@@ -681,8 +689,6 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 func (g *AtlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
 
-	g.prepareRequest(r)
-
 	filename := g.snapshotName(r)
 
 	g.t.Logf("reading snapshot from %q", filename)
@@ -723,6 +729,12 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 	if mode == TestModeLive {
 		return
 	}
+
+	p, err := ProfileData()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+	g.snapshotTargetURI = p["ops_manager_url"]
 
 	targetURL, err := url.Parse(g.snapshotTargetURI)
 	if err != nil {

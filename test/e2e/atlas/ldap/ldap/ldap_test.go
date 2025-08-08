@@ -66,7 +66,10 @@ func TestLDAPWithFlags(t *testing.T) {
 			ldapBindPassword,
 			"--projectId", g.ProjectID,
 			"-o",
-			"json")
+			"json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		requestID = testLDAPVerifyCmd(t, cmd)
 	})
@@ -82,6 +85,8 @@ func TestLDAPWithFlags(t *testing.T) {
 			"watch",
 			requestID,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -99,6 +104,8 @@ func TestLDAPWithFlags(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"-o",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -130,6 +137,8 @@ func TestLDAPWithFlags(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"-o",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		testLDAPSaveCmd(t, cmd)
@@ -142,7 +151,10 @@ func TestLDAPWithFlags(t *testing.T) {
 			"get",
 			"--projectId", g.ProjectID,
 			"-o",
-			"json")
+			"json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -184,7 +196,10 @@ func TestLDAPWithStdin(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--projectId", g.ProjectID,
 			"-o",
-			"json")
+			"json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
 		cmd.Stdin = passwordStdin
@@ -212,6 +227,8 @@ func TestLDAPWithStdin(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"-o",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		passwordStdin := bytes.NewBuffer([]byte(ldapBindPassword))
@@ -228,12 +245,15 @@ func TestLDAPWithStdin(t *testing.T) {
 func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		securityEntity,
 		ldapEntity,
 		"delete",
 		"--projectId", projectID,
-		"--force")
+		"--force",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))

@@ -59,7 +59,10 @@ func TestAtlasTeams(t *testing.T) {
 			teamName,
 			"--username",
 			username,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -79,7 +82,10 @@ func TestAtlasTeams(t *testing.T) {
 			"describe",
 			"--id",
 			teamID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -95,7 +101,10 @@ func TestAtlasTeams(t *testing.T) {
 			"describe",
 			"--name",
 			teamName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -112,7 +121,10 @@ func TestAtlasTeams(t *testing.T) {
 			teamName,
 			"--teamId",
 			teamID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -127,7 +139,10 @@ func TestAtlasTeams(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -142,7 +157,10 @@ func TestAtlasTeams(t *testing.T) {
 			teamsEntity,
 			"ls",
 			"-c",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -157,7 +175,10 @@ func TestAtlasTeams(t *testing.T) {
 			teamsEntity,
 			"delete",
 			teamID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

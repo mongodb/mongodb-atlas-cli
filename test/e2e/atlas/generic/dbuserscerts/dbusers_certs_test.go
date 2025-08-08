@@ -53,7 +53,9 @@ func TestDBUserCerts(t *testing.T) {
 			username,
 			"--x509Type",
 			dbusers.X509TypeManaged,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -68,7 +70,9 @@ func TestDBUserCerts(t *testing.T) {
 			certsEntity,
 			"create",
 			"--username", username,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -80,7 +84,9 @@ func TestDBUserCerts(t *testing.T) {
 			certsEntity,
 			"list",
 			username,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -97,7 +103,9 @@ func TestDBUserCerts(t *testing.T) {
 			username,
 			"--force",
 			"--authDB",
-			"$external")
+			"$external",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

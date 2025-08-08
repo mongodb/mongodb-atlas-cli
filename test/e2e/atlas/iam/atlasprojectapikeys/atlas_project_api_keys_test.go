@@ -55,7 +55,10 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"--desc",
 			desc,
 			"--role=GROUP_READ_ONLY",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -80,7 +83,10 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"assign",
 			ID,
 			"--role=GROUP_DATA_ACCESS_READ_ONLY",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -91,7 +97,10 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			projectsEntity,
 			apiKeysEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -111,7 +120,10 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"ls",
 			"-c",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -131,7 +143,10 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"rm",
 			ID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

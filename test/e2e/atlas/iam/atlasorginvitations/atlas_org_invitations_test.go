@@ -59,7 +59,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			emailOrg,
 			"--role",
 			"ORG_MEMBER",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -91,7 +94,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"invite",
 			"--file", inviteFilename,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -122,7 +128,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"invite",
 			"--file", inviteFilename,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -140,7 +149,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgEntity,
 			invitationsEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -158,7 +170,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"get",
 			orgInvitationID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -180,7 +195,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			emailOrg,
 			"--role",
 			roleNameOrg,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -201,7 +219,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationID,
 			"--role",
 			roleNameOrg,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -235,7 +256,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"update",
 			orgInvitationID, // Use ID from the original Invite test
 			"--file", updateFilename,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -267,7 +291,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"update",
 			orgInvitationID, // Use ID from the original Invite test
 			"--file", updateFilename,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -285,7 +312,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"delete",
 			orgInvitationID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
@@ -301,7 +331,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"delete",
 			orgInvitationIDFile,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)

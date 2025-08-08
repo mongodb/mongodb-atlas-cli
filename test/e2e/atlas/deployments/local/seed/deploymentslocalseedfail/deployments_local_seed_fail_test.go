@@ -60,6 +60,8 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 				"--type",
 				"local",
 				"--force",
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -78,6 +80,8 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 			"--bindIpAll",
 			"--force",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

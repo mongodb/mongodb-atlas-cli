@@ -59,7 +59,10 @@ func TestSearch(t *testing.T) {
 			"load",
 			g.ClusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
@@ -71,7 +74,10 @@ func TestSearch(t *testing.T) {
 			"sampleData",
 			"watch",
 			r.GetId(),
-			"--projectId", g.ProjectID)
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err = internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
@@ -110,7 +116,10 @@ func TestSearch(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -130,7 +139,10 @@ func TestSearch(t *testing.T) {
 			indexID,
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -175,7 +187,10 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--file",
 			fileName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -197,7 +212,10 @@ func TestSearch(t *testing.T) {
 			indexID,
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -261,7 +279,10 @@ func TestSearch(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -364,7 +385,10 @@ func TestSearch(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -423,7 +447,10 @@ func TestSearch(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -443,7 +470,10 @@ func TestSearch(t *testing.T) {
 			"--db=sample_mflix",
 			"--collection=movies",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -478,7 +508,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"load",
 			g.ClusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
@@ -490,7 +523,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"sampleData",
 			"watch",
 			r.GetId(),
-			"--projectId", g.ProjectID)
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})
@@ -526,7 +562,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -546,7 +585,10 @@ func TestSearchDeprecated(t *testing.T) {
 			indexID,
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -589,7 +631,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--file",
 			fileName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -610,7 +655,10 @@ func TestSearchDeprecated(t *testing.T) {
 			indexID,
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -672,7 +720,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -775,7 +826,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -831,7 +885,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--file",
 			fileName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -851,7 +908,10 @@ func TestSearchDeprecated(t *testing.T) {
 			"--db=sample_mflix",
 			"--collection=movies",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

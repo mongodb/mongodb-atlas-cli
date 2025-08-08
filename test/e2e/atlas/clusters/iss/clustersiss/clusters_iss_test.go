@@ -73,7 +73,10 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--autoScalingMode", independentShardScalingFlag,
 			"--watch",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -94,7 +97,10 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			issClusterName,
 			"--autoScalingMode",
 			independentShardScalingFlag,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -115,6 +121,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"clusterWideScaling",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -131,6 +139,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"autoScalingConfig",
 			issClusterName,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -151,6 +161,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"independentShardScaling",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -166,7 +178,10 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"autoScalingConfig",
 			issClusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -182,7 +197,10 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"list",
 			"--autoScalingMode", independentShardScalingFlag,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -200,7 +218,10 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"delete",
 			issClusterName,
 			"--force",
-			"--watch")
+			"--watch",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))

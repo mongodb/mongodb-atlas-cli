@@ -61,6 +61,8 @@ func TestDecryptWithAzure(t *testing.T) {
 		"decrypt",
 		"--file",
 		inputFile,
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 

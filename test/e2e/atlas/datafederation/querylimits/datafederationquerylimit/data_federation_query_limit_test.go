@@ -60,7 +60,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			roleID,
 			"--awsTestS3Bucket",
 			testBucket,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -84,7 +87,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			dataFederationName,
 			"--overrunPolicy",
 			"BLOCK",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
@@ -103,7 +109,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -120,7 +129,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"ls",
 			"--dataFederation",
 			dataFederationName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -139,7 +151,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -154,7 +169,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)

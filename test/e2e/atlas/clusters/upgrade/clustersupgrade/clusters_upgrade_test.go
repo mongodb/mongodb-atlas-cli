@@ -54,7 +54,10 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--diskSizeGB", diskSizeGB40,
 			"--projectId", g.ProjectID,
 			"--tag", "env=e2e",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -68,12 +71,15 @@ func TestSharedClusterUpgrade(t *testing.T) {
 
 func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasClustersPinned.AdvancedClusterDescription {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		clustersEntity,
 		"get",
 		clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	req := require.New(t)

@@ -57,7 +57,10 @@ func TestAtlasProjects(t *testing.T) {
 			projectName,
 			"--tag", "env=e2e",
 			"--tag", "prod=false",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -75,7 +78,10 @@ func TestAtlasProjects(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -87,7 +93,10 @@ func TestAtlasProjects(t *testing.T) {
 			projectsEntity,
 			"describe",
 			projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -99,7 +108,10 @@ func TestAtlasProjects(t *testing.T) {
 			projectsEntity,
 			"describe",
 			projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -169,7 +181,10 @@ func TestAtlasProjects(t *testing.T) {
 				projectID,
 				"--file",
 				filename,
-				"-o=json")
+				"-o=json",
+				"-P",
+				internal.ProfileName(),
+			)
 			cmd.Env = os.Environ()
 			resp, err := internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
@@ -178,7 +193,10 @@ func TestAtlasProjects(t *testing.T) {
 				projectsEntity,
 				"describe",
 				projectID,
-				"-o=json")
+				"-o=json",
+				"-P",
+				internal.ProfileName(),
+			)
 			cmd.Env = os.Environ()
 			resp, err = internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
@@ -212,7 +230,10 @@ func TestAtlasProjects(t *testing.T) {
 			"ls",
 			"--projectId",
 			projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -223,7 +244,10 @@ func TestAtlasProjects(t *testing.T) {
 			projectsEntity,
 			"delete",
 			projectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

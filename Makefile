@@ -30,16 +30,6 @@ E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
 export TEST_MODE?=live
-export MONGODB_ATLAS_ORG_ID?=a0123456789abcdef012345a
-export MONGODB_ATLAS_PROJECT_ID?=b0123456789abcdef012345b
-export MONGODB_ATLAS_PUBLIC_API_KEY?=ABCDEF01
-export MONGODB_ATLAS_PRIVATE_API_KEY?=12345678-abcd-ef01-2345-6789abcdef01
-export MONGODB_ATLAS_OPS_MANAGER_URL?=http://localhost:8080/
-export MONGODB_ATLAS_SERVICE?=cloud
-export E2E_CLOUD_ROLE_ID?=c0123456789abcdef012345c
-export E2E_TEST_BUCKET?=test-bucket
-export E2E_FLEX_INSTANCE_NAME?=test-flex
-export IDENTITY_PROVIDER_ID?=d0123456789abcdef012345d
 
 ifeq ($(OS),Windows_NT)
 	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)
@@ -170,6 +160,7 @@ e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
@@ -204,6 +195,10 @@ update-atlas-sdk: ## Update the atlas-sdk dependency
 .PHONY: update-openapi-spec
 update-openapi-spec: ## Update the openapi spec
 	./scripts/update-openapi-spec.sh
+
+.PHONY: add-e2e-profiles
+add-e2e-profiles: build ## Add e2e profiles
+	./scripts/add-e2e-profiles.sh
 
 .PHONY: help
 .DEFAULT_GOAL := help

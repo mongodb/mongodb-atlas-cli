@@ -52,6 +52,8 @@ func TestAlerts(t *testing.T) {
 			"--status",
 			closed,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -71,6 +73,8 @@ func TestAlerts(t *testing.T) {
 			"--status",
 			"OPEN",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -83,6 +87,8 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"list",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -99,6 +105,8 @@ func TestAlerts(t *testing.T) {
 			"describe",
 			alertID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -121,7 +129,10 @@ func TestAlerts(t *testing.T) {
 			alertID,
 			"--until",
 			time.Now().Format(time.RFC3339),
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -140,7 +151,10 @@ func TestAlerts(t *testing.T) {
 			"ack",
 			alertID,
 			"--forever",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -158,7 +172,10 @@ func TestAlerts(t *testing.T) {
 			alertsEntity,
 			"unack",
 			alertID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

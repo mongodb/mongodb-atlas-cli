@@ -50,7 +50,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--hourOfDay",
 			"1",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -65,7 +67,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"-o",
 			"json",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -83,7 +87,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"clear",
 			"--force",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

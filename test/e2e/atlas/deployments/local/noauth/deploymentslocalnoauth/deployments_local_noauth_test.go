@@ -71,6 +71,8 @@ func TestDeploymentsLocal(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -87,6 +89,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -103,6 +107,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -117,6 +123,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"list",
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -147,6 +155,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"local",
 			"--connectWith",
 			"connectionString",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -197,6 +207,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--collection",
 			collectionName,
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -220,6 +232,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--file",
 			"testdata/sample_vector_search.json",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -244,6 +258,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			vectorSearchCol,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -269,6 +285,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			collectionName,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -293,6 +311,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			deploymentName,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -368,6 +388,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -387,6 +409,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -405,6 +429,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

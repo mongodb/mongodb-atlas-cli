@@ -26,7 +26,6 @@ import (
 	"strings"
 	"testing"
 
-	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -79,10 +78,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		bin = "podman"
 	}
 
-	image := os.Getenv("LOCALDEV_IMAGE")
-	if image == "" {
-		image = opt.LocalDevImage
-	}
+	image := internal.LocalDevImage()
 
 	t.Run("Pull", func(t *testing.T) {
 		cmd := exec.Command(bin,
@@ -118,6 +114,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -132,6 +130,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"list",
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -166,6 +166,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			dbUserPassword,
 			"--connectWith",
 			"connectionString",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -227,6 +229,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"LOCAL",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -254,6 +258,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--file",
 			"testdata/sample_vector_search.json",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -284,6 +290,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -311,6 +319,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -393,6 +403,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--password",
 			dbUserPassword,
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -412,6 +424,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -430,6 +444,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		r, err := cmd.CombinedOutput()

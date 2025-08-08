@@ -51,7 +51,9 @@ func TestAccessLogs(t *testing.T) {
 			"ls",
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -65,7 +67,9 @@ func TestAccessLogs(t *testing.T) {
 			"ls",
 			"--hostname", h,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

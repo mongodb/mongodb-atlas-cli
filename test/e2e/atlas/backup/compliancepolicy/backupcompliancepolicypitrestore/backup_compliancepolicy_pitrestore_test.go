@@ -68,6 +68,8 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 			g.ProjectID,
 			"--restoreWindowDays",
 			"1",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := internal.RunAndGetStdOut(cmd)

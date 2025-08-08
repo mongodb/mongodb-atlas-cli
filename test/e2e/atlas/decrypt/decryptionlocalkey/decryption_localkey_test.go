@@ -61,6 +61,8 @@ func TestDecryptWithLocalKey(t *testing.T) {
 		"decrypt",
 		"--file",
 		inputFile,
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 

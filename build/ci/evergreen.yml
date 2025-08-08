@@ -113,12 +113,13 @@ functions:
       type: setup
       params:
         <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        env:
+          <<: *go_env
+          EDITOR: echo
         shell: bash
         script: |
           set -Eeou pipefail
-          export EDITOR=echo
-          CONFIG_PATH=$(atlas config edit 2>/dev/null)
+          CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)
           cat <<EOF > "$CONFIG_PATH"
           skip_update_check = true
 

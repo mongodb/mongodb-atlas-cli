@@ -77,9 +77,7 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		opts.config.SetPrivateAPIKey("")
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
-	case config.ServiceAccount:
-		fallthrough
-	case config.UserAccount:
+	case config.ServiceAccount, config.UserAccount:
 		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 			return err
 		}
@@ -124,9 +122,6 @@ func LogoutBuilder() *cobra.Command {
 			switch opts.config.AuthType() {
 			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()
-				if entry == "" {
-					entry = "API key account"
-				}
 				message = "Are you sure you want to log out of account with public API key %s?"
 			case config.ServiceAccount, config.UserAccount:
 				entry, err = config.AccessTokenSubject()

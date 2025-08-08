@@ -30,10 +30,6 @@ E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
 export TEST_MODE?=live
-export E2E_CLOUD_ROLE_ID?=c0123456789abcdef012345c
-export E2E_TEST_BUCKET?=test-bucket
-export E2E_FLEX_INSTANCE_NAME?=test-flex
-export IDENTITY_PROVIDER_ID?=d0123456789abcdef012345d
 
 ifeq ($(OS),Windows_NT)
 	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)

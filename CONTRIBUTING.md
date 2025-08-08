@@ -115,7 +115,11 @@ Review and replace the command name and arguments depending on the command you w
 
 To debug e2e tests.
 
-```shell
+Update e2e profiles by running `make add-e2e-profiles`.
+
+Add needed env vars by:
+
+```shell 
 touch .vscode/settings.json
 ```
 
@@ -129,14 +133,11 @@ Review and replace the atlas settings.
     "TEST_MODE": "live",
     "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
     "GOCOVERDIR": "${workspaceFolder}/cov",
-    "DO_NOT_TRACK": "1",
     "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes",
-    "MONGODB_ATLAS_ORG_ID": "<default org id>",
-    "MONGODB_ATLAS_PROJECT_ID": "<default project id>",
-    "MONGODB_ATLAS_PRIVATE_API_KEY": "<private key>",
-    "MONGODB_ATLAS_PUBLIC_API_KEY": "<public key>",
-    "MONGODB_ATLAS_OPS_MANAGER_URL": "https://cloud.mongodb.com/",
-    "MONGODB_ATLAS_SERVICE": "cloud",
+    "E2E_CLOUD_ROLE_ID": "<value here>",
+    "E2E_TEST_BUCKET": "<value here>",
+    "E2E_FLEX_INSTANCE_NAME": "<value here>",
+    "IDENTITY_PROVIDER_ID": "<value here>"
   }
 }
 ```

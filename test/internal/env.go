@@ -25,7 +25,14 @@ import (
 )
 
 const (
-	cloudgov = "cloudgov"
+	cloudgov                   = "cloudgov"
+	snapshotCloudRoleID        = "c0123456789abcdef012345c"
+	snapshotTestBucket         = "test-bucket"
+	snapshotFlexInstanceName   = "test-flex"
+	snapshotIdentityProviderID = "d0123456789abcdef012345d"
+	snapshotOrgID              = "a0123456789abcdef012345a"
+	snapshotProjectID          = "b0123456789abcdef012345b"
+	snapshotOpsManagerURL      = "http://localhost:8080/"
 )
 
 type TestMode string
@@ -81,6 +88,11 @@ func SkipCleanup() bool {
 }
 
 func IdentityProviderID() (string, error) {
+	mode, err := TestRunMode()
+	if err == nil && mode == TestModeReplay {
+		return snapshotIdentityProviderID, nil
+	}
+
 	idpID, ok := os.LookupEnv("IDENTITY_PROVIDER_ID")
 	if !ok || idpID == "" {
 		return "", errors.New("environment variable is missing: IDENTITY_PROVIDER_ID")
@@ -90,6 +102,11 @@ func IdentityProviderID() (string, error) {
 }
 
 func FlexInstanceName() (string, error) {
+	mode, err := TestRunMode()
+	if err == nil && mode == TestModeReplay {
+		return snapshotFlexInstanceName, nil
+	}
+
 	instanceName, ok := os.LookupEnv("E2E_FLEX_INSTANCE_NAME")
 	if !ok || instanceName == "" {
 		return "", errors.New("environment variable is missing: E2E_FLEX_INSTANCE_NAME")
@@ -99,6 +116,11 @@ func FlexInstanceName() (string, error) {
 }
 
 func CloudRoleID() (string, error) {
+	mode, err := TestRunMode()
+	if err == nil && mode == TestModeReplay {
+		return snapshotCloudRoleID, nil
+	}
+
 	roleID, ok := os.LookupEnv("E2E_CLOUD_ROLE_ID")
 	if !ok || roleID == "" {
 		return "", errors.New("environment variable is missing: E2E_CLOUD_ROLE_ID")
@@ -108,6 +130,11 @@ func CloudRoleID() (string, error) {
 }
 
 func TestBucketName() (string, error) {
+	mode, err := TestRunMode()
+	if err == nil && mode == TestModeReplay {
+		return snapshotTestBucket, nil
+	}
+
 	bucketName, ok := os.LookupEnv("E2E_TEST_BUCKET")
 	if !ok || bucketName == "" {
 		return "", errors.New("environment variable is missing: E2E_TEST_BUCKET")

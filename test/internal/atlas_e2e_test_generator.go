@@ -520,13 +520,13 @@ func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	}
 
 	o := s
-	o = strings.ReplaceAll(o, p["org_id"], "a0123456789abcdef012345a")
-	o = strings.ReplaceAll(o, p["project_id"], "b0123456789abcdef012345b")
-	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "d0123456789abcdef012345d")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "c0123456789abcdef012345c")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
-	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	o = strings.ReplaceAll(o, p["org_id"], snapshotOrgID)
+	o = strings.ReplaceAll(o, p["project_id"], snapshotProjectID)
+	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), snapshotIdentityProviderID)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), snapshotCloudRoleID)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), snapshotFlexInstanceName)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), snapshotTestBucket)
+	o = strings.ReplaceAll(o, g.snapshotTargetURI, snapshotOpsManagerURL)
 	o = replaceLinkToken(o)
 
 	return o

@@ -361,7 +361,6 @@ jobs:
             output = 'plaintext'
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
-      - run: cat ${{ steps.config-path.outputs.CONFIG_PATH }}
       - run: |
           set +e
           make e2e-test-snapshots

@@ -331,32 +331,36 @@ jobs:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - run: make build
-      - run: |
-          export EDITOR=echo
-          CONFIG_PATH=$(atlas config edit 2>/dev/null)
-          cat <<EOF > "$CONFIG_PATH"
-          skip_update_check = true
+      - id: config-path
+        env:
+          EDITOR: echo
+        run: echo "CONFIG_PATH=$(atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
+      - env:
+          CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
+          CONFIG_CONTENT: |
+            skip_update_check = true
 
-          [__e2e]
-          org_id = 'a0123456789abcdef012345a'
-          project_id = 'b0123456789abcdef012345b'
-          public_api_key = 'ABCDEF01'
-          private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
-          ops_manager_url = 'http://localhost:8080/'
-          service = 'cloud'
-          telemetry_enabled = false
-          output = 'plaintext'
+            [__e2e]
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
 
-          [__e2e_snapshot]
-          org_id = 'a0123456789abcdef012345a'
-          project_id = 'b0123456789abcdef012345b'
-          public_api_key = 'ABCDEF01'
-          private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
-          ops_manager_url = 'http://localhost:8080/'
-          service = 'cloud'
-          telemetry_enabled = false
-          output = 'plaintext'
-          EOF
+            [__e2e_snapshot]
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
+        run: |
+          echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
       - run: |
           set +e
           make e2e-test-snapshots

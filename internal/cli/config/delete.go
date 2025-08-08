@@ -43,7 +43,6 @@ func (opts *DeleteOpts) executeLogout() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	// Execute logout - this now handles all profile types gracefully
 	return cmd.Run()
 }
 
@@ -51,21 +50,7 @@ func (opts *DeleteOpts) Run() error {
 	if !opts.Confirm {
 		return nil
 	}
-
-	// Execute logout command for the profile before deletion
-	if err := opts.executeLogout(); err != nil {
-		return err
-	}
-
-	if err := config.SetName(opts.Entry); err != nil {
-		return err
-	}
-
-	if err := config.Delete(); err != nil {
-		return err
-	}
-	fmt.Printf(opts.SuccessMessage(), opts.Entry)
-	return nil
+	return opts.executeLogout()
 }
 
 func DeleteBuilder() *cobra.Command {

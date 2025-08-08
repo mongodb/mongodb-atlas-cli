@@ -70,7 +70,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			region,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -87,7 +90,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -102,7 +108,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			id,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -118,7 +127,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -135,7 +147,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			id,
 			"--projectId",
 			g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -155,7 +170,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()

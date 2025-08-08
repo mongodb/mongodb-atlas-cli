@@ -183,6 +183,10 @@ func TestDataFederation(t *testing.T) {
 
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
+
+		t.Cleanup(func() {
+			os.Remove("testLogFile")
+		})
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

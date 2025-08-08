@@ -470,7 +470,10 @@ func TestSearch(t *testing.T) {
 			"--db=sample_mflix",
 			"--collection=movies",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

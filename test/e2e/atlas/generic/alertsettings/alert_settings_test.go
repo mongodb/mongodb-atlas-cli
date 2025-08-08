@@ -202,6 +202,10 @@ func TestAlertConfig(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
+		t.Cleanup(func() {
+			os.Remove(fileName)
+		})
+
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var alert admin.GroupAlertsConfig

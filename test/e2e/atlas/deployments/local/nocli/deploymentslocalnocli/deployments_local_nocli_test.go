@@ -26,7 +26,6 @@ import (
 	"strings"
 	"testing"
 
-	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -79,10 +78,8 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		bin = "podman"
 	}
 
-	image := os.Getenv("LOCALDEV_IMAGE")
-	if image == "" {
-		image = opt.LocalDevImage
-	}
+	image, err := internal.LocalDevImage()
+	req.NoError(err)
 
 	t.Run("Pull", func(t *testing.T) {
 		cmd := exec.Command(bin,

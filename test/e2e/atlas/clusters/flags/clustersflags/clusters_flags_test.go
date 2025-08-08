@@ -58,7 +58,7 @@ func TestClustersFlags(t *testing.T) {
 	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
-	mdbVersion, err := internal.MongoDBMajorVersion()
+	mdbVersion, err := g.MongoDBMajorVersion()
 	req.NoError(err)
 
 	previousMdbVersion, err := getPreviousMajorVersion(mdbVersion)

@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -102,4 +103,35 @@ func GCPCredentials() (string, error) {
 	}
 
 	return credentials, nil
+}
+
+func LocalDevImage() (string, error) {
+	image, ok := os.LookupEnv("LOCALDEV_IMAGE")
+	if !ok || image == "" {
+		return "", errors.New("environment variable is missing: LOCALDEV_IMAGE")
+	}
+
+	return image, nil
+}
+
+func AtlasCLIBin() (string, error) {
+	path := os.Getenv("ATLAS_E2E_BINARY")
+	cliPath, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf("%w: invalid bin path %q", err, path)
+	}
+
+	if _, err := os.Stat(cliPath); err != nil {
+		return "", fmt.Errorf("%w: invalid bin %q", err, path)
+	}
+	return cliPath, nil
+}
+
+func snapshotsDir() (string, error) {
+	dir := os.Getenv("SNAPSHOTS_DIR")
+	if dir == "" {
+		return "", errors.New("environment variable is missing: SNAPSHOTS_DIR")
+	}
+
+	return dir, nil
 }

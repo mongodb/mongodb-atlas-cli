@@ -48,7 +48,7 @@ func TestClustersFile(t *testing.T) {
 
 	clusterFileName := g.Memory("clusterFileName", internal.Must(internal.RandClusterName())).(string)
 
-	mdbVersion, err := internal.MongoDBMajorVersion()
+	mdbVersion, err := g.MongoDBMajorVersion()
 	req.NoError(err)
 
 	clusterFile, err := generateClusterFile(mdbVersion)

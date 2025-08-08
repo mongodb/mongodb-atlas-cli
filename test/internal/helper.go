@@ -16,13 +16,11 @@ package internal
 
 import (
 	"bytes"
-	"context"
 	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,7 +34,6 @@ import (
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 var (
@@ -136,19 +133,6 @@ const (
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"
 )
-
-func AtlasCLIBin() (string, error) {
-	path := os.Getenv("ATLAS_E2E_BINARY")
-	cliPath, err := filepath.Abs(path)
-	if err != nil {
-		return "", fmt.Errorf("%w: invalid bin path %q", err, path)
-	}
-
-	if _, err := os.Stat(cliPath); err != nil {
-		return "", fmt.Errorf("%w: invalid bin %q", err, path)
-	}
-	return cliPath, nil
-}
 
 func RandInt(maximum int64) (*big.Int, error) {
 	return rand.Int(rand.Reader, big.NewInt(maximum))
@@ -561,22 +545,6 @@ func RandEntityWithRevision(entity string) (string, error) {
 		return fmt.Sprintf("%s-%v-%s", entity, n, revision), nil
 	}
 	return fmt.Sprintf("%s-%v", entity, n), nil
-}
-
-func MongoDBMajorVersion() (string, error) {
-	atlasClient := mongodbatlas.NewClient(nil)
-	atlasURL := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
-	baseURL, err := url.Parse(atlasURL)
-	if err != nil {
-		return "", err
-	}
-	atlasClient.BaseURL = baseURL
-	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.Background())
-	if err != nil {
-		return "", err
-	}
-
-	return version, nil
 }
 
 func IsGov() bool {

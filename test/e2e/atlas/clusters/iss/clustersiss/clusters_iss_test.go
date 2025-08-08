@@ -55,7 +55,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
-	mdbVersion, err := internal.MongoDBMajorVersion()
+	mdbVersion, err := g.MongoDBMajorVersion()
 	req.NoError(err)
 
 	g.Run("Create ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

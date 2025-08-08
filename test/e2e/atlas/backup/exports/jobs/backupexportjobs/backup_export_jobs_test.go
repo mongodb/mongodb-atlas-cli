@@ -54,7 +54,7 @@ func TestExportJobs(t *testing.T) {
 	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 	fmt.Println(clusterName)
 
-	mdbVersion, err := internal.MongoDBMajorVersion()
+	mdbVersion, err := g.MongoDBMajorVersion()
 	r.NoError(err)
 
 	const cloudProvider = "AWS"

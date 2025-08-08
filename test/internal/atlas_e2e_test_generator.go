@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"context"
 	"crypto/sha1" //nolint:gosec // no need to be secure just replacing long filenames for windows
 	"encoding/base64"
 	"encoding/json"
@@ -32,7 +33,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"regexp"
 	"slices"
 	"strconv"
@@ -41,6 +41,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 const redactedToken = "redactedToken"
@@ -306,7 +307,7 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	}
 
 	if g.MDBVer == "" {
-		mdbVersion, e := MongoDBMajorVersion()
+		mdbVersion, e := g.MongoDBMajorVersion()
 		require.NoError(g.t, e)
 
 		g.MDBVer = mdbVersion
@@ -457,10 +458,7 @@ func (g *AtlasE2ETestGenerator) RunCommand(args ...string) ([]byte, error) {
 func (g *AtlasE2ETestGenerator) snapshotBaseDir() string {
 	g.t.Helper()
 
-	if os.Getenv("SNAPSHOTS_DIR") == "" {
-		g.t.Fatal("missing env var SNAPSHOTS_DIR")
-	}
-	dir, err := filepath.Abs(os.Getenv("SNAPSHOTS_DIR"))
+	dir, err := snapshotsDir()
 	if err != nil {
 		g.t.Fatal(err)
 	}
@@ -508,6 +506,22 @@ func SnapshotHashedName(r *http.Request) string {
 	defaultSnapshotBaseName := defaultSnapshotBaseName(r)
 	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName))) //nolint:gosec // no need to be secure just replacing long filenames for windows
 	return hash
+}
+
+func (g *AtlasE2ETestGenerator) MongoDBMajorVersion() (string, error) {
+	atlasClient := mongodbatlas.NewClient(nil)
+	atlasURL := g.snapshotTargetURI
+	baseURL, err := url.Parse(atlasURL)
+	if err != nil {
+		return "", err
+	}
+	atlasClient.BaseURL = baseURL
+	version, _, err := atlasClient.DefaultMongoDBMajorVersion.Get(context.Background())
+	if err != nil {
+		return "", err
+	}
+
+	return version, nil
 }
 
 func (g *AtlasE2ETestGenerator) maskString(s string) string {

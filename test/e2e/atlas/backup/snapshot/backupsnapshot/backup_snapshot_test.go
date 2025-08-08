@@ -49,7 +49,7 @@ func TestSnapshots(t *testing.T) {
 
 	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 
-	mdbVersion, err := internal.MongoDBMajorVersion()
+	mdbVersion, err := g.MongoDBMajorVersion()
 	r.NoError(err)
 
 	var snapshotID string

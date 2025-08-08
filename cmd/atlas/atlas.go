@@ -50,9 +50,7 @@ To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/sta
 // loadConfig reads in config file and ENV variables if set.
 func loadConfig() error {
 	if err := config.LoadAtlasCLIConfig(); err != nil {
-		buf, _ := os.ReadFile(config.Default().Filename())
-
-		return fmt.Errorf("error loading config: %w. Please run `atlas config init` to reconfigure your profile\n%s", err, string(buf))
+		return fmt.Errorf("error loading config: %w. Please run `atlas config init` to reconfigure your profile", err)
 	}
 
 	return nil

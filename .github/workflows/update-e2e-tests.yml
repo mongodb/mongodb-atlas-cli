@@ -104,7 +104,6 @@ jobs:
             service = 'cloud'
             telemetry_enabled = false
             output = 'plaintext'
-            EOF
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
       - env:

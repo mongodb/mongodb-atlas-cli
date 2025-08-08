@@ -50,10 +50,11 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("Profile '%s' deleted\n", "Profile not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <name>",
-		Aliases: []string{"rm"},
-		Short:   "Delete a profile.",
-		Args:    require.ExactArgs(1),
+		Use:        "delete <name>",
+		Aliases:    []string{"rm"},
+		Short:      "Delete a profile.",
+		Args:       require.ExactArgs(1),
+		Deprecated: "Please use the 'atlas auth logout' command instead.",
 		Example: `  # Delete the default profile configuration:
   atlas config delete default
 

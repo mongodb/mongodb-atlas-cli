@@ -331,7 +331,8 @@ jobs:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - run: |
-          CONFIG_PATH=$(EDITOR=echo atlas config edit 2>/dev/null)
+          EDITOR=echo
+          CONFIG_PATH=$(atlas config edit 2>/dev/null)
           cat <<EOF > "$CONFIG_PATH"
           skip_update_check = true
 

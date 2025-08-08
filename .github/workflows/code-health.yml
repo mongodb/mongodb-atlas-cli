@@ -335,7 +335,6 @@ jobs:
         env:
           EDITOR: echo
         run: echo "CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
-      - run: cat ${{ steps.config-path.outputs.CONFIG_PATH }}
       - env:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
@@ -362,6 +361,7 @@ jobs:
             output = 'plaintext'
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
+      - run: cat ${{ steps.config-path.outputs.CONFIG_PATH }}
       - run: |
           set +e
           make e2e-test-snapshots

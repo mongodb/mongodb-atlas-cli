@@ -104,16 +104,18 @@ jobs:
             service = 'cloud'
             telemetry_enabled = false
             output = 'plaintext'
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
-          ./bin/atlas config set org_id "${{ secrets.MONGODB_ATLAS_ORG_ID }}" -P __e2e
-          ./bin/atlas config set project_id "${{ secrets.MONGODB_ATLAS_PROJECT_ID }}" -P __e2e
-          ./bin/atlas config set public_api_key "${{ secrets.MONGODB_ATLAS_PROJECT_ID }}" -P __e2e
-          ./bin/atlas config set private_api_key "${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}" -P __e2e
-          ./bin/atlas config set ops_manager_url "${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}" -P __e2e
-      - env:
-          CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
-        run: cat "$CONFIG_PATH"
+          ./bin/atlas config set org_id "$MONGODB_ATLAS_ORG_ID" -P __e2e
+          ./bin/atlas config set project_id "$MONGODB_ATLAS_PROJECT_ID" -P __e2e
+          ./bin/atlas config set public_api_key "$MONGODB_ATLAS_PUBLIC_API_KEY" -P __e2e
+          ./bin/atlas config set private_api_key "$MONGODB_ATLAS_PRIVATE_API_KEY" -P __e2e
+          ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --

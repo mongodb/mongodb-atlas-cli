@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -34,6 +35,7 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
 	SetProjectID(string)
@@ -51,6 +53,7 @@ type Revoker interface {
 
 type logoutOpts struct {
 	*cli.DeleteOpts
+	cli.DefaultSetterOpts
 	OutWriter  io.Writer
 	config     ConfigDeleter
 	flow       Revoker
@@ -66,21 +69,23 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
+	if !opts.Confirm {
+		return nil
+	}
+
 	switch opts.config.AuthType() {
-	case config.APIKeys:
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-	case config.NoAuth:
-		// Handle profiles with no authentication configured
-		// Just clear any potential leftover credentials
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-		opts.config.SetAccessToken("")
-		opts.config.SetRefreshToken("")
 	case config.ServiceAccount, config.UserAccount:
 		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 			return err
 		}
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.NoAuth, "": // Just clear any potential leftover credentials
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
 	}
@@ -107,12 +112,19 @@ func LogoutBuilder() *cobra.Command {
   atlas auth logout
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			// Check if profile was provided and if it exists
+			profile := cmd.Flag(flag.Profile).Value.String()
+			if profile != "" && !config.Exists(profile) {
+				return fmt.Errorf("profile %v does not exist", profile)
+			}
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
+
 			// Only initialize OAuth flow if we have OAuth-based auth
 			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
 				return opts.initFlow()
 			}
+
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -135,7 +147,7 @@ func LogoutBuilder() *cobra.Command {
 
 				message = "Are you sure you want to log out of account %s?"
 			case config.NoAuth, "":
-				entry = config.Name()
+				entry = opts.config.Name()
 				message = "Are you sure you want to clear profile %s?"
 			}
 

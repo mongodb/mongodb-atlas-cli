@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1407
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Fri, 08 Aug 2025 05:14:59 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 111
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=526ca11a33d07ac939a7fe3df4cf571e6b6f4540; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-08-08T05:14:50Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"689587c529bbdd1dd04e8879","id":"689587ca29bbdd1dd04e915d","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/689587c529bbdd1dd04e8879/clusters/cluster-837","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/689587c529bbdd1dd04e8879/clusters/cluster-837/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/689587c529bbdd1dd04e8879/clusters/cluster-837/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.12","name":"cluster-837","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"689587ca29bbdd1dd04e9153","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"689587ca29bbdd1dd04e9152","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

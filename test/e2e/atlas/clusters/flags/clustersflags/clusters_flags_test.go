@@ -277,6 +277,7 @@ func TestClustersFlags(t *testing.T) {
 			clusterName,
 			"--projectId", g.ProjectID,
 			"--force",
+			"-w",
 			"-P",
 			internal.ProfileName(),
 		)

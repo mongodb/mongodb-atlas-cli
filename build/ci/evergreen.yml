@@ -109,6 +109,13 @@ functions:
             rm -rf mongodb-database-tools
           fi
   "e2e test":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        binary: make
+        args:
+          - build
     - command: shell.exec
       type: setup
       params:

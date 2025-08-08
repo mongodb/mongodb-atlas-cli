@@ -326,7 +326,7 @@ jobs:
           go install github.com/mattn/goveralls@v0.0.12
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@222db38e5893a57f26bd156999713aa98a55b92c
+        uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

@@ -87,7 +87,7 @@ func TestOnlineArchives(t *testing.T) {
 
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"rm",
@@ -107,7 +107,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"watch",
@@ -123,7 +123,7 @@ func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"start",
@@ -145,7 +145,7 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"pause",
@@ -195,7 +195,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"describe",
@@ -221,7 +221,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 
 func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"list",
@@ -246,7 +246,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) string {
 	t.Helper()
 	const dbName = "test"
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"create",

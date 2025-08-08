@@ -95,7 +95,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 
 func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // this part of e2e tests
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		logsEntity,
 		"download",
 		hostname,

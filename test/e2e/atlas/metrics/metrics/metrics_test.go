@@ -63,14 +63,17 @@ func TestMetrics(t *testing.T) {
 
 func process(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		metricsEntity,
 		"processes",
 		hostname,
 		"--granularity=PT30M",
 		"--period=P1DT12H",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -82,7 +85,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 
 func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		metricsEntity,
 		"processes",
 		hostname,
@@ -90,7 +93,10 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 		"--period=P1DT12H",
 		"--type=MAX_PROCESS_CPU_USER",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -102,13 +108,16 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 
 func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 			metricsEntity,
 			"databases",
 			"list",
 			hostname,
 			"--projectId", projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -119,7 +128,7 @@ func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID s
 	})
 
 	g.Run("databases describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 			metricsEntity,
 			"databases",
 			"describe",
@@ -128,7 +137,10 @@ func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID s
 			"--granularity=PT30M",
 			"--period=P1DT12H",
 			"--projectId", projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -141,13 +153,16 @@ func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID s
 
 func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("disks list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 			metricsEntity,
 			"disks",
 			"list",
 			hostname,
 			"--projectId", projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -158,7 +173,7 @@ func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID strin
 	})
 
 	g.Run("disks describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
+		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 			metricsEntity,
 			"disks",
 			"describe",
@@ -167,7 +182,10 @@ func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID strin
 			"--granularity=PT30M",
 			"--period=P1DT12H",
 			"--projectId", projectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

@@ -64,6 +64,8 @@ func TestAtlasTeamUsers(t *testing.T) {
 			"--teamId",
 			teamID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -89,7 +91,10 @@ func TestAtlasTeamUsers(t *testing.T) {
 			"ls",
 			"--teamId",
 			teamID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -107,7 +112,10 @@ func TestAtlasTeamUsers(t *testing.T) {
 			"-c",
 			"--teamId",
 			teamID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -125,7 +133,10 @@ func TestAtlasTeamUsers(t *testing.T) {
 			userID,
 			"--teamId",
 			teamID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

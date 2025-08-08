@@ -197,7 +197,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			region,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -217,7 +220,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		_, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
@@ -231,7 +237,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -247,7 +256,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -264,7 +276,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--force",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -284,7 +299,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		// We expect a 404 error once the private endpoint has been completely deleted
@@ -332,7 +350,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"--region="+region,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -349,7 +370,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		_, err := internal.RunAndGetStdOut(cmd)
@@ -364,7 +388,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			id,
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -380,7 +407,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"ls",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -397,7 +427,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			id,
 			"--force",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -417,7 +450,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"watch",
 			id,
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := cmd.CombinedOutput()
@@ -444,7 +480,10 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"enable",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -458,7 +497,10 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			regionalModeEntity,
 			"disable",
 			"--projectId",
-			g.ProjectID)
+			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -473,7 +515,10 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			"get",
 			"--projectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)

@@ -47,6 +47,11 @@ func TestRunMode() (TestMode, error) {
 }
 
 func ProfileName() string {
+	profileName := os.Getenv("E2E_PROFILE_NAME")
+	if profileName != "" {
+		return profileName
+	}
+
 	mode, err := TestRunMode()
 	if err != nil || mode != TestModeReplay {
 		return "__e2e"

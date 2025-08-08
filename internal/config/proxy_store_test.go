@@ -137,7 +137,7 @@ func testGetHierarchicalValue(t *testing.T, store *ProxyStore, propertyName stri
 	if isSecure {
 		store.secure.(*MockSecureStore).EXPECT().
 			Get(profileName, propertyName).
-			Return(expectedValue, nil)
+			Return(expectedValue)
 	} else {
 		store.insecure.(*MockStore).EXPECT().
 			GetHierarchicalValue(profileName, propertyName).
@@ -155,8 +155,7 @@ func testSetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 
 	if isSecure {
 		store.secure.(*MockSecureStore).EXPECT().
-			Set(profileName, propertyName, value).
-			Return(nil)
+			Set(profileName, propertyName, value)
 	} else {
 		store.insecure.(*MockStore).EXPECT().
 			SetProfileValue(profileName, propertyName, value)
@@ -173,7 +172,7 @@ func testGetProfileValue(t *testing.T, store *ProxyStore, propertyName string, i
 	if isSecure {
 		store.secure.(*MockSecureStore).EXPECT().
 			Get(profileName, propertyName).
-			Return(expectedValue, nil)
+			Return(expectedValue)
 	} else {
 		store.insecure.(*MockStore).EXPECT().
 			GetProfileValue(profileName, propertyName).
@@ -190,8 +189,7 @@ func testSetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, is
 
 	if isSecure {
 		store.secure.(*MockSecureStore).EXPECT().
-			Set(DefaultProfile, propertyName, value).
-			Return(nil)
+			Set(DefaultProfile, propertyName, value)
 	} else {
 		store.insecure.(*MockStore).EXPECT().
 			SetGlobalValue(propertyName, value)
@@ -207,7 +205,7 @@ func testGetGlobalValue(t *testing.T, store *ProxyStore, propertyName string, is
 	if isSecure {
 		store.secure.(*MockSecureStore).EXPECT().
 			Get(DefaultProfile, propertyName).
-			Return(expectedValue, nil)
+			Return(expectedValue)
 	} else {
 		store.insecure.(*MockStore).EXPECT().
 			GetGlobalValue(propertyName).

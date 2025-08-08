@@ -202,7 +202,11 @@ func (s *ViperConfigStore) GetHierarchicalValue(profileName string, propertyName
 
 func (s *ViperConfigStore) SetProfileValue(profileName string, propertyName string, value any) {
 	settings := s.viper.GetStringMap(profileName)
-	settings[propertyName] = value
+	if value == nil {
+		delete(settings, propertyName)
+	} else {
+		settings[propertyName] = value
+	}
 	s.viper.Set(profileName, settings)
 }
 

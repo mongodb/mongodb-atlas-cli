@@ -6,6 +6,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/secure"
+	"github.com/spf13/afero"
 )
 
 var (
@@ -27,7 +28,14 @@ func NewDefaultMigrator() *Migrator {
 	dependencies := MigrationDependencies{
 		GetInsecureStore: config.NewDefaultStore,
 		GetSecureStore: func() (config.SecureStore, error) {
-			return secure.NewSecureStore(), nil
+			// For migrations, we need to create a temporary insecure store to get profile names
+			// This avoids circular dependency issues
+			insecureStore, err := config.NewViperStore(afero.NewOsFs())
+			if err != nil {
+				return nil, fmt.Errorf("failed to create insecure store for migrations: %w", err)
+			}
+			profileNames := insecureStore.GetProfileNames()
+			return secure.NewSecureStore(profileNames, config.SecureProperties), nil
 		},
 	}
 

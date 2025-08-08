@@ -28,7 +28,9 @@ func NewDefaultStore() (Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	secureStore := secure.NewSecureStore()
+
+	profileNames := insecure.GetProfileNames()
+	secureStore := secure.NewSecureStore(profileNames, SecureProperties)
 
 	return NewStore(insecure, secureStore), nil
 }
@@ -82,10 +84,7 @@ func (p *ProxyStore) DeleteProfile(profileName string) error {
 
 func (p *ProxyStore) GetHierarchicalValue(profileName string, propertyName string) any {
 	if isSecureProperty(propertyName) {
-		if val, err := p.secure.Get(profileName, propertyName); err == nil {
-			return val
-		}
-		return ""
+		return p.secure.Get(profileName, propertyName)
 	}
 	return p.insecure.GetHierarchicalValue(profileName, propertyName)
 }
@@ -93,7 +92,7 @@ func (p *ProxyStore) GetHierarchicalValue(profileName string, propertyName strin
 func (p *ProxyStore) SetProfileValue(profileName string, propertyName string, value any) {
 	if isSecureProperty(propertyName) {
 		if v, ok := value.(string); ok {
-			_ = p.secure.Set(profileName, propertyName, v)
+			p.secure.Set(profileName, propertyName, v)
 		}
 		return
 	}
@@ -102,10 +101,7 @@ func (p *ProxyStore) SetProfileValue(profileName string, propertyName string, va
 
 func (p *ProxyStore) GetProfileValue(profileName string, propertyName string) any {
 	if isSecureProperty(propertyName) {
-		if val, err := p.secure.Get(profileName, propertyName); err == nil {
-			return val
-		}
-		return ""
+		return p.secure.Get(profileName, propertyName)
 	}
 	return p.insecure.GetProfileValue(profileName, propertyName)
 }
@@ -117,7 +113,7 @@ func (p *ProxyStore) GetProfileStringMap(profileName string) map[string]string {
 func (p *ProxyStore) SetGlobalValue(propertyName string, value any) {
 	if isSecureProperty(propertyName) {
 		if v, ok := value.(string); ok {
-			_ = p.secure.Set(DefaultProfile, propertyName, v)
+			p.secure.Set(DefaultProfile, propertyName, v)
 		}
 		return
 	}
@@ -126,10 +122,7 @@ func (p *ProxyStore) SetGlobalValue(propertyName string, value any) {
 
 func (p *ProxyStore) GetGlobalValue(propertyName string) any {
 	if isSecureProperty(propertyName) {
-		if val, err := p.secure.Get(DefaultProfile, propertyName); err == nil {
-			return val
-		}
-		return ""
+		return p.secure.Get(DefaultProfile, propertyName)
 	}
 	return p.insecure.GetGlobalValue(propertyName)
 }

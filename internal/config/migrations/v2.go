@@ -72,8 +72,7 @@ func migrateSecrets(insecureStore config.Store, secureStore config.SecureStore) 
 	for _, name := range profileNames {
 		for _, property := range config.SecureProperties {
 			if value, ok := insecureStore.GetProfileValue(name, property).(string); ok && value != "" {
-				// TODO: Refactor so set doesn't return an error.
-				_ = secureStore.Set(name, property, value)
+				secureStore.Set(name, property, value)
 				insecureStore.SetProfileValue(name, property, nil)
 			}
 		}

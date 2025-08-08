@@ -242,11 +242,9 @@ func (mr *MockSecureStoreMockRecorder) Available() *gomock.Call {
 }
 
 // DeleteKey mocks base method.
-func (m *MockSecureStore) DeleteKey(profileName, propertyName string) error {
+func (m *MockSecureStore) DeleteKey(profileName, propertyName string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteKey", profileName, propertyName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "DeleteKey", profileName, propertyName)
 }
 
 // DeleteKey indicates an expected call of DeleteKey.
@@ -256,11 +254,9 @@ func (mr *MockSecureStoreMockRecorder) DeleteKey(profileName, propertyName any) 
 }
 
 // DeleteProfile mocks base method.
-func (m *MockSecureStore) DeleteProfile(profileName string) error {
+func (m *MockSecureStore) DeleteProfile(profileName string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteProfile", profileName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "DeleteProfile", profileName)
 }
 
 // DeleteProfile indicates an expected call of DeleteProfile.
@@ -270,12 +266,11 @@ func (mr *MockSecureStoreMockRecorder) DeleteProfile(profileName any) *gomock.Ca
 }
 
 // Get mocks base method.
-func (m *MockSecureStore) Get(profileName, propertyName string) (string, error) {
+func (m *MockSecureStore) Get(profileName, propertyName string) string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", profileName, propertyName)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // Get indicates an expected call of Get.
@@ -299,11 +294,9 @@ func (mr *MockSecureStoreMockRecorder) Save() *gomock.Call {
 }
 
 // Set mocks base method.
-func (m *MockSecureStore) Set(profileName, propertyName, value string) error {
+func (m *MockSecureStore) Set(profileName, propertyName, value string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Set", profileName, propertyName, value)
-	ret0, _ := ret[0].(error)
-	return ret0
+	m.ctrl.Call(m, "Set", profileName, propertyName, value)
 }
 
 // Set indicates an expected call of Set.

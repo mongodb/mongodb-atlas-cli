@@ -48,6 +48,7 @@ type SetSaver interface {
 type LoginConfig interface {
 	SetSaver
 	AccessTokenSubject() (string, error)
+
 	OrgID() string
 	ProjectID() string
 }
@@ -58,18 +59,20 @@ type TrackAsker interface {
 }
 
 const (
-	userAccountAuth = "UserAccount"
-	apiKeysAuth     = "APIKeys"
-	atlasName       = "atlas"
+	userAccountAuth    = "UserAccount"
+	serviceAccountAuth = "ServiceAccount"
+	apiKeysAuth        = "APIKeys"
+	atlasName          = "atlas"
 )
 
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, apiKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, serviceAccountAuth, apiKeysAuth}
 	authTypeDescription  = map[string]string{
-		userAccountAuth: "(best for getting started)",
-		apiKeysAuth:     "(for existing automations)",
+		userAccountAuth:    "(best for getting started)",
+		serviceAccountAuth: "(best for automation)",
+		apiKeysAuth:        "(for existing automations)",
 	}
 )
 
@@ -79,6 +82,8 @@ type LoginOpts struct {
 	cli.DigestConfigOpts
 	AccessToken  string
 	RefreshToken string
+	ClientID     string
+	ClientSecret string
 	IsGov        bool
 	NoBrowser    bool
 	authType     string
@@ -112,10 +117,24 @@ func (opts *LoginOpts) SetUpAccess() {
 		opts.Service = config.CloudService
 	}
 
+	if opts.authType == serviceAccountAuth {
+		opts.SetUpServiceAccountAccess()
+		return
+	}
 	opts.SetUpServiceAndKeys()
 }
 
-func (opts *LoginOpts) runAPIKeysLogin(ctx context.Context) error {
+func (opts *LoginOpts) SetUpServiceAccountAccess() {
+	config.SetService(opts.Service)
+	if opts.ClientID != "" {
+		config.SetClientID(opts.ClientID)
+	}
+	if opts.ClientSecret != "" {
+		config.SetClientSecret(opts.ClientSecret)
+	}
+}
+
+func (opts *LoginOpts) runServiceAccountOrAPIKeysLogin(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
@@ -124,17 +143,25 @@ Enter [?] on any option to get help.
 
 `, atlasName)
 
-	q := prompt.AccessQuestions()
-	if err := opts.Asker.TrackAsk(q, opts); err != nil {
-		return err
+	if opts.authType == serviceAccountAuth {
+		q := prompt.ServiceAccountQuestions()
+		if err := opts.Asker.TrackAsk(q, opts); err != nil {
+			return err
+		}
+		opts.SetUpServiceAccountAccess()
+	} else {
+		q := prompt.AccessQuestions()
+		if err := opts.Asker.TrackAsk(q, opts); err != nil {
+			return err
+		}
+		opts.SetUpAccess()
 	}
-	opts.SetUpAccess()
 
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 
-	if config.IsAccessSet() {
+	if config.IsAccessSet() || config.IsServiceAccountSet() {
 		if err := opts.AskOrg(); err != nil {
 			return err
 		}
@@ -248,13 +275,19 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
-	if opts.authType == apiKeysAuth {
+	switch opts.authType {
+	case userAccountAuth:
+		config.SetAuthType(config.UserAccount)
+		return opts.runUserAccountLogin(ctx)
+	case serviceAccountAuth:
+		config.SetAuthType(config.ServiceAccount)
+		return opts.runServiceAccountOrAPIKeysLogin(ctx)
+	case apiKeysAuth:
 		config.SetAuthType(config.APIKeys)
-		return opts.runAPIKeysLogin(ctx)
+		return opts.runServiceAccountOrAPIKeysLogin(ctx)
+	default:
+		return errors.New("no authentication type selected")
 	}
-
-	config.SetAuthType(config.UserAccount)
-	return opts.runUserAccountLogin(ctx)
 }
 
 func (opts *LoginOpts) checkProfile(ctx context.Context) error {

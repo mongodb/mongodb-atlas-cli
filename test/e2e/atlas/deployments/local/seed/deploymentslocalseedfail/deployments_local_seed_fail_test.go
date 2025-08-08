@@ -33,12 +33,6 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 	}
 
 	req := require.New(t)
-	mode, err := internal.TestRunMode()
-	req.NoError(err)
-
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
 
 	const (
 		deploymentName = "test-seed-fail"

@@ -46,7 +46,10 @@ func TestFlexBackup(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.ProjectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
+	profile, err := g.ProfileData()
+	require.NoError(t, err)
+
+	g.ProjectID = profile["project_id"]
 	generateFlexCluster(t, g)
 
 	clusterName, err := internal.FlexInstanceName()

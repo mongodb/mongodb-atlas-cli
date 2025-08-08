@@ -63,6 +63,8 @@ func TestStreamsWithClusters(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -97,6 +99,8 @@ func TestStreamsWithClusters(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -121,6 +125,8 @@ func TestStreamsWithClusters(t *testing.T) {
 			instanceName,
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

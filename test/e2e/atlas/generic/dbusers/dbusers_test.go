@@ -312,13 +312,16 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		dbusersEntity,
 		"delete",
 		username,
 		"--force",
 		"--authDB",
-		"admin")
+		"admin",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))

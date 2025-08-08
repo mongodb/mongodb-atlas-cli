@@ -195,7 +195,7 @@ func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerato
 		snapshotNameFunc: defaultSnapshotBaseName,
 	}
 
-	p, err := g.profile()
+	p, err := g.ProfileData()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -520,7 +520,7 @@ func SnapshotHashedName(r *http.Request) string {
 	return hash
 }
 
-func (g *AtlasE2ETestGenerator) profile() (map[string]string, error) {
+func (g *AtlasE2ETestGenerator) ProfileData() (map[string]string, error) {
 	buf, err := g.RunCommand(
 		"config",
 		"describe",
@@ -541,7 +541,7 @@ func (g *AtlasE2ETestGenerator) profile() (map[string]string, error) {
 }
 
 func (g *AtlasE2ETestGenerator) maskString(s string) string {
-	p, err := g.profile()
+	p, err := g.ProfileData()
 	if err != nil {
 		g.t.Fatal(err)
 	}

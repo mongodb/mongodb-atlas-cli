@@ -62,6 +62,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		resp, err := cmd.CombinedOutput()
@@ -82,6 +84,8 @@ func TestSearchNodes(t *testing.T) {
 			"--file", "testdata/search_nodes_spec.json",
 			"-w",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -110,6 +114,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -140,6 +146,8 @@ func TestSearchNodes(t *testing.T) {
 			"--file", "testdata/search_nodes_spec_update.json",
 			"-w",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -168,6 +176,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -197,6 +207,8 @@ func TestSearchNodes(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--force",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

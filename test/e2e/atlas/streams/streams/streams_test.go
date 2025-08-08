@@ -57,6 +57,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -85,6 +87,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -112,6 +116,8 @@ func TestStreams(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 
@@ -152,6 +158,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -181,6 +189,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -208,6 +218,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -236,6 +248,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -261,6 +275,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -287,6 +303,8 @@ func TestStreams(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -311,6 +329,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -334,6 +354,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -359,6 +381,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -399,6 +423,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -423,6 +449,8 @@ func TestStreams(t *testing.T) {
 			connectionName,
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -444,6 +472,8 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

@@ -142,7 +142,7 @@ Successfully logged in as test@10gen.com.
 `, buf.String())
 }
 
-func Test_loginOpts_runAPIKeysLogin(t *testing.T) {
+func Test_loginOpts_runServiceAccountOrAPIKeysLogin(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockConfig := NewMockLoginConfig(ctrl)
 	mockAsker := NewMockTrackAsker(ctrl)

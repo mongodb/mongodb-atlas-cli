@@ -48,7 +48,6 @@ type SetSaver interface {
 type LoginConfig interface {
 	SetSaver
 	AccessTokenSubject() (string, error)
-
 	OrgID() string
 	ProjectID() string
 }
@@ -77,18 +76,19 @@ var (
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	cli.DigestConfigOpts
-	AccessToken  string
-	RefreshToken string
-	ClientID     string
-	ClientSecret string
-	IsGov        bool
-	NoBrowser    bool
-	authType     string
-	force        bool
-	SkipConfig   bool
-	config       LoginConfig
-	Asker        TrackAsker
+	AccessToken   string
+	RefreshToken  string
+	ClientID      string
+	ClientSecret  string
+	PublicAPIKey  string
+	PrivateAPIKey string
+	IsGov         bool
+	NoBrowser     bool
+	authType      string
+	force         bool
+	SkipConfig    bool
+	config        LoginConfig
+	Asker         TrackAsker
 }
 
 func (opts *LoginOpts) promptAuthType() error {
@@ -108,28 +108,31 @@ func (opts *LoginOpts) promptAuthType() error {
 }
 
 func (opts *LoginOpts) SetUpAccess() {
+	// Set service
 	switch {
 	case opts.IsGov:
 		opts.Service = config.CloudGovService
 	default:
 		opts.Service = config.CloudService
 	}
+	config.SetService(opts.Service)
 
+	// Set authentication credentials
 	switch opts.authType {
 	case prompt.ServiceAccountAuth:
-		opts.SetUpServiceAndClientCredentials()
+		if opts.ClientID != "" {
+			config.SetClientID(opts.ClientID)
+		}
+		if opts.ClientSecret != "" {
+			config.SetClientSecret(opts.ClientSecret)
+		}
 	case prompt.APIKeysAuth:
-		opts.SetUpServiceAndKeys()
-	}
-}
-
-func (opts *LoginOpts) SetUpServiceAndClientCredentials() {
-	config.SetService(opts.Service)
-	if opts.ClientID != "" {
-		config.SetClientID(opts.ClientID)
-	}
-	if opts.ClientSecret != "" {
-		config.SetClientSecret(opts.ClientSecret)
+		if opts.PublicAPIKey != "" {
+			config.SetPublicAPIKey(opts.PublicAPIKey)
+		}
+		if opts.PrivateAPIKey != "" {
+			config.SetPrivateAPIKey(opts.PrivateAPIKey)
+		}
 	}
 }
 

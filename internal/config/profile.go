@@ -523,8 +523,7 @@ func (p *Profile) SetOutput(v string) {
 	p.Set(output, v)
 }
 
-// IsAccessSet return true if some set of credentials are set have been set up.
-// For Ops Manager we also check for the base URL.
+// IsAccessSet return true if Service Account or API Keys credentials have been set up.
 func IsAccessSet() bool { return Default().IsAccessSet() }
 func (p *Profile) IsAccessSet() bool {
 	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" ||

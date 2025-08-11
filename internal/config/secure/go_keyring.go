@@ -1,6 +1,7 @@
 package secure
 
 import (
+	"errors"
 	"slices"
 
 	"github.com/zalando/go-keyring"
@@ -34,7 +35,12 @@ func (*DefaultKeyringClient) Set(service, user, password string) error {
 }
 
 func (*DefaultKeyringClient) Get(service, user string) (string, error) {
-	return keyring.Get(service, user)
+	value, err := keyring.Get(service, user)
+	if err != nil && !errors.Is(err, keyring.ErrNotFound) {
+		return "", err
+	}
+
+	return value, nil
 }
 
 func (*DefaultKeyringClient) Delete(service, user string) error {
@@ -93,15 +99,22 @@ func NewSecureStoreWithClient(profileNames []string, secureProperties []string, 
 	attemptedToRead := false
 
 	// Load all existing secure properties for all profiles into memory
+outer:
 	for _, profileName := range profileNames {
 		store.cache[profileName] = make(map[string]string)
 		for _, propertyName := range secureProperties {
-			if value, err := keyringClient.Get(createServiceName(profileName), propertyName); err == nil {
-				store.cache[profileName][propertyName] = value
-				available = true
+			attemptedToRead = true
+
+			// Attempt to read the value from the keyring.
+			value, err := keyringClient.Get(createServiceName(profileName), propertyName)
+
+			// If the store returns an error, break the loop.
+			if err != nil {
+				break outer
 			}
 
-			attemptedToRead = true
+			store.cache[profileName][propertyName] = value
+			available = true
 		}
 	}
 

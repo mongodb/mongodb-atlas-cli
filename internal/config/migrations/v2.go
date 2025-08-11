@@ -32,6 +32,10 @@ func NewMigrateToVersion2() MigrationFunc {
 			if err := secureStore.Save(); err != nil {
 				return fmt.Errorf("failed to save secure store: %w", err)
 			}
+
+			if err := insecureStore.Save(); err != nil {
+				return fmt.Errorf("failed to save insecure store: %w", err)
+			}
 		}
 
 		return nil

@@ -19,19 +19,19 @@ func TestNewSecureStore(t *testing.T) {
 
 	// Setup expectations for loading existing values
 	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("existing_public_1", nil)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
 	mockKeyring.EXPECT().Get("atlascli_profile1", "access_token").Return("existing_access_1", nil)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "refresh_token").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "refresh_token").Return("", nil)
 
-	mockKeyring.EXPECT().Get("atlascli_profile2", "public_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile2", "public_api_key").Return("", nil)
 	mockKeyring.EXPECT().Get("atlascli_profile2", "private_api_key").Return("existing_private_2", nil)
-	mockKeyring.EXPECT().Get("atlascli_profile2", "access_token").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile2", "refresh_token").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile2", "access_token").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile2", "refresh_token").Return("", nil)
 
-	mockKeyring.EXPECT().Get("atlascli_profile3", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile3", "private_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile3", "access_token").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile3", "refresh_token").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile3", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile3", "private_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile3", "access_token").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile3", "refresh_token").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 
@@ -65,8 +65,8 @@ func TestKeyringStore_Set(t *testing.T) {
 	secureProperties := []string{"public_api_key", "private_api_key"}
 
 	// Setup expectations for loading (no existing values)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 
@@ -114,8 +114,8 @@ func TestKeyringStore_Get(t *testing.T) {
 	secureProperties := []string{"public_api_key", "private_api_key"}
 
 	// Setup expectations for loading (no existing values)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 
@@ -147,8 +147,8 @@ func TestKeyringStore_DeleteKey(t *testing.T) {
 	secureProperties := []string{"public_api_key", "private_api_key"}
 
 	// Setup expectations for loading (no existing values)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 
@@ -190,10 +190,10 @@ func TestKeyringStore_DeleteProfile(t *testing.T) {
 	secureProperties := []string{"public_api_key", "private_api_key"}
 
 	// Setup expectations for loading (no existing values)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile2", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile2", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile2", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile2", "private_api_key").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 
@@ -226,8 +226,8 @@ func TestKeyringStore_Save(t *testing.T) {
 	secureProperties := []string{"public_api_key", "private_api_key"}
 
 	// Setup expectations for loading (no existing values)
-	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", errors.New("not found"))
-	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", errors.New("not found"))
+	mockKeyring.EXPECT().Get("atlascli_profile1", "public_api_key").Return("", nil)
+	mockKeyring.EXPECT().Get("atlascli_profile1", "private_api_key").Return("", nil)
 
 	store := NewSecureStoreWithClient(profileNames, secureProperties, mockKeyring)
 

@@ -201,12 +201,16 @@ func (s *ViperConfigStore) GetHierarchicalValue(profileName string, propertyName
 }
 
 func (s *ViperConfigStore) SetProfileValue(profileName string, propertyName string, value any) {
-	settings := s.viper.GetStringMap(profileName)
+	// HACK: viper doesn't allow deleting values: https://github.com/spf13/viper/issues/632
+	// Viper was never intended to be used as a key-value store with a save functionality.
+	// Setting the value to `nil` or `""` will not delete the value from the config file.
+	// Setting the value to `struct{}` will delete the value from the config file.
 	if value == nil {
-		delete(settings, propertyName)
-	} else {
-		settings[propertyName] = value
+		value = struct{}{}
 	}
+
+	settings := s.viper.GetStringMap(profileName)
+	settings[propertyName] = value
 	s.viper.Set(profileName, settings)
 }
 

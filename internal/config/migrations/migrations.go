@@ -26,7 +26,9 @@ func NewMigrator(dependencies MigrationDependencies, migrations []MigrationFunc)
 
 func NewDefaultMigrator() *Migrator {
 	dependencies := MigrationDependencies{
-		GetInsecureStore: config.NewDefaultStore,
+		GetInsecureStore: func() (config.Store, error) {
+			return config.NewViperStore(afero.NewOsFs())
+		},
 		GetSecureStore: func() (config.SecureStore, error) {
 			// For migrations, we need to create a temporary insecure store to get profile names
 			// This avoids circular dependency issues
@@ -51,20 +53,30 @@ func (m *Migrator) currentVersion() (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("failed to get store: %w", err)
 	}
-	version, ok := store.GetGlobalValue(VersionKey).(int)
-	if !ok {
-		return 0, errors.New("invalid version type")
+
+	// Get the current version from the store.
+	// It is possible that the version is not set, in which case it could return nil or an empty string.
+	rawVersion := store.GetGlobalValue(VersionKey)
+	if rawVersion == nil || rawVersion == "" {
+		return 1, nil
 	}
+
+	// Convert the version to an int.
+	version, ok := rawVersion.(int)
+	if !ok {
+		return 0, fmt.Errorf("invalid version type: %T", rawVersion)
+	}
+
 	return version, nil
 }
 
-func (m *Migrator) setCurrentVersion(version int) error {
+func (m *Migrator) persistCurrentVersion(version int) error {
 	store, err := m.dependencies.GetInsecureStore()
 	if err != nil {
 		return fmt.Errorf("failed to get store: %w", err)
 	}
 	store.SetGlobalValue(VersionKey, version)
-	return nil
+	return store.Save()
 }
 
 func (m *Migrator) Migrate() error {
@@ -96,7 +108,7 @@ func (m *Migrator) Migrate() error {
 		}
 
 		// In case the migration succeeds, update the config version.
-		if err := m.setCurrentVersion(currentVersion + 1); err != nil {
+		if err := m.persistCurrentVersion(currentVersion + 1); err != nil {
 			return fmt.Errorf("failed to set current config version: %w", err)
 		}
 	}

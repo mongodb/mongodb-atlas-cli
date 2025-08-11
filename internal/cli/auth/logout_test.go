@@ -18,6 +18,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -316,4 +317,36 @@ func mockProjectAndOrgCleanUp(mockConfig *MockConfigDeleter) {
 		EXPECT().
 		SetOrgID("").
 		Times(1)
+}
+
+func TestLogoutBuilder_PreRunE_DefaultConfig(t *testing.T) {
+	cmd := LogoutBuilder()
+
+	// Test that PreRunE uses config.Default() when no profile in context
+	err := cmd.PreRunE(cmd, []string{})
+
+	// Should not error - just sets up the default config
+	require.NoError(t, err)
+}
+
+func TestLogoutBuilder_PreRunE_ProfileFromContext(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := config.NewMockStore(ctrl)
+
+	// Create a test profile
+	testProfile := config.NewProfile("test-profile", mockStore)
+
+	cmd := LogoutBuilder()
+
+	// Add profile to context and execute the command with that context
+	ctx := config.WithProfile(context.Background(), testProfile)
+	cmd.SetContext(ctx)
+
+	mockStore.EXPECT().
+		GetHierarchicalValue("test-profile", gomock.Any()).
+		Return("").
+		AnyTimes()
+
+	err := cmd.PreRunE(cmd, []string{})
+	require.NoError(t, err)
 }

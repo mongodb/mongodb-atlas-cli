@@ -87,6 +87,9 @@ func TestConfig(t *testing.T) {
 		if _, err := c.Send("\x1B[B"); err != nil {
 			t.Fatalf("Send(Down) = %v", err)
 		}
+		if _, err := c.Send("\x1B[B"); err != nil {
+			t.Fatalf("Send(Down) = %v", err)
+		}
 		if _, err := c.SendLine(""); err != nil {
 			t.Fatalf("SendLine() = %v", err)
 		}

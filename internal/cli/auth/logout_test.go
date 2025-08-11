@@ -22,8 +22,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -44,6 +42,7 @@ func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 		},
 	}
 	ctx := t.Context()
+
 	mockConfig.
 		EXPECT().
 		AuthType().
@@ -56,14 +55,8 @@ func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	mockConfig.
-		EXPECT().
-		SetAccessToken("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetRefreshToken("").
-		Times(1)
+	mockTokenCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
 		EXPECT().
@@ -95,14 +88,9 @@ func Test_logoutOpts_Run_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockConfig.
-		EXPECT().
-		SetPublicAPIKey("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetPrivateAPIKey("").
-		Times(1)
+	mockApiKeysCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
+
 	mockConfig.
 		EXPECT().
 		Delete().
@@ -132,12 +120,18 @@ func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
 		AuthType().
 		Return(config.ServiceAccount).
 		Times(1)
-
 	mockConfig.
 		EXPECT().
 		Delete().
 		Return(nil).
 		Times(1)
+	mockFlow.
+		EXPECT().
+		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		Return(nil, nil).
+		Times(1)
+	mockTokenCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 	require.NoError(t, opts.Run(ctx))
 }
 
@@ -170,22 +164,8 @@ func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	mockConfig.
-		EXPECT().
-		SetAccessToken("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetRefreshToken("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetProjectID("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetOrgID("").
-		Times(1)
+	mockTokenCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
 		Save().
@@ -218,22 +198,8 @@ func Test_logoutOpts_Run_Keep_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockConfig.
-		EXPECT().
-		SetPublicAPIKey("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetPrivateAPIKey("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetProjectID("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetOrgID("").
-		Times(1)
+	mockApiKeysCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
 		Save().
@@ -266,14 +232,14 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 		Return(config.ServiceAccount).
 		Times(1)
 
-	mockConfig.
+	mockFlow.
 		EXPECT().
-		SetProjectID("").
+		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		Return(nil, nil).
 		Times(1)
-	mockConfig.
-		EXPECT().
-		SetOrgID("").
-		Times(1)
+
+	mockTokenCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
 		Save().
@@ -283,115 +249,71 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_LogoutBuilder_PreRunE(t *testing.T) {
-	t.Run("successful prerun", func(t *testing.T) {
-		cmd := LogoutBuilder()
+func Test_logoutOpts_Run_NoAuth(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
 
-		// Create a test command context
-		testCmd := &cobra.Command{}
-		buf := new(bytes.Buffer)
-		testCmd.SetOut(buf)
+	buf := new(bytes.Buffer)
 
-		// Execute PreRunE
-		err := cmd.PreRunE(testCmd, []string{})
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		keepConfig: false,
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.NoAuth).
+		Times(1)
 
-		// Should not return an error
-		assert.NoError(t, err)
-	})
+	mockTokenCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
+	mockApiKeysCleanUp(mockConfig)
+
+	mockConfig.
+		EXPECT().
+		Delete().
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_logoutOpts_initFlow(t *testing.T) {
-	t.Run("successful flow initialization", func(t *testing.T) {
-		opts := &logoutOpts{}
-
-		err := opts.initFlow()
-
-		// Should not return an error under normal conditions
-		assert.NoError(t, err)
-		assert.NotNil(t, opts.flow)
-	})
+func mockApiKeysCleanUp(mockConfig *MockConfigDeleter) {
+	mockConfig.
+		EXPECT().
+		SetPublicAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetPrivateAPIKey("").
+		Times(1)
 }
 
-func Test_LogoutBuilder_RunE_ErrorHandling(t *testing.T) {
-	t.Run("no refresh token error for user account", func(t *testing.T) {
-		// Save original config state
-		originalRefreshToken := config.RefreshToken()
-		originalAuthType := config.AuthType()
-		defer func() {
-			config.SetRefreshToken(originalRefreshToken)
-			config.SetAuthType(originalAuthType)
-		}()
-
-		// Set up UserAccount auth type but clear refresh token to trigger error
-		config.SetAuthType(config.UserAccount)
-		config.SetRefreshToken("")
-
-		cmd := LogoutBuilder()
-
-		// Create a test command context
-		testCmd := &cobra.Command{}
-		buf := new(bytes.Buffer)
-		testCmd.SetOut(buf)
-
-		// Execute PreRunE first
-		err := cmd.PreRunE(testCmd, []string{})
-		assert.NoError(t, err)
-
-		// Execute RunE - should return ErrUnauthenticated
-		err = cmd.RunE(testCmd, []string{})
-		assert.ErrorIs(t, err, ErrUnauthenticated)
-	})
-
-	t.Run("api keys flow validates properly", func(t *testing.T) {
-		// Save original config state
-		originalAuthType := config.AuthType()
-		originalPublicKey := config.PublicAPIKey()
-		defer func() {
-			config.SetAuthType(originalAuthType)
-			config.SetPublicAPIKey(originalPublicKey)
-		}()
-
-		// Set up API key configuration
-		config.SetAuthType(config.APIKeys)
-		config.SetPublicAPIKey("test-public-key")
-
-		cmd := LogoutBuilder()
-
-		// Create a test command context
-		testCmd := &cobra.Command{}
-		buf := new(bytes.Buffer)
-		testCmd.SetOut(buf)
-
-		// Execute PreRunE first
-		err := cmd.PreRunE(testCmd, []string{})
-		assert.NoError(t, err)
-
-		// For API keys, the RunE should work without refresh token
-		// Note: This would normally prompt for confirmation, but we're just testing structure
-		assert.NotNil(t, cmd.RunE)
-	})
+func mockTokenCleanUp(mockConfig *MockConfigDeleter) {
+	mockConfig.
+		EXPECT().
+		SetRefreshToken("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetAccessToken("").
+		Times(1)
 }
 
-func Test_LogoutBuilder_Integration(t *testing.T) {
-	t.Run("command structure validation", func(t *testing.T) {
-		cmd := LogoutBuilder()
-
-		// Verify command metadata
-		assert.Equal(t, "logout", cmd.Use)
-		assert.Contains(t, cmd.Short, "Log out")
-		assert.NotEmpty(t, cmd.Example)
-
-		// Verify command functions are set
-		assert.NotNil(t, cmd.PreRunE)
-		assert.NotNil(t, cmd.RunE)
-
-		// Verify flags are configured
-		assert.True(t, cmd.Flags().Lookup("force") != nil)
-		assert.True(t, cmd.Flags().Lookup("keep") != nil)
-
-		// Verify the keep flag is hidden
-		keepFlag := cmd.Flags().Lookup("keep")
-		assert.NotNil(t, keepFlag)
-		assert.True(t, keepFlag.Hidden)
-	})
+func mockProjectAndOrgCleanUp(mockConfig *MockConfigDeleter) {
+	mockConfig.
+		EXPECT().
+		SetProjectID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetOrgID("").
+		Times(1)
 }

@@ -127,6 +127,8 @@ func (opts *CreateOpts) validateAuthType() error {
 		return opts.validateOAuthRequirements()
 	case config.ServiceAccount:
 		return opts.validateOAuthRequirements()
+	case config.NoAuth:
+		fallthrough
 	default:
 		return nil
 	}

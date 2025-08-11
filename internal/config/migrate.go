@@ -32,15 +32,14 @@ func MigrateVersions(store Store) error {
 }
 
 // setAuthTypes sets the auth type for each profile based on the credentials available.
-// Nothing is set if no credentials are found.
+// Sets NoAuth for profiles without authentication.
 func setAuthTypes(store Store, getAuthType func(*Profile) AuthMechanism) {
 	profileNames := store.GetProfileNames()
 	for _, name := range profileNames {
 		profile := NewProfile(name, store)
 		authType := getAuthType(profile)
-		if authType != "" {
-			profile.SetAuthType(authType)
-		}
+		// Always set the auth type, including NoAuth for profiles without authentication
+		profile.SetAuthType(authType)
 	}
 }
 
@@ -53,5 +52,5 @@ func getAuthType(profile *Profile) AuthMechanism {
 	case profile.ClientID() != "" && profile.ClientSecret() != "":
 		return ServiceAccount
 	}
-	return AuthMechanism("") // This should not happen unless profile is not properly initialized.
+	return NoAuth // Profile has no authentication configured
 }

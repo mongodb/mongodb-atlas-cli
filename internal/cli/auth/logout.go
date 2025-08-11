@@ -34,6 +34,7 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
 	SetProjectID(string)
@@ -51,6 +52,7 @@ type Revoker interface {
 
 type logoutOpts struct {
 	*cli.DeleteOpts
+	cli.DefaultSetterOpts
 	OutWriter  io.Writer
 	config     ConfigDeleter
 	flow       Revoker
@@ -66,34 +68,40 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
+	if !opts.Confirm {
+		return nil
+	}
+
 	switch opts.config.AuthType() {
-	case config.APIKeys:
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-	case config.ServiceAccount:
-		fallthrough
-	case config.UserAccount:
-		// revoking a refresh token revokes the access token
+	case config.ServiceAccount, config.UserAccount:
 		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 			return err
 		}
-
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.NoAuth, "": // Just clear any potential leftover credentials
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
 	}
+
+	opts.config.SetProjectID("")
+	opts.config.SetOrgID("")
 
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
 
-	opts.config.SetProjectID("")
-	opts.config.SetOrgID("")
 	return opts.config.Save()
 }
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of account %s\n", " "),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
 	}
 
 	cmd := &cobra.Command{
@@ -105,16 +113,23 @@ func LogoutBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
-			return opts.initFlow()
+
+			// Only initialize OAuth flow if we have OAuth-based auth
+			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
+				return opts.initFlow()
+			}
+
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			var message, entry string
 			var err error
 
-			if opts.config.AuthType() == config.APIKeys {
+			switch opts.config.AuthType() {
+			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()
 				message = "Are you sure you want to log out of account with public API key %s?"
-			} else {
+			case config.ServiceAccount, config.UserAccount:
 				entry, err = config.AccessTokenSubject()
 				if err != nil {
 					return err
@@ -125,6 +140,9 @@ func LogoutBuilder() *cobra.Command {
 				}
 
 				message = "Are you sure you want to log out of account %s?"
+			case config.NoAuth, "":
+				entry = opts.config.Name()
+				message = "Are you sure you want to clear profile %s?"
 			}
 
 			opts.Entry = entry

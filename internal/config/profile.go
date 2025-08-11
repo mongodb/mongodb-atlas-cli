@@ -528,7 +528,6 @@ func (p *Profile) SetOutput(v string) {
 func IsAccessSet() bool { return Default().IsAccessSet() }
 func (p *Profile) IsAccessSet() bool {
 	isSet := p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" ||
-		p.AccessToken() != "" && p.RefreshToken() != "" ||
 		p.ClientID() != "" && p.ClientSecret() != ""
 
 	return isSet

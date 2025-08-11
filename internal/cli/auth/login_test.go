@@ -160,7 +160,7 @@ func Test_loginOpts_runAPIKeysLogin(t *testing.T) {
 	opts.Store = mockStore
 
 	ctx := t.Context()
-	err := opts.runAPIKeysLogin(ctx)
+	err := opts.runServiceAccountOrAPIKeysLogin(ctx)
 	require.NoError(t, err)
 	assert.Contains(t, buf.String(), "Your profile is now configured.")
 }

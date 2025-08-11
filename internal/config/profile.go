@@ -108,6 +108,10 @@ func WithProfile(ctx context.Context, profile *Profile) context.Context {
 
 // Getting a value
 func ProfileFromContext(ctx context.Context) (*Profile, bool) {
+	if ctx == nil {
+		return nil, false
+	}
+
 	profile, ok := ctx.Value(profileContextKey).(*Profile)
 	return profile, ok
 }

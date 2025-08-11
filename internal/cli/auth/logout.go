@@ -112,12 +112,13 @@ func LogoutBuilder() *cobra.Command {
   atlas auth logout
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			opts.OutWriter = cmd.OutOrStdout()
 			// Check if profile was provided and if it exists
 			profile := cmd.Flag(flag.Profile).Value.String()
 			if profile != "" && !config.Exists(profile) {
 				return fmt.Errorf("profile %v does not exist", profile)
 			}
-			opts.OutWriter = cmd.OutOrStdout()
+
 			opts.config = config.Default()
 
 			// Only initialize OAuth flow if we have OAuth-based auth

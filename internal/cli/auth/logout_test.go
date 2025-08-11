@@ -22,6 +22,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -316,4 +317,22 @@ func mockProjectAndOrgCleanUp(mockConfig *MockConfigDeleter) {
 		EXPECT().
 		SetOrgID("").
 		Times(1)
+}
+
+func TestLogoutBuilder_PreRunE_ProfileNotExists(t *testing.T) {
+	cmd := LogoutBuilder()
+
+	// Since profile is a persistent flag from the root command, we need to add it to test
+	cmd.Flags().StringP(flag.Profile, flag.ProfileShort, "", "profile to use")
+
+	// Set the profile flag to a non-existing profile with a very unique name
+	// that's highly unlikely to exist in any test environment
+	nonExistentProfile := "definitely-non-existent-profile-12345"
+	err := cmd.Flags().Set(flag.Profile, nonExistentProfile)
+	require.NoError(t, err)
+
+	// Test that PreRunE returns an error for non-existing profile
+	err = cmd.PreRunE(cmd, []string{})
+	require.Error(t, err, "PreRunE should return error when profile does not exist")
+	require.Contains(t, err.Error(), "profile "+nonExistentProfile+" does not exist")
 }

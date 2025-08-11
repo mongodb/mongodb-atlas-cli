@@ -15,14 +15,17 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"os/exec"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/workflows"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -31,26 +34,29 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 }
 
-func (opts *DeleteOpts) executeLogout() error {
-	// Get the current executable path
-	executable, err := os.Executable()
+func (opts *DeleteOpts) Run(ctx context.Context) error {
+	logout := auth.LogoutBuilder()
+
+	var newArgs []string
+	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
+
+	newArgs, err := workflows.RemoveFlagsAndArgs(nil, map[string]bool{opts.Entry: true}, os.Args)
 	if err != nil {
-		return fmt.Errorf("failed to get executable path: %w", err)
+		return err
 	}
 
-	// Execute: atlas auth logout --profile <profile-name> --force
-	cmd := exec.Command(executable, "auth", "logout", "--profile", opts.Entry, "--force")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	logout.SetArgs(newArgs)
 
-	return cmd.Run()
-}
-
-func (opts *DeleteOpts) Run() error {
-	if !opts.Confirm {
-		return nil
+	// Send profile as a context value to the logout command
+	if err := config.SetName(opts.Entry); err != nil {
+		return err
 	}
-	return opts.executeLogout()
+
+	ctx = config.WithProfile(ctx, config.Default())
+
+	_, _ = log.Debugf("Executing logout with args '%s' and profile '%s'", newArgs, opts.Entry)
+	_, err = logout.ExecuteContextC(ctx)
+	return err
 }
 
 func DeleteBuilder() *cobra.Command {
@@ -78,10 +84,10 @@ func DeleteBuilder() *cobra.Command {
 				return fmt.Errorf("profile %v does not exist", opts.Entry)
 			}
 
-			return opts.Prompt()
+			return nil
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return opts.Run()
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return opts.Run(cmd.Context())
 		},
 	}
 

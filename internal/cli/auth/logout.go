@@ -114,6 +114,12 @@ func LogoutBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
 
+			// If the profile is set in the context, use it instead of the default profile
+			profile, ok := config.ProfileFromContext(cmd.Context())
+			if ok {
+				opts.config = profile
+			}
+
 			// Only initialize OAuth flow if we have OAuth-based auth
 			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
 				return opts.initFlow()

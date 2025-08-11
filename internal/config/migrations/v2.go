@@ -28,10 +28,10 @@ func NewMigrateToVersion2() MigrationFunc {
 		// Migrate secrets from insecure store to the secure store if the secure store is available.
 		if secureStore.Available() {
 			migrateSecrets(insecureStore, secureStore)
-		}
 
-		if err := secureStore.Save(); err != nil {
-			return fmt.Errorf("failed to save secure store: %w", err)
+			if err := secureStore.Save(); err != nil {
+				return fmt.Errorf("failed to save secure store: %w", err)
+			}
 		}
 
 		return nil

@@ -191,3 +191,88 @@ func Test_GetAuthType(t *testing.T) {
 		})
 	}
 }
+
+func Test_MigrateSecrets(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	// Create mock stores
+	mockInsecureStore := config.NewMockStore(ctrl)
+	mockSecureStore := config.NewMockSecureStore(ctrl)
+
+	// Define test profiles
+	profileNames := []string{"profile1", "profile2"}
+
+	// Setup expectations for GetProfileNames
+	mockInsecureStore.EXPECT().GetProfileNames().Return(profileNames)
+
+	// Note: This test verifies that migrateSecrets only processes properties in config.SecureProperties.
+	// If profiles had dummy properties, they would be ignored completely.
+	// We do NOT set up mock expectations for such properties because the function should never
+	// attempt to access them. If it did, the test would fail with "unexpected call" errors.
+
+	// Setup mock expectations for profile1 - all secure properties
+	// public_api_key
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "public_api_key").Return("public1")
+	mockSecureStore.EXPECT().Set("profile1", "public_api_key", "public1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "public_api_key", nil)
+
+	// private_api_key
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "private_api_key").Return("private1")
+	mockSecureStore.EXPECT().Set("profile1", "private_api_key", "private1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "private_api_key", nil)
+
+	// access_token
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "access_token").Return("access1")
+	mockSecureStore.EXPECT().Set("profile1", "access_token", "access1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "access_token", nil)
+
+	// refresh_token
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "refresh_token").Return("refresh1")
+	mockSecureStore.EXPECT().Set("profile1", "refresh_token", "refresh1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "refresh_token", nil)
+
+	// client_id
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "client_id").Return("client1")
+	mockSecureStore.EXPECT().Set("profile1", "client_id", "client1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "client_id", nil)
+
+	// client_secret
+	mockInsecureStore.EXPECT().GetProfileValue("profile1", "client_secret").Return("secret1")
+	mockSecureStore.EXPECT().Set("profile1", "client_secret", "secret1")
+	mockInsecureStore.EXPECT().SetProfileValue("profile1", "client_secret", nil)
+
+	// Setup mock expectations for profile2 - all secure properties
+	// public_api_key
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "public_api_key").Return("public2")
+	mockSecureStore.EXPECT().Set("profile2", "public_api_key", "public2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "public_api_key", nil)
+
+	// private_api_key
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "private_api_key").Return("private2")
+	mockSecureStore.EXPECT().Set("profile2", "private_api_key", "private2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "private_api_key", nil)
+
+	// access_token
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "access_token").Return("access2")
+	mockSecureStore.EXPECT().Set("profile2", "access_token", "access2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "access_token", nil)
+
+	// refresh_token
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "refresh_token").Return("refresh2")
+	mockSecureStore.EXPECT().Set("profile2", "refresh_token", "refresh2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "refresh_token", nil)
+
+	// client_id
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "client_id").Return("client2")
+	mockSecureStore.EXPECT().Set("profile2", "client_id", "client2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "client_id", nil)
+
+	// client_secret
+	mockInsecureStore.EXPECT().GetProfileValue("profile2", "client_secret").Return("secret2")
+	mockSecureStore.EXPECT().Set("profile2", "client_secret", "secret2")
+	mockInsecureStore.EXPECT().SetProfileValue("profile2", "client_secret", nil)
+
+	// Call the function under test
+	migrateSecrets(mockInsecureStore, mockSecureStore)
+}

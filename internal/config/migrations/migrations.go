@@ -27,12 +27,11 @@ func NewMigrator(dependencies MigrationDependencies, migrations []MigrationFunc)
 func NewDefaultMigrator() *Migrator {
 	dependencies := MigrationDependencies{
 		GetInsecureStore: func() (config.Store, error) {
-			return config.NewViperStore(afero.NewOsFs())
+			return config.NewViperStore(afero.NewOsFs(), false)
 		},
 		GetSecureStore: func() (config.SecureStore, error) {
 			// For migrations, we need to create a temporary insecure store to get profile names
-			// This avoids circular dependency issues
-			insecureStore, err := config.NewViperStore(afero.NewOsFs())
+			insecureStore, err := config.NewViperStore(afero.NewOsFs(), false)
 			if err != nil {
 				return nil, fmt.Errorf("failed to create insecure store for migrations: %w", err)
 			}

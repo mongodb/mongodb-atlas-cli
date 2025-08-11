@@ -23,7 +23,7 @@ type ProxyStore struct {
 }
 
 func NewDefaultStore() (Store, error) {
-	insecure, err := NewViperStore(afero.NewOsFs())
+	insecure, err := NewViperStore(afero.NewOsFs(), true)
 
 	if err != nil {
 		return nil, err

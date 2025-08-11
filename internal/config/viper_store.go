@@ -35,7 +35,7 @@ type ViperConfigStore struct {
 }
 
 // ViperConfigStore specific methods
-func NewViperStore(fs afero.Fs) (*ViperConfigStore, error) {
+func NewViperStore(fs afero.Fs, loadEnvVars bool) (*ViperConfigStore, error) {
 	configDir, err := CLIConfigHome()
 	if err != nil {
 		return nil, err
@@ -44,18 +44,19 @@ func NewViperStore(fs afero.Fs) (*ViperConfigStore, error) {
 	v := viper.New()
 
 	v.SetConfigName("config")
-
-	if hasMongoCLIEnvVars() {
-		v.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
-	}
-
 	v.SetConfigType(configType)
 	v.SetConfigPermissions(configPerm)
 	v.AddConfigPath(configDir)
 	v.SetFs(fs)
 
 	v.SetEnvPrefix(AtlasCLIEnvPrefix)
-	v.AutomaticEnv()
+	if loadEnvVars {
+		v.AutomaticEnv()
+
+		if hasMongoCLIEnvVars() {
+			v.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
+		}
+	}
 
 	// aliases only work for a config file, this won't work for env variables
 	v.RegisterAlias(baseURL, OpsManagerURLField)

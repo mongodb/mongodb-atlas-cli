@@ -42,6 +42,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/yuin/goldmark v1.7.12
+	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
 	go.mongodb.org/atlas-sdk/v20250312005 v20250312005.0.0
@@ -76,7 +77,6 @@ require (
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/zalando/go-keyring v0.2.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 )

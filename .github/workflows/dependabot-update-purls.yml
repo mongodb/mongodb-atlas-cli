@@ -23,7 +23,7 @@ jobs:
         app-id: ${{ secrets.APIXBOT_APP_ID }}
         private-key: ${{ secrets.APIXBOT_APP_PEM }}
     - name: Checkout code
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v5
       with:
         ref: ${{ github.head_ref }}
         token: ${{ steps.app-token.outputs.token }}

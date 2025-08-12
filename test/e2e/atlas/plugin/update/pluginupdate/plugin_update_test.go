@@ -35,7 +35,8 @@ func TestPluginUpdate(t *testing.T) {
 
 	_ = internal.TempConfigFolder(t)
 
-	g := internal.NewAtlasE2ETestGenerator(t)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	runPluginUpdateTest(t, g, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")

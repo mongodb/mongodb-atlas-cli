@@ -16,7 +16,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -87,7 +86,7 @@ func Test_logoutOpts_Run_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockApiKeysCleanUp(mockConfig)
+	mockAPIKeysCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
@@ -197,7 +196,7 @@ func Test_logoutOpts_Run_Keep_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockApiKeysCleanUp(mockConfig)
+	mockAPIKeysCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -273,7 +272,7 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 
 	mockTokenCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
-	mockApiKeysCleanUp(mockConfig)
+	mockAPIKeysCleanUp(mockConfig)
 
 	mockConfig.
 		EXPECT().
@@ -284,7 +283,7 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func mockApiKeysCleanUp(mockConfig *MockConfigDeleter) {
+func mockAPIKeysCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetPublicAPIKey("").
@@ -337,7 +336,7 @@ func TestLogoutBuilder_PreRunE_ProfileFromContext(t *testing.T) {
 	cmd := LogoutBuilder()
 
 	// Add profile to context and execute the command with that context
-	ctx := config.WithProfile(context.Background(), testProfile)
+	ctx := config.WithProfile(t.Context(), testProfile)
 	cmd.SetContext(ctx)
 
 	mockStore.EXPECT().

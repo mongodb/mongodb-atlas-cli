@@ -66,7 +66,7 @@ func (m *MockDeploymentOpts) CommonAtlasMocksWithState(projectID string, state s
 		EXPECT().
 		AuthType().
 		Return(config.UserAccount).
-		Times(1)
+		Times(2) //nolint:mnd
 
 	m.MockAtlasClusterListStore.
 		EXPECT().

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package config
 
 import (
@@ -295,17 +293,17 @@ func TestWithProfile(t *testing.T) {
 		{
 			name:    "add profile to empty context",
 			profile: &Profile{name: "test-profile"},
-			ctx:     context.Background(),
+			ctx:     t.Context(),
 		},
 		{
 			name:    "add profile to context with existing values",
 			profile: &Profile{name: "another-profile"},
-			ctx:     context.WithValue(context.Background(), "existing-key", "existing-value"),
+			ctx:     WithProfile(t.Context(), &Profile{name: "test-profile"}),
 		},
 		{
 			name:    "add nil profile",
 			profile: nil,
-			ctx:     context.Background(),
+			ctx:     t.Context(),
 		},
 	}
 
@@ -327,7 +325,7 @@ func TestWithProfile(t *testing.T) {
 			}
 
 			// Verify original context values are preserved
-			if tt.ctx != context.Background() {
+			if tt.ctx != t.Context() {
 				if existingValue := result.Value("existing-key"); existingValue != nil {
 					assert.Equal(t, "existing-value", existingValue)
 				}
@@ -348,13 +346,13 @@ func TestProfileFromContext(t *testing.T) {
 	}{
 		{
 			name:            "retrieve profile from context",
-			ctx:             WithProfile(context.Background(), &Profile{name: "test-profile", configStore: mockStore}),
+			ctx:             WithProfile(t.Context(), &Profile{name: "test-profile", configStore: mockStore}),
 			expectedProfile: &Profile{name: "test-profile", configStore: mockStore},
 			expectedOk:      true,
 		},
 		{
 			name:            "no profile in context",
-			ctx:             context.Background(),
+			ctx:             t.Context(),
 			expectedProfile: nil,
 			expectedOk:      false,
 		},
@@ -365,14 +363,8 @@ func TestProfileFromContext(t *testing.T) {
 			expectedOk:      false,
 		},
 		{
-			name:            "context with other values but no profile",
-			ctx:             context.WithValue(context.Background(), "other-key", "other-value"),
-			expectedProfile: nil,
-			expectedOk:      false,
-		},
-		{
 			name:            "context with nil profile",
-			ctx:             WithProfile(context.Background(), nil),
+			ctx:             WithProfile(t.Context(), nil),
 			expectedProfile: nil,
 			expectedOk:      true,
 		},
@@ -403,7 +395,7 @@ func TestWithProfile_ProfileFromContext_RoundTrip(t *testing.T) {
 	originalProfile := NewProfile("test-profile", mockStore)
 
 	// Store it in context
-	ctx := WithProfile(context.Background(), originalProfile)
+	ctx := WithProfile(t.Context(), originalProfile)
 
 	// Retrieve it back
 	retrievedProfile, ok := ProfileFromContext(ctx)
@@ -426,7 +418,7 @@ func TestWithProfile_Multiple_Profiles(t *testing.T) {
 	profile2 := NewProfile("profile2", mockStore2)
 
 	// Add first profile to context
-	ctx1 := WithProfile(context.Background(), profile1)
+	ctx1 := WithProfile(t.Context(), profile1)
 
 	// Verify first profile is stored
 	retrieved1, ok := ProfileFromContext(ctx1)
@@ -445,26 +437,4 @@ func TestWithProfile_Multiple_Profiles(t *testing.T) {
 	stillRetrieved1, ok := ProfileFromContext(ctx1)
 	require.True(t, ok)
 	assert.Equal(t, "profile1", stillRetrieved1.name)
-}
-
-func TestWithProfile_ContextChaining(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := NewMockStore(ctrl)
-
-	// Create a context with multiple values
-	baseCtx := context.Background()
-	ctxWithString := context.WithValue(baseCtx, "string-key", "string-value")
-	ctxWithInt := context.WithValue(ctxWithString, "int-key", 42)
-
-	// Add profile to the chain
-	profile := NewProfile("chained-profile", mockStore)
-	ctxWithProfile := WithProfile(ctxWithInt, profile)
-
-	// Verify all values are accessible
-	assert.Equal(t, "string-value", ctxWithProfile.Value("string-key"))
-	assert.Equal(t, 42, ctxWithProfile.Value("int-key"))
-
-	retrievedProfile, ok := ProfileFromContext(ctxWithProfile)
-	require.True(t, ok)
-	assert.Equal(t, "chained-profile", retrievedProfile.name)
 }

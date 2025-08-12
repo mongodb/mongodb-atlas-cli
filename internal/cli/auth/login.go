@@ -417,6 +417,7 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
+		Long:  `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.`,
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 `,

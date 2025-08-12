@@ -118,10 +118,10 @@ pkg:golang/golang.org/x/sys@v0.34.0
 pkg:golang/golang.org/x/term@v0.33.0
 pkg:golang/golang.org/x/text@v0.27.0
 pkg:golang/golang.org/x/time@v0.12.0
-pkg:golang/google.golang.org/api@v0.244.0
+pkg:golang/google.golang.org/api@v0.246.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250603155806-513f23925822
 pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250728155136-f173205681a0
 pkg:golang/google.golang.org/genproto@v0.0.0-20250603155806-513f23925822
 pkg:golang/google.golang.org/grpc@v1.74.2
-pkg:golang/google.golang.org/protobuf@v1.36.6
+pkg:golang/google.golang.org/protobuf@v1.36.7
 pkg:golang/gopkg.in/yaml.v3@v3.0.1

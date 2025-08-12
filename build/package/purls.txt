@@ -98,7 +98,7 @@ pkg:golang/github.com/xdg-go/stringprep@v1.0.4
 pkg:golang/github.com/youmark/pkcs8@v0.0.0-20240726163527-a2c0da244d78
 pkg:golang/github.com/yusufpapurcu/wmi@v1.2.4
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
-pkg:golang/go.mongodb.org/atlas-sdk/v20250312005@v20250312005.0.0
+pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.0.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
 pkg:golang/go.mongodb.org/mongo-driver@v1.17.4
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.1.0

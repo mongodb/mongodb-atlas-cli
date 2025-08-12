@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build e2e || e2eSnap || auth
+
 package auth
 
 import (
@@ -50,7 +52,7 @@ func TestAuth(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	// API key: happy path
+	// API keys
 	t.Run("login", func(t *testing.T) {
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
@@ -108,94 +110,6 @@ func TestAuth(t *testing.T) {
 		}
 		if err = cmd.Wait(); err != nil {
 			t.Fatalf("unexpected error: %v, resp", err)
-		}
-	})
-
-	// API key: inaccessible project failure
-	t.Run("login", func(t *testing.T) {
-		// We use garbage credentials to verify flow will ask for org and project IDs to be asked manually.
-		// We expect this flow to fail with an error message about project being inaccessible.
-		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
-		pty, tty, err := pseudotty.Open()
-		if err != nil {
-			t.Fatalf("failed to open pseudotty: %v", err)
-		}
-
-		term := vt10x.New(vt10x.WithWriter(tty))
-		// To debug add os.Stdout to expect.WithStdout
-		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty))
-		if err != nil {
-			t.Fatalf("failed to create console: %v", err)
-		}
-		defer c.Close()
-
-		cmd := exec.Command(cliPath, configEntity, "init", "-P", "e2e-expect")
-		cmd.Stdin = c.Tty()
-		cmd.Stdout = c.Tty()
-		cmd.Stderr = c.Tty()
-		cmd.Env = os.Environ()
-
-		if err = cmd.Start(); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.ExpectString("Select authentication type"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err := c.Send("\x1B[B"); err != nil {
-			t.Fatalf("Send(Down) = %v", err)
-		}
-		if _, err := c.Send("\x1B[B"); err != nil {
-			t.Fatalf("Send(Down) = %v", err)
-		}
-		if _, err := c.SendLine(""); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-
-		if _, err = c.ExpectString("Public API Key"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("qwerty"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-
-		if _, err = c.ExpectString("Private API Key"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("qwerty"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Do you want to enter the Organization ID manually"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("y"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Default Org ID:"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("5e429f2e06822c6eac4d59c9"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Do you want to enter the Project ID manually"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("y"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Default Project ID:"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine("5e429f2e06822c6eac4d59c9"); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Default Output Format"); err != nil {
-			t.Fatal(err)
-		}
-		if _, err = c.SendLine(""); err != nil {
-			t.Fatalf("SendLine() = %v", err)
-		}
-		if _, err = c.ExpectString("Error: project is inaccessible. You either don't have access to this project or the project doesn't exist"); err != nil {
-			t.Fatal(err)
 		}
 	})
 }

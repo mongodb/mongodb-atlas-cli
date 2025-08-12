@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/Netflix/go-expect"
 	pseudotty "github.com/creack/pty"
@@ -30,7 +31,7 @@ import (
 )
 
 const (
-	configEntity = "config"
+	authEntity = "auth"
 )
 
 func TestAuth(t *testing.T) {
@@ -61,13 +62,13 @@ func TestAuth(t *testing.T) {
 
 		term := vt10x.New(vt10x.WithWriter(tty))
 		// To debug add os.Stdout to expect.WithStdout
-		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty))
+		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty), expect.WithDefaultTimeout(time.Minute))
 		if err != nil {
 			t.Fatalf("failed to create console: %v", err)
 		}
 		defer c.Close()
 
-		cmd := exec.Command(cliPath, configEntity, "init", "-P", "e2e-expect")
+		cmd := exec.Command(cliPath, authEntity, "login", "-P", "e2e-expect")
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 		cmd.Stderr = c.Tty()

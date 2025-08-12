@@ -17,6 +17,7 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path"
@@ -283,4 +284,187 @@ func TestProfile_SetName(t *testing.T) {
 			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
 		})
 	}
+}
+
+func TestWithProfile(t *testing.T) {
+	tests := []struct {
+		name    string
+		profile *Profile
+		ctx     context.Context
+	}{
+		{
+			name:    "add profile to empty context",
+			profile: &Profile{name: "test-profile"},
+			ctx:     context.Background(),
+		},
+		{
+			name:    "add profile to context with existing values",
+			profile: &Profile{name: "another-profile"},
+			ctx:     context.WithValue(context.Background(), "existing-key", "existing-value"),
+		},
+		{
+			name:    "add nil profile",
+			profile: nil,
+			ctx:     context.Background(),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := WithProfile(tt.ctx, tt.profile)
+
+			// Verify context is not nil
+			require.NotNil(t, result)
+
+			// Verify the profile was stored correctly
+			storedProfile, ok := result.Value(profileContextKey).(*Profile)
+			if tt.profile == nil {
+				assert.Nil(t, storedProfile)
+			} else {
+				require.True(t, ok)
+				assert.Equal(t, tt.profile, storedProfile)
+				assert.Equal(t, tt.profile.name, storedProfile.name)
+			}
+
+			// Verify original context values are preserved
+			if tt.ctx != context.Background() {
+				if existingValue := result.Value("existing-key"); existingValue != nil {
+					assert.Equal(t, "existing-value", existingValue)
+				}
+			}
+		})
+	}
+}
+
+func TestProfileFromContext(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockStore(ctrl)
+
+	tests := []struct {
+		name            string
+		ctx             context.Context
+		expectedProfile *Profile
+		expectedOk      bool
+	}{
+		{
+			name:            "retrieve profile from context",
+			ctx:             WithProfile(context.Background(), &Profile{name: "test-profile", configStore: mockStore}),
+			expectedProfile: &Profile{name: "test-profile", configStore: mockStore},
+			expectedOk:      true,
+		},
+		{
+			name:            "no profile in context",
+			ctx:             context.Background(),
+			expectedProfile: nil,
+			expectedOk:      false,
+		},
+		{
+			name:            "nil context",
+			ctx:             nil,
+			expectedProfile: nil,
+			expectedOk:      false,
+		},
+		{
+			name:            "context with other values but no profile",
+			ctx:             context.WithValue(context.Background(), "other-key", "other-value"),
+			expectedProfile: nil,
+			expectedOk:      false,
+		},
+		{
+			name:            "context with nil profile",
+			ctx:             WithProfile(context.Background(), nil),
+			expectedProfile: nil,
+			expectedOk:      true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			profile, ok := ProfileFromContext(tt.ctx)
+
+			assert.Equal(t, tt.expectedOk, ok)
+
+			if tt.expectedProfile == nil {
+				assert.Nil(t, profile)
+			} else {
+				require.NotNil(t, profile)
+				assert.Equal(t, tt.expectedProfile.name, profile.name)
+				assert.Equal(t, tt.expectedProfile.configStore, profile.configStore)
+			}
+		})
+	}
+}
+
+func TestWithProfile_ProfileFromContext_RoundTrip(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockStore(ctrl)
+
+	// Create a test profile with some data
+	originalProfile := NewProfile("test-profile", mockStore)
+
+	// Store it in context
+	ctx := WithProfile(context.Background(), originalProfile)
+
+	// Retrieve it back
+	retrievedProfile, ok := ProfileFromContext(ctx)
+
+	// Verify round trip worked
+	require.True(t, ok)
+	require.NotNil(t, retrievedProfile)
+	assert.Equal(t, originalProfile.name, retrievedProfile.name)
+	assert.Equal(t, originalProfile.configStore, retrievedProfile.configStore)
+	assert.Same(t, originalProfile, retrievedProfile) // Should be the exact same object
+}
+
+func TestWithProfile_Multiple_Profiles(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore1 := NewMockStore(ctrl)
+	mockStore2 := NewMockStore(ctrl)
+
+	// Create multiple profiles
+	profile1 := NewProfile("profile1", mockStore1)
+	profile2 := NewProfile("profile2", mockStore2)
+
+	// Add first profile to context
+	ctx1 := WithProfile(context.Background(), profile1)
+
+	// Verify first profile is stored
+	retrieved1, ok := ProfileFromContext(ctx1)
+	require.True(t, ok)
+	assert.Equal(t, "profile1", retrieved1.name)
+
+	// Override with second profile
+	ctx2 := WithProfile(ctx1, profile2)
+
+	// Verify second profile overwrites the first
+	retrieved2, ok := ProfileFromContext(ctx2)
+	require.True(t, ok)
+	assert.Equal(t, "profile2", retrieved2.name)
+
+	// Verify original context still has first profile
+	stillRetrieved1, ok := ProfileFromContext(ctx1)
+	require.True(t, ok)
+	assert.Equal(t, "profile1", stillRetrieved1.name)
+}
+
+func TestWithProfile_ContextChaining(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockStore(ctrl)
+
+	// Create a context with multiple values
+	baseCtx := context.Background()
+	ctxWithString := context.WithValue(baseCtx, "string-key", "string-value")
+	ctxWithInt := context.WithValue(ctxWithString, "int-key", 42)
+
+	// Add profile to the chain
+	profile := NewProfile("chained-profile", mockStore)
+	ctxWithProfile := WithProfile(ctxWithInt, profile)
+
+	// Verify all values are accessible
+	assert.Equal(t, "string-value", ctxWithProfile.Value("string-key"))
+	assert.Equal(t, 42, ctxWithProfile.Value("int-key"))
+
+	retrievedProfile, ok := ProfileFromContext(ctxWithProfile)
+	require.True(t, ok)
+	assert.Equal(t, "chained-profile", retrievedProfile.name)
 }

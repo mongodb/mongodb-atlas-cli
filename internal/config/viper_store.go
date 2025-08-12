@@ -168,7 +168,7 @@ func (s *ViperConfigStore) RenameProfile(oldProfileName string, newProfileName s
 func (s *ViperConfigStore) DeleteProfile(profileName string) error {
 	// Configuration needs to be deleted from toml, as viper doesn't support this yet.
 	// FIXME :: change when https://github.com/spf13/viper/pull/519 is merged.
-	settings := viper.AllSettings()
+	settings := s.viper.AllSettings()
 
 	t, err := toml.TreeFromMap(settings)
 	if err != nil {

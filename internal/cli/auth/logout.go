@@ -34,10 +34,15 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
 	SetProjectID(string)
 	SetOrgID(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
+	AuthType() config.AuthMechanism
+	PublicAPIKey() string
 	Save() error
 }
 
@@ -47,6 +52,7 @@ type Revoker interface {
 
 type logoutOpts struct {
 	*cli.DeleteOpts
+	cli.DefaultSetterOpts
 	OutWriter  io.Writer
 	config     ConfigDeleter
 	flow       Revoker
@@ -62,24 +68,40 @@ func (opts *logoutOpts) initFlow() error {
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
-	// revoking a refresh token revokes the access token
-	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
-		return err
+	if !opts.Confirm {
+		return nil
 	}
+
+	switch opts.config.AuthType() {
+	case config.ServiceAccount, config.UserAccount:
+		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+			return err
+		}
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.NoAuth, "": // Just clear any potential leftover credentials
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	}
+
+	opts.config.SetProjectID("")
+	opts.config.SetOrgID("")
 
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-	opts.config.SetAccessToken("")
-	opts.config.SetRefreshToken("")
-	opts.config.SetProjectID("")
-	opts.config.SetOrgID("")
+
 	return opts.config.Save()
 }
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of account %s\n", " "),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
 	}
 
 	cmd := &cobra.Command{
@@ -91,18 +113,46 @@ func LogoutBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
-			return opts.initFlow()
+
+			// If the profile is set in the context, use it instead of the default profile
+			profile, ok := config.ProfileFromContext(cmd.Context())
+			if ok {
+				opts.config = profile
+			}
+
+			// Only initialize OAuth flow if we have OAuth-based auth
+			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
+				return opts.initFlow()
+			}
+
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if config.RefreshToken() == "" {
-				return ErrUnauthenticated
+			var message, entry string
+			var err error
+
+			switch opts.config.AuthType() {
+			case config.APIKeys:
+				entry = opts.config.PublicAPIKey()
+				message = "Are you sure you want to log out of account with public API key %s?"
+			case config.ServiceAccount, config.UserAccount:
+				entry, err = config.AccessTokenSubject()
+				if err != nil {
+					return err
+				}
+
+				if config.RefreshToken() == "" {
+					return ErrUnauthenticated
+				}
+
+				message = "Are you sure you want to log out of account %s?"
+			case config.NoAuth, "":
+				entry = opts.config.Name()
+				message = "Are you sure you want to clear profile %s?"
 			}
-			s, err := config.AccessTokenSubject()
-			if err != nil {
-				return err
-			}
-			opts.Entry = s
-			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
+
+			opts.Entry = entry
+			if err := opts.PromptWithMessage(message); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

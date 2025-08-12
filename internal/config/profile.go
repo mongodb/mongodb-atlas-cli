@@ -108,6 +108,10 @@ func WithProfile(ctx context.Context, profile *Profile) context.Context {
 
 // Getting a value
 func ProfileFromContext(ctx context.Context) (*Profile, bool) {
+	if ctx == nil {
+		return nil, false
+	}
+
 	profile, ok := ctx.Value(profileContextKey).(*Profile)
 	return profile, ok
 }
@@ -281,6 +285,7 @@ const (
 	APIKeys        AuthMechanism = "api_keys"
 	UserAccount    AuthMechanism = "user_account"
 	ServiceAccount AuthMechanism = "service_account"
+	NoAuth         AuthMechanism = "no_auth"
 )
 
 // AuthType gets the configured auth type.

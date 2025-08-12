@@ -88,7 +88,7 @@ Options
    * - --status
      - string
      - false
-     - Status of the alerts to return. Omit to return all alerts in all statuses.
+     - Status of the alerts to return. Omit this parameter to return all alerts in all statuses. TRACKING indicates the alert condition exists but has not persisted for the minimum notification delay. OPEN indicates the alert condition currently exists. CLOSED indicates the alert condition has been resolved.
    * - --version
      - string
      - false

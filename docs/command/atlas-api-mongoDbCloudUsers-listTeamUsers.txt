@@ -90,6 +90,10 @@ Options
      - string
      - true
      - Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.
+   * - --userId
+     - string
+     - false
+     - Unique 24-hexadecimal digit string to filter users by. Not supported in deprecated versions.
    * - --username
      - string
      - false

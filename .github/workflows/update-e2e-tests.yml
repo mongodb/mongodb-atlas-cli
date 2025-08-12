@@ -196,7 +196,7 @@ jobs:
           labels: update-snapshots
   pr:
     runs-on: ubuntu-latest
-    if: always() && github.event_name != 'pull_request'
+    if: success() && github.event_name != 'pull_request'
     needs: update-tests
     steps:
       - name: Checkout repository
@@ -284,3 +284,59 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+  report:
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name != 'pull_request'
+    needs: update-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Find JIRA ticket
+        id: find
+        uses: mongodb/apix-action/find-jira@v12
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Failed to update test snapshots"
+      - name: Comment JIRA ticket
+        if: steps.find.outputs.found == 'true'
+        uses: mongodb/apix-action/comment-jira@v12
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          issue-key: ${{ steps.find.outputs.issue-key }}
+          comment: |
+            Another attempt to update test snapshots failed.
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      - name: Create JIRA ticket
+        uses: mongodb/apix-action/create-jira@v12
+        id: create
+        if: steps.find.outputs.found == 'false'
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "[AtlasCLI] Failed to update test snapshots"
+          issuetype: Investigation
+          description: |
+            Failed to update test snapshots
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          components: AtlasCLI
+          assignee: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          extra-data: |
+            {
+              "fields": {
+                "fixVersions": [
+                  {
+                    "id": "41805"
+                  }
+                ],
+                "customfield_12751": [
+                  {
+                    "id": "22223"
+                  }
+                ],
+                "customfield_10257": {
+                  "id": "11861"
+                }
+              }
+            }

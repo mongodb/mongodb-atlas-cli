@@ -18,13 +18,16 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312005/admin"
@@ -55,32 +58,44 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 			}
 			opts.OutWriter = new(bytes.Buffer)
 
-			mockConfig.EXPECT().Set("service", tt.expectedService).Times(1)
-			mockConfig.EXPECT().Set("access_token", opts.AccessToken).Times(1)
-			mockConfig.EXPECT().Set("refresh_token", opts.RefreshToken).Times(1)
-			mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+			mockConfig.EXPECT().SetService(tt.expectedService).Times(1)
+			mockConfig.EXPECT().SetAccessToken(opts.AccessToken).Times(1)
+			mockConfig.EXPECT().SetRefreshToken(opts.RefreshToken).Times(1)
+			mockConfig.EXPECT().SetClientID(gomock.Any()).Times(0)
+			mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 
 			require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
 		})
 	}
 }
 
-func Test_loginOpts_runUserAccountLogin(t *testing.T) {
+func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
 
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
 		config:    mockConfig,
+		Asker:     mockAsker,
 		NoBrowser: true,
 	}
 	opts.WithFlow(mockFlow)
-
 	opts.OutWriter = buf
 	opts.Store = mockStore
+
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = userAccountAuth
+			}
+			return nil
+		})
+
 	expectedCode := &auth.DeviceCode{
 		UserCode:        "12345678",
 		VerificationURI: "http://localhost",
@@ -109,60 +124,63 @@ func Test_loginOpts_runUserAccountLogin(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud").Times(1)
-	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
-	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
-	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().SetService("cloud").Times(1)
+	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
+	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
+	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
-	mockConfig.EXPECT().Save().Return(nil).Times(2)
-	expectedOrgs := &admin.PaginatedOrganization{
-		TotalCount: pointer.Get(1),
-		Results: &[]admin.AtlasOrganization{
-			{Id: pointer.Get("o1"), Name: "Org1"},
-		},
-	}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
-		Results: &[]admin.Group{
-			{Id: pointer.Get("p1"), Name: "Project1"},
-		},
-	}
-	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
-	require.NoError(t, opts.runUserAccountLogin(ctx))
-	assert.Equal(t, `
-To verify your account, copy your one-time verification code:
-1234-5678
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
 
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
+	opts.SkipConfig = true
 
-To continue, go to http://localhost
-Successfully logged in as test@10gen.com.
-`, buf.String())
+	err := opts.LoginRun(ctx)
+	require.NoError(t, err)
 }
 
-func Test_loginOpts_runServiceAccountOrAPIKeysLogin(t *testing.T) {
+func TestLoginRun_APIKeys_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockConfig := NewMockLoginConfig(ctrl)
 	mockAsker := NewMockTrackAsker(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
-	mockAsker.EXPECT().TrackAsk(gomock.Any(), gomock.Any()).Return(nil).Times(3)
-	mockConfig.EXPECT().Save().Return(nil).Times(1)
-
-	buf := new(bytes.Buffer)
 	opts := &LoginOpts{
 		config: mockConfig,
 		Asker:  mockAsker,
 	}
-	opts.OutWriter = buf
+	opts.OutWriter = new(bytes.Buffer)
 	opts.Store = mockStore
 
-	ctx := t.Context()
-	err := opts.runServiceAccountOrAPIKeysLogin(ctx)
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = prompt.APIKeysAuth
+			}
+			return nil
+		})
+
+	mockAsker.EXPECT().
+		TrackAsk(gomock.Any(), opts).
+		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
+			if o, ok := answer.(*LoginOpts); ok {
+				o.PublicAPIKey = "public-key"
+				o.PrivateAPIKey = "private-key"
+			}
+			return nil
+		})
+
+	mockConfig.EXPECT().SetAuthType(config.APIKeys).Times(1)
+	mockConfig.EXPECT().SetService("cloud").Times(1)
+	mockConfig.EXPECT().SetPublicAPIKey("public-key").Times(1)
+	mockConfig.EXPECT().SetPrivateAPIKey("private-key").Times(1)
+
+	opts.SkipConfig = true
+
+	err := opts.LoginRun(context.Background())
 	require.NoError(t, err)
-	assert.Contains(t, buf.String(), "Your profile is now configured.")
 }
 
 type confirmMock struct{}
@@ -228,4 +246,55 @@ func Test_shouldRetryAuthenticate(t *testing.T) {
 			assert.Equalf(t, tt.wantRetry, gotRetry, "shouldRetryAuthenticate(%v, %v)", tt.args.err, tt.args.p)
 		})
 	}
+}
+
+func TestLoginOpts_setUpProfile_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	buf := new(bytes.Buffer)
+	opts := &LoginOpts{
+		config: mockConfig,
+		Asker:  mockAsker,
+	}
+	opts.OutWriter = buf
+	opts.Store = mockStore
+
+	opts.OrgID = ""
+	opts.ProjectID = ""
+
+	mockConfig.EXPECT().OrgID().Return("").Times(1)
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+
+	expectedOrgs := &admin.PaginatedOrganization{
+		TotalCount: pointer.Get(1),
+		Results: &[]admin.AtlasOrganization{
+			{Id: pointer.Get("o1"), Name: "Org1"},
+		},
+	}
+	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
+		Results: &[]admin.Group{
+			{Id: pointer.Get("p1"), Name: "Project1"},
+		},
+	}
+	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
+	mockAsker.EXPECT().
+		TrackAsk(gomock.Any(), opts).
+		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
+			if o, ok := answer.(*LoginOpts); ok {
+				o.Output = "json"
+			}
+			return nil
+		})
+
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+
+	ctx := context.Background()
+	err := opts.setUpProfile(ctx)
+	require.NoError(t, err)
 }

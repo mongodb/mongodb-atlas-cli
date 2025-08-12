@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
@@ -34,6 +35,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
 
 	buf := new(bytes.Buffer)
 	ctx := t.Context()
@@ -43,6 +45,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.config = mockConfig
 	opts.OutWriter = buf
 	opts.Store = mockStore
+	opts.Asker = mockAsker
 	opts.WithFlow(mockFlow)
 
 	expectedCode := &auth.DeviceCode{
@@ -78,14 +81,15 @@ func Test_registerOpts_Run(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().Set("service", "cloud").Times(1)
-	mockConfig.EXPECT().Set("access_token", "asdf").Times(1)
-	mockConfig.EXPECT().Set("refresh_token", "querty").Times(1)
-	mockConfig.EXPECT().Set("ops_manager_url", gomock.Any()).Times(0)
+	mockConfig.EXPECT().SetService("cloud").Times(1)
+	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
+	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
+	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
+
 	expectedOrgs := &admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
 		Results: &[]admin.AtlasOrganization{
@@ -107,6 +111,15 @@ func Test_registerOpts_Run(t *testing.T) {
 		GetOrgProjects("o1", gomock.Any()).
 		Return(expectedProjects, nil).
 		Times(1)
+
+	mockAsker.EXPECT().
+		TrackAsk(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
+			if o, ok := answer.(*LoginOpts); ok {
+				o.Output = "json"
+			}
+			return nil
+		})
 
 	require.NoError(t, opts.RegisterRun(ctx))
 	assert.Equal(t, `

@@ -61,12 +61,12 @@ func (m *Migrator) currentVersion() (int, error) {
 	}
 
 	// Convert the version to an int.
-	version, ok := rawVersion.(int)
+	version, ok := rawVersion.(int64)
 	if !ok {
 		return 0, fmt.Errorf("invalid version type: %T", rawVersion)
 	}
 
-	return version, nil
+	return int(version), nil
 }
 
 func (m *Migrator) persistCurrentVersion(version int) error {

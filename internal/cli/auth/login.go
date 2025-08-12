@@ -40,7 +40,17 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig,TrackAsker
 
 type SetSaver interface {
-	Set(string, any)
+	SetAuthType(config.AuthMechanism)
+	SetAccessToken(string)
+	SetRefreshToken(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
+	SetClientID(string)
+	SetClientSecret(string)
+	SetOrgID(string)
+	SetProjectID(string)
+	SetOpsManagerURL(string)
+	SetService(string)
 	Save() error
 	SetGlobal(string, any)
 }
@@ -59,33 +69,36 @@ type TrackAsker interface {
 
 const (
 	userAccountAuth = "UserAccount"
-	apiKeysAuth     = "APIKeys"
 	atlasName       = "atlas"
 )
 
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, apiKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
-		userAccountAuth: "(best for getting started)",
-		apiKeysAuth:     "(for existing automations)",
+		userAccountAuth:           "(best for getting started)",
+		prompt.ServiceAccountAuth: "(best for automation)",
+		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	cli.DigestConfigOpts
-	AccessToken  string
-	RefreshToken string
-	IsGov        bool
-	NoBrowser    bool
-	authType     string
-	force        bool
-	SkipConfig   bool
-	config       LoginConfig
-	Asker        TrackAsker
+	AccessToken   string
+	RefreshToken  string
+	ClientID      string
+	ClientSecret  string
+	PublicAPIKey  string
+	PrivateAPIKey string
+	IsGov         bool
+	NoBrowser     bool
+	authType      string
+	force         bool
+	SkipConfig    bool
+	config        LoginConfig
+	Asker         TrackAsker
 }
 
 func (opts *LoginOpts) promptAuthType() error {
@@ -104,18 +117,32 @@ func (opts *LoginOpts) promptAuthType() error {
 	return opts.Asker.TrackAskOne(authTypePrompt, &opts.authType)
 }
 
-func (opts *LoginOpts) SetUpAccess() {
-	switch {
-	case opts.IsGov:
-		opts.Service = config.CloudGovService
-	default:
-		opts.Service = config.CloudService
+func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
+	if err := opts.oauthFlow(ctx); err != nil {
+		return err
+	}
+	// Sync config with OAuth tokens
+	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
+		return err
+	}
+	s, err := opts.config.AccessTokenSubject()
+	if err != nil {
+		return err
 	}
 
-	opts.SetUpServiceAndKeys()
+	if err := opts.checkProfile(ctx); err != nil {
+		return err
+	}
+
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+
+	return nil
 }
 
-func (opts *LoginOpts) runAPIKeysLogin(ctx context.Context) error {
+func (opts *LoginOpts) setProgrammaticCredentials() error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
@@ -124,47 +151,54 @@ Enter [?] on any option to get help.
 
 `, atlasName)
 
-	q := prompt.AccessQuestions()
+	q := prompt.AccessQuestions(opts.authType)
 	if err := opts.Asker.TrackAsk(q, opts); err != nil {
 		return err
 	}
-	opts.SetUpAccess()
 
-	if err := opts.InitStore(ctx); err != nil {
-		return err
-	}
+	opts.setUpAccess()
 
-	if config.IsAccessSet() {
-		if err := opts.AskOrg(); err != nil {
-			return err
-		}
-		if err := opts.AskProject(); err != nil {
-			return err
-		}
-	} else {
-		q := prompt.TenantQuestions()
-		if err := opts.Asker.TrackAsk(q, opts); err != nil {
-			return err
-		}
-	}
-	opts.SetUpProject()
-	opts.SetUpOrg()
-
-	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
-		return err
-	}
-	opts.SetUpOutput()
-
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
-
-	_, _ = fmt.Fprintf(opts.OutWriter, "\nYour profile is now configured.\n")
-	if config.Name() != config.DefaultProfile {
-		_, _ = fmt.Fprintf(opts.OutWriter, "To use this profile, you must set the flag [-%s %s] for every command.\n", flag.ProfileShort, config.Name())
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "You can use [%s config set] to change these settings at a later time.\n", atlasName)
 	return nil
+}
+
+func (opts *LoginOpts) setUpCredentials(ctx context.Context) error {
+	switch opts.authType {
+	case userAccountAuth:
+		return opts.setUserAccountCredentials(ctx)
+	case prompt.ServiceAccountAuth, prompt.APIKeysAuth:
+		return opts.setProgrammaticCredentials()
+	default:
+		return errors.New("no authentication type selected")
+	}
+}
+
+func (opts *LoginOpts) setUpAccess() {
+	// Set service
+	switch {
+	case opts.IsGov:
+		opts.Service = config.CloudGovService
+	default:
+		opts.Service = config.CloudService
+	}
+	opts.config.SetService(opts.Service)
+
+	// Set authentication credentials
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		if opts.ClientID != "" {
+			opts.config.SetClientID(opts.ClientID)
+		}
+		if opts.ClientSecret != "" {
+			opts.config.SetClientSecret(opts.ClientSecret)
+		}
+	case prompt.APIKeysAuth:
+		if opts.PublicAPIKey != "" {
+			opts.config.SetPublicAPIKey(opts.PublicAPIKey)
+		}
+		if opts.PrivateAPIKey != "" {
+			opts.config.SetPrivateAPIKey(opts.PrivateAPIKey)
+		}
+	}
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -179,22 +213,22 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		default:
 			opts.Service = config.CloudService
 		}
-		opts.config.Set("service", opts.Service)
+		opts.config.SetService(opts.Service)
 
 		if opts.AccessToken != "" {
-			opts.config.Set(config.AccessTokenField, opts.AccessToken)
+			opts.config.SetAccessToken(opts.AccessToken)
 		}
 		if opts.RefreshToken != "" {
-			opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
+			opts.config.SetRefreshToken(opts.RefreshToken)
 		}
 		if config.ClientID() != "" {
-			opts.config.Set(config.ClientIDField, config.ClientID())
+			opts.config.SetClientID(config.ClientID())
 		}
 
 		// sync OpsManagerURL from command opts (higher priority)
 		// and OpsManagerURL from default profile
 		if opts.OpsManagerURL != "" {
-			opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
+			opts.config.SetOpsManagerURL(opts.OpsManagerURL)
 		}
 		if config.OpsManagerURL() != "" {
 			opts.OpsManagerURL = config.OpsManagerURL()
@@ -204,29 +238,25 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 	}
 }
 
-func (opts *LoginOpts) runUserAccountLogin(ctx context.Context) error {
-	if err := opts.oauthFlow(ctx); err != nil {
-		return err
-	}
-	// oauth config might have changed,
-	// re-sync config profile with login opts
-	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
-		return err
+func (opts *LoginOpts) LoginRun(ctx context.Context) error {
+	if err := opts.promptAuthType(); err != nil {
+		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
-	s, err := opts.config.AccessTokenSubject()
-	if err != nil {
-		return err
+	switch opts.authType {
+	case userAccountAuth:
+		opts.config.SetAuthType(config.UserAccount)
+	case prompt.ServiceAccountAuth:
+		opts.config.SetAuthType(config.ServiceAccount)
+	case prompt.APIKeysAuth:
+		opts.config.SetAuthType(config.APIKeys)
+	default:
+		return errors.New("no authentication type selected")
 	}
 
-	if err := opts.checkProfile(ctx); err != nil {
+	if err := opts.setUpCredentials(ctx); err != nil {
 		return err
 	}
-
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
 	if opts.SkipConfig {
 		return nil
@@ -243,30 +273,16 @@ func (opts *LoginOpts) runUserAccountLogin(ctx context.Context) error {
 	return nil
 }
 
-func (opts *LoginOpts) LoginRun(ctx context.Context) error {
-	if err := opts.promptAuthType(); err != nil {
-		return fmt.Errorf("failed to select authentication type: %w", err)
-	}
-
-	if opts.authType == apiKeysAuth {
-		config.SetAuthType(config.APIKeys)
-		return opts.runAPIKeysLogin(ctx)
-	}
-
-	config.SetAuthType(config.UserAccount)
-	return opts.runUserAccountLogin(ctx)
-}
-
 func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 	if err := opts.InitStore(ctx); err != nil {
 		return err
 	}
 	if opts.config.OrgID() != "" && !opts.OrgExists(opts.config.OrgID()) {
-		opts.config.Set("org_id", "")
+		opts.config.SetOrgID("")
 	}
 
 	if opts.config.ProjectID() != "" && !opts.ProjectExists(opts.config.ProjectID()) {
-		opts.config.Set("project_id", "")
+		opts.config.SetProjectID("")
 	}
 	return nil
 }
@@ -297,6 +313,19 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	}
 	opts.SetUpProject()
 
+	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+		return err
+	}
+	opts.SetUpOutput()
+
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+
+	return opts.validateOrgAndProject()
+}
+
+func (opts *LoginOpts) validateOrgAndProject() error {
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		if !opts.ProjectExists(opts.config.ProjectID()) {
@@ -312,8 +341,7 @@ You have successfully configured your profile.
 You can use [atlas config set] to change your profile settings later.
 `)
 	}
-
-	return opts.config.Save()
+	return nil
 }
 
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
@@ -398,7 +426,8 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 		// ignore expired tokens since logging in
 		if err := opts.RefreshAccessToken(ctx); err != nil {
 			// clean up any expired or invalid tokens
-			opts.config.Set(config.AccessTokenField, "")
+			opts.config.SetAccessToken(
+				"")
 
 			if !commonerrors.IsInvalidRefreshToken(err) {
 				return err

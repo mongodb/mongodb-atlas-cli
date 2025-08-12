@@ -13,6 +13,7 @@ import (
 	reflect "reflect"
 
 	survey "github.com/AlecAivazis/survey/v2"
+	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -193,38 +194,146 @@ func (c *MockLoginConfigSaveCall) DoAndReturn(f func() error) *MockLoginConfigSa
 	return c
 }
 
-// Set mocks base method.
-func (m *MockLoginConfig) Set(arg0 string, arg1 any) {
+// SetAccessToken mocks base method.
+func (m *MockLoginConfig) SetAccessToken(arg0 string) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Set", arg0, arg1)
+	m.ctrl.Call(m, "SetAccessToken", arg0)
 }
 
-// Set indicates an expected call of Set.
-func (mr *MockLoginConfigMockRecorder) Set(arg0, arg1 any) *MockLoginConfigSetCall {
+// SetAccessToken indicates an expected call of SetAccessToken.
+func (mr *MockLoginConfigMockRecorder) SetAccessToken(arg0 any) *MockLoginConfigSetAccessTokenCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockLoginConfig)(nil).Set), arg0, arg1)
-	return &MockLoginConfigSetCall{Call: call}
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAccessToken", reflect.TypeOf((*MockLoginConfig)(nil).SetAccessToken), arg0)
+	return &MockLoginConfigSetAccessTokenCall{Call: call}
 }
 
-// MockLoginConfigSetCall wrap *gomock.Call
-type MockLoginConfigSetCall struct {
+// MockLoginConfigSetAccessTokenCall wrap *gomock.Call
+type MockLoginConfigSetAccessTokenCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockLoginConfigSetCall) Return() *MockLoginConfigSetCall {
+func (c *MockLoginConfigSetAccessTokenCall) Return() *MockLoginConfigSetAccessTokenCall {
 	c.Call = c.Call.Return()
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockLoginConfigSetCall) Do(f func(string, any)) *MockLoginConfigSetCall {
+func (c *MockLoginConfigSetAccessTokenCall) Do(f func(string)) *MockLoginConfigSetAccessTokenCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockLoginConfigSetCall) DoAndReturn(f func(string, any)) *MockLoginConfigSetCall {
+func (c *MockLoginConfigSetAccessTokenCall) DoAndReturn(f func(string)) *MockLoginConfigSetAccessTokenCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetAuthType mocks base method.
+func (m *MockLoginConfig) SetAuthType(arg0 config.AuthMechanism) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAuthType", arg0)
+}
+
+// SetAuthType indicates an expected call of SetAuthType.
+func (mr *MockLoginConfigMockRecorder) SetAuthType(arg0 any) *MockLoginConfigSetAuthTypeCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthType", reflect.TypeOf((*MockLoginConfig)(nil).SetAuthType), arg0)
+	return &MockLoginConfigSetAuthTypeCall{Call: call}
+}
+
+// MockLoginConfigSetAuthTypeCall wrap *gomock.Call
+type MockLoginConfigSetAuthTypeCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetAuthTypeCall) Return() *MockLoginConfigSetAuthTypeCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetAuthTypeCall) Do(f func(config.AuthMechanism)) *MockLoginConfigSetAuthTypeCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetAuthTypeCall) DoAndReturn(f func(config.AuthMechanism)) *MockLoginConfigSetAuthTypeCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetClientID mocks base method.
+func (m *MockLoginConfig) SetClientID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetClientID", arg0)
+}
+
+// SetClientID indicates an expected call of SetClientID.
+func (mr *MockLoginConfigMockRecorder) SetClientID(arg0 any) *MockLoginConfigSetClientIDCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetClientID", reflect.TypeOf((*MockLoginConfig)(nil).SetClientID), arg0)
+	return &MockLoginConfigSetClientIDCall{Call: call}
+}
+
+// MockLoginConfigSetClientIDCall wrap *gomock.Call
+type MockLoginConfigSetClientIDCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetClientIDCall) Return() *MockLoginConfigSetClientIDCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetClientIDCall) Do(f func(string)) *MockLoginConfigSetClientIDCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetClientIDCall) DoAndReturn(f func(string)) *MockLoginConfigSetClientIDCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetClientSecret mocks base method.
+func (m *MockLoginConfig) SetClientSecret(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetClientSecret", arg0)
+}
+
+// SetClientSecret indicates an expected call of SetClientSecret.
+func (mr *MockLoginConfigMockRecorder) SetClientSecret(arg0 any) *MockLoginConfigSetClientSecretCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetClientSecret", reflect.TypeOf((*MockLoginConfig)(nil).SetClientSecret), arg0)
+	return &MockLoginConfigSetClientSecretCall{Call: call}
+}
+
+// MockLoginConfigSetClientSecretCall wrap *gomock.Call
+type MockLoginConfigSetClientSecretCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetClientSecretCall) Return() *MockLoginConfigSetClientSecretCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetClientSecretCall) Do(f func(string)) *MockLoginConfigSetClientSecretCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetClientSecretCall) DoAndReturn(f func(string)) *MockLoginConfigSetClientSecretCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -261,6 +370,258 @@ func (c *MockLoginConfigSetGlobalCall) Do(f func(string, any)) *MockLoginConfigS
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockLoginConfigSetGlobalCall) DoAndReturn(f func(string, any)) *MockLoginConfigSetGlobalCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetOpsManagerURL mocks base method.
+func (m *MockLoginConfig) SetOpsManagerURL(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetOpsManagerURL", arg0)
+}
+
+// SetOpsManagerURL indicates an expected call of SetOpsManagerURL.
+func (mr *MockLoginConfigMockRecorder) SetOpsManagerURL(arg0 any) *MockLoginConfigSetOpsManagerURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpsManagerURL", reflect.TypeOf((*MockLoginConfig)(nil).SetOpsManagerURL), arg0)
+	return &MockLoginConfigSetOpsManagerURLCall{Call: call}
+}
+
+// MockLoginConfigSetOpsManagerURLCall wrap *gomock.Call
+type MockLoginConfigSetOpsManagerURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetOpsManagerURLCall) Return() *MockLoginConfigSetOpsManagerURLCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetOpsManagerURLCall) Do(f func(string)) *MockLoginConfigSetOpsManagerURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetOpsManagerURLCall) DoAndReturn(f func(string)) *MockLoginConfigSetOpsManagerURLCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetOrgID mocks base method.
+func (m *MockLoginConfig) SetOrgID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetOrgID", arg0)
+}
+
+// SetOrgID indicates an expected call of SetOrgID.
+func (mr *MockLoginConfigMockRecorder) SetOrgID(arg0 any) *MockLoginConfigSetOrgIDCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOrgID", reflect.TypeOf((*MockLoginConfig)(nil).SetOrgID), arg0)
+	return &MockLoginConfigSetOrgIDCall{Call: call}
+}
+
+// MockLoginConfigSetOrgIDCall wrap *gomock.Call
+type MockLoginConfigSetOrgIDCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetOrgIDCall) Return() *MockLoginConfigSetOrgIDCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetOrgIDCall) Do(f func(string)) *MockLoginConfigSetOrgIDCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetOrgIDCall) DoAndReturn(f func(string)) *MockLoginConfigSetOrgIDCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetPrivateAPIKey mocks base method.
+func (m *MockLoginConfig) SetPrivateAPIKey(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetPrivateAPIKey", arg0)
+}
+
+// SetPrivateAPIKey indicates an expected call of SetPrivateAPIKey.
+func (mr *MockLoginConfigMockRecorder) SetPrivateAPIKey(arg0 any) *MockLoginConfigSetPrivateAPIKeyCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPrivateAPIKey", reflect.TypeOf((*MockLoginConfig)(nil).SetPrivateAPIKey), arg0)
+	return &MockLoginConfigSetPrivateAPIKeyCall{Call: call}
+}
+
+// MockLoginConfigSetPrivateAPIKeyCall wrap *gomock.Call
+type MockLoginConfigSetPrivateAPIKeyCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetPrivateAPIKeyCall) Return() *MockLoginConfigSetPrivateAPIKeyCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetPrivateAPIKeyCall) Do(f func(string)) *MockLoginConfigSetPrivateAPIKeyCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetPrivateAPIKeyCall) DoAndReturn(f func(string)) *MockLoginConfigSetPrivateAPIKeyCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetProjectID mocks base method.
+func (m *MockLoginConfig) SetProjectID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetProjectID", arg0)
+}
+
+// SetProjectID indicates an expected call of SetProjectID.
+func (mr *MockLoginConfigMockRecorder) SetProjectID(arg0 any) *MockLoginConfigSetProjectIDCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetProjectID", reflect.TypeOf((*MockLoginConfig)(nil).SetProjectID), arg0)
+	return &MockLoginConfigSetProjectIDCall{Call: call}
+}
+
+// MockLoginConfigSetProjectIDCall wrap *gomock.Call
+type MockLoginConfigSetProjectIDCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetProjectIDCall) Return() *MockLoginConfigSetProjectIDCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetProjectIDCall) Do(f func(string)) *MockLoginConfigSetProjectIDCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetProjectIDCall) DoAndReturn(f func(string)) *MockLoginConfigSetProjectIDCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetPublicAPIKey mocks base method.
+func (m *MockLoginConfig) SetPublicAPIKey(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetPublicAPIKey", arg0)
+}
+
+// SetPublicAPIKey indicates an expected call of SetPublicAPIKey.
+func (mr *MockLoginConfigMockRecorder) SetPublicAPIKey(arg0 any) *MockLoginConfigSetPublicAPIKeyCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPublicAPIKey", reflect.TypeOf((*MockLoginConfig)(nil).SetPublicAPIKey), arg0)
+	return &MockLoginConfigSetPublicAPIKeyCall{Call: call}
+}
+
+// MockLoginConfigSetPublicAPIKeyCall wrap *gomock.Call
+type MockLoginConfigSetPublicAPIKeyCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetPublicAPIKeyCall) Return() *MockLoginConfigSetPublicAPIKeyCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetPublicAPIKeyCall) Do(f func(string)) *MockLoginConfigSetPublicAPIKeyCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetPublicAPIKeyCall) DoAndReturn(f func(string)) *MockLoginConfigSetPublicAPIKeyCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetRefreshToken mocks base method.
+func (m *MockLoginConfig) SetRefreshToken(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetRefreshToken", arg0)
+}
+
+// SetRefreshToken indicates an expected call of SetRefreshToken.
+func (mr *MockLoginConfigMockRecorder) SetRefreshToken(arg0 any) *MockLoginConfigSetRefreshTokenCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetRefreshToken", reflect.TypeOf((*MockLoginConfig)(nil).SetRefreshToken), arg0)
+	return &MockLoginConfigSetRefreshTokenCall{Call: call}
+}
+
+// MockLoginConfigSetRefreshTokenCall wrap *gomock.Call
+type MockLoginConfigSetRefreshTokenCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetRefreshTokenCall) Return() *MockLoginConfigSetRefreshTokenCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetRefreshTokenCall) Do(f func(string)) *MockLoginConfigSetRefreshTokenCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetRefreshTokenCall) DoAndReturn(f func(string)) *MockLoginConfigSetRefreshTokenCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetService mocks base method.
+func (m *MockLoginConfig) SetService(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetService", arg0)
+}
+
+// SetService indicates an expected call of SetService.
+func (mr *MockLoginConfigMockRecorder) SetService(arg0 any) *MockLoginConfigSetServiceCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetService", reflect.TypeOf((*MockLoginConfig)(nil).SetService), arg0)
+	return &MockLoginConfigSetServiceCall{Call: call}
+}
+
+// MockLoginConfigSetServiceCall wrap *gomock.Call
+type MockLoginConfigSetServiceCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetServiceCall) Return() *MockLoginConfigSetServiceCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetServiceCall) Do(f func(string)) *MockLoginConfigSetServiceCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetServiceCall) DoAndReturn(f func(string)) *MockLoginConfigSetServiceCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

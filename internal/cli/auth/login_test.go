@@ -16,7 +16,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -177,7 +176,7 @@ func TestLoginRun_APIKeys_Success(t *testing.T) {
 
 	opts.SkipConfig = true
 
-	err := opts.LoginRun(context.Background())
+	err := opts.LoginRun(t.Context())
 	require.NoError(t, err)
 }
 
@@ -285,14 +284,14 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 		TrackAsk(gomock.Any(), opts).
 		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
 			if o, ok := answer.(*LoginOpts); ok {
-				o.Output = "json"
+				o.Output = "json" //nolint:goconst
 			}
 			return nil
 		})
 
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 
-	ctx := context.Background()
+	ctx := t.Context()
 	err := opts.setUpProfile(ctx)
 	require.NoError(t, err)
 }

@@ -42,7 +42,6 @@ var (
 	ErrInvalidDBUsername           = errors.New("invalid db username")
 	ErrWeakPassword                = errors.New("the password provided is too common")
 	ErrShortPassword               = errors.New("the password provided is too short")
-	ErrInvalidConfigVersion        = errors.New("version is invalid")
 )
 
 // toString tries to cast an interface to string.
@@ -245,41 +244,5 @@ func WeakPassword(val any) error {
 		return ErrWeakPassword
 	}
 
-	return nil
-}
-
-// ValidConfig checks if the config file is valid based on the version.
-func ValidConfig(store config.Store) error {
-	version := int64(0)
-	var ok bool
-	if v := store.GetGlobalValue(config.Version); v != nil {
-		if version, ok = v.(int64); !ok {
-			return errors.New("issue retrieving version")
-		}
-	}
-
-	profileNames := store.GetProfileNames()
-	for _, name := range profileNames {
-		var hasCreds bool
-
-		if store.GetProfileValue(name, "public_api_key") != nil && store.GetProfileValue(name, "private_api_key") != nil ||
-			store.GetProfileValue(name, "client_id") != nil && store.GetProfileValue(name, "client_secret") != nil ||
-			store.GetProfileValue(name, "access_token") != nil && store.GetProfileValue(name, "refresh_token") != nil {
-			hasCreds = true
-		}
-		hasAuthType := store.GetProfileValue(name, "auth_type") != nil
-
-		switch version {
-		case config.ConfigVersion2:
-			if !hasAuthType && hasCreds {
-				return ErrInvalidConfigVersion
-			}
-		case 0:
-			// config is invalid if authType is set regardless of credentials.
-			if hasAuthType {
-				return ErrInvalidConfigVersion
-			}
-		}
-	}
 	return nil
 }

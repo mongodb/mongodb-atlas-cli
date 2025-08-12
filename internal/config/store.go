@@ -21,7 +21,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store,SecureStore
+
 type Store interface {
+	IsSecure() bool
 	Save() error
 
 	GetProfileNames() []string
@@ -39,6 +42,16 @@ type Store interface {
 	IsSetGlobal(propertyName string) bool
 }
 
+type SecureStore interface {
+	Available() bool
+	Save() error
+
+	Set(profileName string, propertyName string, value string)
+	Get(profileName string, propertyName string) string
+	DeleteKey(profileName string, propertyName string)
+	DeleteProfile(profileName string)
+}
+
 // Temporary InMemoryStore to mimick legacy behavior
 // Will be removed when we get rid of static references in the profile
 type InMemoryStore struct {
@@ -49,6 +62,10 @@ func NewInMemoryStore() *InMemoryStore {
 	return &InMemoryStore{
 		v: viper.New(),
 	}
+}
+
+func (*InMemoryStore) IsSecure() bool {
+	return true
 }
 
 func (*InMemoryStore) Save() error {

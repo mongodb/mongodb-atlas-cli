@@ -42,6 +42,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/yuin/goldmark v1.7.12
+	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
 	go.mongodb.org/atlas-sdk/v20250312005 v20250312005.0.0
@@ -62,9 +63,12 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.2 // indirect
 	github.com/cli/safeexec v1.0.0 // indirect
+	github.com/danieljoos/wincred v1.2.2 // indirect
+	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store
-
 package config
 
 import (
@@ -37,7 +35,7 @@ type ViperConfigStore struct {
 }
 
 // ViperConfigStore specific methods
-func NewViperStore(fs afero.Fs) (*ViperConfigStore, error) {
+func NewViperStore(fs afero.Fs, loadEnvVars bool) (*ViperConfigStore, error) {
 	configDir, err := CLIConfigHome()
 	if err != nil {
 		return nil, err
@@ -46,18 +44,19 @@ func NewViperStore(fs afero.Fs) (*ViperConfigStore, error) {
 	v := viper.New()
 
 	v.SetConfigName("config")
-
-	if hasMongoCLIEnvVars() {
-		v.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
-	}
-
 	v.SetConfigType(configType)
 	v.SetConfigPermissions(configPerm)
 	v.AddConfigPath(configDir)
 	v.SetFs(fs)
 
 	v.SetEnvPrefix(AtlasCLIEnvPrefix)
-	v.AutomaticEnv()
+	if loadEnvVars {
+		v.AutomaticEnv()
+
+		if hasMongoCLIEnvVars() {
+			v.SetEnvKeyReplacer(strings.NewReplacer(AtlasCLIEnvPrefix, MongoCLIEnvPrefix))
+		}
+	}
 
 	// aliases only work for a config file, this won't work for env variables
 	v.RegisterAlias(baseURL, OpsManagerURLField)
@@ -97,6 +96,10 @@ func (s *ViperConfigStore) Filename() string {
 }
 
 // ConfigStore implementation
+
+func (*ViperConfigStore) IsSecure() bool {
+	return false
+}
 
 func (s *ViperConfigStore) Save() error {
 	exists, err := afero.DirExists(s.fs, s.configDir)
@@ -199,6 +202,14 @@ func (s *ViperConfigStore) GetHierarchicalValue(profileName string, propertyName
 }
 
 func (s *ViperConfigStore) SetProfileValue(profileName string, propertyName string, value any) {
+	// HACK: viper doesn't allow deleting values: https://github.com/spf13/viper/issues/632
+	// Viper was never intended to be used as a key-value store with a save functionality.
+	// Setting the value to `nil` or `""` will not delete the value from the config file.
+	// Setting the value to `struct{}` will delete the value from the config file.
+	if value == nil {
+		value = struct{}{}
+	}
+
 	settings := s.viper.GetStringMap(profileName)
 	settings[propertyName] = value
 	s.viper.Set(profileName, settings)

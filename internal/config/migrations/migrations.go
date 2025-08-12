@@ -83,7 +83,7 @@ func (m *Migrator) currentVersion() (int, error) {
 	return int(version), nil
 }
 
-func (m *Migrator) persistCurrentVersion(version int) error {
+func (m *Migrator) saveConfigVersion(version int) error {
 	store, err := m.dependencies.GetInsecureStore()
 	if err != nil {
 		return fmt.Errorf("failed to get store: %w", err)
@@ -121,7 +121,7 @@ func (m *Migrator) Migrate() error {
 		}
 
 		// In case the migration succeeds, update the config version.
-		if err := m.persistCurrentVersion(currentVersion + 1); err != nil {
+		if err := m.saveConfigVersion(currentVersion + 1); err != nil {
 			return fmt.Errorf("failed to set current config version: %w", err)
 		}
 	}

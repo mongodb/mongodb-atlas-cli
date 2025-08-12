@@ -107,7 +107,7 @@ func TestList_Run(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.UserAccount).
-		Times(2)
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -200,7 +200,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.UserAccount).
-		Times(2)
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -290,7 +290,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.UserAccount).
-		Times(2)
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -344,7 +344,7 @@ func TestListOpts_PostRun(t *testing.T) {
 		EXPECT().
 		AuthType().
 		Return(config.UserAccount).
-		Times(1)
+		Times(2)
 
 	deploymentsTest.MockDeploymentTelemetry.
 		EXPECT().

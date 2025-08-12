@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"go.mongodb.org/atlas-sdk/v20250312005/auth/clientcredentials"
+	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 

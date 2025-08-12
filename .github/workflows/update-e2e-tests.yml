@@ -404,7 +404,7 @@ jobs:
               "fields": {
                 "fixVersions": [
                   {
-                    "name": "next-atlascli-release"
+                    "id": "41805"
                   }
                 ],
                 "customfield_12751": [

@@ -18,6 +18,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"runtime"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
@@ -30,6 +31,10 @@ import (
 func TestConfigMigration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
+	}
+
+	if runtime.GOOS != "darwin" {
+		t.Skip("skipping test on non-macOS")
 	}
 
 	// Create a temporary config folder

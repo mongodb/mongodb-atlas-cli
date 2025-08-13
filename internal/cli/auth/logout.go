@@ -48,6 +48,8 @@ type ConfigDeleter interface {
 	PublicAPIKey() string
 	ClientID() string
 	ClientSecret() string
+	AccessTokenSubject() (string, error)
+	RefreshToken() string
 	Save() error
 }
 
@@ -170,12 +172,12 @@ func LogoutBuilder() *cobra.Command {
 				entry = opts.config.ClientID()
 				message = "Are you sure you want to log out of service account %s?"
 			case config.UserAccount:
-				entry, err = config.AccessTokenSubject()
+				entry, err = opts.config.AccessTokenSubject()
 				if err != nil {
 					return err
 				}
 
-				if config.RefreshToken() == "" {
+				if opts.config.RefreshToken() == "" {
 					return ErrUnauthenticated
 				}
 

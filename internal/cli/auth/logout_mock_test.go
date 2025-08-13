@@ -42,6 +42,45 @@ func (m *MockConfigDeleter) EXPECT() *MockConfigDeleterMockRecorder {
 	return m.recorder
 }
 
+// AccessTokenSubject mocks base method.
+func (m *MockConfigDeleter) AccessTokenSubject() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AccessTokenSubject")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AccessTokenSubject indicates an expected call of AccessTokenSubject.
+func (mr *MockConfigDeleterMockRecorder) AccessTokenSubject() *MockConfigDeleterAccessTokenSubjectCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AccessTokenSubject", reflect.TypeOf((*MockConfigDeleter)(nil).AccessTokenSubject))
+	return &MockConfigDeleterAccessTokenSubjectCall{Call: call}
+}
+
+// MockConfigDeleterAccessTokenSubjectCall wrap *gomock.Call
+type MockConfigDeleterAccessTokenSubjectCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterAccessTokenSubjectCall) Return(arg0 string, arg1 error) *MockConfigDeleterAccessTokenSubjectCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterAccessTokenSubjectCall) Do(f func() (string, error)) *MockConfigDeleterAccessTokenSubjectCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterAccessTokenSubjectCall) DoAndReturn(f func() (string, error)) *MockConfigDeleterAccessTokenSubjectCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // AuthType mocks base method.
 func (m *MockConfigDeleter) AuthType() config.AuthMechanism {
 	m.ctrl.T.Helper()
@@ -266,6 +305,44 @@ func (c *MockConfigDeleterPublicAPIKeyCall) Do(f func() string) *MockConfigDelet
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockConfigDeleterPublicAPIKeyCall) DoAndReturn(f func() string) *MockConfigDeleterPublicAPIKeyCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// RefreshToken mocks base method.
+func (m *MockConfigDeleter) RefreshToken() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RefreshToken")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// RefreshToken indicates an expected call of RefreshToken.
+func (mr *MockConfigDeleterMockRecorder) RefreshToken() *MockConfigDeleterRefreshTokenCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshToken", reflect.TypeOf((*MockConfigDeleter)(nil).RefreshToken))
+	return &MockConfigDeleterRefreshTokenCall{Call: call}
+}
+
+// MockConfigDeleterRefreshTokenCall wrap *gomock.Call
+type MockConfigDeleterRefreshTokenCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterRefreshTokenCall) Return(arg0 string) *MockConfigDeleterRefreshTokenCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterRefreshTokenCall) Do(f func() string) *MockConfigDeleterRefreshTokenCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterRefreshTokenCall) DoAndReturn(f func() string) *MockConfigDeleterRefreshTokenCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -13,60 +13,60 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tags:
-          - atlas,autogeneration
-          - atlas,backup,compliancepolicy
-          - atlas,backup,flex
-          - atlas,backup,exports,buckets
-          - atlas,backup,exports,jobs
-          - atlas,backup,restores
-          - atlas,backup,schedule
-          - atlas,backup,snapshot
-          - atlas,clusters,file
-          - atlas,clusters,flags
-          - atlas,clusters,flex
-          - atlas,clusters,m0
-          - atlas,clusters,sharded
-          - atlas,clusters,upgrade
-          - atlas,datafederation,db
-          - atlas,datafederation,privatenetwork
-          - atlas,datafederation,querylimits
-          # - atlas,decrypt # requires live calls to GCP/AWS/Azure
-          # - atlas,deployments,atlasclusters # one assertion connects to DB (needs live mode)
-          # - atlas,deployments,local,auth,deprecated # needs docker to run
-          # - atlas,deployments,local,auth,new # needs docker to run
-          # - atlas,deployments,local,nocli # needs docker to run
-          # - atlas,deployments,local,noauth # needs docker to run
-          - atlas,generic
-          - atlas,interactive
-          - atlas,ldap
-          - atlas,livemigrations
-          - atlas,logs
-          - atlas,metrics
-          - atlas,networking
-          - atlas,onlinearchive
-          - atlas,performanceAdvisor
-          - atlas,plugin,install
-          - atlas,plugin,run
-          - atlas,plugin,uninstall
-          - atlas,plugin,update
-          - atlas,processes
-          - atlas,search
-          - atlas,search_nodes
-          - atlas,serverless,instance
-          - atlas,streams
-          - atlas,streams_with_cluster
-          - atlas,clusters,iss
+        package:
+          - atlas/autogeneration
+          - atlas/backup/compliancepolicy
+          - atlas/backup/flex
+          - atlas/backup/exports/buckets
+          - atlas/backup/exports/jobs
+          - atlas/backup/restores
+          - atlas/backup/schedule
+          - atlas/backup/snapshot
+          - atlas/clusters/file
+          - atlas/clusters/flags
+          - atlas/clusters/flex
+          - atlas/clusters/m0
+          - atlas/clusters/sharded
+          - atlas/clusters/upgrade
+          - atlas/datafederation/db
+          - atlas/datafederation/privatenetwork
+          - atlas/datafederation/querylimits
+          - atlas/decrypt
+          - atlas/deployments/atlasclusters
+          - atlas/deployments/local/auth/deprecated
+          - atlas/deployments/local/auth/new
+          - atlas/deployments/local/nocli
+          - atlas/deployments/local/noauth
+          - atlas/generic
+          - atlas/interactive
+          - atlas/ldap
+          - atlas/livemigrations
+          - atlas/logs
+          - atlas/metrics
+          - atlas/networking
+          - atlas/onlinearchive
+          - atlas/performanceAdvisor
+          - atlas/plugin/install
+          - atlas/plugin/run
+          - atlas/plugin/uninstall
+          - atlas/plugin/update
+          - atlas/processes
+          - atlas/search
+          - atlas/search_nodes
+          - atlas/serverless/instance
+          - atlas/streams
+          - atlas/streams_with_cluster
+          - atlas/clusters/iss
+          - atlas/iam
           - brew
           - config
-          - atlas,iam
           - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install Go
@@ -75,19 +75,52 @@ jobs:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
       - run: rm -rf test/e2e/testdata/.snapshots
+      - run: make build
+      - id: config-path
+        env:
+          EDITOR: echo
+        run: echo "CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
+      - env:
+          CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
+          CONFIG_CONTENT: |
+            skip_update_check = true
+
+            [__e2e]
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
+
+            [__e2e_snapshot]
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
+        run: |
+          echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
+          ./bin/atlas config set org_id "$MONGODB_ATLAS_ORG_ID" -P __e2e
+          ./bin/atlas config set project_id "$MONGODB_ATLAS_PROJECT_ID" -P __e2e
+          ./bin/atlas config set public_api_key "$MONGODB_ATLAS_PUBLIC_API_KEY" -P __e2e
+          ./bin/atlas config set private_api_key "$MONGODB_ATLAS_PRIVATE_API_KEY" -P __e2e
+          ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TAGS: ${{ matrix.tags }}
-          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
-          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
-          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
-          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
-          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
-          MONGODB_ATLAS_SERVICE: cloud
-          DO_NOT_TRACK: 1
-          UPDATE_SNAPSHOTS: true
-          E2E_SKIP_CLEANUP: true
+          E2E_TEST_PACKAGES: ./test/e2e/${{ matrix.package }}/...
+          TEST_MODE: record
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
@@ -101,13 +134,14 @@ jobs:
           E2E_TIMEOUT: 3h
       - name: set artifact name
         if: always()
+        id: set-artifact-name
         run: |
-          echo "NAME=snapshots_${{ matrix.tags }}" | sed "s|,|_|g" >> "$GITHUB_ENV"
+          echo "NAME=snapshots_${{ matrix.package }}" | sed "s|/|_|g" >> "$GITHUB_OUTPUT"
       - name: upload artifact
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ${{ env.NAME }}
+          name: ${{ steps.set-artifact-name.outputs.NAME }}
           path: test/e2e/testdata/.snapshots
           include-hidden-files: true
       - name: Test Summary
@@ -124,7 +158,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install Go
@@ -132,17 +166,42 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
+      - run: make build
+      - id: config-path
+        env:
+          EDITOR: echo
+        run: echo "CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)" >> "$GITHUB_OUTPUT"
+      - env:
+          CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
+          CONFIG_CONTENT: |
+            skip_update_check = true
+
+            [__e2e]
+            org_id = '${{ secrets.MONGODB_ATLAS_ORG_ID }}'
+            project_id = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
+            public_api_key = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
+            private_api_key = '${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}'
+            ops_manager_url = '${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
+
+            [__e2e_snapshot]
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
+            service = 'cloud'
+            telemetry_enabled = false
+            output = 'plaintext'
+            EOF
+        run: |
+          echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          E2E_TAGS: atlas,cleanup
-          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
-          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
-          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
-          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
-          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
-          MONGODB_ATLAS_SERVICE: cloud
-          DO_NOT_TRACK: 1
+          E2E_TEST_PACKAGES: ./test/internal/...
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
@@ -154,7 +213,6 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           E2E_TIMEOUT: 3h
-          E2E_TEST_PACKAGES: ./test/internal..
       - name: Test Summary
         if: always()
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
@@ -162,23 +220,23 @@ jobs:
           paths: e2e-tests.xml
   commit:
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
+    if: success() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
     needs: update-tests
     steps:
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.pull_request.head.ref }}
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v5
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots
@@ -194,25 +252,44 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           labels: update-snapshots
+  comment:
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
+    needs: update-tests
+    steps:
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          labels: update-snapshots
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405
+        with:
+          header: test
+          message: "Failed to update test snapshots."
   pr:
     runs-on: ubuntu-latest
-    if: always() && github.event_name != 'pull_request'
+    if: success() && github.event_name != 'pull_request'
     needs: update-tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v4.2.1
+        uses: actions/download-artifact@v5
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots
           merge-multiple: true
       - name: Find JIRA ticket
         id: find
-        uses: mongodb/apix-action/find-jira@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        uses: mongodb/apix-action/find-jira@6c3fde402c21942fa46cde003f190c2b23c59530
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Update Test Snapshots"
@@ -221,7 +298,7 @@ jobs:
         run: |
           echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        uses: mongodb/apix-action/create-jira@6c3fde402c21942fa46cde003f190c2b23c59530
         id: create
         if: steps.find.outputs.found == 'false'
         with:
@@ -237,7 +314,7 @@ jobs:
               "fields": {
                 "fixVersions": [
                   {
-                    "id": "41805"
+                    "name": "next-atlascli-release"
                   }
                 ],
                 "customfield_12751": [
@@ -256,7 +333,7 @@ jobs:
           echo "JIRA_KEY=${{steps.create.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -284,3 +361,59 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+  report:
+    runs-on: ubuntu-latest
+    if: failure() && github.event_name != 'pull_request'
+    needs: update-tests
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Find JIRA ticket
+        id: find
+        uses: mongodb/apix-action/find-jira@v13
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Failed to update test snapshots"
+      - name: Comment JIRA ticket
+        if: steps.find.outputs.found == 'true'
+        uses: mongodb/apix-action/comment-jira@v13
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          issue-key: ${{ steps.find.outputs.issue-key }}
+          comment: |
+            Another attempt to update test snapshots failed.
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      - name: Create JIRA ticket
+        uses: mongodb/apix-action/create-jira@v13
+        id: create
+        if: steps.find.outputs.found == 'false'
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "[AtlasCLI] Failed to update test snapshots"
+          issuetype: Investigation
+          description: |
+            Failed to update test snapshots
+            Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          components: AtlasCLI
+          assignee: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          extra-data: |
+            {
+              "fields": {
+                "fixVersions": [
+                  {
+                    "name": "next-atlascli-release"
+                  }
+                ],
+                "customfield_12751": [
+                  {
+                    "id": "22223"
+                  }
+                ],
+                "customfield_10257": {
+                  "id": "11861"
+                }
+              }
+            }

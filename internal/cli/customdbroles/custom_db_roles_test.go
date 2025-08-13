@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package customdbroles
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 func Test_appendActions(t *testing.T) {

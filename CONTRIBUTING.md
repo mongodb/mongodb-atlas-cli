@@ -67,10 +67,8 @@ The following is a short list of commands that can be run in the root of the pro
 - Run `make` to see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
-- Run `E2E_TAGS=e2e,atlas make e2e-test` will run end-to-end tests against an Atlas instance,
+- Run `make e2e-test` will run end-to-end tests,
   please make sure to have set `MCLI_*` variables pointing to that instance.
-- Run `E2E_TAGS=cloudmanager,remote,generic make e2e-test` will run end-to-end tests against a Cloud Manager instance.<br />
-  Please remember to: (a) have a running automation agent, and (b) set MCLI\_\* variables to point to your Cloud Manager instance.
 - Run `make build` to generate a local binary in the `./bin` folder.
 
 We provide a git pre-commit hook to format and check the code, to install it run `make link-git-hooks`.
@@ -79,18 +77,6 @@ We provide a git pre-commit hook to format and check the code, to install it run
 
 We use [mockgen](go.uber.org/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
-
-#### Compilation in VSCode
-
-Please add the following line to your `.vscode/settings.json` file :
-```json
-{
-    "go.buildTags": "e2e",
-    "go.testTags": "e2e"
-}
-```
-
-This will enable compilation for unit and end-to-end tests.
 
 #### Debugging in VSCode
 
@@ -129,7 +115,11 @@ Review and replace the command name and arguments depending on the command you w
 
 To debug e2e tests.
 
-```shell
+Update e2e profiles by running `make add-e2e-profiles`.
+
+Add optional env vars by:
+
+```shell 
 touch .vscode/settings.json
 ```
 
@@ -138,21 +128,14 @@ Review and replace the atlas settings.
 
 ```json
 {
-  "go.buildTags": "e2e",
-  "go.testTags": "e2e",
   "go.testEnvVars": {
-    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
-    "UPDATE_SNAPSHOTS": "skip",
-    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
-    "GOCOVERDIR": "${workspaceFolder}/cov",
-    "DO_NOT_TRACK": "1",
-    "E2E_SKIP_CLEANUP": "false",
-    "MONGODB_ATLAS_ORG_ID": "<default org id>",
-    "MONGODB_ATLAS_PROJECT_ID": "<default project id>",
-    "MONGODB_ATLAS_PRIVATE_API_KEY": "<private key>",
-    "MONGODB_ATLAS_PUBLIC_API_KEY": "<public key>",
-    "MONGODB_ATLAS_OPS_MANAGER_URL": "https://cloud.mongodb.com/",
-    "MONGODB_ATLAS_SERVICE": "cloud",
+    "TEST_MODE": "live", // optional default is 'live'
+    "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
+    "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended
+    "E2E_CLOUD_ROLE_ID": "<value here>", // needed just for a few tests
+    "E2E_TEST_BUCKET": "<value here>", // needed just for a few tests
+    "E2E_FLEX_INSTANCE_NAME": "<value here>", // needed just for a few tests
+    "IDENTITY_PROVIDER_ID": "<value here>" // needed just for a few tests
   }
 }
 ```
@@ -290,7 +273,7 @@ To update simply rename all instances of major version across the repository imp
 
 e.g `v20230201001` => `v20230201002` 
 
-### Update Automation
+### Update SDK Automation
 
 To update Atlas SDK run:
 

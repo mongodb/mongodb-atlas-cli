@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && cleanup)
-
 package internal
 
 import (
@@ -23,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 // list of keys to delete as clean up.
@@ -38,6 +36,15 @@ func getKeysToDelete() map[string]struct{} {
 func TestCleanup(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
+	}
+
+	mode, err := TestRunMode()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if mode != TestModeLive {
+		t.Skip("skipping test in snapshot mode")
 	}
 
 	req := require.New(t)
@@ -63,6 +70,8 @@ func TestCleanup(t *testing.T) {
 		"list",
 		"--limit=500",
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)

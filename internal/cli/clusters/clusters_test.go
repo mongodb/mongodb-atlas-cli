@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package clusters
 
 import (
@@ -23,7 +21,7 @@ import (
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {

@@ -16,7 +16,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Check out code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Set date
         id: set-date
         run: |
@@ -176,7 +176,7 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac
+        uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Docker Image
@@ -215,7 +215,7 @@ jobs:
           username: "${{ secrets.QUAY_USER }}"
           password: "${{ secrets.QUAY_TOKEN }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac
+        uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Quay Image

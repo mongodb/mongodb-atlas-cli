@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 941
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 11 Aug 2025 05:24:51 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 74
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=18bd6e3f1da61a3ff3ca8d68b763805b69492140; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"68997d3ca35f6579ff7d323a","regionName":"ASIA_SOUTHEAST_2","serviceAttachmentNames":["projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-0","projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-1","projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-2","projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-3","projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-4","projects/p-lausrcuwxsqqrm7u88hdqr36/regions/asia-southeast2/serviceAttachments/sa-asia-southeast2-68997d37a35f6579ff7d2f01-5"],"status":"AVAILABLE"}

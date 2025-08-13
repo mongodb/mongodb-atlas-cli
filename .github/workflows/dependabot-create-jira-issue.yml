@@ -18,12 +18,12 @@ jobs:
       with:
         config: ${{ vars.PERMISSIONS_CONFIG }}
     - name: Checkout code
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v5
       with:
         fetch-depth: 2
     - name: set Apix Bot token
       id: app-token
-      uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+      uses: mongodb/apix-action/token@6c3fde402c21942fa46cde003f190c2b23c59530
       with:
         app-id: ${{ secrets.APIXBOT_APP_ID }}
         private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -40,7 +40,7 @@ jobs:
         echo "JIRA_TEAM=$JIRA_TEAM"
         echo "assigned_team=$JIRA_TEAM" >> "${GITHUB_OUTPUT}"
     - name: Create JIRA ticket
-      uses: mongodb/apix-action/create-jira@v8
+      uses: mongodb/apix-action/create-jira@v13
       id: create
       with:
         token: ${{ secrets.JIRA_API_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
             "fields": {
               "fixVersions": [
                 {
-                  "id": "41805"
+                  "name": "next-atlascli-release"
                 }
               ],
               "customfield_12751": [

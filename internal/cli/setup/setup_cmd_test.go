@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build unit
+
 package setup
 
 import (
@@ -33,7 +35,6 @@ import (
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	mockStore := config.NewMockStore(ctrl)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
@@ -42,17 +43,16 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	opts.OutWriter = buf
 	opts.login.WithFlow(mockFlow)
 
-	oldProfile := config.Default()
-	profile := config.NewProfile("test-profile", mockStore)
-	config.SetProfile(profile)
+	config.SetPublicAPIKey("publicKey")
+	config.SetPrivateAPIKey("privateKey")
 
-	mockStore.EXPECT().GetHierarchicalValue("test-profile", "auth_type").Return("api_keys").Times(1)
 	require.NoError(t, opts.PreRun(ctx))
 
 	assert.Equal(t, 0, buf.Len())
 	assert.True(t, opts.skipLogin)
 	t.Cleanup(func() {
-		config.SetDefaultProfile(oldProfile)
+		config.SetPublicAPIKey("")
+		config.SetPrivateAPIKey("")
 	})
 }
 

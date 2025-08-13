@@ -117,7 +117,7 @@ func isNil(o any) bool {
 	}
 	ot := reflect.TypeOf(o)
 	otk := ot.Kind()
-	switch otk { //nolint:exhaustive // clearer cod
+	switch otk { //nolint:exhaustive // clearer code
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Chan, reflect.Pointer, reflect.UnsafePointer, reflect.Interface:
 		return reflect.ValueOf(o).IsNil()
 	default:

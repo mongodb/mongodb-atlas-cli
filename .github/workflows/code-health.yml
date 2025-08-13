@@ -50,7 +50,6 @@ jobs:
           go install github.com/mattn/goveralls@v0.0.12
       - run: make unit-test
       - name: Send coverage
-        if: matrix.os == 'ubuntu-latest'
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
@@ -317,6 +316,8 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install Go
         uses: actions/setup-go@v5
         with:
@@ -326,18 +327,11 @@ jobs:
           go install github.com/mattn/goveralls@v0.0.12
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@222db38e5893a57f26bd156999713aa98a55b92c
+        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
-      - run: |
-          set +e
-          make e2e-test-snapshots
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "::error::Snapshot tests failed, consider adding label 'update-snapshots' to re-generate them"
-          fi
-          exit $EXIT_CODE
+      - run: make e2e-test-snapshots
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --

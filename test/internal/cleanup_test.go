@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build e2e || (atlas && cleanup)
+
 package internal
 
 import (
@@ -36,10 +38,6 @@ func getKeysToDelete() map[string]struct{} {
 func TestCleanup(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
-	}
-
-	if TestRunMode() != TestModeLive {
-		t.Skip("skipping test in snapshot mode")
 	}
 
 	req := require.New(t)

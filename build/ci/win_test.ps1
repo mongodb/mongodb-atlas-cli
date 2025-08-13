@@ -27,6 +27,6 @@ $env:GOPROXY=$GOPROXY
 tar -xzf ../vendor.tar.gz
 Write-Output "Run tests"
 $env:TEST_CMD="gotestsum --junitfile e2e-tests.xml --format standard-verbose --"
-$env:E2E_TEST_PACKAGES="./test/e2e/atlas/deployments/local/..."
+$env:E2E_TAGS="atlas,deployments,local,auth,noauth,nocli"
 $env:BUILD_FLAGS="-mod vendor -x"
 make e2e-test

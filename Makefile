@@ -25,7 +25,8 @@ export SNAPSHOTS_DIR?=$(abspath test/e2e/testdata/.snapshots)
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
-E2E_TEST_PACKAGES?=./test/e2e/...
+E2E_TEST_PACKAGES?=./test/e2e..
+E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
@@ -174,11 +175,11 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
 
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
-	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) -tags="e2eSnap" ${E2E_TEST_PACKAGES}. $(E2E_EXTRA_ARGS)
 	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test

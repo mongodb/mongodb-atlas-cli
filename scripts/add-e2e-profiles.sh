@@ -30,6 +30,7 @@ fi
 ./bin/atlas config init -P __e2e
 ./bin/atlas config set output plaintext -P __e2e
 ./bin/atlas config set telemetry_enabled false -P __e2e
+./bin/atlas config set ops_manager_url https://cloud-dev.mongodb.com/ -P __e2e
 
 ./bin/atlas config delete __e2e_snapshot --force >/dev/null 2>&1 || true
 

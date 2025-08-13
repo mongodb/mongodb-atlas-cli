@@ -267,9 +267,10 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 		Return(config.NoAuth).
 		Times(1)
 
-	mockTokenCleanUp(mockConfig)
-	mockProjectAndOrgCleanUp(mockConfig)
 	mockAPIKeysCleanUp(mockConfig)
+	mockTokenCleanUp(mockConfig)
+	mockServiceAccountCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
 		EXPECT().

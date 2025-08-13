@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312005/auth/clientcredentials"
+	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -80,8 +80,8 @@ func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret strin
 	cfg := clientcredentials.NewConfig(clientID, clientSecret)
 	if config.OpsManagerURL() != "" {
 		// TokenURL and RevokeURL points to "https://cloud.mongodb.com/api/oauth/<token/revoke>". Modify TokenURL and RevokeURL if OpsManagerURL does not point to cloud.mongodb.com
-		cfg.TokenURL = config.OpsManagerURL() + "api/oauth/token"
-		cfg.RevokeURL = config.OpsManagerURL() + "api/oauth/revoke"
+		cfg.TokenURL = config.OpsManagerURL() + clientcredentials.TokenAPIPath
+		cfg.RevokeURL = config.OpsManagerURL() + clientcredentials.RevokeAPIPath
 	}
 	token, err := cfg.Token(ctx)
 	if err != nil {

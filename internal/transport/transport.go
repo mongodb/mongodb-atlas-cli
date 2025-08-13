@@ -118,8 +118,8 @@ func (tr *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 func NewServiceAccountClient(clientID, clientSecret string) *http.Client {
 	cfg := clientcredentials.NewConfig(clientID, clientSecret)
 	if config.OpsManagerURL() != "" {
-		cfg.RevokeURL = config.OpsManagerURL() + "api/oauth/revoke"
-		cfg.TokenURL = config.OpsManagerURL() + "api/oauth/token"
+		cfg.TokenURL = config.OpsManagerURL() + clientcredentials.TokenAPIPath
+		cfg.RevokeURL = config.OpsManagerURL() + clientcredentials.RevokeAPIPath
 	}
 	return cfg.Client(context.Background())
 }

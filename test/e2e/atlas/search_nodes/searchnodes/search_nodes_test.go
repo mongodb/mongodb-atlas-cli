@@ -66,11 +66,9 @@ func TestSearchNodes(t *testing.T) {
 			internal.ProfileName(),
 		)
 
-		resp, err := cmd.CombinedOutput()
-		respStr := string(resp)
-
-		require.NoError(t, err, respStr)
-		require.Equal(t, "{}\n", respStr)
+		stdout, stderr, err := internal.RunAndGetSeparateStdOutAndErr(cmd)
+		require.NoError(t, err, string(stderr))
+		require.Equal(t, "{}\n", string(stdout))
 	})
 
 	g.Run("Create search node", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

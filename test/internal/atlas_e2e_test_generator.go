@@ -600,6 +600,26 @@ func skipSnapshots() bool {
 	return os.Getenv(updateSnapshotsEnvVarKey) == "skip"
 }
 
+type TestMode string
+
+const (
+	TestModeLive   TestMode = "live"   // run tests against a live Atlas instance
+	TestModeRecord TestMode = "record" // record snapshots
+	TestModeReplay TestMode = "replay" // replay snapshots
+)
+
+func TestRunMode() TestMode {
+	if skipSnapshots() {
+		return TestModeLive
+	}
+
+	if updateSnapshots() {
+		return TestModeRecord
+	}
+
+	return TestModeReplay
+}
+
 func (g *AtlasE2ETestGenerator) loadMemory() {
 	g.t.Helper()
 

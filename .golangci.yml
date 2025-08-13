@@ -1,7 +1,5 @@
 version: "2"
 run:
-  build-tags:
-    - e2e
   modules-download-mode: readonly
   tests: true
 linters:

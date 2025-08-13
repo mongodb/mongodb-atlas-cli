@@ -80,6 +80,82 @@ func (c *MockConfigDeleterAuthTypeCall) DoAndReturn(f func() config.AuthMechanis
 	return c
 }
 
+// ClientID mocks base method.
+func (m *MockConfigDeleter) ClientID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClientID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ClientID indicates an expected call of ClientID.
+func (mr *MockConfigDeleterMockRecorder) ClientID() *MockConfigDeleterClientIDCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClientID", reflect.TypeOf((*MockConfigDeleter)(nil).ClientID))
+	return &MockConfigDeleterClientIDCall{Call: call}
+}
+
+// MockConfigDeleterClientIDCall wrap *gomock.Call
+type MockConfigDeleterClientIDCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterClientIDCall) Return(arg0 string) *MockConfigDeleterClientIDCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterClientIDCall) Do(f func() string) *MockConfigDeleterClientIDCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterClientIDCall) DoAndReturn(f func() string) *MockConfigDeleterClientIDCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// ClientSecret mocks base method.
+func (m *MockConfigDeleter) ClientSecret() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClientSecret")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ClientSecret indicates an expected call of ClientSecret.
+func (mr *MockConfigDeleterMockRecorder) ClientSecret() *MockConfigDeleterClientSecretCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClientSecret", reflect.TypeOf((*MockConfigDeleter)(nil).ClientSecret))
+	return &MockConfigDeleterClientSecretCall{Call: call}
+}
+
+// MockConfigDeleterClientSecretCall wrap *gomock.Call
+type MockConfigDeleterClientSecretCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterClientSecretCall) Return(arg0 string) *MockConfigDeleterClientSecretCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterClientSecretCall) Do(f func() string) *MockConfigDeleterClientSecretCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterClientSecretCall) DoAndReturn(f func() string) *MockConfigDeleterClientSecretCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // Delete mocks base method.
 func (m *MockConfigDeleter) Delete() error {
 	m.ctrl.T.Helper()
@@ -264,6 +340,78 @@ func (c *MockConfigDeleterSetAccessTokenCall) Do(f func(string)) *MockConfigDele
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockConfigDeleterSetAccessTokenCall) DoAndReturn(f func(string)) *MockConfigDeleterSetAccessTokenCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetClientID mocks base method.
+func (m *MockConfigDeleter) SetClientID(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetClientID", arg0)
+}
+
+// SetClientID indicates an expected call of SetClientID.
+func (mr *MockConfigDeleterMockRecorder) SetClientID(arg0 any) *MockConfigDeleterSetClientIDCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetClientID", reflect.TypeOf((*MockConfigDeleter)(nil).SetClientID), arg0)
+	return &MockConfigDeleterSetClientIDCall{Call: call}
+}
+
+// MockConfigDeleterSetClientIDCall wrap *gomock.Call
+type MockConfigDeleterSetClientIDCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterSetClientIDCall) Return() *MockConfigDeleterSetClientIDCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterSetClientIDCall) Do(f func(string)) *MockConfigDeleterSetClientIDCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterSetClientIDCall) DoAndReturn(f func(string)) *MockConfigDeleterSetClientIDCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetClientSecret mocks base method.
+func (m *MockConfigDeleter) SetClientSecret(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetClientSecret", arg0)
+}
+
+// SetClientSecret indicates an expected call of SetClientSecret.
+func (mr *MockConfigDeleterMockRecorder) SetClientSecret(arg0 any) *MockConfigDeleterSetClientSecretCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetClientSecret", reflect.TypeOf((*MockConfigDeleter)(nil).SetClientSecret), arg0)
+	return &MockConfigDeleterSetClientSecretCall{Call: call}
+}
+
+// MockConfigDeleterSetClientSecretCall wrap *gomock.Call
+type MockConfigDeleterSetClientSecretCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterSetClientSecretCall) Return() *MockConfigDeleterSetClientSecretCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterSetClientSecretCall) Do(f func(string)) *MockConfigDeleterSetClientSecretCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterSetClientSecretCall) DoAndReturn(f func(string)) *MockConfigDeleterSetClientSecretCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

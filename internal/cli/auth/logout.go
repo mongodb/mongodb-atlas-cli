@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20250312005/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -41,8 +42,12 @@ type ConfigDeleter interface {
 	SetOrgID(string)
 	SetPublicAPIKey(string)
 	SetPrivateAPIKey(string)
+	SetClientID(string)
+	SetClientSecret(string)
 	AuthType() config.AuthMechanism
 	PublicAPIKey() string
+	ClientID() string
+	ClientSecret() string
 	Save() error
 }
 
@@ -53,18 +58,36 @@ type Revoker interface {
 type logoutOpts struct {
 	*cli.DeleteOpts
 	cli.DefaultSetterOpts
-	OutWriter  io.Writer
-	config     ConfigDeleter
-	flow       Revoker
-	keepConfig bool
+	OutWriter                 io.Writer
+	config                    ConfigDeleter
+	flow                      Revoker
+	keepConfig                bool
+	revokeServiceAccountToken func() error
 }
 
-func (opts *logoutOpts) initFlow() error {
+func (opts *logoutOpts) initFlow(ctx context.Context) error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
 	opts.flow, err = oauth.FlowWithConfig(config.Default(), client)
+	opts.revokeServiceAccountToken = func() error {
+		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
+	}
 	return err
+}
+
+func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret string) error {
+	cfg := clientcredentials.NewConfig(clientID, clientSecret)
+	if config.OpsManagerURL() != "" {
+		// TokenURL and RevokeURL points to "https://cloud.mongodb.com/api/oauth/<token/revoke>". Modify TokenURL and RevokeURL if OpsManagerURL does not point to cloud.mongodb.com
+		cfg.TokenURL = config.OpsManagerURL() + "api/oauth/token"
+		cfg.RevokeURL = config.OpsManagerURL() + "api/oauth/revoke"
+	}
+	token, err := cfg.Token(ctx)
+	if err != nil {
+		return err
+	}
+	return cfg.RevokeToken(ctx, token)
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {
@@ -73,12 +96,18 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	}
 
 	switch opts.config.AuthType() {
-	case config.ServiceAccount, config.UserAccount:
+	case config.UserAccount:
 		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
 			return err
 		}
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
+	case config.ServiceAccount:
+		if err := opts.revokeServiceAccountToken(); err != nil {
+			return err
+		}
+		opts.config.SetClientID("")
+		opts.config.SetClientSecret("")
 	case config.APIKeys:
 		opts.config.SetPublicAPIKey("")
 		opts.config.SetPrivateAPIKey("")
@@ -87,6 +116,8 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		opts.config.SetPrivateAPIKey("")
 		opts.config.SetAccessToken("")
 		opts.config.SetRefreshToken("")
+		opts.config.SetClientID("")
+		opts.config.SetClientSecret("")
 	}
 
 	opts.config.SetProjectID("")
@@ -122,7 +153,7 @@ func LogoutBuilder() *cobra.Command {
 
 			// Only initialize OAuth flow if we have OAuth-based auth
 			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
-				return opts.initFlow()
+				return opts.initFlow(cmd.Context())
 			}
 
 			return nil
@@ -135,7 +166,10 @@ func LogoutBuilder() *cobra.Command {
 			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()
 				message = "Are you sure you want to log out of account with public API key %s?"
-			case config.ServiceAccount, config.UserAccount:
+			case config.ServiceAccount:
+				entry = opts.config.ClientID()
+				message = "Are you sure you want to log out of service account %s?"
+			case config.UserAccount:
 				entry, err = config.AccessTokenSubject()
 				if err != nil {
 					return err

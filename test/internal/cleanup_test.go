@@ -70,6 +70,8 @@ func TestCleanup(t *testing.T) {
 		"list",
 		"--limit=500",
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)

@@ -65,6 +65,10 @@ func loadConfig() (*config.Profile, error) {
 		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
 	}
 
+	if !configStore.IsSecure() {
+		fmt.Fprintf(os.Stderr, "Warning: Secure storage is not available, falling back to insecure storage\n")
+	}
+
 	profile := config.NewProfile(config.DefaultProfile, configStore)
 	config.SetProfile(profile)
 

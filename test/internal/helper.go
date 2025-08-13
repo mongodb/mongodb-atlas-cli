@@ -26,6 +26,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -612,6 +613,70 @@ func TempConfigFolder(t *testing.T) string {
 	}
 
 	return dir
+}
+
+func InitKeychain(t *testing.T) error {
+	t.Helper()
+
+	if runtime.GOOS == "darwin" {
+		return InitKeychainMac(t)
+	}
+
+	return fmt.Errorf("keychain initialization not supported on %s", runtime.GOOS)
+}
+
+func InitKeychainMac(t *testing.T) error {
+	t.Helper()
+
+	// Run the following command to initialize the keychain
+	//
+	// Create the preferences directory, expected by the security command to exist
+	// HOME=dir mkdir -p $dir/Library/Preferences
+	//
+	// Create the keychain:
+	// HOME=dir /usr/bin/security create-keychain -p "" default.keychain-db
+	//
+	// Add the keychain to the search list:
+	// HOME=dir /usr/bin/security list-keychains -d user -s default.keychain-db
+	//
+	// Set the default keychain:
+	// HOME=dir /usr/bin/security default-keychain -s default.keychain-db
+	//
+	// Unlock the keychain:
+	// HOME=dir /usr/bin/security unlock-keychain -p "" default.keychain-db
+	//
+
+	home := os.Getenv("HOME")
+
+	if err := os.MkdirAll(filepath.Join(home, "Library", "Preferences"), os.ModePerm); err != nil {
+		return fmt.Errorf("error creating preferences directory: %w", err)
+	}
+
+	createCmd := exec.Command("/usr/bin/security", "create-keychain", "-p", "", "default.keychain-db")
+	createCmd.Env = os.Environ()
+	if err := createCmd.Run(); err != nil {
+		return fmt.Errorf("error creating keychain: %w", err)
+	}
+
+	listCmd := exec.Command("/usr/bin/security", "list-keychains", "-d", "user", "-s", "default.keychain-db")
+	listCmd.Env = os.Environ()
+	if err := listCmd.Run(); err != nil {
+		return fmt.Errorf("error listing keychains: %w", err)
+	}
+
+	defaultCmd := exec.Command("/usr/bin/security", "default-keychain", "-s", "default.keychain-db")
+	defaultCmd.Env = os.Environ()
+	if err := defaultCmd.Run(); err != nil {
+		return fmt.Errorf("error setting default keychain: %w", err)
+	}
+
+	unlockCmd := exec.Command("/usr/bin/security", "unlock-keychain", "-p", "", "default.keychain-db")
+	unlockCmd.Env = os.Environ()
+	if err := unlockCmd.Run(); err != nil {
+		return fmt.Errorf("error unlocking keychain: %w", err)
+	}
+
+	return nil
 }
 
 func createProject(projectName string) (string, error) {

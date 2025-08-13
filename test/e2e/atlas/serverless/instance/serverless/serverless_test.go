@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -54,7 +54,10 @@ func TestServerless(t *testing.T) {
 			"--provider=AWS",
 			"--tag", "env=test",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -73,6 +76,8 @@ func TestServerless(t *testing.T) {
 			"watch",
 			"--projectId", g.ProjectID,
 			clusterName,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -90,7 +95,10 @@ func TestServerless(t *testing.T) {
 			"--disableTerminationProtection",
 			"--tag", "env=e2e",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -108,7 +116,10 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"ls",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -127,7 +138,10 @@ func TestServerless(t *testing.T) {
 			"describe",
 			clusterName,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -147,7 +161,10 @@ func TestServerless(t *testing.T) {
 			"delete",
 			clusterName,
 			"--projectId", g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -167,6 +184,8 @@ func TestServerless(t *testing.T) {
 			"watch",
 			clusterName,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted

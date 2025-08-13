@@ -32,7 +32,11 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
@@ -43,7 +47,6 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 	)
 
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Test failed seed setup", func(t *testing.T) {
@@ -57,6 +60,8 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 				"--type",
 				"local",
 				"--force",
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -75,6 +80,8 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 			"--bindIpAll",
 			"--force",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 // list of keys to delete as clean up.
@@ -38,7 +38,12 @@ func TestCleanup(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if TestRunMode() != TestModeLive {
+	mode, err := TestRunMode()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if mode != TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
@@ -65,6 +70,8 @@ func TestCleanup(t *testing.T) {
 		"list",
 		"--limit=500",
 		"-o=json",
+		"-P",
+		ProfileName(),
 	}
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)

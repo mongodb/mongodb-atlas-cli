@@ -143,7 +143,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 	t.Run("List", func(t *testing.T) {
-		cmd := exec.Command(cliPath, configEntity, "ls")
+		cmd := exec.Command(cliPath, configEntity, "ls", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
@@ -161,6 +161,8 @@ func TestConfig(t *testing.T) {
 			"describe",
 			"e2e",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -185,6 +187,8 @@ func TestConfig(t *testing.T) {
 			"rename",
 			"e2e",
 			"renamed",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -197,7 +201,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force")
+		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

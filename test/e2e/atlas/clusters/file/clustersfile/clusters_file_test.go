@@ -65,7 +65,10 @@ func TestClustersFile(t *testing.T) {
 			clusterFileName,
 			"--file", clusterFile,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -82,6 +85,8 @@ func TestClustersFile(t *testing.T) {
 			"watch",
 			"--projectId", g.ProjectID,
 			clusterFileName,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -98,6 +103,8 @@ func TestClustersFile(t *testing.T) {
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_partial_index.json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -113,6 +120,8 @@ func TestClustersFile(t *testing.T) {
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_sparse_index.json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -128,6 +137,8 @@ func TestClustersFile(t *testing.T) {
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_2dspere_index.json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -144,6 +155,8 @@ func TestClustersFile(t *testing.T) {
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_index_test-unknown-fields.json",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -159,7 +172,10 @@ func TestClustersFile(t *testing.T) {
 			clusterFileName,
 			"--file=testdata/update_cluster_test.json",
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -179,7 +195,10 @@ func TestClustersFile(t *testing.T) {
 			"delete",
 			clusterFileName,
 			"--projectId", g.ProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -198,6 +217,8 @@ func TestClustersFile(t *testing.T) {
 			"watch",
 			clusterFileName,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted

@@ -53,6 +53,8 @@ func TestSchedule(t *testing.T) {
 			"--projectId",
 			g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -73,6 +75,8 @@ func TestSchedule(t *testing.T) {
 			"--projectId",
 			g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -88,6 +92,8 @@ func TestSchedule(t *testing.T) {
 			"--projectId",
 			g.ProjectID,
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

@@ -35,12 +35,15 @@ func TestDecryptWithLocalKey(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
 	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	req := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
@@ -58,6 +61,8 @@ func TestDecryptWithLocalKey(t *testing.T) {
 		"decrypt",
 		"--file",
 		inputFile,
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 

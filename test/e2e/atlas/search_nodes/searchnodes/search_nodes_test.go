@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 	tierM20        = "M20"
 )
 
-const minSearchNodesMDBVersion = "6.0"
+const minSearchNodesMDBVersion = "7.0"
 
 func TestSearchNodes(t *testing.T) {
 	if testing.Short() {
@@ -62,6 +62,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		resp, err := cmd.CombinedOutput()
@@ -82,6 +84,8 @@ func TestSearchNodes(t *testing.T) {
 			"--file", "testdata/search_nodes_spec.json",
 			"-w",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -110,6 +114,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -140,6 +146,8 @@ func TestSearchNodes(t *testing.T) {
 			"--file", "testdata/search_nodes_spec_update.json",
 			"-w",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -168,6 +176,8 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.ClusterName,
 			"--projectId", g.ProjectID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -197,6 +207,8 @@ func TestSearchNodes(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--force",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

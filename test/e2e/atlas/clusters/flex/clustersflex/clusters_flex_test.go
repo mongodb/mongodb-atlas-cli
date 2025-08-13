@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -57,7 +57,10 @@ func TestFlexCluster(t *testing.T) {
 			"--region=US_EAST_1",
 			"--tier=FLEX",
 			"--provider", e2eClusterProvider,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -74,7 +77,10 @@ func TestFlexCluster(t *testing.T) {
 			clustersEntity,
 			"get",
 			flexClusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -91,7 +97,10 @@ func TestFlexCluster(t *testing.T) {
 			clustersEntity,
 			"list",
 			"--tier=FLEX",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -109,7 +118,10 @@ func TestFlexCluster(t *testing.T) {
 			"delete",
 			flexClusterName,
 			"--force",
-			"--watch")
+			"--watch",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))

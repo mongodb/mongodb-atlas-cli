@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -46,11 +46,14 @@ func TestFlexBackup(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.ProjectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
+	profile, err := internal.ProfileData()
+	require.NoError(t, err)
+
+	g.ProjectID = profile["project_id"]
 	generateFlexCluster(t, g)
 
-	clusterName := os.Getenv("E2E_FLEX_INSTANCE_NAME")
-	require.NotEmpty(t, clusterName)
+	clusterName, err := internal.FlexInstanceName()
+	require.NoError(t, err)
 
 	var snapshotID string
 	g.Run("Snapshot List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -59,7 +62,10 @@ func TestFlexBackup(t *testing.T) {
 			snapshotsEntity,
 			"list",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -80,7 +86,10 @@ func TestFlexBackup(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -97,7 +106,10 @@ func TestFlexBackup(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			clusterName)
+			clusterName,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -120,7 +132,10 @@ func TestFlexBackup(t *testing.T) {
 			g.ClusterName,
 			"--targetProjectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -141,7 +156,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -154,7 +172,10 @@ func TestFlexBackup(t *testing.T) {
 			restoresEntity,
 			"list",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -172,7 +193,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -195,7 +219,10 @@ func TestFlexBackup(t *testing.T) {
 			g.ClusterName,
 			"--targetProjectId",
 			g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -215,7 +242,10 @@ func TestFlexBackup(t *testing.T) {
 			restoreJobID,
 			"--clusterName",
 			clusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -228,7 +258,10 @@ func TestFlexBackup(t *testing.T) {
 			"delete",
 			g.ClusterName,
 			"--force",
-			"--watch")
+			"--watch",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -274,6 +307,8 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 		clusterName,
 		"--region", "US_EAST_1",
 		"--provider", "AWS",
+		"-P",
+		internal.ProfileName(),
 	}
 
 	if projectID != "" {
@@ -290,6 +325,8 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 		clustersEntity,
 		"watch",
 		clusterName,
+		"-P",
+		internal.ProfileName(),
 	}
 
 	if projectID != "" {

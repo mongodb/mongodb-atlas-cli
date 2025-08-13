@@ -13,7 +13,7 @@ import (
 	io "io"
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

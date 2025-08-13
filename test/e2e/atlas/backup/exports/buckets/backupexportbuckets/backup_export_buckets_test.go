@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -43,10 +43,10 @@ func TestExportBuckets(t *testing.T) {
 	r.NoError(err)
 
 	const cloudProvider = "AWS"
-	iamRoleID := os.Getenv("E2E_CLOUD_ROLE_ID")
-	bucketName := os.Getenv("E2E_TEST_BUCKET")
-	r.NotEmpty(iamRoleID)
-	r.NotEmpty(bucketName)
+	iamRoleID, err := internal.CloudRoleID()
+	r.NoError(err)
+	bucketName, err := internal.TestBucketName()
+	r.NoError(err)
 	var bucketID string
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -60,7 +60,10 @@ func TestExportBuckets(t *testing.T) {
 			cloudProvider,
 			"--iamRoleId",
 			iamRoleID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -78,7 +81,10 @@ func TestExportBuckets(t *testing.T) {
 			exportsEntity,
 			bucketsEntity,
 			"list",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -95,7 +101,10 @@ func TestExportBuckets(t *testing.T) {
 			"describe",
 			"--bucketId",
 			bucketID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
@@ -112,7 +121,10 @@ func TestExportBuckets(t *testing.T) {
 			"delete",
 			"--bucketId",
 			bucketID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

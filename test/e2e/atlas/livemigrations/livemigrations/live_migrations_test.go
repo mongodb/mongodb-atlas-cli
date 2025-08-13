@@ -43,7 +43,9 @@ func TestLinkToken(t *testing.T) {
 		liveMigrationsEntity,
 		"link",
 		"delete",
-		"--force")
+		"--force",
+		"-P",
+		internal.ProfileName())
 	deleteCleanup.Env = os.Environ()
 	if err := deleteCleanup.Run(); err == nil {
 		t.Logf("Warning: Deleted link-token.")
@@ -56,7 +58,9 @@ func TestLinkToken(t *testing.T) {
 			"link",
 			"create",
 			"--accessListIp",
-			"1.2.3.4,5.6.7.8")
+			"1.2.3.4,5.6.7.8",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -68,7 +72,9 @@ func TestLinkToken(t *testing.T) {
 			liveMigrationsEntity,
 			"link",
 			"delete",
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 

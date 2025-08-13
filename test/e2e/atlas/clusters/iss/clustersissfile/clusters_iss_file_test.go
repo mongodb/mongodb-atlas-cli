@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -50,7 +50,10 @@ func TestISSClustersFile(t *testing.T) {
 			"create",
 			clusterIssFileName,
 			"--file", "testdata/create_iss_cluster_test.json",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -66,7 +69,10 @@ func TestISSClustersFile(t *testing.T) {
 			clustersEntity,
 			"autoScalingConfig",
 			clusterIssFileName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -82,6 +88,8 @@ func TestISSClustersFile(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterIssFileName,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -98,6 +106,8 @@ func TestISSClustersFile(t *testing.T) {
 			"independentShardScaling",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -117,6 +127,8 @@ func TestISSClustersFile(t *testing.T) {
 			"independentShardScaling",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -136,6 +148,8 @@ func TestISSClustersFile(t *testing.T) {
 			"testdata/create_iss_cluster_test_update.json",
 			"--output",
 			"json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -153,7 +167,10 @@ func TestISSClustersFile(t *testing.T) {
 			"delete",
 			clusterIssFileName,
 			"--watch",
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

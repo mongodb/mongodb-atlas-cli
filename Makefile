@@ -19,8 +19,6 @@ ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
 LOCALDEV_IMAGE?=docker.io/mongodb/mongodb-atlas-local
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${GIT_SHA} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options.LocalDevImage=${LOCALDEV_IMAGE}
-ATLAS_E2E_BINARY?=$(abspath bin/${ATLAS_BINARY_NAME})
-export SNAPSHOTS_DIR?=$(abspath test/e2e/testdata/.snapshots)
 
 DEBUG_FLAGS=all=-N -l
 
@@ -29,18 +27,7 @@ E2E_TEST_PACKAGES?=./test/e2e/...
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
-export UPDATE_SNAPSHOTS?=skip
-export E2E_SKIP_CLEANUP?=false 
-export MONGODB_ATLAS_ORG_ID?=a0123456789abcdef012345a
-export MONGODB_ATLAS_PROJECT_ID?=b0123456789abcdef012345b
-export MONGODB_ATLAS_PUBLIC_API_KEY?=ABCDEF01
-export MONGODB_ATLAS_PRIVATE_API_KEY?=12345678-abcd-ef01-2345-6789abcdef01
-export MONGODB_ATLAS_OPS_MANAGER_URL?=http://localhost:8080/
-export MONGODB_ATLAS_SERVICE?=cloud
-export E2E_CLOUD_ROLE_ID?=c0123456789abcdef012345c
-export E2E_TEST_BUCKET?=test-bucket
-export E2E_FLEX_INSTANCE_NAME?=test-flex
-export IDENTITY_PROVIDER_ID?=d0123456789abcdef012345d
+export TEST_MODE?=live
 
 ifeq ($(OS),Windows_NT)
 	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)
@@ -50,7 +37,6 @@ endif
 export TERM := linux-m
 export GO111MODULE := on
 export GOTOOLCHAIN := local
-export ATLAS_E2E_BINARY
 
 .PHONY: pre-commit
 pre-commit:  ## Run pre-commit hook
@@ -121,10 +107,6 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 	@echo "==> Generating docs metadata"
 	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-with-overlays.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
-.PHONY: otel
-otel: ## Generate code
-	go run ./tools/cmd/otel $(SPAN) --attr $(ATTRS)
-
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
@@ -175,10 +157,11 @@ e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
-	UPDATE_SNAPSHOTS=false E2E_SKIP_CLEANUP=true DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
+	TEST_MODE=replay DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
 	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test
@@ -209,6 +192,10 @@ update-atlas-sdk: ## Update the atlas-sdk dependency
 .PHONY: update-openapi-spec
 update-openapi-spec: ## Update the openapi spec
 	./scripts/update-openapi-spec.sh
+
+.PHONY: add-e2e-profiles
+add-e2e-profiles: build ## Add e2e profiles
+	./scripts/add-e2e-profiles.sh
 
 .PHONY: help
 .DEFAULT_GOAL := help

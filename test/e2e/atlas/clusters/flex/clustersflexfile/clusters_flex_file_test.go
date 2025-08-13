@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -52,7 +52,9 @@ func TestFlexClustersFile(t *testing.T) {
 			"create",
 			clusterFileName,
 			"--file", "testdata/create_flex_cluster_test.json",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -70,7 +72,9 @@ func TestFlexClustersFile(t *testing.T) {
 			"delete",
 			clusterFileName,
 			"--watch",
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

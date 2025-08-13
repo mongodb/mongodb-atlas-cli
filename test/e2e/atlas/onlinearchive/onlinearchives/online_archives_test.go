@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -87,14 +87,16 @@ func TestOnlineArchives(t *testing.T) {
 
 func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"rm",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"--force")
+		"--force",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -105,13 +107,15 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"watch",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
+		"-P",
+		internal.ProfileName(),
 	)
 	cmd.Env = os.Environ()
 	_ = cmd.Run()
@@ -119,14 +123,16 @@ func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"start",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -139,14 +145,16 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 
 func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"pause",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
@@ -169,7 +177,9 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--clusterName", clusterName,
 		"--projectId", projectID,
 		"--archiveAfter", expireAfterDaysStr,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -185,14 +195,16 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 
 func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"describe",
 		archiveID,
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -209,13 +221,15 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 
 func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"list",
 		"--clusterName", clusterName,
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -232,7 +246,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) string {
 	t.Helper()
 	const dbName = "test"
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		clustersEntity,
 		onlineArchiveEntity,
 		"create",
@@ -243,7 +257,9 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		"--archiveAfter=3",
 		"--partition=test",
 		"--projectId", projectID,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)

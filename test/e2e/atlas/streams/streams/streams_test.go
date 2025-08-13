@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 func TestStreams(t *testing.T) {
@@ -57,6 +57,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -85,6 +87,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -112,6 +116,8 @@ func TestStreams(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 
@@ -127,6 +133,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -152,6 +160,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -181,6 +191,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -208,6 +220,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -236,6 +250,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -261,6 +277,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -287,6 +305,8 @@ func TestStreams(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		streamsCmd.Env = os.Environ()
@@ -311,6 +331,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -334,6 +356,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -359,6 +383,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -399,6 +425,8 @@ func TestStreams(t *testing.T) {
 			"-o=json",
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -423,6 +451,8 @@ func TestStreams(t *testing.T) {
 			connectionName,
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -444,6 +474,8 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"--projectId",
 			g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

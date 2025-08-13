@@ -51,14 +51,17 @@ func TestDeploymentsLocal(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
 	const deploymentName = "test"
 
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
@@ -68,6 +71,8 @@ func TestDeploymentsLocal(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -84,6 +89,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -100,6 +107,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -114,6 +123,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"list",
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -144,6 +155,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"local",
 			"--connectWith",
 			"connectionString",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -194,6 +207,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--collection",
 			collectionName,
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -217,6 +232,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--file",
 			"testdata/sample_vector_search.json",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -241,6 +258,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			vectorSearchCol,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -266,6 +285,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			collectionName,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -290,6 +311,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			deploymentName,
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -365,6 +388,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -384,6 +409,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -402,6 +429,8 @@ func TestDeploymentsLocal(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

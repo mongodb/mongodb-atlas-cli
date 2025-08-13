@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -65,7 +65,9 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			apiKeyID,
 			"--ip",
 			entry,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -81,7 +83,9 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			apiKeyAccessListEntity,
 			"list",
 			apiKeyID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -103,7 +107,9 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"--apiKey",
 			apiKeyID,
 			"--currentIp",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -120,7 +126,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 
 func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		orgEntity,
 		apiKeysEntity,
 		apiKeyAccessListEntity,
@@ -128,7 +134,9 @@ func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 		entry,
 		"--apiKey",
 		apiKeyID,
-		"--force")
+		"--force",
+		"-P",
+		internal.ProfileName())
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -147,6 +155,8 @@ func createOrgAPIKey() (string, error) {
 		apiKeysEntity,
 		"create",
 		"--desc=e2e-test-helper",
+		"-P",
+		internal.ProfileName(),
 		"--role=ORG_READ_ONLY",
 		"-o=json")
 	cmd.Env = os.Environ()

@@ -27,7 +27,7 @@ jobs:
           JIRA_KEY=$(gh pr view "$URL" --comments | grep 'was created for internal tracking' | grep -oE 'CLOUDP-[0-9]+' | head -1)  
           echo "JIRA_KEY=$JIRA_KEY" >> "$GITHUB_ENV"
       - name: Close JIRA ticket
-        uses: mongodb/apix-action/transition-jira@v12
+        uses: mongodb/apix-action/transition-jira@v13
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           issue-key: ${{ env.JIRA_KEY }}

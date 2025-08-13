@@ -115,7 +115,11 @@ Review and replace the command name and arguments depending on the command you w
 
 To debug e2e tests.
 
-```shell
+Update e2e profiles by running `make add-e2e-profiles`.
+
+Add optional env vars by:
+
+```shell 
 touch .vscode/settings.json
 ```
 
@@ -125,18 +129,13 @@ Review and replace the atlas settings.
 ```json
 {
   "go.testEnvVars": {
-    "ATLAS_E2E_BINARY": "${workspaceFolder}/bin/atlas",
-    "UPDATE_SNAPSHOTS": "skip",
-    "SNAPSHOTS_DIR": "${workspaceFolder}/test/e2e/testdata/.snapshots",
-    "GOCOVERDIR": "${workspaceFolder}/cov",
-    "DO_NOT_TRACK": "1",
-    "E2E_SKIP_CLEANUP": "false",
-    "MONGODB_ATLAS_ORG_ID": "<default org id>",
-    "MONGODB_ATLAS_PROJECT_ID": "<default project id>",
-    "MONGODB_ATLAS_PRIVATE_API_KEY": "<private key>",
-    "MONGODB_ATLAS_PUBLIC_API_KEY": "<public key>",
-    "MONGODB_ATLAS_OPS_MANAGER_URL": "https://cloud.mongodb.com/",
-    "MONGODB_ATLAS_SERVICE": "cloud",
+    "TEST_MODE": "live", // optional default is 'live'
+    "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
+    "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended
+    "E2E_CLOUD_ROLE_ID": "<value here>", // needed just for a few tests
+    "E2E_TEST_BUCKET": "<value here>", // needed just for a few tests
+    "E2E_FLEX_INSTANCE_NAME": "<value here>", // needed just for a few tests
+    "IDENTITY_PROVIDER_ID": "<value here>" // needed just for a few tests
   }
 }
 ```
@@ -274,7 +273,7 @@ To update simply rename all instances of major version across the repository imp
 
 e.g `v20230201001` => `v20230201002` 
 
-### Update Automation
+### Update SDK Automation
 
 To update Atlas SDK run:
 

@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -67,6 +67,8 @@ func TestDBUserWithFlags(t *testing.T) {
 			"--password", pwd,
 			"--scope", scopeClusterDataLake,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		testCreateUserCmd(t, cmd, username)
@@ -76,7 +78,10 @@ func TestDBUserWithFlags(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -94,7 +99,10 @@ func TestDBUserWithFlags(t *testing.T) {
 			dbusersEntity,
 			"ls",
 			"-c",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -124,7 +132,10 @@ func TestDBUserWithFlags(t *testing.T) {
 			clusterName0,
 			"--password",
 			pwd,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		testUpdateUserCmd(t, cmd, username)
 	})
@@ -138,7 +149,10 @@ func TestDBUserWithFlags(t *testing.T) {
 			username,
 			"--password",
 			pwd,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		testUpdateUserCmd(t, cmd, username)
 	})
@@ -156,8 +170,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
-	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
-	require.NotEmpty(t, idpID)
+	idpID, err := internal.IdentityProviderID()
+	require.NoError(t, err)
 	oidcUsername := idpID + "/" + username
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -176,6 +190,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 			"--username", username,
 			"--scope", scopeClusterDataLake,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		passwordStdin := bytes.NewBuffer([]byte(pwd))
 		cmd.Stdin = passwordStdin
@@ -193,6 +209,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 			"IDP_GROUP",
 			"--scope", scopeClusterDataLake,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		testCreateUserCmd(t, cmd, oidcUsername)
@@ -212,7 +230,10 @@ func TestDBUsersWithStdin(t *testing.T) {
 			roleReadWrite,
 			"--scope",
 			clusterName0,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		testUpdateUserCmd(t, cmd, username)
 	})
@@ -247,11 +268,14 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDescribeUser(t *testing.T, cliPath, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		dbusersEntity,
 		"describe",
 		username,
-		"-o=json")
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -288,13 +312,16 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
 		dbusersEntity,
 		"delete",
 		username,
 		"--force",
 		"--authDB",
-		"admin")
+		"admin",
+		"-P",
+		internal.ProfileName(),
+	)
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -59,6 +59,8 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			"describe",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -102,6 +104,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--userClaim",
 			"user",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -126,6 +130,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -172,6 +178,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--associatedDomain",
 			"iam-test-domain-dev.com",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -195,6 +203,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -218,6 +228,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -237,6 +249,8 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			connectedOrgsConfigsEntity,
 			"describe",
+			"-P",
+			internal.ProfileName(),
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
@@ -264,6 +278,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -287,6 +303,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -310,6 +328,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--file",
 			"testdata/connected_org_config.json",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -333,6 +353,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--file",
 			"testdata/connected_org_config_update.json",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -358,6 +380,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--idpType",
 			"WORKFORCE",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -381,6 +405,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--idpType",
 			"WORKLOAD",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -397,6 +423,8 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsEntity,
 			identityProviderEntity,
 			"list",
+			"-P",
+			internal.ProfileName(),
 			"--federationSettingsId",
 			federationSettingsID,
 			"--protocol",
@@ -421,6 +449,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -446,6 +476,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -467,6 +499,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -485,6 +519,8 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsID,
 			"--force",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -502,6 +538,8 @@ func TestIdentityProviders(t *testing.T) {
 			"--federationSettingsId",
 			federationSettingsID,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -520,6 +558,8 @@ func TestIdentityProviders(t *testing.T) {
 			federationSettingsID,
 			"--force",
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()

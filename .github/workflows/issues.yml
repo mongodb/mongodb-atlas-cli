@@ -17,7 +17,7 @@
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v12
+        uses: mongodb/apix-action/create-jira@v13
         id: create
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
@@ -32,7 +32,7 @@
               "fields": {
                 "fixVersions": [
                   {
-                    "id": "41805"
+                    "name": "next-atlascli-release"
                   }
                 ],
                 "customfield_12751": [

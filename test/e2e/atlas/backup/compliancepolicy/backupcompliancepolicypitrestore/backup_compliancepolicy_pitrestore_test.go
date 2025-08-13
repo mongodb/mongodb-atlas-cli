@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -68,6 +68,8 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 			g.ProjectID,
 			"--restoreWindowDays",
 			"1",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, outputErr := internal.RunAndGetStdOut(cmd)

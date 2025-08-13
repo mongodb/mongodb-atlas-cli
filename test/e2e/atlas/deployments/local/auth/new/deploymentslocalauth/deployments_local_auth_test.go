@@ -51,7 +51,11 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
@@ -62,7 +66,6 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	)
 
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
@@ -71,6 +74,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 				deploymentEntity,
 				"diagnostics",
 				deploymentName,
+				"-P",
+				internal.ProfileName(),
 			)
 
 			cmd.Env = os.Environ()
@@ -92,6 +97,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUserPassword,
 			"--bindIpAll",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -108,6 +115,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--type",
 			"local",
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -122,6 +131,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"list",
 			"--type",
 			"local",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -156,6 +167,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUserPassword,
 			"--connectWith",
 			"connectionString",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -217,6 +230,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--type",
 			"LOCAL",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -244,6 +259,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--file",
 			"testdata/sample_vector_search.json",
 			"-w",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -274,6 +291,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -301,6 +320,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -383,6 +404,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--password",
 			dbUserPassword,
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -402,6 +425,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -420,6 +445,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		r, err := cmd.CombinedOutput()

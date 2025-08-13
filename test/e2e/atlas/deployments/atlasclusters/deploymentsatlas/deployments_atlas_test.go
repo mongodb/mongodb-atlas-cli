@@ -45,14 +45,17 @@ func TestDeploymentsAtlas(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	if internal.TestRunMode() != internal.TestModeLive {
+	req := require.New(t)
+	mode, err := internal.TestRunMode()
+	req.NoError(err)
+
+	if mode != internal.TestModeLive {
 		t.Skip("skipping test in snapshot mode")
 	}
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
-	req := require.New(t)
 	req.NoError(err)
 
 	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
@@ -80,6 +83,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--projectId", g.ProjectID,
 			"--username", dbUserUsername,
 			"--password", dbUserPassword,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -100,6 +105,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--type", "atlas",
 			"--connectWith", "connectionString",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -132,6 +139,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			clusterName,
 			"--type=ATLAS",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -146,6 +155,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			clusterName,
 			"--type=ATLAS",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -170,6 +181,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--collection",
 			collectionNameAtlas,
 			"--watch",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 
@@ -190,6 +203,8 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--watch",
 			"--watchTimeout", "300",
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

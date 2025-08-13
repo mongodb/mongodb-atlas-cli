@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -63,6 +63,8 @@ func TestDBRoles(t *testing.T) {
 			"--privilege", fmt.Sprintf("%s@db.collection,%s@db.collection2", createPrivilege, findPrivilege),
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -85,7 +87,9 @@ func TestDBRoles(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -101,7 +105,9 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"describe",
 			roleName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -128,7 +134,9 @@ func TestDBRoles(t *testing.T) {
 			"--privilege", updatePrivilege,
 			"--privilege", createPrivilege+"@db2.collection",
 			"--append",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -154,7 +162,9 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"--inheritedRole", enableShardingInheritedRole,
 			"--privilege", updatePrivilege,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -175,7 +185,9 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"delete",
 			roleName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

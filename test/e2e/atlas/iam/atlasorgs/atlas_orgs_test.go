@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312005/admin"
+	"go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -47,7 +47,10 @@ func TestAtlasOrgs(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"ls",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
@@ -64,7 +67,10 @@ func TestAtlasOrgs(t *testing.T) {
 			orgEntity,
 			"describe",
 			orgID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
@@ -78,7 +84,10 @@ func TestAtlasOrgs(t *testing.T) {
 			"ls",
 			"--orgId",
 			orgID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
@@ -107,7 +116,10 @@ func TestAtlasOrgs(t *testing.T) {
 			"ORG_OWNER",
 			"--apiKeyDescription",
 			"test",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -133,6 +145,8 @@ func TestAtlasOrgs(t *testing.T) {
 			"delete",
 			orgID,
 			"--force",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)

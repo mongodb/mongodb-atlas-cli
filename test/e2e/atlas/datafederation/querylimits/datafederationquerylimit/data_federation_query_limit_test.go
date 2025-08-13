@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -44,10 +44,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 	n := g.MemoryRand("rand", 1000)
 	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
-	testBucket := os.Getenv("E2E_TEST_BUCKET")
-	r.NotEmpty(testBucket)
-	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
-	r.NotEmpty(roleID)
+	testBucket, err := internal.TestBucketName()
+	r.NoError(err)
+	roleID, err := internal.CloudRoleID()
+	r.NoError(err)
 
 	limitName := "bytesProcessed.query"
 
@@ -60,7 +60,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			roleID,
 			"--awsTestS3Bucket",
 			testBucket,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -84,7 +87,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			dataFederationName,
 			"--overrunPolicy",
 			"BLOCK",
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
@@ -103,7 +109,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -120,7 +129,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			"ls",
 			"--dataFederation",
 			dataFederationName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -139,7 +151,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			limitName,
 			"--dataFederation",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -154,7 +169,10 @@ func TestDataFederationQueryLimit(t *testing.T) {
 			datafederationEntity,
 			"delete",
 			dataFederationName,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 
 		resp, err := internal.RunAndGetStdOut(cmd)

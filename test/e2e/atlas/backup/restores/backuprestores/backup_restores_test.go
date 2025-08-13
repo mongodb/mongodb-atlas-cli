@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 
 const (
@@ -75,7 +75,10 @@ func TestRestores(t *testing.T) {
 			"test-snapshot",
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -96,7 +99,10 @@ func TestRestores(t *testing.T) {
 			"--clusterName",
 			sourceClusterName,
 			"--projectId",
-			sourceProjectID)
+			sourceProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
@@ -118,7 +124,10 @@ func TestRestores(t *testing.T) {
 			targetProjectID,
 			"--targetClusterName",
 			targetClusterName,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -138,7 +147,10 @@ func TestRestores(t *testing.T) {
 			sourceClusterName,
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -153,7 +165,10 @@ func TestRestores(t *testing.T) {
 			sourceClusterName,
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -173,7 +188,10 @@ func TestRestores(t *testing.T) {
 			sourceClusterName,
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -196,7 +214,10 @@ func TestRestores(t *testing.T) {
 			snapshotID,
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -216,7 +237,10 @@ func TestRestores(t *testing.T) {
 			sourceClusterName,
 			"--projectId",
 			sourceProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 
@@ -233,7 +257,10 @@ func TestRestores(t *testing.T) {
 			sourceClusterName,
 			"--projectId",
 			sourceProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -252,7 +279,10 @@ func TestRestores(t *testing.T) {
 			"--clusterName",
 			sourceClusterName,
 			"--projectId",
-			sourceProjectID)
+			sourceProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))

@@ -34,10 +34,12 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 	t.Helper()
 
 	// Setup the command
-	cmd := exec.Command(cliPath,
+	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
 		authEntity,
 		whoami,
-		"--profile", profile)
+		"--profile", profile,
+		"-P",
+		internal.ProfileName())
 
 	cmd.Env = os.Environ()
 

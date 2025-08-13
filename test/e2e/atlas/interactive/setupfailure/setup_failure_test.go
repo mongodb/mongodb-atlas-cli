@@ -45,7 +45,9 @@ func TestSetupFailureFlow(t *testing.T) {
 			setupEntity,
 			"--skipMongosh",
 			"--skipSampleData",
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
@@ -58,7 +60,9 @@ func TestSetupFailureFlow(t *testing.T) {
 			setupEntity,
 			"--skipMongosh",
 			"--skipSampleData",
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
@@ -74,7 +78,9 @@ func TestSetupFailureFlow(t *testing.T) {
 			"--skipMongosh",
 			"--skipSampleData",
 			"--projectId", invalidProjectID,
-			"--force")
+			"--force",
+			"-P",
+			internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)

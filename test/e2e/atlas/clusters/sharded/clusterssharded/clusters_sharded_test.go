@@ -70,7 +70,10 @@ func TestShardedCluster(t *testing.T) {
 			"--mdbVersion", mdbVersion,
 			"--diskSizeGB", diskSizeGB30,
 			"--projectId", g.ProjectID,
-			"-o=json")
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -83,7 +86,15 @@ func TestShardedCluster(t *testing.T) {
 	})
 
 	g.Run("Delete sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.ProjectID, "--force")
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			shardedClusterName,
+			"--projectId", g.ProjectID,
+			"--force",
+			"-P",
+			internal.ProfileName(),
+		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
@@ -102,6 +113,8 @@ func TestShardedCluster(t *testing.T) {
 			"watch",
 			shardedClusterName,
 			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted

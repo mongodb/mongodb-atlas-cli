@@ -111,6 +111,9 @@ func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
 		DeleteOpts: &cli.DeleteOpts{
 			Confirm: true,
 		},
+		revokeServiceAccountToken: func() error {
+			return nil
+		},
 	}
 	ctx := t.Context()
 	mockConfig.
@@ -118,18 +121,15 @@ func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
 		AuthType().
 		Return(config.ServiceAccount).
 		Times(1)
+
+	mockServiceAccountCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
 		Delete().
 		Return(nil).
 		Times(1)
-	mockFlow.
-		EXPECT().
-		RevokeToken(ctx, gomock.Any(), gomock.Any()).
-		Return(nil, nil).
-		Times(1)
-	mockTokenCleanUp(mockConfig)
-	mockProjectAndOrgCleanUp(mockConfig)
+
 	require.NoError(t, opts.Run(ctx))
 }
 
@@ -222,6 +222,9 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 			Confirm: true,
 		},
 		keepConfig: true,
+		revokeServiceAccountToken: func() error {
+			return nil
+		},
 	}
 	ctx := t.Context()
 	mockConfig.
@@ -230,13 +233,7 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 		Return(config.ServiceAccount).
 		Times(1)
 
-	mockFlow.
-		EXPECT().
-		RevokeToken(ctx, gomock.Any(), gomock.Any()).
-		Return(nil, nil).
-		Times(1)
-
-	mockTokenCleanUp(mockConfig)
+	mockServiceAccountCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -270,9 +267,10 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 		Return(config.NoAuth).
 		Times(1)
 
-	mockTokenCleanUp(mockConfig)
-	mockProjectAndOrgCleanUp(mockConfig)
 	mockAPIKeysCleanUp(mockConfig)
+	mockTokenCleanUp(mockConfig)
+	mockServiceAccountCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
 		EXPECT().
@@ -302,6 +300,17 @@ func mockTokenCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetAccessToken("").
+		Times(1)
+}
+
+func mockServiceAccountCleanUp(mockConfig *MockConfigDeleter) {
+	mockConfig.
+		EXPECT().
+		SetClientID("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetClientSecret("").
 		Times(1)
 }
 

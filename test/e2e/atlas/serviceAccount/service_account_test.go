@@ -30,6 +30,12 @@ func TestCreateOrgServiceAccount(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
+	mode, err := internal.TestRunMode()
+	require.NoError(t, err)
+	if mode != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -49,7 +55,7 @@ func TestCreateOrgServiceAccount(t *testing.T) {
 
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
-	t.Logf("Service account authentication successful. Projects output: %s", string(resp))
+	t.Logf("Service account authentication successful: Command executed using service account profile. Command output: %s", string(resp))
 
 	// Logout from the service account profile
 	err = logoutServiceAccountProfile(t, cliPath, saProfileName)
@@ -81,7 +87,7 @@ func setupServiceAccountProfile(t *testing.T, cliPath, profileName, clientID, cl
 	}
 
 	// Set ops manager URL
-	opsManagerURL := getOpsManagerURL()
+	opsManagerURL := "https://cloud-dev.mongodb.com/"
 	cmd = exec.Command(cliPath, "config", "set", "ops_manager_url", opsManagerURL, "-P", profileName)
 	cmd.Env = os.Environ()
 	if _, err := internal.RunAndGetStdOut(cmd); err != nil {
@@ -89,17 +95,6 @@ func setupServiceAccountProfile(t *testing.T, cliPath, profileName, clientID, cl
 	}
 
 	return nil
-}
-
-// getOpsManagerURL returns a URL depending on the profile name.
-func getOpsManagerURL() string {
-	profileName := internal.ProfileName()
-	switch profileName {
-	case "__e2e_snapshot":
-		return "http://localhost:8080/"
-	default:
-		return "https://cloud-dev.mongodb.com/"
-	}
 }
 
 func logoutServiceAccountProfile(t *testing.T, cliPath, profileName string) error {

@@ -48,7 +48,7 @@ func (opts *SetOpts) Run() error {
 			return err
 		}
 	} else if strings.HasSuffix(opts.prop, "_id") {
-		if err := validate.ObjectID(opts.val); err != nil {
+		if err := validate.ObjectIDByType(opts.prop, opts.val); err != nil {
 			return err
 		}
 	}

@@ -18,11 +18,13 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -82,8 +84,9 @@ func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret strin
 	cfg := clientcredentials.NewConfig(clientID, clientSecret)
 	if config.OpsManagerURL() != "" {
 		// TokenURL and RevokeURL points to "https://cloud.mongodb.com/api/oauth/<token/revoke>". Modify TokenURL and RevokeURL if OpsManagerURL does not point to cloud.mongodb.com
-		cfg.TokenURL = config.OpsManagerURL() + clientcredentials.TokenAPIPath
-		cfg.RevokeURL = config.OpsManagerURL() + clientcredentials.RevokeAPIPath
+		baseURL := strings.TrimSuffix(config.OpsManagerURL(), "/")
+		cfg.TokenURL = baseURL + clientcredentials.TokenAPIPath
+		cfg.RevokeURL = baseURL + clientcredentials.RevokeAPIPath
 	}
 	token, err := cfg.Token(ctx)
 	if err != nil {
@@ -106,7 +109,13 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		opts.config.SetRefreshToken("")
 	case config.ServiceAccount:
 		if err := opts.revokeServiceAccountToken(); err != nil {
-			return err
+			// If the service account doesn't exist, log a warning and proceed.
+			// This happens if the user has already deleted the service account or is pointing to the wrong environment.
+			// To not block users who have already deleted their account, we proceed with logout.
+			if !strings.Contains(err.Error(), "The specified service account doesn't exist") {
+				return err
+			}
+			_, _ = log.Warningf("Warning: unable to revoke service account token: %v, proceeding with logout\n", err)
 		}
 		opts.config.SetClientID("")
 		opts.config.SetClientSecret("")

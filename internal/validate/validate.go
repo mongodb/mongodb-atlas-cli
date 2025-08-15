@@ -32,6 +32,7 @@ const (
 	minPasswordLength       = 10
 	clusterWideScaling      = "clusterWideScaling"
 	independentShardScaling = "independentShardScaling"
+	clientIDLength          = 34
 )
 
 var (
@@ -106,6 +107,17 @@ func ObjectID(s string) error {
 		return fmt.Errorf("the provided value '%s' is not a valid ID", s)
 	}
 	return nil
+}
+
+func ObjectIDByType(name, s string) error {
+	if strings.HasPrefix(name, "client_") {
+		if len(s) != clientIDLength {
+			return fmt.Errorf("the provided value '%s' is not a valid client ID", s)
+		}
+		return nil
+	}
+
+	return ObjectID(s)
 }
 
 // Credentials validates public and private API keys have been set.

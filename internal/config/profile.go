@@ -138,6 +138,8 @@ func ProfileProperties() []string {
 		privateAPIKey,
 		projectID,
 		publicAPIKey,
+		ClientIDField,
+		ClientSecretField,
 		RefreshTokenField,
 		service,
 	}

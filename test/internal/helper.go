@@ -113,6 +113,8 @@ const (
 	apiKeysEntity                 = "apikeys"
 	apiKeyAccessListEntity        = "accessLists"
 	usersEntity                   = "users"
+	apiEntity                     = "api"
+	serviceAccountsEntity         = "serviceAccounts"
 
 	deletingState = "DELETING"
 
@@ -128,6 +130,10 @@ const (
 	e2eGovClusterTier    = "M20"
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+
+	// serviceAccount API constants.
+	serviceAccountAPIVersion = "2024-08-05"
+	secretExpiresAfterHours  = 8
 )
 
 // Backup compliance policy constants.
@@ -1484,4 +1490,88 @@ func DeleteOrgAPIKey(id string) error {
 	)
 	cmd.Env = os.Environ()
 	return cmd.Run()
+}
+
+// createOrgServiceAccount creates a new organization service account.
+func createOrgServiceAccount(cliPath, name string) (string, string, error) {
+	payload := map[string]any{
+		"description":             "Test service account",
+		"name":                    name,
+		"roles":                   []string{"ORG_OWNER"},
+		"secretExpiresAfterHours": secretExpiresAfterHours,
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	args := []string{
+		apiEntity,
+		serviceAccountsEntity,
+		"createServiceAccount",
+		"--version",
+		serviceAccountAPIVersion,
+		"-P",
+		ProfileName(),
+	}
+
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	cmd.Stdin = bytes.NewReader(payloadBytes)
+
+	resp, err := RunAndGetStdOut(cmd)
+	if err != nil {
+		return "", "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var serviceAccount map[string]any
+	if err := json.Unmarshal(resp, &serviceAccount); err != nil {
+		return "", "", fmt.Errorf("failed to unmarshal response: %w", err)
+	}
+
+	// Obtain client ID
+	clientID, ok := serviceAccount["clientId"].(string)
+	if !ok {
+		return "", "", errors.New("clientId not found in response")
+	}
+
+	// Obtain client secret
+	secrets, ok := serviceAccount["secrets"].([]any)
+	if !ok || len(secrets) == 0 {
+		return "", "", errors.New("secrets array not found or empty in response")
+	}
+	secret, ok := secrets[0].(map[string]any)
+	if !ok {
+		return "", "", errors.New("secret is not a valid object")
+	}
+	clientSecret, ok := secret["secret"].(string)
+	if !ok {
+		return "", "", errors.New("secret value not found in secret")
+	}
+
+	return clientID, clientSecret, nil
+}
+
+// deleteOrgServiceAccount deletes an organization service account.
+func deleteOrgServiceAccount(t *testing.T, cliPath, clientID string) {
+	t.Helper()
+
+	args := []string{
+		apiEntity,
+		serviceAccountsEntity,
+		"deleteServiceAccount",
+		"--clientId",
+		clientID,
+		"--version",
+		serviceAccountAPIVersion,
+		"-P",
+		ProfileName(),
+	}
+
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+
+	_, err := RunAndGetStdOut(cmd)
+	require.NoError(t, err, "failed to delete service account %s", clientID)
 }

@@ -685,6 +685,18 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance/...
+  - name: atlas_service_account_e2e
+    tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true

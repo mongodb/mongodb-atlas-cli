@@ -16,10 +16,8 @@ package transport
 
 import (
 	"context"
-	"net"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/atlas-cli-core/transport"
@@ -29,90 +27,20 @@ import (
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
-const (
-	telemetryTimeout      = 1 * time.Second
-	timeout               = 5 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 5
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 30 * time.Second
-	expectContinueTimeout = 1 * time.Second
-)
-
-var defaultTransport = newTransport(timeout)
-
 func Default() *http.Transport {
-	return defaultTransport
+	return transport.Default()
 }
-
-var telemetryTransport = newTransport(telemetryTimeout)
 
 func Telemetry() *http.Transport {
-	return telemetryTransport
-}
-
-func newTransport(timeout time.Duration) *http.Transport {
-	return &http.Transport{
-		DialContext: (&net.Dialer{
-			Timeout:   timeout,
-			KeepAlive: keepAlive,
-		}).DialContext,
-		MaxIdleConns:          maxIdleConns,
-		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-		Proxy:                 http.ProxyFromEnvironment,
-		IdleConnTimeout:       idleConnTimeout,
-		ExpectContinueTimeout: expectContinueTimeout,
-	}
+	return transport.Telemetry()
 }
 
 func NewDigestTransport(username, password string, base http.RoundTripper) *digest.Transport {
-	return &digest.Transport{
-		Username:  username,
-		Password:  password,
-		Transport: base,
-	}
+	return transport.NewDigestTransport(username, password, base)
 }
 
 func NewAccessTokenTransport(token *atlasauth.Token, base http.RoundTripper, saveToken func(*atlasauth.Token) error) (http.RoundTripper, error) {
-	client := http.DefaultClient
-	client.Transport = Default()
-
-	flow, err := transport.FlowWithConfig(config.Default(), client, version.Version)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &tokenTransport{
-		token:      token,
-		base:       base,
-		authConfig: flow,
-		saveToken:  saveToken,
-	}, nil
-}
-
-type tokenTransport struct {
-	token      *atlasauth.Token
-	authConfig *atlasauth.Config
-	base       http.RoundTripper
-	saveToken  func(*atlasauth.Token) error
-}
-
-func (tr *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	if !tr.token.Valid() {
-		token, _, err := tr.authConfig.RefreshToken(req.Context(), tr.token.RefreshToken)
-		if err != nil {
-			return nil, err
-		}
-		tr.token = token
-		if err := tr.saveToken(tr.token); err != nil {
-			return nil, err
-		}
-	}
-
-	tr.token.SetAuthHeader(req)
-
-	return tr.base.RoundTrip(req)
+	return transport.NewAccessTokenTransport(token, base, version.Version, saveToken)
 }
 
 // NewServiceAccountClient creates a new HTTP client configured for service account authentication.

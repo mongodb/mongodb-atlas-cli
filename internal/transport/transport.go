@@ -22,8 +22,9 @@ import (
 	"time"
 
 	"github.com/mongodb-forks/digest"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
@@ -76,7 +77,7 @@ func NewAccessTokenTransport(token *atlasauth.Token, base http.RoundTripper, sav
 	client := http.DefaultClient
 	client.Transport = Default()
 
-	flow, err := oauth.FlowWithConfig(config.Default(), client)
+	flow, err := transport.FlowWithConfig(config.Default(), client, version.Version)
 
 	if err != nil {
 		return nil, err

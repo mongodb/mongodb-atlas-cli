@@ -1514,6 +1514,7 @@ func createOrgServiceAccount(cliPath, name string) (string, string, error) {
 		serviceAccountAPIVersion,
 		"-P",
 		ProfileName(),
+		"--debug",
 	}
 
 	cmd := exec.Command(cliPath, args...)

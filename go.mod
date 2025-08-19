@@ -29,7 +29,6 @@ require (
 	github.com/klauspost/compress v1.18.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mholt/archives v0.1.3
-	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v1.19.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
@@ -63,12 +62,14 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
+	github.com/mongodb-forks/digest v1.1.0 // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -113,7 +114,7 @@ require (
 	github.com/ebitengine/purego v0.8.4 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/fsnotify/fsnotify v1.8.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
@@ -142,6 +143,7 @@ require (
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/minio/minlz v1.0.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
+	github.com/mongodb/atlas-cli-core v0.0.0-20250818144810-ba7083f4cd0a
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/nwaples/rardecode/v2 v2.1.0 // indirect
 	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect

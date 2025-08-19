@@ -31,6 +31,7 @@ require (
 	github.com/mholt/archives v0.1.3
 	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v1.19.1
+	github.com/mongodb/atlas-cli-core v0.0.0-20250818144810-ba7083f4cd0a
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.25.7
@@ -70,7 +71,6 @@ require (
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
-	github.com/mongodb/atlas-cli-core v0.0.0-20250818144810-ba7083f4cd0a // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	go.opencensus.io v0.24.0 // indirect

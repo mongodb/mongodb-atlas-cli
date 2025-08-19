@@ -94,7 +94,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"run",
 			"-d",
 			"--name", deploymentName,
-			"-P",
+			"-p", "127.0.0.1::27017",
 			"-e", "MONGODB_INITDB_ROOT_USERNAME="+dbUsername,
 			"-e", "MONGODB_INITDB_ROOT_PASSWORD="+dbUserPassword,
 			image,

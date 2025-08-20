@@ -498,7 +498,7 @@ tasks:
       - func: "build"
   # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
-    tags: ["e2e","generic","atlas","foliage_task_only"]
+    tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -511,7 +511,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
           IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
-    tags: ["e2e","generic","atlas","foliage_task_only"]
+    tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -526,7 +526,7 @@ tasks:
           IDENTITY_PROVIDER_ID: ${identity_provider_id}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -538,7 +538,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
   - name: atlas_autogeneration_commands_e2e
-    tags: ["e2e","autogeneration","atlas"]
+    tags: ["e2e","autogeneration","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -550,7 +550,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration/...
   - name: atlas_clusters_file_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -562,7 +562,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
   - name: atlas_clusters_sharded_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -574,7 +574,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
   - name: atlas_clusters_flex_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -586,7 +586,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex/...
   - name: atlas_clusters_iss_e2e
-    tags: ["e2e","clusters","atlas", "iss"]
+    tags: ["e2e","clusters","atlas", "iss","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -598,7 +598,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss/...
   - name: atlas_plugin_install
-    tags: ["e2e","atlas","plugin","install"]
+    tags: ["e2e","atlas","plugin","install","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
@@ -606,7 +606,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/install/...
   - name: atlas_plugin_run
-    tags: ["e2e","atlas","plugin"]
+    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
@@ -614,7 +614,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/run/...
   - name: atlas_plugin_uninstall
-    tags: ["e2e","atlas","plugin"]
+    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
@@ -622,7 +622,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/uninstall/...
   - name: atlas_plugin_update
-    tags: ["e2e","atlas","plugin"]
+    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
@@ -630,7 +630,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/update/...
   - name: atlas_clusters_m0_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -642,7 +642,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0/...
   - name: atlas_kubernetes_plugin
-    tags: ["e2e","atlas","plugin","kubernetes"]
+    tags: ["e2e","atlas","plugin","kubernetes","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "install gotestsum"
@@ -650,7 +650,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/kubernetes/...
   - name: atlas_clusters_upgrade_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -662,7 +662,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade/...
   - name: atlas_interactive_e2e
-    tags: ["e2e","atlas", "interactive"]
+    tags: ["e2e","atlas", "interactive","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -674,7 +674,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
   - name: atlas_serverless_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -686,7 +686,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance/...
   - name: atlas_gov_clusters_flags_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -699,7 +699,7 @@ tasks:
           E2E_PROFILE_NAME: __e2e_gov
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
   - name: atlas_gov_clusters_file_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -712,7 +712,7 @@ tasks:
           E2E_PROFILE_NAME: __e2e_gov
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
   - name: atlas_gov_clusters_sharded_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -726,7 +726,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
   # LDAP Configuration depends on a cluster running
   - name: atlas_ldap_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -739,7 +739,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap/...
   # Logs depend on a cluster running to get logs from
   - name: atlas_logs_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -751,7 +751,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
   - name: atlas_gov_logs_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -765,7 +765,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
   # Metrics depend on a cluster running to get metrics from
   - name: atlas_metrics_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -777,7 +777,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
   - name: atlas_gov_metrics_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -791,7 +791,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
   # Processes depend on a cluster running
   - name: atlas_processes_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -803,7 +803,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
   - name: atlas_gov_processes_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -817,7 +817,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
   # Online archives depend on a cluster to create the archive against
   - name: atlas_online_archive_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -830,7 +830,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive/...
   # Performance Advisor depend on a cluster
   - name: atlas_performance_advisor_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -842,7 +842,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
   - name: atlas_gov_performance_advisor_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -856,7 +856,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     must_have_test_results: true
     depends_on:
@@ -870,7 +870,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
           E2E_TIMEOUT: 3h
   - name: atlas_gov_search_e2e
-    tags: ["e2e","clusters","atlasgov"]
+    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_gov_clusters_flags_e2e
@@ -883,7 +883,7 @@ tasks:
           E2E_PROFILE_NAME: __e2e_gov
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
   - name: atlas_search_nodes_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas", "foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -896,7 +896,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes/...
   # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_private_endpoint_e2e
-    tags: ["e2e","networking","atlas"]
+    tags: ["e2e","networking","atlas", "foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -909,7 +909,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/networking/...
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_db_e2e
-    tags: ["e2e","datafederation","atlas"]
+    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -924,7 +924,7 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_privatenetwork_e2e
-    tags: ["e2e","datafederation","atlas"]
+    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -939,7 +939,7 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_querylimits_e2e
-    tags: ["e2e","datafederation","atlas"]
+    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -954,7 +954,7 @@ tasks:
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
-    tags: ["e2e","generic","atlas"]
+    tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -966,7 +966,7 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
   - name: atlas_gov_iam_e2e
-    tags: ["e2e","generic","atlas"]
+    tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -980,7 +980,7 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
     # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_live_migrations_link_token_e2e
-    tags: ["e2e","atlas","livemigrations"]
+    tags: ["e2e","atlas","livemigrations","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -1149,7 +1149,7 @@ tasks:
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
-    tags: [ "e2e","cleanup", "foliage_task_only" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     stepback: false
@@ -1166,7 +1166,7 @@ tasks:
           E2E_PARALLEL: 16
           E2E_TIMEOUT: 3h
   - name: atlas_gov_cleanup_e2e
-    tags: [ "e2e","cleanup", "foliage_task_only" ]
+    tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     stepback: false

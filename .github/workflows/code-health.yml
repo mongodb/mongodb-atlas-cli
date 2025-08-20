@@ -53,7 +53,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
+        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github || echo "Warning: Coverage upload failed"
+        continue-on-error: true
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
@@ -379,7 +380,8 @@ jobs:
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERAGE: coverage.out
-        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
+        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github || echo "Warning: Coverage upload failed"
+        continue-on-error: true
       - name: Test Summary
         if: always()
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

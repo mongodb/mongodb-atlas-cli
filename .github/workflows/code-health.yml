@@ -387,7 +387,7 @@ jobs:
         continue-on-error: true
       - name: Test Summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
+        if: always()
         with:
           paths: e2e-tests.xml
-        if: always() && matrix.os == 'ubuntu-latest'
         continue-on-error: true

@@ -56,22 +56,11 @@ jobs:
         run: |
           goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
         continue-on-error: true
-      - name: Check if test results exist
-        if: always() && matrix.os == 'ubuntu-latest'
-        run: |
-          if [ -f "unit-tests.xml" ]; then
-            echo "Test results file found"
-            ls -la unit-tests.xml
-          else
-            echo "Warning: unit-tests.xml not found"
-          fi
-        continue-on-error: true
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: unit-tests.xml
-        if: always() && matrix.os == 'ubuntu-latest' && hashFiles('unit-tests.xml') != ''
         continue-on-error: true
 
   coverage:
@@ -395,18 +384,7 @@ jobs:
         run: |
           goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
         continue-on-error: true
-      - name: Check if test results exist
-        if: always()
-        run: |
-          if [ -f "e2e-tests.xml" ]; then
-            echo "Test results file found"
-            ls -la e2e-tests.xml
-          else
-            echo "Warning: e2e-tests.xml not found"
-          fi
-        continue-on-error: true
       - name: Test Summary
-        if: always() && hashFiles('e2e-tests.xml') != ''
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: e2e-tests.xml

@@ -20,14 +20,14 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -73,7 +73,7 @@ func (opts *logoutOpts) initFlow(ctx context.Context) error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
-	opts.flow, err = oauth.FlowWithConfig(config.Default(), client)
+	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
 	opts.revokeServiceAccountToken = func() error {
 		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
 	}

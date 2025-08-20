@@ -26,6 +26,7 @@
 	"github.com/mholt/archives": "apix-2",
 	"github.com/mongodb-forks/digest": "apix-2",
 	"github.com/mongodb-labs/cobra2snooty": "apix-2",
+	"github.com/mongodb/atlas-cli-core": "apix-2",
 	"github.com/Netflix/go-expect": "apix-2",
 	"github.com/PaesslerAG/jsonpath": "apix-2",
 	"github.com/pelletier/go-toml": "apix-2",

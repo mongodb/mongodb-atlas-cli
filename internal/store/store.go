@@ -23,9 +23,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
@@ -62,7 +63,7 @@ func HTTPClient(c CredentialsGetter, httpTransport http.RoundTripper) (*http.Cli
 		if err != nil {
 			return nil, err
 		}
-		tr, err := transport.NewAccessTokenTransport(token, httpTransport, func(t *atlasauth.Token) error {
+		tr, err := transport.NewAccessTokenTransport(token, httpTransport, version.Version, func(t *atlasauth.Token) error {
 			config.SetAccessToken(t.AccessToken)
 			config.SetRefreshToken(t.RefreshToken)
 			return config.Save()
@@ -72,7 +73,7 @@ func HTTPClient(c CredentialsGetter, httpTransport http.RoundTripper) (*http.Cli
 		}
 		return &http.Client{Transport: tr}, nil
 	case config.ServiceAccount:
-		return transport.NewServiceAccountClient(c.ClientID(), c.ClientSecret()), nil
+		return transport.NewServiceAccountClientWithHost(c.ClientID(), c.ClientSecret(), config.OpsManagerURL()), nil
 	case config.NoAuth:
 		fallthrough
 	default:

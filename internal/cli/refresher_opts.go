@@ -18,9 +18,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -39,12 +39,12 @@ type Refresher interface {
 	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
 }
 
-func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
+func (opts *RefresherOpts) InitFlow(c transport.ServiceGetter) func() error {
 	return func() error {
 		var err error
 		client := http.DefaultClient
 		client.Transport = transport.Default()
-		opts.flow, err = oauth.FlowWithConfig(c, client)
+		opts.flow, err = transport.FlowWithConfig(c, client, version.Version)
 		return err
 	}
 }

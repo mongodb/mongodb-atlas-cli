@@ -19,6 +19,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/auth"
@@ -65,7 +66,7 @@ func TestNewServiceAccountTransport(t *testing.T) {
 	clientID := "mock-client-id"
 	clientSecret := "mock-client-secret" //nolint:gosec
 
-	client := NewServiceAccountClient(clientID, clientSecret)
+	client := transport.NewServiceAccountClientWithHost(clientID, clientSecret, config.OpsManagerURL())
 	require.NotNil(t, client)
 
 	// Create request to check authentication header

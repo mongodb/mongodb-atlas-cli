@@ -15,15 +15,11 @@
 package transport
 
 import (
-	"context"
 	"net/http"
-	"strings"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
-	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
@@ -41,16 +37,4 @@ func NewDigestTransport(username, password string, base http.RoundTripper) *dige
 
 func NewAccessTokenTransport(token *atlasauth.Token, base http.RoundTripper, saveToken func(*atlasauth.Token) error) (http.RoundTripper, error) {
 	return transport.NewAccessTokenTransport(token, base, version.Version, saveToken)
-}
-
-// NewServiceAccountClient creates a new HTTP client configured for service account authentication.
-// This function does not return http.RoundTripper as atlas-sdk already packages a transport with the client.
-func NewServiceAccountClient(clientID, clientSecret string) *http.Client {
-	cfg := clientcredentials.NewConfig(clientID, clientSecret)
-	if config.OpsManagerURL() != "" {
-		baseURL := strings.TrimSuffix(config.OpsManagerURL(), "/")
-		cfg.TokenURL = baseURL + clientcredentials.TokenAPIPath
-		cfg.RevokeURL = baseURL + clientcredentials.RevokeAPIPath
-	}
-	return cfg.Client(context.Background())
 }

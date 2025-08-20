@@ -31,7 +31,7 @@ require (
 	github.com/mholt/archives v0.1.3
 	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20250818144810-ba7083f4cd0a
+	github.com/mongodb/atlas-cli-core v0.0.0-20250820105017-56202fc11332
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.25.7

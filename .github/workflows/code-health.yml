@@ -53,7 +53,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github || echo "Warning: Coverage upload failed"
+        run: |
+          goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
         continue-on-error: true
       - name: Check if test results exist
         if: always() && matrix.os == 'ubuntu-latest'
@@ -391,7 +392,8 @@ jobs:
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERAGE: coverage.out
-        run: goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github || echo "Warning: Coverage upload failed"
+        run: |
+          goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
         continue-on-error: true
       - name: Check if test results exist
         if: always()

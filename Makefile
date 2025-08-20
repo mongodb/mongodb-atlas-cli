@@ -157,11 +157,11 @@ e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
-	-go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE) || echo "Warning: Coverage processing failed, but tests succeeded"
+	-go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 .PHONY: e2e-test-snapshots
 e2e-test-snapshots: build-debug ## Run E2E tests
 	TEST_MODE=replay DO_NOT_TRACK=1 $(TEST_CMD) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
-	-go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE) || echo "Warning: Coverage processing failed, but tests succeeded"
+	-go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: unit-test
 unit-test: build-debug ## Run unit-tests

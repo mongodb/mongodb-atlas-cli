@@ -57,11 +57,11 @@ jobs:
           goveralls -parallel -coverprofile="$COVERAGE" -ignore=test/* -service=github
         continue-on-error: true
       - name: Test Summary
-        if: always() && matrix.os == 'ubuntu-latest' && hashFiles('unit-tests.xml') != ''
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: unit-tests.xml
+        if: always() && matrix.os == 'ubuntu-latest'
         continue-on-error: true
 
   coverage:

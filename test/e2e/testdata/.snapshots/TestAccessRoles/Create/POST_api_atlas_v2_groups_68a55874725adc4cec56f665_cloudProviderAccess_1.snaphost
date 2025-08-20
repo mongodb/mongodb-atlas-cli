@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 283
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 20 Aug 2025 05:09:13 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 138
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCloudProviderAccessResource::addCloudProviderAccessRole
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=1cc158e5b58ff1b6867c707cf65ab757622d172a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"atlasAWSAccountArn":"arn:aws:iam::299602853325:root","atlasAssumedRoleExternalId":"6b9cc7ba-fec7-4c2a-b3bd-4debc0c5e910","authorizedDate":null,"createdDate":"2025-08-20T05:09:13Z","featureUsages":[],"iamAssumedRoleArn":null,"providerName":"AWS","roleId":"68a55879725adc4cec56fa06"}

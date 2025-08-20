@@ -23,7 +23,7 @@ LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/ver
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
-E2E_TEST_PACKAGES?=./test/e2e/atlas/...
+E2E_TEST_PACKAGES?=./test/e2e/...
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=

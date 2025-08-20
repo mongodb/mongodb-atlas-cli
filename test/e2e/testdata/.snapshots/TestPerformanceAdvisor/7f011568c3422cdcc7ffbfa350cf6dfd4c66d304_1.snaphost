@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 20 Aug 2025 05:17:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 119
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=1cc158e5b58ff1b6867c707cf65ab757622d172a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68a5585b51af9311932003be/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-08-20T05:16:37Z","groupId":"68a5585b51af9311932003be","hostname":"atlas-lxns0o-shard-00-00.pyxeyi.mongodb-dev.net","id":"atlas-lxns0o-shard-00-00.pyxeyi.mongodb-dev.net:27017","lastPing":"2025-08-20T05:17:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68a5585b51af9311932003be/processes/atlas-lxns0o-shard-00-00.pyxeyi.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lxns0o-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-64-shard-00-00.pyxeyi.mongodb-dev.net","version":"8.0.13"},{"created":"2025-08-20T05:16:37Z","groupId":"68a5585b51af9311932003be","hostname":"atlas-lxns0o-shard-00-01.pyxeyi.mongodb-dev.net","id":"atlas-lxns0o-shard-00-01.pyxeyi.mongodb-dev.net:27017","lastPing":"2025-08-20T05:17:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68a5585b51af9311932003be/processes/atlas-lxns0o-shard-00-01.pyxeyi.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lxns0o-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-64-shard-00-01.pyxeyi.mongodb-dev.net","version":"8.0.13"},{"created":"2025-08-20T05:16:37Z","groupId":"68a5585b51af9311932003be","hostname":"atlas-lxns0o-shard-00-02.pyxeyi.mongodb-dev.net","id":"atlas-lxns0o-shard-00-02.pyxeyi.mongodb-dev.net:27017","lastPing":"2025-08-20T05:17:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68a5585b51af9311932003be/processes/atlas-lxns0o-shard-00-02.pyxeyi.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lxns0o-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-64-shard-00-02.pyxeyi.mongodb-dev.net","version":"8.0.13"}],"totalCount":3}

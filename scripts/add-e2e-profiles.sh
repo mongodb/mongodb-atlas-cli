@@ -16,10 +16,20 @@
 set -euo pipefail
 
 ./bin/atlas config delete __e2e --force >/dev/null 2>&1 || true
+
+# Prompt if user wants to use cloud-dev.mongodb.com 
+read -p "Do you want to set ops_manager_url to cloud-dev.mongodb.com? [Y/n] " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    ops_manager_url="https://cloud-dev.mongodb.com/"
+else
+    ops_manager_url="https://cloud.mongodb.com/" # Default to cloud.mongodb.com
+fi
+
+./bin/atlas config set ops_manager_url $ops_manager_url -P __e2e
 ./bin/atlas config init -P __e2e
 ./bin/atlas config set output plaintext -P __e2e
 ./bin/atlas config set telemetry_enabled false -P __e2e
-./bin/atlas config set ops_manager_url https://cloud-dev.mongodb.com/ -P __e2e
 
 ./bin/atlas config delete __e2e_snapshot --force >/dev/null 2>&1 || true
 
@@ -40,4 +50,3 @@ cat <<EOF >> "$CONFIG_PATH"
 EOF
 
 echo "Added e2e profiles to $CONFIG_PATH"
-

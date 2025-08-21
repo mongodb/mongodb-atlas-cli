@@ -50,4 +50,3 @@ cat <<EOF >> "$CONFIG_PATH"
 EOF
 
 echo "Added e2e profiles to $CONFIG_PATH"
-

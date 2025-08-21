@@ -95,7 +95,6 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			dbUsername,
 			"--password",
 			dbUserPassword,
-			"--bindIpAll",
 			"--force",
 			"-P",
 			internal.ProfileName(),

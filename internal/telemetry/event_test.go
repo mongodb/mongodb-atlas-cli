@@ -126,9 +126,10 @@ func TestWithOS(t *testing.T) {
 
 func TestWithUserAgent(t *testing.T) {
 	e := newEvent(withUserAgent())
+	userAgent := config.UserAgent(version.Version)
 
 	a := assert.New(t)
-	a.Equal(e.Properties["UserAgent"], config.UserAgent)
+	a.Equal(e.Properties["UserAgent"], userAgent)
 	a.Equal(e.Properties["HostName"], config.HostName)
 }
 

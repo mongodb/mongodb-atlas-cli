@@ -165,7 +165,7 @@ func WithContext(ctx context.Context) Option {
 
 // setAtlasClient sets the internal client to use an Atlas client and methods.
 func (s *Store) setAtlasClient() error {
-	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent)}
+	opts := []atlas.ClientOpt{atlas.SetUserAgent(config.UserAgent(version.Version))}
 	if s.baseURL != "" {
 		opts = append(opts, atlas.SetBaseURL(s.baseURL))
 	}
@@ -211,7 +211,7 @@ response:
 func (s *Store) createV2Client(client *http.Client) error {
 	opts := []atlasv2.ClientModifier{
 		atlasv2.UseHTTPClient(client),
-		atlasv2.UseUserAgent(config.UserAgent),
+		atlasv2.UseUserAgent(config.UserAgent(version.Version)),
 		atlasv2.UseDebug(log.IsDebugLevel())}
 
 	if s.baseURL != "" {
@@ -228,7 +228,7 @@ func (s *Store) createV2Client(client *http.Client) error {
 func (s *Store) createClustersClient(client *http.Client) error {
 	opts := []atlasClustersPinned.ClientModifier{
 		atlasClustersPinned.UseHTTPClient(client),
-		atlasClustersPinned.UseUserAgent(config.UserAgent),
+		atlasClustersPinned.UseUserAgent(config.UserAgent(version.Version)),
 		atlasClustersPinned.UseDebug(log.IsDebugLevel())}
 
 	if s.baseURL != "" {

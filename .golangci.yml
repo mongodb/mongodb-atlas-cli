@@ -145,6 +145,8 @@ linters:
           alias: storeTransport
         - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api
           alias: shared_api
+        - pkg: github.com/mongodb/atlas-cli-core/mocks
+          alias: coreMocks
       no-extra-aliases: true
     misspell:
       locale: US

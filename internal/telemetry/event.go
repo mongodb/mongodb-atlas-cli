@@ -399,8 +399,9 @@ func withEventType(s string) EventOpt {
 }
 
 func withUserAgent() EventOpt {
+	userAgent := config.UserAgent(version.Version)
 	return func(event Event) {
-		event.Properties["UserAgent"] = config.UserAgent
+		event.Properties["UserAgent"] = userAgent
 		event.Properties["HostName"] = config.HostName
 	}
 }

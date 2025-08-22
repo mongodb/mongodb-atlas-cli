@@ -12,7 +12,7 @@ package mocks
 import (
 	reflect "reflect"
 
-	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	config "github.com/mongodb/atlas-cli-core/config"
 	auth "go.mongodb.org/atlas/auth"
 	gomock "go.uber.org/mock/gomock"
 )

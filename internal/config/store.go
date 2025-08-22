@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config Store,SecureStore
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=config github.com/mongodb/atlas-cli-core/config Store,SecureStore
 
 type Store interface {
 	IsSecure() bool

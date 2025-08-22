@@ -21,7 +21,7 @@ import (
 	"github.com/zalando/go-keyring"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=secure github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/secure KeyringClient
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=secure github.com/mongodb/atlas-cli-core/config/secure KeyringClient
 
 const servicePrefix = "atlascli_"
 

@@ -17,7 +17,7 @@ package migrations
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 )
 
 func NewMigrateToVersion2() MigrationFunc {

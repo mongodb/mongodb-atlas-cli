@@ -17,7 +17,7 @@ package migrations
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

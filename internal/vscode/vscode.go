@@ -22,7 +22,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 )
 
 var ErrVsCodeCliNotInstalled = errors.New("did not find vscode cli, install vscode and vscode cli: https://code.visualstudio.com/download")

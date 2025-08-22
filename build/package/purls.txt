@@ -47,7 +47,7 @@ pkg:golang/github.com/fsnotify/fsnotify@v1.8.0
 pkg:golang/github.com/go-logr/logr@v1.4.3
 pkg:golang/github.com/go-logr/stdr@v1.2.2
 pkg:golang/github.com/go-ole/go-ole@v1.2.6
-pkg:golang/github.com/go-viper/mapstructure/v2@v2.3.0
+pkg:golang/github.com/go-viper/mapstructure/v2@v2.4.0
 pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.0
 pkg:golang/github.com/golang/snappy@v0.0.4
 pkg:golang/github.com/google/go-github/v61@v61.0.0

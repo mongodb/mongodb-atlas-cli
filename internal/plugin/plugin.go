@@ -22,7 +22,7 @@ import (
 	"path"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"

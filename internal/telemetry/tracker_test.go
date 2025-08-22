@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"

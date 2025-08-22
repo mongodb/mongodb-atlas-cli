@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"

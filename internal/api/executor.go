@@ -20,8 +20,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 )

@@ -18,8 +18,9 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -337,7 +338,7 @@ func TestLogoutBuilder_PreRunE_DefaultConfig(t *testing.T) {
 
 func TestLogoutBuilder_PreRunE_ProfileFromContext(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := config.NewMockStore(ctrl)
+	mockStore := mocks.NewMockStore(ctrl)
 
 	// Create a test profile
 	testProfile := config.NewProfile("test-profile", mockStore)

@@ -26,7 +26,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
@@ -399,8 +399,9 @@ func withEventType(s string) EventOpt {
 }
 
 func withUserAgent() EventOpt {
+	userAgent := config.UserAgent(version.Version)
 	return func(event Event) {
-		event.Properties["UserAgent"] = config.UserAgent
+		event.Properties["UserAgent"] = userAgent
 		event.Properties["HostName"] = config.HostName
 	}
 }

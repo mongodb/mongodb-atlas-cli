@@ -18,8 +18,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"

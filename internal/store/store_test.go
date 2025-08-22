@@ -18,7 +18,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/stretchr/testify/require"
 	atlasauth "go.mongodb.org/atlas/auth"
 )

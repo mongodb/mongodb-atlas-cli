@@ -18,7 +18,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
+	coreMocks "github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -33,7 +34,7 @@ import (
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	mockStore := config.NewMockStore(ctrl)
+	mockStore := coreMocks.NewMockStore(ctrl)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
 

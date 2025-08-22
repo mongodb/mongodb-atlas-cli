@@ -22,7 +22,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"

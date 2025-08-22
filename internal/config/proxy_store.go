@@ -18,7 +18,7 @@ import (
 	"errors"
 	"slices"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/secure"
+	"github.com/mongodb/atlas-cli-core/config/secure"
 	"github.com/spf13/afero"
 )
 

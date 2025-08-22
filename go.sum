@@ -174,8 +174,6 @@ github.com/go-viper/mapstructure/v2 v2.4.0 h1:EBsztssimR/CONLSZZ04E8qAkxNYq4Qp9L
 github.com/go-viper/mapstructure/v2 v2.4.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
 github.com/godbus/dbus/v5 v5.1.0 h1:4KLkAxT3aOY8Li4FRJe/KvhoNFFxo0m6fNuFUO8QJUk=
 github.com/godbus/dbus/v5 v5.1.0/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
-github.com/golang-jwt/jwt/v4 v4.5.2 h1:YtQM7lnr8iZ+j5q71MGKkNw9Mn7AjHM68uc9g5fXeUI=
-github.com/golang-jwt/jwt/v4 v4.5.2/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
 github.com/golang-jwt/jwt/v5 v5.3.0 h1:pv4AsKCKKZuqlgs5sUmn4x8UlGa0kEVt/puTpKx9vvo=
 github.com/golang-jwt/jwt/v5 v5.3.0/go.mod h1:fxCRLWMO43lRc8nhHWY6LGqRcf+1gQWArsqaEUEa5bE=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
@@ -322,8 +320,8 @@ github.com/mongodb-forks/digest v1.1.0 h1:7eUdsR1BtqLv0mdNm4OXs6ddWvR4X2/OsLwdKk
 github.com/mongodb-forks/digest v1.1.0/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
 github.com/mongodb-labs/cobra2snooty v1.19.1 h1:GDEQZWy8f/DeJlImNgVvStu6sgNi8nuSOR1Oskcw8BI=
 github.com/mongodb-labs/cobra2snooty v1.19.1/go.mod h1:Hyq4YadN8dwdOiz56MXwTuVN63p0WlkQwxdLxOSGdX8=
-github.com/mongodb/atlas-cli-core v0.0.0-20250820105017-56202fc11332 h1:A+L5wKOeaOjIiUnscUGf6GEZyhRHdLTBVxx9z/FE1Es=
-github.com/mongodb/atlas-cli-core v0.0.0-20250820105017-56202fc11332/go.mod h1:rmM8Mi0YA0iuCSJL6jxQqyT/UEwKqv9wQMi+37zQhTM=
+github.com/mongodb/atlas-cli-core v0.0.0-20250822132614-230a610dbe0f h1:oSNF4zFkefc61U5K/C/rT6A0tsbu7cG/Tdo1ZVKbUGA=
+github.com/mongodb/atlas-cli-core v0.0.0-20250822132614-230a610dbe0f/go.mod h1:QDfVGpdfxXM1httLNXCKsfWTKv6slzCqBZxkkPIktlQ=
 github.com/montanaflynn/stats v0.7.1 h1:etflOAAHORrCC44V+aR6Ftzort912ZU+YLiSTuV8eaE=
 github.com/montanaflynn/stats v0.7.1/go.mod h1:etXPPgVO6n31NxCd9KQUMvCM+ve0ruNzt6R8Bnaayow=
 github.com/nwaples/rardecode/v2 v2.1.0 h1:JQl9ZoBPDy+nIZGb1mx8+anfHp/LV3NE2MjMiv0ct/U=

@@ -24,8 +24,8 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
 const (

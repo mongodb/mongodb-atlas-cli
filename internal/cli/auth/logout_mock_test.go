@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	config "github.com/mongodb/atlas-cli-core/config"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	gomock "go.uber.org/mock/gomock"
 )

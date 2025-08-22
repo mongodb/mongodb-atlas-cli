@@ -15,7 +15,7 @@
 package store
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

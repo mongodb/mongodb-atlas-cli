@@ -24,6 +24,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslogs"
@@ -62,7 +63,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/teams"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/users"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"

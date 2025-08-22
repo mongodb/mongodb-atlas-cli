@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonwriter"

@@ -13,7 +13,7 @@ import (
 	reflect "reflect"
 
 	survey "github.com/AlecAivazis/survey/v2"
-	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	config "github.com/mongodb/atlas-cli-core/config"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -17,7 +17,8 @@ package migrations
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -25,13 +26,13 @@ import (
 func Test_MigrateToVersion2(t *testing.T) {
 	tests := []struct {
 		name             string
-		setupExpect      func(mockStore *config.MockStore)
+		setupExpect      func(mockStore *mocks.MockStore)
 		setupProfile     func(p *config.Profile)
 		expectedAuthType config.AuthMechanism
 	}{
 		{
 			name: "API Keys",
-			setupExpect: func(mockStore *config.MockStore) {
+			setupExpect: func(mockStore *mocks.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -58,7 +59,7 @@ func Test_MigrateToVersion2(t *testing.T) {
 		},
 		{
 			name: "User Account",
-			setupExpect: func(mockStore *config.MockStore) {
+			setupExpect: func(mockStore *mocks.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -85,7 +86,7 @@ func Test_MigrateToVersion2(t *testing.T) {
 		},
 		{
 			name: "Service Account",
-			setupExpect: func(mockStore *config.MockStore) {
+			setupExpect: func(mockStore *mocks.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -112,7 +113,7 @@ func Test_MigrateToVersion2(t *testing.T) {
 		},
 		{
 			name: "Empty Profile",
-			setupExpect: func(mockStore *config.MockStore) {
+			setupExpect: func(mockStore *mocks.MockStore) {
 				mockStore.EXPECT().
 					GetProfileNames().
 					Return([]string{"test"}).
@@ -130,7 +131,7 @@ func Test_MigrateToVersion2(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			mockStore := config.NewMockStore(ctrl)
+			mockStore := mocks.NewMockStore(ctrl)
 			tt.setupExpect(mockStore)
 
 			p := config.NewProfile("test", mockStore)
@@ -195,8 +196,8 @@ func Test_MigrateSecrets(t *testing.T) {
 	defer ctrl.Finish()
 
 	// Create mock stores
-	mockInsecureStore := config.NewMockStore(ctrl)
-	mockSecureStore := config.NewMockSecureStore(ctrl)
+	mockInsecureStore := mocks.NewMockStore(ctrl)
+	mockSecureStore := mocks.NewMockSecureStore(ctrl)
 
 	// Define test profiles
 	profileNames := []string{"profile1", "profile2"}

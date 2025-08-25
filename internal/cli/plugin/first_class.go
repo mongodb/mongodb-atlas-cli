@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -113,6 +114,10 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	// find and run installed plugin
 	installedPlugin, err := plugin.GetPluginWithName(fcp.Name, nil, false)
 	if err != nil {
+		return err
+	}
+	// validate plugin version is compatible
+	if err := validate.PluginVersion(installedPlugin.Name, installedPlugin.Version); err != nil {
 		return err
 	}
 

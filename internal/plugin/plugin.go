@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 )
 
@@ -162,6 +163,10 @@ type Plugin struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	if err := validate.PluginVersion(p.Name, p.Version); err != nil {
+		return err
+	}
+
 	p.setTelemetry()
 
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)

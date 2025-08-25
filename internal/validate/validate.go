@@ -24,6 +24,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 )
@@ -43,6 +44,11 @@ var (
 	ErrInvalidDBUsername           = errors.New("invalid db username")
 	ErrWeakPassword                = errors.New("the password provided is too common")
 	ErrShortPassword               = errors.New("the password provided is too short")
+
+	minimumPluginVersions = map[string]string{
+		"atlas-cli-plugin-kubernetes": "v1.1.7",
+		"atlas-cli-plugin-gsa":        "v0.0.2",
+	}
 )
 
 // toString tries to cast an interface to string.
@@ -254,6 +260,27 @@ func WeakPassword(val any) error {
 
 	if commonPasswords[strings.ToLower(password)] {
 		return ErrWeakPassword
+	}
+
+	return nil
+}
+
+// PluginVersion validates the version of a plugin against the minimum required version.
+// If a plugin is not listed in the minimumPluginVersions map, it is considered valid.
+func PluginVersion(name string, version *semver.Version) error {
+	minVersionStr, exists := minimumPluginVersions[name]
+	if !exists {
+		return nil // No version requirement for this plugin
+	}
+
+	minVersion, err := semver.NewVersion(minVersionStr)
+	if err != nil {
+		return err
+	}
+
+	if version.LessThan(minVersion) {
+		return fmt.Errorf("plugin %s version v%s is below minimum required version %s for this version of AtlasCLI. Please update the plugin using 'atlas plugin update %s'",
+			name, version.String(), minVersionStr, name)
 	}
 
 	return nil

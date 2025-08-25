@@ -82,3 +82,48 @@ func Test_createPluginFromManifest(t *testing.T) {
 	assert.Equal(t, plugin.Commands[0].Description, manifest.Commands["testCommand"].Description)
 	assert.Equal(t, plugin.Commands[0].Aliases, manifest.Commands["testCommand"].Aliases)
 }
+
+func TestPluginVerion(t *testing.T) {
+	tests := []struct {
+		name    string
+		github  Github
+		version string
+		wantErr require.ErrorAssertionFunc
+	}{
+		{
+			name:    "no minimum version",
+			github:  Github{Owner: "unknown", Name: "atlas-cli-plugin-unknown"},
+			version: "v0.0.1",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "meets minimum version",
+			github:  Github{Owner: "mongodb", Name: "atlas-cli-plugin-kubernetes"},
+			version: "v1.1.7",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "exceeds minimum version",
+			github:  Github{Owner: "mongodb", Name: "atlas-cli-plugin-kubernetes"},
+			version: "v1.2.0",
+			wantErr: require.NoError,
+		},
+		{
+			name:    "below minimum version",
+			github:  Github{Owner: "mongodb", Name: "atlas-cli-plugin-kubernetes"},
+			version: "v1.0.0",
+			wantErr: require.Error,
+		},
+	}
+	for _, tt := range tests {
+		github := tt.github
+		versionStr := tt.version
+		version, err := semver.NewVersion(versionStr)
+		require.NoError(t, err)
+		wantErr := tt.wantErr
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			wantErr(t, ValidateVersion(github, version))
+		})
+	}
+}

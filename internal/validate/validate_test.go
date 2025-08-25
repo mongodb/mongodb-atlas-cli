@@ -18,7 +18,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 )
@@ -516,51 +515,6 @@ func TestWeakPassword(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			wantErr(t, WeakPassword(val))
-		})
-	}
-}
-
-func TestPluginVerion(t *testing.T) {
-	tests := []struct {
-		name    string
-		plugin  string
-		version string
-		wantErr require.ErrorAssertionFunc
-	}{
-		{
-			name:    "no minimum version",
-			plugin:  "atlas-cli-plugin-unknown",
-			version: "v0.0.1",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "meets minimum version",
-			plugin:  "atlas-cli-plugin-kubernetes",
-			version: "v1.1.7",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "exceeds minimum version",
-			plugin:  "atlas-cli-plugin-kubernetes",
-			version: "v1.2.0",
-			wantErr: require.NoError,
-		},
-		{
-			name:    "below minimum version",
-			plugin:  "atlas-cli-plugin-kubernetes",
-			version: "v1.0.0",
-			wantErr: require.Error,
-		},
-	}
-	for _, tt := range tests {
-		plugin := tt.plugin
-		versionStr := tt.version
-		version, err := semver.NewVersion(versionStr)
-		require.NoError(t, err)
-		wantErr := tt.wantErr
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			wantErr(t, PluginVersion(plugin, version))
 		})
 	}
 }

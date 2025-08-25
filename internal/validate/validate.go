@@ -47,7 +47,7 @@ var (
 
 	minimumPluginVersions = map[string]string{
 		"atlas-cli-plugin-kubernetes": "v1.1.7",
-		"atlas-cli-plugin-gsa":        "v0.0.2",
+		"atlas-cli-plugin-gsa":        "v0.0.2", // TODO: ensure this version is correct version after work in CLOUDP-333246
 	}
 )
 

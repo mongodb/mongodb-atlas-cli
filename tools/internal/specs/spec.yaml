@@ -16791,6 +16791,7 @@ components:
                     - INGESTION_PIPELINE_CREATED
                     - INGESTION_PIPELINE_UPDATED
                     - OS_TUNE_FILE_OVERRIDES
+                    - MONITORING_AGENT_OVERRIDES
                     - CLUSTER_PREFERRED_CPU_ARCHITECTURE_MODIFIED
                     - CLUSTER_FORCE_PLANNED
                     - DATA_PROCESSING_REGION_UPDATED
@@ -26545,6 +26546,7 @@ components:
                 - INGESTION_PIPELINE_CREATED
                 - INGESTION_PIPELINE_UPDATED
                 - OS_TUNE_FILE_OVERRIDES
+                - MONITORING_AGENT_OVERRIDES
                 - CLUSTER_PREFERRED_CPU_ARCHITECTURE_MODIFIED
                 - CLUSTER_FORCE_PLANNED
                 - DATA_PROCESSING_REGION_UPDATED
@@ -39850,7 +39852,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 11014b8233ecb088385344ed535e60942a09f111
+    x-xgen-sha: 71ac9e4b796c59607af25b073aa510451ae85fdb
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

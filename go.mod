@@ -12,10 +12,10 @@ require (
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ProtonMail/go-crypto v1.3.0
-	github.com/aws/aws-sdk-go-v2 v1.38.0
-	github.com/aws/aws-sdk-go-v2/config v1.31.0
-	github.com/aws/aws-sdk-go-v2/credentials v1.18.4
-	github.com/aws/aws-sdk-go-v2/service/kms v1.44.0
+	github.com/aws/aws-sdk-go-v2 v1.38.1
+	github.com/aws/aws-sdk-go-v2/config v1.31.2
+	github.com/aws/aws-sdk-go-v2/credentials v1.18.6
+	github.com/aws/aws-sdk-go-v2/service/kms v1.44.2
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
@@ -88,15 +88,15 @@ require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/STARRY-S/zip v0.2.1 // indirect
 	github.com/andybalholm/brotli v1.1.2-0.20250424173009-453214e765f3 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.3 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.3 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.3 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.4 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.3 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.28.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.33.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.37.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.28.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.33.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.38.0 // indirect
 	github.com/aws/smithy-go v1.22.5 // indirect
 	github.com/bodgit/plumbing v1.3.0 // indirect
 	github.com/bodgit/sevenzip v1.6.0 // indirect

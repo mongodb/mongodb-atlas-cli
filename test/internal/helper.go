@@ -226,7 +226,32 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
+func removeTerminationProtectionFromServerlessInstance(projectID, serverlessInstanceName string) error {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		serverlessEntity,
+		"update",
+		serverlessInstanceName,
+		"--disableTerminationProtection",
+		"-P",
+		ProfileName(),
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	updateCmd := exec.Command(cliPath, args...)
+	updateCmd.Env = os.Environ()
+	if resp, err := RunAndGetStdOut(updateCmd); err != nil {
+		return fmt.Errorf("error updating serverless instance %w: %s", err, string(resp))
+	}
+
+	return watchServerlessInstanceForProject(projectID, serverlessInstanceName)
+}
+
+func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) error {
 	t.Helper()
 
 	args := []string{
@@ -242,10 +267,17 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(deleteCmd)
-	require.NoError(t, err, string(resp))
+	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
+		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_SERVERLESS_INSTANCE_WHEN_TERMINATION_PROTECTION_ENABLED") {
+			return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
+		}
 
-	_ = watchServerlessInstanceForProject(projectID, clusterName)
+		if err := removeTerminationProtectionFromServerlessInstance(projectID, clusterName); err != nil {
+			return err
+		}
+	}
+
+	return watchServerlessInstanceForProject(projectID, clusterName)
 }
 
 func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, enableBackup bool) (string, error) {
@@ -392,6 +424,17 @@ func DeleteClusterForProject(projectID, clusterName string) error {
 		return internalDeleteClusterForProject(projectID, clusterName)
 	}
 
+	return nil
+}
+
+func DeleteClusterForProjectIfExists(projectID, clusterName string) error {
+	err := DeleteClusterForProject(projectID, clusterName)
+	if err != nil {
+		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			return nil
+		}
+		return err
+	}
 	return nil
 }
 
@@ -675,7 +718,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 					_ = WatchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, DeleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, DeleteClusterForProjectIfExists(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -985,7 +1028,7 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 					_ = watchServerlessInstanceForProject(projectID, serverlessInstance)
 					return
 				}
-				deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance)
+				require.NoError(t, deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance))
 			})
 		}(serverless.GetName(), serverless.GetStateName())
 	}

@@ -1705,9 +1705,6 @@ git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"
     task: ".*"
-  - git_tag: "atlascli/v*"
-    variant: "^copybara"
-    task: ".*"
 github_checks_aliases:
  - variant: ".*"
    task: ".*"

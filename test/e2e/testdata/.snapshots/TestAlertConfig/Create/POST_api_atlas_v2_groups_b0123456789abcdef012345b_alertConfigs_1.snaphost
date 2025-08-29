@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 640
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Fri, 22 Aug 2025 05:09:28 GMT
-Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68a7fb89bc5dd63c21e96c3b
+Date: Fri, 29 Aug 2025 16:45:26 GMT
+Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68b1d92648b4134cfe956263
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 235
+X-Envoy-Upstream-Service-Time: 169
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertConfigsResource::addAlertConfig
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=1096485f3736f7f58fd68983661135a0e89ca9e8; versionString=master
+X-Mongodb-Service-Version: gitHash=4ae1a27f7045ec5b8ff2f88678993f8a4ec23755; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"created":"2025-08-22T05:09:29Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"68a7fb89bc5dd63c21e96c3b","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68a7fb89bc5dd63c21e96c3b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68a7fb89bc5dd63c21e96c3b/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"68a7fb89bc5dd63c21e96c36","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-08-22T05:09:29Z"}
+{"created":"2025-08-29T16:45:26Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"68b1d92648b4134cfe956263","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68b1d92648b4134cfe956263","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68b1d92648b4134cfe956263/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"68b1d92648b4134cfe95625e","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-08-29T16:45:26Z"}

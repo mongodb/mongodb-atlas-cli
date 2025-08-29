@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1037
+Content-Type: application/vnd.atlas.2025-02-19+json;charset=utf-8
+Date: Fri, 29 Aug 2025 16:47:37 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 95
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationTeamUsersResource::getTeamUsers
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=4ae1a27f7045ec5b8ff2f88678993f8a4ec23755; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/68b1d99e48b4134cfe959060/users?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"country":"IE","createdAt":"2020-02-18T10:58:47Z","firstName":"Andrea","id":"5e4bc367c6b0f41bb9bbb178","lastAuth":"2025-08-26T16:16:37Z","lastName":"Angiolillo","mobileNumber":null,"orgMembershipStatus":"ACTIVE","roles":{"groupRoleAssignments":[{"groupId":"b0123456789abcdef012345b","groupRoles":["GROUP_OWNER"]}],"orgRoles":["ORG_OWNER"]},"teamIds":["68b1d99e48b4134cfe959060"],"username":"andrea.angiolillo@mongodb.com"},{"country":"IE","createdAt":"2022-01-10T16:04:57Z","firstName":"Bianca","id":"61dc5929ae95796dcd418d1d","lastAuth":"2025-08-29T13:39:38Z","lastName":"Lisle","mobileNumber":null,"orgMembershipStatus":"ACTIVE","roles":{"groupRoleAssignments":[{"groupId":"b0123456789abcdef012345b","groupRoles":["GROUP_OWNER"]}],"orgRoles":["ORG_OWNER"]},"teamIds":["68b1d99e48b4134cfe959060"],"username":"bianca.vianadeaguiar@mongodb.com"}],"totalCount":2}

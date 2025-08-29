@@ -327,7 +327,7 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 
 	g.t.Cleanup(func() {
 		g.Logf("Cluster cleanup for project %q\n", g.ProjectID)
-		err := DeleteClusterForProjectIfExists(g.ProjectID, g.ClusterName)
+		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
 		if err == nil {
 			g.t.Logf("Cluster %q was deleted", g.ClusterName)
 			return

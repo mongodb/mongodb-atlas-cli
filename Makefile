@@ -133,7 +133,7 @@ gen-purls: # Generate purls
 		LC_ALL=C sort > build/package/purls-darwin.txt
 
 	@echo "==> Generating Windows purls"
-	GOOS=windows GOARCH=386 go build -trimpath -mod=readonly -o bin/atlas-win ./cmd/atlas
+	GOOS=windows GOARCH=amd64 go build -trimpath -mod=readonly -o bin/atlas-win ./cmd/atlas
 	go version -m ./bin/atlas-win | \
 		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
 		LC_ALL=C sort > build/package/purls-win.txt

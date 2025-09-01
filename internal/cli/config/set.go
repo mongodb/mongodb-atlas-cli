@@ -19,9 +19,9 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
@@ -48,7 +48,7 @@ func (opts *SetOpts) Run() error {
 			return err
 		}
 	} else if strings.HasSuffix(opts.prop, "_id") {
-		if err := validate.ObjectID(opts.val); err != nil {
+		if err := validate.ObjectIDByType(opts.prop, opts.val); err != nil {
 			return err
 		}
 	}
@@ -58,6 +58,9 @@ func (opts *SetOpts) Run() error {
 		value = config.IsTrue(opts.val)
 	}
 	if slices.Contains(config.GlobalProperties(), opts.prop) {
+		if strings.EqualFold(config.Version, opts.prop) {
+			return fmt.Errorf("the %s property cannot be set manually, it is automatically managed by the CLI", config.Version)
+		}
 		opts.store.SetGlobal(opts.prop, value)
 	} else {
 		opts.store.Set(opts.prop, value)

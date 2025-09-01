@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -36,23 +36,19 @@ func (opts *whoOpts) Run() error {
 	return nil
 }
 
-var ErrUnauthenticated = errors.New("not logged in with an Atlas account or API key")
-
-func AccountWithAccessToken() (string, error) {
-	if config.AccessToken() == "" {
-		return "", ErrUnauthenticated
-	}
-
-	return config.AccessTokenSubject()
-}
+var ErrUnauthenticated = errors.New("not logged in with an Atlas account, Service Account or API key")
 
 func authTypeAndSubject() (string, string, error) {
-	if config.PublicAPIKey() != "" {
+	switch config.AuthType() {
+	case config.APIKeys:
 		return "key", config.PublicAPIKey(), nil
-	}
-
-	if subject, err := AccountWithAccessToken(); err == nil {
+	case config.ServiceAccount:
+		return "service account", config.ClientID(), nil
+	case config.UserAccount:
+		subject, _ := config.AccessTokenSubject()
 		return "account", subject, nil
+	case config.NoAuth:
+		return "", "", ErrUnauthenticated
 	}
 
 	return "", "", ErrUnauthenticated

@@ -18,15 +18,18 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20250312006/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -34,10 +37,21 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
 	SetProjectID(string)
 	SetOrgID(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
+	SetClientID(string)
+	SetClientSecret(string)
+	AuthType() config.AuthMechanism
+	PublicAPIKey() string
+	ClientID() string
+	ClientSecret() string
+	AccessTokenSubject() (string, error)
+	RefreshToken() string
 	Save() error
 }
 
@@ -47,39 +61,89 @@ type Revoker interface {
 
 type logoutOpts struct {
 	*cli.DeleteOpts
-	OutWriter  io.Writer
-	config     ConfigDeleter
-	flow       Revoker
-	keepConfig bool
+	cli.DefaultSetterOpts
+	OutWriter                 io.Writer
+	config                    ConfigDeleter
+	flow                      Revoker
+	keepConfig                bool
+	revokeServiceAccountToken func() error
 }
 
-func (opts *logoutOpts) initFlow() error {
+func (opts *logoutOpts) initFlow(ctx context.Context) error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
-	opts.flow, err = oauth.FlowWithConfig(config.Default(), client)
+	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
+	opts.revokeServiceAccountToken = func() error {
+		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
+	}
 	return err
 }
 
-func (opts *logoutOpts) Run(ctx context.Context) error {
-	// revoking a refresh token revokes the access token
-	if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret string) error {
+	cfg := clientcredentials.NewConfig(clientID, clientSecret)
+	if config.OpsManagerURL() != "" {
+		// TokenURL and RevokeURL points to "https://cloud.mongodb.com/api/oauth/<token/revoke>". Modify TokenURL and RevokeURL if OpsManagerURL does not point to cloud.mongodb.com
+		baseURL := strings.TrimSuffix(config.OpsManagerURL(), "/")
+		cfg.TokenURL = baseURL + clientcredentials.TokenAPIPath
+		cfg.RevokeURL = baseURL + clientcredentials.RevokeAPIPath
+	}
+	token, err := cfg.Token(ctx)
+	if err != nil {
 		return err
 	}
+	return cfg.RevokeToken(ctx, token)
+}
+
+func (opts *logoutOpts) Run(ctx context.Context) error {
+	if !opts.Confirm {
+		return nil
+	}
+
+	switch opts.config.AuthType() {
+	case config.UserAccount:
+		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
+			return err
+		}
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+	case config.ServiceAccount:
+		if err := opts.revokeServiceAccountToken(); err != nil {
+			// If the service account doesn't exist, log a warning and proceed.
+			// This happens if the user has already deleted the service account or is pointing to the wrong environment.
+			// To not block users who have already deleted their account, we proceed with logout.
+			if !strings.Contains(err.Error(), "The specified service account doesn't exist") {
+				return err
+			}
+			_, _ = log.Warningf("Warning: unable to revoke service account token: %v, proceeding with logout\n", err)
+		}
+		opts.config.SetClientID("")
+		opts.config.SetClientSecret("")
+	case config.APIKeys:
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+	case config.NoAuth, "": // Just clear any potential leftover credentials
+		opts.config.SetPublicAPIKey("")
+		opts.config.SetPrivateAPIKey("")
+		opts.config.SetAccessToken("")
+		opts.config.SetRefreshToken("")
+		opts.config.SetClientID("")
+		opts.config.SetClientSecret("")
+	}
+
+	opts.config.SetProjectID("")
+	opts.config.SetOrgID("")
 
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
-	opts.config.SetAccessToken("")
-	opts.config.SetRefreshToken("")
-	opts.config.SetProjectID("")
-	opts.config.SetOrgID("")
+
 	return opts.config.Save()
 }
 
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
-		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of account %s\n", " "),
+		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
 	}
 
 	cmd := &cobra.Command{
@@ -91,18 +155,49 @@ func LogoutBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
 			opts.config = config.Default()
-			return opts.initFlow()
+
+			// If the profile is set in the context, use it instead of the default profile
+			profile, ok := config.ProfileFromContext(cmd.Context())
+			if ok {
+				opts.config = profile
+			}
+
+			// Only initialize OAuth flow if we have OAuth-based auth
+			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
+				return opts.initFlow(cmd.Context())
+			}
+
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if config.RefreshToken() == "" {
-				return ErrUnauthenticated
+			var message, entry string
+			var err error
+
+			switch opts.config.AuthType() {
+			case config.APIKeys:
+				entry = opts.config.PublicAPIKey()
+				message = "Are you sure you want to log out of account with public API key %s?"
+			case config.ServiceAccount:
+				entry = opts.config.ClientID()
+				message = "Are you sure you want to log out of service account %s?"
+			case config.UserAccount:
+				entry, err = opts.config.AccessTokenSubject()
+				if err != nil {
+					return err
+				}
+
+				if opts.config.RefreshToken() == "" {
+					return ErrUnauthenticated
+				}
+
+				message = "Are you sure you want to log out of account %s?"
+			case config.NoAuth, "":
+				entry = opts.config.Name()
+				message = "Are you sure you want to clear profile %s?"
 			}
-			s, err := config.AccessTokenSubject()
-			if err != nil {
-				return err
-			}
-			opts.Entry = s
-			if err := opts.PromptWithMessage("Are you sure you want to log out of account %s?"); err != nil || !opts.Confirm {
+
+			opts.Entry = entry
+			if err := opts.PromptWithMessage(message); err != nil {
 				return err
 			}
 			return opts.Run(cmd.Context())

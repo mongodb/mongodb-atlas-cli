@@ -15,8 +15,8 @@
 package fixture
 
 import (
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
@@ -65,8 +65,8 @@ func (m *MockDeploymentOpts) CommonAtlasMocksWithState(projectID string, state s
 	m.MockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
-		Times(1)
+		Return(config.UserAccount).
+		Times(2) //nolint:mnd
 
 	m.MockAtlasClusterListStore.
 		EXPECT().

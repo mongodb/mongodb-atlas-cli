@@ -26,8 +26,8 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
@@ -231,7 +231,7 @@ func (opts *DeploymentOpts) IsCliAuthenticated() bool {
 	if opts.CredStore == nil {
 		opts.CredStore = config.Default()
 	}
-	return opts.CredStore.AuthType() != config.NotLoggedIn
+	return opts.CredStore.AuthType() != "" && opts.CredStore.AuthType() != config.NoAuth
 }
 
 func (opts *DeploymentOpts) GetLocalContainers(ctx context.Context) ([]container.Container, error) {

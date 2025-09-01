@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
@@ -78,7 +78,7 @@ func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.Registr
 		}
 
 		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
+		if retry, errRetry := opts.shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue

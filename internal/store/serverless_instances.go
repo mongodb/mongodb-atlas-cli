@@ -17,7 +17,7 @@ package store
 import (
 	"fmt"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
 )
 

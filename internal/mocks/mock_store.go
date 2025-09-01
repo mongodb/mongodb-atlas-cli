@@ -12,7 +12,7 @@ package mocks
 import (
 	reflect "reflect"
 
-	config "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	config "github.com/mongodb/atlas-cli-core/config"
 	auth "go.mongodb.org/atlas/auth"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -53,6 +53,34 @@ func (m *MockCredentialsGetter) AuthType() config.AuthMechanism {
 func (mr *MockCredentialsGetterMockRecorder) AuthType() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthType", reflect.TypeOf((*MockCredentialsGetter)(nil).AuthType))
+}
+
+// ClientID mocks base method.
+func (m *MockCredentialsGetter) ClientID() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClientID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ClientID indicates an expected call of ClientID.
+func (mr *MockCredentialsGetterMockRecorder) ClientID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClientID", reflect.TypeOf((*MockCredentialsGetter)(nil).ClientID))
+}
+
+// ClientSecret mocks base method.
+func (m *MockCredentialsGetter) ClientSecret() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClientSecret")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ClientSecret indicates an expected call of ClientSecret.
+func (mr *MockCredentialsGetterMockRecorder) ClientSecret() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClientSecret", reflect.TypeOf((*MockCredentialsGetter)(nil).ClientSecret))
 }
 
 // PrivateAPIKey mocks base method.

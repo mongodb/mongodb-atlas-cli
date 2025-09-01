@@ -19,10 +19,10 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -106,8 +106,8 @@ func TestList_Run(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
-		Times(2)
+		Return(config.UserAccount).
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -199,8 +199,8 @@ func TestList_Run_NoLocal(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
-		Times(2)
+		Return(config.UserAccount).
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -289,8 +289,8 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
-		Times(2)
+		Return(config.UserAccount).
+		Times(4)
 
 	mockContainerEngine.
 		EXPECT().
@@ -343,8 +343,8 @@ func TestListOpts_PostRun(t *testing.T) {
 	mockCredentialsGetter.
 		EXPECT().
 		AuthType().
-		Return(config.OAuth).
-		Times(1)
+		Return(config.UserAccount).
+		Times(2)
 
 	deploymentsTest.MockDeploymentTelemetry.
 		EXPECT().

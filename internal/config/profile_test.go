@@ -15,14 +15,15 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path"
 	"testing"
 
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCLIConfigHome(t *testing.T) {
@@ -194,37 +195,52 @@ func Test_getConfigHostname(t *testing.T) {
 func TestProfile_Rename(t *testing.T) {
 	tests := []struct {
 		name    string
-		wantErr require.ErrorAssertionFunc
+		wantErr bool
 	}{
 		{
 			name:    "default",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default-123",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default-test",
-			wantErr: require.NoError,
+			wantErr: false,
 		},
 		{
 			name:    "default.123",
-			wantErr: require.Error,
+			wantErr: true,
 		},
 		{
 			name:    "default.test",
-			wantErr: require.Error,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
+
+			var assertion require.ErrorAssertionFunc
+			if tt.wantErr {
+				assertion = require.Error
+			} else {
+				assertion = require.NoError
 			}
-			tt.wantErr(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
+
+			ctrl := gomock.NewController(t)
+			configStore := NewMockStore(ctrl)
+			if !tt.wantErr {
+				configStore.EXPECT().RenameProfile(DefaultProfile, tt.name).Return(nil).Times(1)
+			}
+
+			p := &Profile{
+				name:        DefaultProfile,
+				configStore: configStore,
+			}
+
+			assertion(t, p.Rename(tt.name), fmt.Sprintf("Rename(%v)", tt.name))
 		})
 	}
 }
@@ -258,11 +274,167 @@ func TestProfile_SetName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+			ctrl := gomock.NewController(t)
 			p := &Profile{
-				name: tt.name,
-				fs:   afero.NewMemMapFs(),
+				name:        tt.name,
+				configStore: NewMockStore(ctrl),
 			}
 			tt.wantErr(t, p.SetName(tt.name), fmt.Sprintf("SetName(%v)", tt.name))
 		})
 	}
+}
+
+func TestWithProfile(t *testing.T) {
+	tests := []struct {
+		name    string
+		profile *Profile
+		ctx     context.Context
+	}{
+		{
+			name:    "add profile to empty context",
+			profile: &Profile{name: "test-profile"},
+			ctx:     t.Context(),
+		},
+		{
+			name:    "add profile to context with existing values",
+			profile: &Profile{name: "another-profile"},
+			ctx:     WithProfile(t.Context(), &Profile{name: "test-profile"}),
+		},
+		{
+			name:    "add nil profile",
+			profile: nil,
+			ctx:     t.Context(),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := WithProfile(tt.ctx, tt.profile)
+
+			// Verify context is not nil
+			require.NotNil(t, result)
+
+			// Verify the profile was stored correctly
+			storedProfile, ok := result.Value(profileContextKey).(*Profile)
+			if tt.profile == nil {
+				assert.Nil(t, storedProfile)
+			} else {
+				require.True(t, ok)
+				assert.Equal(t, tt.profile, storedProfile)
+				assert.Equal(t, tt.profile.name, storedProfile.name)
+			}
+
+			// Verify original context values are preserved
+			if tt.ctx != t.Context() {
+				if existingValue := result.Value("existing-key"); existingValue != nil {
+					assert.Equal(t, "existing-value", existingValue)
+				}
+			}
+		})
+	}
+}
+
+func TestProfileFromContext(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockStore(ctrl)
+
+	tests := []struct {
+		name            string
+		ctx             context.Context
+		expectedProfile *Profile
+		expectedOk      bool
+	}{
+		{
+			name:            "retrieve profile from context",
+			ctx:             WithProfile(t.Context(), &Profile{name: "test-profile", configStore: mockStore}),
+			expectedProfile: &Profile{name: "test-profile", configStore: mockStore},
+			expectedOk:      true,
+		},
+		{
+			name:            "no profile in context",
+			ctx:             t.Context(),
+			expectedProfile: nil,
+			expectedOk:      false,
+		},
+		{
+			name:            "nil context",
+			ctx:             nil,
+			expectedProfile: nil,
+			expectedOk:      false,
+		},
+		{
+			name:            "context with nil profile",
+			ctx:             WithProfile(t.Context(), nil),
+			expectedProfile: nil,
+			expectedOk:      true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			profile, ok := ProfileFromContext(tt.ctx)
+
+			assert.Equal(t, tt.expectedOk, ok)
+
+			if tt.expectedProfile == nil {
+				assert.Nil(t, profile)
+			} else {
+				require.NotNil(t, profile)
+				assert.Equal(t, tt.expectedProfile.name, profile.name)
+				assert.Equal(t, tt.expectedProfile.configStore, profile.configStore)
+			}
+		})
+	}
+}
+
+func TestWithProfile_ProfileFromContext_RoundTrip(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockStore(ctrl)
+
+	// Create a test profile with some data
+	originalProfile := NewProfile("test-profile", mockStore)
+
+	// Store it in context
+	ctx := WithProfile(t.Context(), originalProfile)
+
+	// Retrieve it back
+	retrievedProfile, ok := ProfileFromContext(ctx)
+
+	// Verify round trip worked
+	require.True(t, ok)
+	require.NotNil(t, retrievedProfile)
+	assert.Equal(t, originalProfile.name, retrievedProfile.name)
+	assert.Equal(t, originalProfile.configStore, retrievedProfile.configStore)
+	assert.Same(t, originalProfile, retrievedProfile) // Should be the exact same object
+}
+
+func TestWithProfile_Multiple_Profiles(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore1 := NewMockStore(ctrl)
+	mockStore2 := NewMockStore(ctrl)
+
+	// Create multiple profiles
+	profile1 := NewProfile("profile1", mockStore1)
+	profile2 := NewProfile("profile2", mockStore2)
+
+	// Add first profile to context
+	ctx1 := WithProfile(t.Context(), profile1)
+
+	// Verify first profile is stored
+	retrieved1, ok := ProfileFromContext(ctx1)
+	require.True(t, ok)
+	assert.Equal(t, "profile1", retrieved1.name)
+
+	// Override with second profile
+	ctx2 := WithProfile(ctx1, profile2)
+
+	// Verify second profile overwrites the first
+	retrieved2, ok := ProfileFromContext(ctx2)
+	require.True(t, ok)
+	assert.Equal(t, "profile2", retrieved2.name)
+
+	// Verify original context still has first profile
+	stillRetrieved1, ok := ProfileFromContext(ctx1)
+	require.True(t, ok)
+	assert.Equal(t, "profile1", stillRetrieved1.name)
 }

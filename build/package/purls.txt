@@ -1,3 +1,4 @@
+pkg:golang/al.essio.dev/pkg/shellescape@v1.5.1
 pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.16.5
 pkg:golang/cloud.google.com/go/compute/metadata@v0.8.0
@@ -38,16 +39,18 @@ pkg:golang/github.com/briandowns/spinner@v1.23.2
 pkg:golang/github.com/cli/go-gh/v2@v2.12.2
 pkg:golang/github.com/cli/safeexec@v1.0.0
 pkg:golang/github.com/cloudflare/circl@v1.6.1
+pkg:golang/github.com/danieljoos/wincred@v1.2.2
 pkg:golang/github.com/denisbrodbeck/machineid@v1.0.1
 pkg:golang/github.com/dsnet/compress@v0.0.2-0.20230904184137-39efe44ab707
 pkg:golang/github.com/ebitengine/purego@v0.8.4
 pkg:golang/github.com/fatih/color@v1.14.1
 pkg:golang/github.com/felixge/httpsnoop@v1.0.4
-pkg:golang/github.com/fsnotify/fsnotify@v1.8.0
+pkg:golang/github.com/fsnotify/fsnotify@v1.9.0
 pkg:golang/github.com/go-logr/logr@v1.4.3
 pkg:golang/github.com/go-logr/stdr@v1.2.2
 pkg:golang/github.com/go-ole/go-ole@v1.2.6
 pkg:golang/github.com/go-viper/mapstructure/v2@v2.4.0
+pkg:golang/github.com/godbus/dbus/v5@v5.1.0
 pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.0
 pkg:golang/github.com/golang/snappy@v0.0.4
 pkg:golang/github.com/google/go-github/v61@v61.0.0
@@ -72,6 +75,7 @@ pkg:golang/github.com/mholt/archives@v0.1.3
 pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.0
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0
+pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20250822132614-230a610dbe0f
 pkg:golang/github.com/montanaflynn/stats@v0.7.1
 pkg:golang/github.com/nwaples/rardecode/v2@v2.1.0
 pkg:golang/github.com/pelletier/go-toml/v2@v2.2.3
@@ -97,6 +101,7 @@ pkg:golang/github.com/xdg-go/scram@v1.1.2
 pkg:golang/github.com/xdg-go/stringprep@v1.0.4
 pkg:golang/github.com/youmark/pkcs8@v0.0.0-20240726163527-a2c0da244d78
 pkg:golang/github.com/yusufpapurcu/wmi@v1.2.4
+pkg:golang/github.com/zalando/go-keyring@v0.2.6
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0

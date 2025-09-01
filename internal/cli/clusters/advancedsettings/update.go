@@ -17,10 +17,9 @@ package advancedsettings
 import (
 	"context"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -67,7 +66,7 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 func (opts *UpdateOpts) Run() error {
 	r, err := opts.store.UpdateAtlasClusterConfigurationOptions(opts.ConfigProjectID(), opts.name, opts.newProcessArgs())
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)

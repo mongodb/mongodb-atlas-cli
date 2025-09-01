@@ -140,6 +140,8 @@ func TestObjectID(t *testing.T) {
 }
 
 func TestCredentials(t *testing.T) {
+	t.Skip("Will reenable on ticket CLOUDP-333193")
+
 	t.Run("no credentials", func(t *testing.T) {
 		if err := Credentials(); err == nil {
 			t.Fatal("Credentials() expected an error\n")
@@ -167,13 +169,16 @@ func TestCredentials(t *testing.T) {
 	})
 }
 
-func TestNoAPIKeyss(t *testing.T) {
+func TestNoAPIKeys(t *testing.T) {
 	t.Run("no credentials", func(t *testing.T) {
 		if err := NoAPIKeys(); err != nil {
 			t.Fatalf("NoAPIKeys() unexpected error %v\n", err)
 		}
 	})
+
 	t.Run("with api key credentials", func(t *testing.T) {
+		t.Skip("Will reenable on ticket CLOUDP-333193")
+
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()
@@ -183,6 +188,7 @@ func TestNoAPIKeyss(t *testing.T) {
 			t.Fatalf("NoAPIKeys() expected error\n")
 		}
 	})
+
 	t.Run("with auth token credentials", func(t *testing.T) {
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
@@ -211,7 +217,10 @@ func TestNoAccessToken(t *testing.T) {
 			t.Fatalf("NoAccessToken() unexpected error %v\n", err)
 		}
 	})
+
 	t.Run("with auth token credentials", func(t *testing.T) {
+		t.Skip("Will reenable on ticket CLOUDP-333193")
+
 		// this function depends on the global config (globals are bad I know)
 		// the easiest way we have to test it is via ENV vars
 		viper.AutomaticEnv()

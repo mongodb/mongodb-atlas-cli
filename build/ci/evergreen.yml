@@ -685,6 +685,18 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance/...
+  - name: atlas_service_account_e2e
+    tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
@@ -1365,6 +1377,25 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
+  # 
+  - name: atlas_config_migration_e2e
+    tags: ["e2e","config-migration"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
+          MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MONGODB_ATLAS_SERVICE: cloud
+          E2E_TEST_PACKAGES: ./test/e2e/config/migration/...
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1683,6 +1714,18 @@ buildvariants:
       - ubuntu2204-small
     tasks:
       - name: ".snyk"
+  - name: e2e_config_migration_macos_14
+    display_name: "E2E Config Migration Tests"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - config-migration
+      - foliage_health
+    run_on:
+      - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .config-migration"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]

@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -112,7 +112,7 @@ func (opts *CreateOpts) validateOAuthRequirements() error {
 	}
 	if len(disallowed) > 0 {
 		return fmt.Errorf(
-			"%s are not allowed when using account to authenticate",
+			"%s are not allowed with your authentication method",
 			strings.Join(disallowed, ", "),
 		)
 	}
@@ -123,10 +123,12 @@ func (opts *CreateOpts) validateAuthType() error {
 	switch config.AuthType() {
 	case config.APIKeys:
 		return opts.validateAPIKeyRequirements()
-	case config.OAuth:
+	case config.UserAccount:
 		return opts.validateOAuthRequirements()
-	case config.NotLoggedIn:
-		return nil // should not happen
+	case config.ServiceAccount:
+		return opts.validateOAuthRequirements()
+	case config.NoAuth:
+		fallthrough
 	default:
 		return nil
 	}

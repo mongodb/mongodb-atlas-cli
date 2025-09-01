@@ -15,27 +15,31 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2/core"
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config/migrations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func execute(rootCmd *cobra.Command) {
-	ctx := telemetry.NewContext()
+func execute(ctx context.Context, rootCmd *cobra.Command) {
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
 To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/stable/connect-atlas-cli/`
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
+		err := commonerrors.Check(err)
+		rootCmd.PrintErrln(rootCmd.ErrPrefix(), err)
 		if !telemetry.StartedTrackingCommand() {
 			telemetry.StartTrackingCommand(cmd, os.Args[1:])
 		}
@@ -48,12 +52,27 @@ To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/sta
 }
 
 // loadConfig reads in config file and ENV variables if set.
-func loadConfig() error {
-	if err := config.LoadAtlasCLIConfig(); err != nil {
-		return fmt.Errorf("error loading config: %w. Please run `atlas config init` to reconfigure your profile", err)
+func loadConfig() (*config.Profile, error) {
+	// Migrate config to the latest version.
+	migrator := migrations.NewDefaultMigrator()
+	if err := migrator.Migrate(); err != nil {
+		return nil, fmt.Errorf("error migrating config: %w", err)
 	}
 
-	return nil
+	configStore, initErr := config.NewDefaultStore()
+
+	if initErr != nil {
+		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
+	}
+
+	if !configStore.IsSecure() {
+		fmt.Fprintf(os.Stderr, "Warning: Secure storage is not available, falling back to insecure storage\n")
+	}
+
+	profile := config.NewProfile(config.DefaultProfile, configStore)
+	config.SetProfile(profile)
+
+	return profile, nil
 }
 
 func trackInitError(e error, rootCmd *cobra.Command) {
@@ -82,9 +101,18 @@ func main() {
 		core.DisableColor = true
 	}
 
+	// Load config
+	profile, loadProfileErr := loadConfig()
+
 	rootCmd := root.Builder()
 	initTrack(rootCmd)
-	trackInitError(loadConfig(), rootCmd)
+	trackInitError(loadProfileErr, rootCmd)
 
-	execute(rootCmd)
+	// Initialize context, attach
+	// - telemetry
+	// - profile
+	ctx := telemetry.NewContext()
+	config.WithProfile(ctx, profile)
+
+	execute(ctx, rootCmd)
 }

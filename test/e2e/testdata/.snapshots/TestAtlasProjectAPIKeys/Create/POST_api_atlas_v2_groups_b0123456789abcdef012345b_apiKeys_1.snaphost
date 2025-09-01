@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 397
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Fri, 29 Aug 2025 16:45:27 GMT
+Date: Mon, 01 Sep 2025 05:09:58 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 131
+X-Envoy-Upstream-Service-Time: 126
 X-Frame-Options: DENY
 X-Java-Method: ApiProjectApiUsersResource::createApiUser
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=4ae1a27f7045ec5b8ff2f88678993f8a4ec23755; versionString=master
+X-Mongodb-Service-Version: gitHash=b274627c2b42e08ec2eef6caf13bf56b8c853f47; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"desc":"e2e-test","id":"68b1d92748b4134cfe956273","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/68b1d92748b4134cfe956273","rel":"self"}],"privateKey":"014a9521-1bb5-4c4d-beea-74ef320d7529","publicKey":"gariomuw","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"}]}
+{"desc":"e2e-test","id":"68b52aa67af6b0372e96d858","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/68b52aa67af6b0372e96d858","rel":"self"}],"privateKey":"42e1970b-cefb-4917-b9ab-f6102a8bc3ae","publicKey":"uooojmoi","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"}]}

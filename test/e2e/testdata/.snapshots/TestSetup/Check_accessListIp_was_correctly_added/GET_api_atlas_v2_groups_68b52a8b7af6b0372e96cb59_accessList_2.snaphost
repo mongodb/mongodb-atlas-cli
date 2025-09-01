@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 457
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 01 Sep 2025 05:34:38 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 23
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasNetworkAccessListResource::getAtlasWhitelist
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=b274627c2b42e08ec2eef6caf13bf56b8c853f47; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b52a8b7af6b0372e96cb59/accessList?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cidrBlock":"192.168.0.108/32","comment":"IP added with atlas quickstart","groupId":"68b52a8b7af6b0372e96cb59","ipAddress":"192.168.0.108","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b52a8b7af6b0372e96cb59/accessList/192.168.0.108%2F32","rel":"self"}]}],"totalCount":1}

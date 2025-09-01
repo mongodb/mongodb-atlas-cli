@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 361
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 01 Sep 2025 05:10:53 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 91
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCustomDBRoleResource::patchCustomDBRole
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=b274627c2b42e08ec2eef6caf13bf56b8c853f47; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]},{"action":"UPDATE","resources":[{"collection":"collection","db":"db2"},{"collection":"collection","db":"db"}]},{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"},{"db":"mydb","role":"read"}],"roleName":"role-455"}

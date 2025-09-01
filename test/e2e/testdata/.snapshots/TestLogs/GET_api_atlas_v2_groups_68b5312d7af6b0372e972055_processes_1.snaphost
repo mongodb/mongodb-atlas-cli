@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 01 Sep 2025 05:47:08 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 41
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=b274627c2b42e08ec2eef6caf13bf56b8c853f47; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b5312d7af6b0372e972055/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-01T05:46:13Z","groupId":"68b5312d7af6b0372e972055","hostname":"atlas-117p7l-shard-00-00.5ceqjh.mongodb-dev.net","id":"atlas-117p7l-shard-00-00.5ceqjh.mongodb-dev.net:27017","lastPing":"2025-09-01T05:47:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b5312d7af6b0372e972055/processes/atlas-117p7l-shard-00-00.5ceqjh.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-117p7l-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-900-shard-00-00.5ceqjh.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-01T05:46:13Z","groupId":"68b5312d7af6b0372e972055","hostname":"atlas-117p7l-shard-00-01.5ceqjh.mongodb-dev.net","id":"atlas-117p7l-shard-00-01.5ceqjh.mongodb-dev.net:27017","lastPing":"2025-09-01T05:47:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b5312d7af6b0372e972055/processes/atlas-117p7l-shard-00-01.5ceqjh.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-117p7l-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-900-shard-00-01.5ceqjh.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-01T05:46:13Z","groupId":"68b5312d7af6b0372e972055","hostname":"atlas-117p7l-shard-00-02.5ceqjh.mongodb-dev.net","id":"atlas-117p7l-shard-00-02.5ceqjh.mongodb-dev.net:27017","lastPing":"2025-09-01T05:47:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68b5312d7af6b0372e972055/processes/atlas-117p7l-shard-00-02.5ceqjh.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-117p7l-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-900-shard-00-02.5ceqjh.mongodb-dev.net","version":"8.0.13"}],"totalCount":3}

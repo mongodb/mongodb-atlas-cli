@@ -83,7 +83,7 @@ func Test_createPluginFromManifest(t *testing.T) {
 	assert.Equal(t, plugin.Commands[0].Aliases, manifest.Commands["testCommand"].Aliases)
 }
 
-func TestPluginVerion(t *testing.T) {
+func TestPluginVersion(t *testing.T) {
 	tests := []struct {
 		name    string
 		github  Github

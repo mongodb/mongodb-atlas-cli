@@ -299,41 +299,6 @@ functions:
           - mongo_repo
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
         binary: ./docker-build.sh
-  "build-copybara":
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        binary: git
-        args:
-          - clone
-          - --depth=1
-          - https://github.com/google/copybara
-          - ${workdir}/copybara
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        binary: docker
-        args:
-          - build
-          - -t
-          - google/copybara
-          - ${workdir}/copybara
-  "run-copybara":
-    - command: shell.exec
-      params:
-        <<: *go_options
-        env:
-          <<: *go_env
-          TAG: ${tag}
-          GH_TOKEN: ${gh_token}
-          WORKFLOW: ${workflow}
-          EVERGREEN_USER: ${evergreen_user}
-          EVERGREEN_API_KEY: ${evergreen_api_key}
-          DOCS_SLACK_CHANNEL: ${docs_slack_channel}
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
-        shell: bash
-        script: |
-          ./run-copybara.sh
   "create-windows-host":
     - command: host.create
       params:
@@ -489,30 +454,6 @@ tasks:
       - func: "powershell build"
         vars:
           file: windows_post_package_test
-  - name: copybara
-    depends_on:
-      - name: package_goreleaser
-        variant: release_atlascli_github
-    commands:
-      - func: "build-copybara"
-      - command: github.generate_token
-        params:
-          expansion_name: docs_atlas_cli_token
-          owner: 10gen
-          repo: docs-mongodb-internal
-      - func: "run-copybara"
-        vars:
-          gh_token: ${docs_atlas_cli_token}
-          workflow: docs-mongodb-internal
-      - command: github.generate_token
-        params:
-          expansion_name: cloud_docs_token
-          owner: 10gen
-          repo: cloud-docs
-      - func: "run-copybara"
-        vars:
-          gh_token: ${cloud_docs_token}
-          workflow: cloud-docs
 buildvariants:
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
@@ -550,17 +491,6 @@ buildvariants:
       meta_package_name: "mongodb-atlas"
     tasks:
       - name: package_goreleaser
-  - name: copybara
-    display_name: "Copybara"
-    git_tag_only: true
-    tags:
-      - foliage_health
-    run_on:
-      - ubuntu2404-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: copybara
   - name: release_atlascli_publish
     display_name: "Publish AtlasCLI Generator"
     run_on:

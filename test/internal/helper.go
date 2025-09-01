@@ -438,14 +438,18 @@ func DeleteClusterForProjectWithRetry(t *testing.T, projectID, clusterName strin
 	t.Helper()
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
-		err := DeleteClusterForProject(projectID, clusterName)
-		if strings.Contains(err.Error(), "CLUSTER_ALREADY_REQUESTED_DELETION") {
-			t.Logf("%d/%d attempts - cluster %q already requested deletion, retrying in %d seconds...", attempts, maxRetryAttempts, clusterName, backoff)
-			time.Sleep(time.Duration(backoff) * time.Second)
-			backoff *= 2
-			continue
+		if err := DeleteClusterForProject(projectID, clusterName); err != nil {
+			if strings.Contains(err.Error(), "CLUSTER_ALREADY_REQUESTED_DELETION") {
+				t.Logf("%d/%d attempts - cluster %q already requested deletion, retrying in %d seconds...", attempts, maxRetryAttempts, clusterName, backoff)
+				time.Sleep(time.Duration(backoff) * time.Second)
+				backoff *= 2
+				continue
+			}
+
+			return fmt.Errorf("unexpected error while deleting cluster %q: %w", clusterName, err)
 		}
-		return fmt.Errorf("unexpected error while deleting cluster %q: %w", clusterName, err)
+
+		return nil
 	}
 	return fmt.Errorf("failed to delete cluster %q after %d attempts", clusterName, maxRetryAttempts)
 }

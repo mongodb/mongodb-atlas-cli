@@ -166,7 +166,7 @@ type Plugin struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
-	// TODO:  uncomment after plugin release
+	// TODO:  uncomment after plugin release - to be done by CLOUDP-340658
 	// if err := ValidateVersion(*p.Github, p.Version); err != nil {
 	// 	return err
 	// }

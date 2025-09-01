@@ -21,23 +21,36 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig,TrackAsker
 
 type SetSaver interface {
-	Set(string, any)
+	SetAuthType(config.AuthMechanism)
+	SetAccessToken(string)
+	SetRefreshToken(string)
+	SetPublicAPIKey(string)
+	SetPrivateAPIKey(string)
+	SetClientID(string)
+	SetClientSecret(string)
+	SetOrgID(string)
+	SetProjectID(string)
+	SetOpsManagerURL(string)
+	SetService(string)
 	Save() error
 	SetGlobal(string, any)
 }
@@ -49,20 +62,143 @@ type LoginConfig interface {
 	ProjectID() string
 }
 
+type TrackAsker interface {
+	TrackAsk([]*survey.Question, any, ...survey.AskOpt) error
+	TrackAskOne(survey.Prompt, any, ...survey.AskOpt) error
+}
+
+const (
+	userAccountAuth = "UserAccount"
+	atlasName       = "atlas"
+)
+
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
+	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	authTypeDescription  = map[string]string{
+		userAccountAuth:           "(best for getting started)",
+		prompt.ServiceAccountAuth: "(best for automation)",
+		prompt.APIKeysAuth:        "(for existing automations)",
+	}
 )
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	AccessToken  string
-	RefreshToken string
-	IsGov        bool
-	NoBrowser    bool
-	SkipConfig   bool
-	config       LoginConfig
+	AccessToken   string
+	RefreshToken  string
+	ClientID      string
+	ClientSecret  string
+	PublicAPIKey  string
+	PrivateAPIKey string
+	IsGov         bool
+	NoBrowser     bool
+	authType      string
+	force         bool
+	SkipConfig    bool
+	config        LoginConfig
+	Asker         TrackAsker
+}
+
+func (opts *LoginOpts) promptAuthType() error {
+	if opts.force {
+		opts.authType = userAccountAuth
+		return nil
+	}
+	authTypePrompt := &survey.Select{
+		Message: "Select authentication type:",
+		Options: authTypeOptions,
+		Default: userAccountAuth,
+		Description: func(value string, _ int) string {
+			return authTypeDescription[value]
+		},
+	}
+	return opts.Asker.TrackAskOne(authTypePrompt, &opts.authType)
+}
+
+func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
+	if err := opts.oauthFlow(ctx); err != nil {
+		return err
+	}
+	// Sync config with OAuth tokens
+	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
+		return err
+	}
+	s, err := opts.config.AccessTokenSubject()
+	if err != nil {
+		return err
+	}
+
+	if err := opts.checkProfile(ctx); err != nil {
+		return err
+	}
+
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
+
+	return nil
+}
+
+func (opts *LoginOpts) setProgrammaticCredentials() error {
+	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
+
+All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
+
+Enter [?] on any option to get help.
+
+`, atlasName)
+
+	q := prompt.AccessQuestions(opts.authType)
+	if err := opts.Asker.TrackAsk(q, opts); err != nil {
+		return err
+	}
+
+	opts.setUpAccess()
+
+	return nil
+}
+
+func (opts *LoginOpts) setUpCredentials(ctx context.Context) error {
+	switch opts.authType {
+	case userAccountAuth:
+		return opts.setUserAccountCredentials(ctx)
+	case prompt.ServiceAccountAuth, prompt.APIKeysAuth:
+		return opts.setProgrammaticCredentials()
+	default:
+		return errors.New("no authentication type selected")
+	}
+}
+
+func (opts *LoginOpts) setUpAccess() {
+	// Set service
+	switch {
+	case opts.IsGov:
+		opts.Service = config.CloudGovService
+	default:
+		opts.Service = config.CloudService
+	}
+	opts.config.SetService(opts.Service)
+
+	// Set authentication credentials
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		if opts.ClientID != "" {
+			opts.config.SetClientID(opts.ClientID)
+		}
+		if opts.ClientSecret != "" {
+			opts.config.SetClientSecret(opts.ClientSecret)
+		}
+	case prompt.APIKeysAuth:
+		if opts.PublicAPIKey != "" {
+			opts.config.SetPublicAPIKey(opts.PublicAPIKey)
+		}
+		if opts.PrivateAPIKey != "" {
+			opts.config.SetPrivateAPIKey(opts.PrivateAPIKey)
+		}
+	}
 }
 
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
@@ -77,22 +213,22 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		default:
 			opts.Service = config.CloudService
 		}
-		opts.config.Set("service", opts.Service)
+		opts.config.SetService(opts.Service)
 
 		if opts.AccessToken != "" {
-			opts.config.Set(config.AccessTokenField, opts.AccessToken)
+			opts.config.SetAccessToken(opts.AccessToken)
 		}
 		if opts.RefreshToken != "" {
-			opts.config.Set(config.RefreshTokenField, opts.RefreshToken)
+			opts.config.SetRefreshToken(opts.RefreshToken)
 		}
 		if config.ClientID() != "" {
-			opts.config.Set(config.ClientIDField, config.ClientID())
+			opts.config.SetClientID(config.ClientID())
 		}
 
 		// sync OpsManagerURL from command opts (higher priority)
 		// and OpsManagerURL from default profile
 		if opts.OpsManagerURL != "" {
-			opts.config.Set(config.OpsManagerURLField, opts.OpsManagerURL)
+			opts.config.SetOpsManagerURL(opts.OpsManagerURL)
 		}
 		if config.OpsManagerURL() != "" {
 			opts.OpsManagerURL = config.OpsManagerURL()
@@ -103,28 +239,24 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 }
 
 func (opts *LoginOpts) LoginRun(ctx context.Context) error {
-	if err := opts.oauthFlow(ctx); err != nil {
-		return err
-	}
-	// oauth config might have changed,
-	// re-sync config profile with login opts
-	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
-		return err
+	if err := opts.promptAuthType(); err != nil {
+		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
-	s, err := opts.config.AccessTokenSubject()
-	if err != nil {
-		return err
+	switch opts.authType {
+	case userAccountAuth:
+		opts.config.SetAuthType(config.UserAccount)
+	case prompt.ServiceAccountAuth:
+		opts.config.SetAuthType(config.ServiceAccount)
+	case prompt.APIKeysAuth:
+		opts.config.SetAuthType(config.APIKeys)
+	default:
+		return errors.New("no authentication type selected")
 	}
 
-	if err := opts.checkProfile(ctx); err != nil {
+	if err := opts.setUpCredentials(ctx); err != nil {
 		return err
 	}
-
-	if err := opts.config.Save(); err != nil {
-		return err
-	}
-	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
 	if opts.SkipConfig {
 		return nil
@@ -146,11 +278,11 @@ func (opts *LoginOpts) checkProfile(ctx context.Context) error {
 		return err
 	}
 	if opts.config.OrgID() != "" && !opts.OrgExists(opts.config.OrgID()) {
-		opts.config.Set("org_id", "")
+		opts.config.SetOrgID("")
 	}
 
 	if opts.config.ProjectID() != "" && !opts.ProjectExists(opts.config.ProjectID()) {
-		opts.config.Set("project_id", "")
+		opts.config.SetProjectID("")
 	}
 	return nil
 }
@@ -181,6 +313,19 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	}
 	opts.SetUpProject()
 
+	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+		return err
+	}
+	opts.SetUpOutput()
+
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+
+	return opts.validateOrgAndProject()
+}
+
+func (opts *LoginOpts) validateOrgAndProject() error {
 	// Only make references to profile if user was asked about org or projects
 	if opts.AskedOrgsOrProjects && opts.ProjectID != "" && opts.OrgID != "" {
 		if !opts.ProjectExists(opts.config.ProjectID()) {
@@ -196,8 +341,7 @@ You have successfully configured your profile.
 You can use [atlas config set] to change your profile settings later.
 `)
 	}
-
-	return opts.config.Save()
+	return nil
 }
 
 func (opts *LoginOpts) printAuthInstructions(code *auth.DeviceCode) {
@@ -223,6 +367,10 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 		return
 	}
 
+	if !opts.force {
+		_, _ = fmt.Fprintf(opts.OutWriter, "\nPress Enter to open the browser and complete authentication...")
+		_, _ = fmt.Scanln()
+	}
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
 		_, _ = log.Warningln("There was an issue opening your browser")
 	}
@@ -243,7 +391,7 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 		}
 
 		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
+		if retry, errRetry := opts.shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
 			return errRetry
 		} else if retry {
 			continue
@@ -258,11 +406,11 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-func shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
+func (opts *LoginOpts) shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
 	}
-	err = telemetry.TrackAskOne(p, &retry)
+	err = opts.Asker.TrackAskOne(p, &retry)
 	return retry, err
 }
 
@@ -278,9 +426,10 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 		// ignore expired tokens since logging in
 		if err := opts.RefreshAccessToken(ctx); err != nil {
 			// clean up any expired or invalid tokens
-			opts.config.Set(config.AccessTokenField, "")
+			opts.config.SetAccessToken(
+				"")
 
-			if !errors.Is(err, cli.ErrInvalidRefreshToken) {
+			if !commonerrors.IsInvalidRefreshToken(err) {
 				return err
 			}
 		}
@@ -290,11 +439,14 @@ func (opts *LoginOpts) LoginPreRun(ctx context.Context) func() error {
 }
 
 func LoginBuilder() *cobra.Command {
-	opts := &LoginOpts{}
+	opts := &LoginOpts{
+		Asker: &telemetry.Ask{},
+	}
 
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
+		Long:  `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.`,
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 `,
@@ -305,7 +457,6 @@ func LoginBuilder() *cobra.Command {
 				opts.SyncWithOAuthAccessProfile(defaultProfile),
 				opts.InitFlow(defaultProfile),
 				opts.LoginPreRun(cmd.Context()),
-				validate.NoAPIKeys,
 				validate.NoAccessToken,
 			)
 		},
@@ -316,8 +467,10 @@ func LoginBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
+	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
+	_ = cmd.Flags().MarkHidden(flag.Force)
 	return cmd
 }

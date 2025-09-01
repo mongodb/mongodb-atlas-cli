@@ -22,7 +22,7 @@ import (
 	"path"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -31,6 +31,10 @@ import (
 
 var (
 	errCreateDefaultPluginDir = errors.New("failed to create default plugin directory")
+	minimumPluginVersions     = map[Github]string{
+		{Owner: "mongodb", Name: "atlas-cli-plugin-kubernetes"}: "v1.1.7",
+		{Owner: "mongodb", Name: "atlas-cli-plugin-gsa"}:        "v0.0.2", // TODO: ensure this version is correct version after work in CLOUDP-333246
+	}
 )
 
 const (
@@ -162,6 +166,11 @@ type Plugin struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	// TODO:  uncomment after plugin release - to be done by CLOUDP-340658
+	// if err := ValidateVersion(*p.Github, p.Version); err != nil {
+	// 	return err
+	// }
+
 	p.setTelemetry()
 
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
@@ -284,4 +293,26 @@ func (p *Plugin) setTelemetry() {
 	}
 
 	telemetry.AppendOption(telemetry.WithPluginExecutionInfo(info))
+}
+
+// ValidateVersion validates the version of a plugin against the minimum required version.
+// If a plugin is not listed in the minimumPluginVersions map, it is considered valid.
+func ValidateVersion(gh Github, version *semver.Version) error {
+	minVersionStr, exists := minimumPluginVersions[gh]
+	if !exists {
+		return nil // No version requirement for this plugin
+	}
+
+	// TODO check if version is optional, if so, check if version is available and return nil
+	minVersion, err := semver.NewVersion(minVersionStr)
+	if err != nil {
+		return err
+	}
+
+	if version.LessThan(minVersion) {
+		return fmt.Errorf("plugin %s/%s version v%s is below minimum required version %s for this version of AtlasCLI.\nPlease update the plugin using 'atlas plugin update %s'",
+			gh.Owner, gh.Name, version.String(), minVersionStr, gh.Name)
+	}
+
+	return nil
 }

@@ -56,10 +56,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-config-delete` - Delete a profile.
 * :ref:`atlas-config-describe` - Return the profile you specify.
 * :ref:`atlas-config-edit` - Opens the config file with the default text editor.
-* :ref:`atlas-config-init` - Configure a profile to store access settings for your MongoDB deployment.
 * :ref:`atlas-config-list` - Return a list of available profiles by name.
 * :ref:`atlas-config-rename` - Rename a profile.
 * :ref:`atlas-config-set` - Configure specific properties of a profile.
@@ -68,10 +66,8 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   delete </command/atlas-config-delete>
    describe </command/atlas-config-describe>
    edit </command/atlas-config-edit>
-   init </command/atlas-config-init>
    list </command/atlas-config-list>
    rename </command/atlas-config-rename>
    set </command/atlas-config-set>

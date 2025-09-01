@@ -55,7 +55,10 @@ func TestConfig(t *testing.T) {
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
+
 	t.Run("config", func(t *testing.T) {
+		// We use garbage credentials to verify flow will ask for org and project IDs to be asked manually.
+		// We expect this flow to fail with an error message about project being inaccessible. The profile is still saved.
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
@@ -78,6 +81,18 @@ func TestConfig(t *testing.T) {
 
 		if err = cmd.Start(); err != nil {
 			t.Fatal(err)
+		}
+		if _, err = c.ExpectString("Select authentication type"); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := c.Send("\x1B[B"); err != nil {
+			t.Fatalf("Send(Down) = %v", err)
+		}
+		if _, err := c.Send("\x1B[B"); err != nil {
+			t.Fatalf("Send(Down) = %v", err)
+		}
+		if _, err := c.SendLine(""); err != nil {
+			t.Fatalf("SendLine() = %v", err)
 		}
 
 		if _, err = c.ExpectString("Public API Key"); err != nil {
@@ -123,11 +138,10 @@ func TestConfig(t *testing.T) {
 		if _, err = c.SendLine(""); err != nil {
 			t.Fatalf("SendLine() = %v", err)
 		}
-		if err = cmd.Wait(); err != nil {
-			t.Fatalf("unexpected error: %v, resp", err)
+		if _, err = c.ExpectString("Error: project is inaccessible. You either don't have access to this project or the project doesn't exist"); err != nil {
+			t.Fatal(err)
 		}
 	})
-
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
@@ -194,7 +208,7 @@ func TestConfig(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		const expected = "Profile 'renamed' deleted\n"
+		const expected = "Successfully logged out of 'renamed'\n"
 		if string(resp) != expected {
 			t.Errorf("expected %s, got %s\n", expected, string(resp))
 		}

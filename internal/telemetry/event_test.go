@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
@@ -126,27 +126,47 @@ func TestWithOS(t *testing.T) {
 
 func TestWithUserAgent(t *testing.T) {
 	e := newEvent(withUserAgent())
+	userAgent := config.UserAgent(version.Version)
 
 	a := assert.New(t)
-	a.Equal(e.Properties["UserAgent"], config.UserAgent)
+	a.Equal(e.Properties["UserAgent"], userAgent)
 	a.Equal(e.Properties["HostName"], config.HostName)
 }
 
 func TestWithAuthMethod(t *testing.T) {
-	t.Run("api key", func(t *testing.T) {
-		c := &configMock{
-			publicKey:  "test-public",
-			privateKey: "test-private",
-		}
-		e := newEvent(withAuthMethod(c))
-		assert.Equal(t, "api_key", e.Properties["auth_method"])
-	})
-	t.Run("Oauth", func(t *testing.T) {
-		e := newEvent(withAuthMethod(&configMock{
-			accessToken: "test",
-		}))
-		assert.Equal(t, "oauth", e.Properties["auth_method"])
-	})
+	tests := []struct {
+		name     string
+		cfg      *configMock
+		expected string
+	}{
+		{
+			name: "api key",
+			cfg: &configMock{
+				authType: config.APIKeys,
+			},
+			expected: "api_key",
+		},
+		{
+			name: "user account",
+			cfg: &configMock{
+				authType: config.UserAccount,
+			},
+			expected: "oauth",
+		},
+		{
+			name: "service account",
+			cfg: &configMock{
+				authType: config.ServiceAccount,
+			},
+			expected: "service_account",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := newEvent(withAuthMethod(tt.cfg))
+			assert.Equal(t, tt.expected, e.Properties["auth_method"])
+		})
+	}
 }
 
 func TestWithService(t *testing.T) {
@@ -444,15 +464,13 @@ func Test_withOutput(t *testing.T) {
 }
 
 type configMock struct {
-	name        string
-	publicKey   string
-	privateKey  string
-	accessToken string
-	service     string
-	url         string
-	project     string
-	org         string
-	out         string
+	name     string
+	authType config.AuthMechanism
+	service  string
+	url      string
+	project  string
+	org      string
+	out      string
 }
 
 var _ Authenticator = configMock{}
@@ -477,16 +495,8 @@ func (c configMock) OpsManagerURL() string {
 	return c.url
 }
 
-func (c configMock) PublicAPIKey() string {
-	return c.publicKey
-}
-
-func (c configMock) PrivateAPIKey() string {
-	return c.privateKey
-}
-
-func (c configMock) AccessToken() string {
-	return c.accessToken
+func (c configMock) AuthType() config.AuthMechanism {
+	return c.authType
 }
 
 func (c configMock) Output() string {

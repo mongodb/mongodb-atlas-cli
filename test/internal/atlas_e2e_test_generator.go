@@ -162,6 +162,8 @@ type AtlasE2ETestGenerator struct {
 	skipSnapshots     func(snapshot *http.Response, prevSnapshot *http.Response) bool
 	snapshotNameFunc  func(r *http.Request) string
 	snapshotTargetURI string
+	ClientID          string
+	ClientSecret      string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -353,6 +355,35 @@ func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 
 	g.GenerateProject(prefix)
 	g.generateClusterWithPrefix(prefix)
+}
+
+// GenerateOrgServiceAccount generates a new organization service account and also registers its deletion on test cleanup.
+func (g *AtlasE2ETestGenerator) GenerateOrgServiceAccount(cliPath, name string) {
+	g.t.Helper()
+
+	if g.ClientID != "" && g.ClientSecret != "" {
+		g.t.Fatal("unexpected error: service account was already generated")
+	}
+
+	var err error
+	g.ClientID, g.ClientSecret, err = createOrgServiceAccount(cliPath, name)
+	if err != nil {
+		g.t.Fatalf("unexpected error creating org service account: %v", err)
+	}
+
+	g.Logf("clientID=%s", g.ClientID)
+	if g.ClientID == "" {
+		g.t.Fatal("clientID not created")
+	}
+
+	if SkipCleanup() {
+		return
+	}
+
+	g.t.Cleanup(func() {
+		g.Logf("Service Account cleanup %q", g.ClientID)
+		deleteOrgServiceAccount(g.t, cliPath, g.ClientID)
+	})
 }
 
 // NewAvailableRegion returns the first region for the provider/tier.

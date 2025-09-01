@@ -24,12 +24,26 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 )
 
-const minPasswordLength = 10
-const clusterWideScaling = "clusterWideScaling"
-const independentShardScaling = "independentShardScaling"
+const (
+	minPasswordLength       = 10
+	clusterWideScaling      = "clusterWideScaling"
+	independentShardScaling = "independentShardScaling"
+	clientIDLength          = 34
+)
+
+var (
+	ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
+	ErrAlreadyAuthenticatedToken   = errors.New("already authenticated with an account")
+	ErrInvalidPath                 = errors.New("invalid path")
+	ErrInvalidClusterName          = errors.New("invalid cluster name")
+	ErrInvalidDBUsername           = errors.New("invalid db username")
+	ErrWeakPassword                = errors.New("the password provided is too common")
+	ErrShortPassword               = errors.New("the password provided is too short")
+)
 
 // toString tries to cast an interface to string.
 func toString(val any) (string, error) {
@@ -95,7 +109,16 @@ func ObjectID(s string) error {
 	return nil
 }
 
-var ErrMissingCredentials = errors.New("this action requires authentication")
+func ObjectIDByType(name, s string) error {
+	if strings.HasPrefix(name, "client_") {
+		if len(s) != clientIDLength {
+			return fmt.Errorf("the provided value '%s' is not a valid client ID", s)
+		}
+		return nil
+	}
+
+	return ObjectID(s)
+}
 
 // Credentials validates public and private API keys have been set.
 func Credentials() error {
@@ -106,16 +129,8 @@ func Credentials() error {
 		return nil
 	}
 
-	return fmt.Errorf(
-		`%w
-
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas config init`,
-		ErrMissingCredentials,
-	)
+	return commonerrors.ErrUnauthorized
 }
-
-var ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
 
 // NoAPIKeys there are no API keys in the profile, used for login/register/setup commands.
 func NoAPIKeys() error {
@@ -147,8 +162,6 @@ func AutoScalingMode(autoScalingMode string) func() error {
 	}
 }
 
-var ErrAlreadyAuthenticatedToken = errors.New("already authenticated with an account")
-
 // NoAccessToken there is no access token in the profile, used for login/register/setup commands.
 func NoAccessToken() error {
 	if config.AccessToken() == "" {
@@ -179,8 +192,6 @@ func ConditionalFlagNotInSlice(conditionalFlag string, conditionalFlagValue stri
 	return fmt.Errorf(`invalid flag "%s" in combination with "%s=%s", not allowed values: "%s"`, flag, conditionalFlag, conditionalFlagValue, strings.Join(invalidFlags, `", "`))
 }
 
-var ErrInvalidPath = errors.New("invalid path")
-
 func Path(val any) error {
 	path, ok := val.(string)
 	if !ok {
@@ -205,8 +216,6 @@ func OptionalPath(val any) error {
 	return Path(val)
 }
 
-var ErrInvalidClusterName = errors.New("invalid cluster name")
-
 func ClusterName(val any) error {
 	name, ok := val.(string)
 	if !ok {
@@ -220,8 +229,6 @@ func ClusterName(val any) error {
 	return fmt.Errorf("%w. Cluster names can only contain ASCII letters, numbers, and hyphens: %s", ErrInvalidClusterName, name)
 }
 
-var ErrInvalidDBUsername = errors.New("invalid db username")
-
 func DBUsername(val any) error {
 	name, ok := val.(string)
 	if !ok {
@@ -234,9 +241,6 @@ func DBUsername(val any) error {
 
 	return fmt.Errorf("%w: %s", ErrInvalidDBUsername, name)
 }
-
-var ErrWeakPassword = errors.New("the password provided is too common")
-var ErrShortPassword = errors.New("the password provided is too short")
 
 func WeakPassword(val any) error {
 	password, ok := val.(string)

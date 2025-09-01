@@ -26,11 +26,12 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
@@ -134,7 +135,7 @@ type AtlasClusterQuickStarter interface {
 type Opts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
-	register                    auth.RegisterOpts
+	login                       auth.LoginOpts
 	config                      profileReader
 	store                       AtlasClusterQuickStarter
 	defaultName                 string
@@ -163,8 +164,7 @@ type Opts struct {
 	connectionString            string
 
 	// control
-	skipRegister bool
-	skipLogin    bool
+	skipLogin bool
 }
 
 type clusterSettings struct {
@@ -407,26 +407,18 @@ func (opts *Opts) setupCloseHandler() {
 }
 
 func (opts *Opts) Run(ctx context.Context) error {
-	if !opts.skipRegister {
-		_, _ = fmt.Fprintf(opts.OutWriter, `
-This command will help you:
-1. Create and verify your MongoDB Atlas account in your browser.
-2. Return to the terminal to create your first free MongoDB database in Atlas.
-`)
-		if err := opts.register.RegisterRun(ctx); err != nil {
-			return err
-		}
-	} else if !opts.skipLogin {
+	if !opts.skipLogin {
 		_, _ = fmt.Fprintf(opts.OutWriter, `Next steps:
 1. Log in and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
+
+If you wish to register a new account, run: 'atlas auth register'.
 `)
 
-		if err := opts.register.LoginRun(ctx); err != nil {
+		if err := opts.login.LoginRun(ctx); err != nil {
 			return err
 		}
 	}
-
 	if err := opts.clusterPreRun(ctx, opts.OutWriter); err != nil {
 		return err
 	}
@@ -444,8 +436,8 @@ func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error 
 
 	return opts.PreRunE(
 		opts.initStore(ctx),
-		opts.register.SyncWithOAuthAccessProfile(defaultProfile),
-		opts.register.InitFlow(defaultProfile),
+		opts.login.SyncWithOAuthAccessProfile(defaultProfile),
+		opts.login.InitFlow(defaultProfile),
 		opts.InitOutput(outWriter, ""),
 	)
 }
@@ -585,24 +577,22 @@ func (opts *Opts) promptConnect() error {
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
-	opts.skipRegister = true
 	opts.skipLogin = true
 
-	if err := validate.NoAPIKeys(); err != nil {
-		// Why are we ignoring the error?
-		// Because if the user has API keys, we just want to proceed with the flow
-		// Then why not remove the error?
-		// The error is useful in other components that call `validate.NoAPIKeys()`
+	switch config.AuthType() {
+	case config.APIKeys, config.ServiceAccount:
 		return nil
-	}
-	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
+	case config.UserAccount:
+		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
+			return nil
+		}
+	case config.NoAuth:
+		fallthrough
+	default:
 		opts.skipLogin = false
 		return nil
 	}
-	if _, err := auth.AccountWithAccessToken(); err == nil {
-		return nil
-	}
-	opts.skipRegister = false
+
 	return nil
 }
 
@@ -668,8 +658,8 @@ func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "setup",
 		Aliases: []string{"quickstart"},
-		Short:   "Register, authenticate, create, and access an Atlas cluster.",
-		Long:    `This command takes you through registration, login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.`,
+		Short:   "Login, authenticate, create, and access an Atlas cluster.",
+		Long:    `This command takes you through login, default profile creation, creating your first free tier cluster and connecting to it using MongoDB Shell.`,
 		Example: `  # Override default cluster settings like name, provider, or database username by using the command options
   atlas setup --clusterName Test --provider GCP --username dbuserTest`,
 		Hidden: false,
@@ -678,29 +668,22 @@ func Builder() *cobra.Command {
 			defaultProfile := config.Default()
 			opts.config = defaultProfile
 			opts.OutWriter = cmd.OutOrStdout()
-			opts.register.OutWriter = opts.OutWriter
+			opts.login.OutWriter = opts.OutWriter
 
-			if err := opts.register.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
+			if err := opts.login.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
 				return err
 			}
-			if err := opts.register.InitFlow(defaultProfile)(); err != nil {
+			if err := opts.login.InitFlow(defaultProfile)(); err != nil {
 				return err
 			}
 			if err := opts.PreRun(cmd.Context()); err != nil {
 				return nil
 			}
 			var preRun []prerun.CmdOpt
-			// registration pre run if applicable
-			if !opts.skipRegister {
-				preRun = append(preRun,
-					opts.register.LoginPreRun(cmd.Context()),
-					validate.NoAPIKeys,
-					validate.NoAccessToken,
-				)
-			}
-
-			if !opts.skipLogin && opts.skipRegister {
-				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
+			// login pre run if applicable
+			if !opts.skipLogin {
+				opts.login.Asker = &telemetry.Ask{}
+				preRun = append(preRun, opts.login.LoginPreRun(cmd.Context()))
 			}
 			preRun = append(preRun, opts.validateTier)
 			preRun = append(preRun, validate.AutoScalingMode(opts.AutoScalingMode))
@@ -713,9 +696,9 @@ func Builder() *cobra.Command {
 		},
 	}
 
-	// Register and login related
-	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	// Login related
+	cmd.Flags().BoolVar(&opts.login.IsGov, "gov", false, "Login with Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.login.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Setup related
 	cmd.Flags().StringVar(&opts.MDBVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithAtlasSetup)

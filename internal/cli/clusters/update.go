@@ -20,10 +20,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -211,7 +211,7 @@ func (opts *UpdateOpts) RunDedicatedClusterWideScaling() error {
 
 	r, err := opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)

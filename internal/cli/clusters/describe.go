@@ -18,10 +18,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -83,12 +82,12 @@ func (opts *DescribeOpts) RunFlexCluster(err error) error {
 	}
 
 	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	r, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return commonerrors.Check(err)
+		return err
 	}
 
 	return opts.Print(r)

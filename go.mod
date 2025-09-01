@@ -29,8 +29,8 @@ require (
 	github.com/klauspost/compress v1.18.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mholt/archives v0.1.3
-	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v1.19.1
+	github.com/mongodb/atlas-cli-core v0.0.0-20250822132614-230a610dbe0f
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.25.7
@@ -42,9 +42,10 @@ require (
 	github.com/stretchr/testify v1.11.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/yuin/goldmark v1.7.13
+	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0
+	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.0.0
 	go.mongodb.org/mongo-driver v1.17.4
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.27.0
@@ -57,14 +58,18 @@ require (
 )
 
 require (
+	al.essio.dev/pkg/shellescape v1.5.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cli/safeexec v1.0.0 // indirect
+	github.com/danieljoos/wincred v1.2.2 // indirect
+	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
+	github.com/mongodb-forks/digest v1.1.0 // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/woodsbury/decimal128 v1.3.0 // indirect
@@ -110,7 +115,7 @@ require (
 	github.com/ebitengine/purego v0.8.4 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/fsnotify/fsnotify v1.8.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
@@ -170,7 +175,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
+	golang.org/x/oauth2 v0.30.0
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/term v0.34.0 // indirect
 	golang.org/x/text v0.28.0 // indirect

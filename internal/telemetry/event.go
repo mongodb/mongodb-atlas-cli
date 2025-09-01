@@ -26,7 +26,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/denisbrodbeck/machineid"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
@@ -207,18 +207,21 @@ func withOS() EventOpt {
 }
 
 type Authenticator interface {
-	PublicAPIKey() string
-	PrivateAPIKey() string
-	AccessToken() string
+	AuthType() config.AuthMechanism
 }
 
 func withAuthMethod(c Authenticator) EventOpt {
 	return func(event Event) {
-		if c.PublicAPIKey() != "" && c.PrivateAPIKey() != "" {
+		switch c.AuthType() {
+		case config.APIKeys:
 			event.Properties["auth_method"] = "api_key"
 			return
-		} else if c.AccessToken() != "" {
+		case config.UserAccount:
 			event.Properties["auth_method"] = "oauth"
+		case config.ServiceAccount:
+			event.Properties["auth_method"] = "service_account"
+		case config.NoAuth:
+			event.Properties["auth_method"] = "no_auth"
 		}
 	}
 }
@@ -396,8 +399,9 @@ func withEventType(s string) EventOpt {
 }
 
 func withUserAgent() EventOpt {
+	userAgent := config.UserAgent(version.Version)
 	return func(event Event) {
-		event.Properties["UserAgent"] = config.UserAgent
+		event.Properties["UserAgent"] = userAgent
 		event.Properties["HostName"] = config.HostName
 	}
 }

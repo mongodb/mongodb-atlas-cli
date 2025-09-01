@@ -18,7 +18,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/atlas-cli-core/config"
+	coreMocks "github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -33,40 +34,41 @@ import (
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockStore := coreMocks.NewMockStore(ctrl)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{}
 
 	opts.OutWriter = buf
-	opts.register.WithFlow(mockFlow)
+	opts.login.WithFlow(mockFlow)
 
-	config.SetPublicAPIKey("publicKey")
-	config.SetPrivateAPIKey("privateKey")
+	oldProfile := config.Default()
+	profile := config.NewProfile("test-profile", mockStore)
+	config.SetProfile(profile)
 
+	mockStore.EXPECT().GetHierarchicalValue("test-profile", "auth_type").Return("api_keys").Times(1)
 	require.NoError(t, opts.PreRun(ctx))
 
-	assert.True(t, opts.skipRegister)
 	assert.Equal(t, 0, buf.Len())
 	assert.True(t, opts.skipLogin)
+	t.Cleanup(func() {
+		config.SetDefaultProfile(oldProfile)
+	})
 }
 
-func Test_setupOpts_RunSkipRegister(t *testing.T) {
+func Test_setupOpts_RunSkipLogin(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
-	opts := &Opts{
-		skipLogin: true,
-	}
-	opts.register.WithFlow(mockFlow)
-
-	config.SetAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ")
+	opts := &Opts{}
+	opts.login.WithFlow(mockFlow)
 
 	opts.OutWriter = buf
 	require.NoError(t, opts.PreRun(ctx))
-	assert.True(t, opts.skipRegister)
+	assert.False(t, opts.skipLogin)
 }
 
 func TestCluster_Run(t *testing.T) {
@@ -107,7 +109,7 @@ func TestCluster_Run(t *testing.T) {
 		Tag:             map[string]string{"env": "test"},
 		AutoScalingMode: clusterWideScaling,
 	}
-	opts.register.WithFlow(mockFlow)
+	opts.login.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -167,7 +169,7 @@ func TestCluster_Run_LatestAPI(t *testing.T) {
 		Tag:             map[string]string{"env": "test"},
 		AutoScalingMode: "independentShardingScaling",
 	}
-	opts.register.WithFlow(mockFlow)
+	opts.login.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 
@@ -235,7 +237,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 		MDBVersion:                  "7.0",
 		AutoScalingMode:             clusterWideScaling,
 	}
-	opts.register.WithFlow(mockFlow)
+	opts.login.WithFlow(mockFlow)
 
 	projectIPAccessList := opts.newProjectIPAccessList()
 

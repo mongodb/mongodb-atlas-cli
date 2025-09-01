@@ -26,6 +26,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -112,6 +113,8 @@ const (
 	apiKeysEntity                 = "apikeys"
 	apiKeyAccessListEntity        = "accessLists"
 	usersEntity                   = "users"
+	apiEntity                     = "api"
+	serviceAccountsEntity         = "serviceAccounts"
 
 	deletingState = "DELETING"
 
@@ -127,6 +130,10 @@ const (
 	e2eGovClusterTier    = "M20"
 	e2eSharedClusterTier = "M2"
 	e2eClusterProvider   = "AWS" // e2eClusterProvider preferred provider for e2e testing.
+
+	// serviceAccount API constants.
+	serviceAccountAPIVersion = "2024-08-05"
+	secretExpiresAfterHours  = 8
 )
 
 // Backup compliance policy constants.
@@ -612,6 +619,70 @@ func TempConfigFolder(t *testing.T) string {
 	}
 
 	return dir
+}
+
+func InitKeychain(t *testing.T) error {
+	t.Helper()
+
+	if runtime.GOOS == "darwin" {
+		return InitKeychainMac(t)
+	}
+
+	return fmt.Errorf("keychain initialization not supported on %s", runtime.GOOS)
+}
+
+func InitKeychainMac(t *testing.T) error {
+	t.Helper()
+
+	// Run the following command to initialize the keychain
+	//
+	// Create the preferences directory, expected by the security command to exist
+	// HOME=dir mkdir -p $dir/Library/Preferences
+	//
+	// Create the keychain:
+	// HOME=dir /usr/bin/security create-keychain -p "" default.keychain-db
+	//
+	// Add the keychain to the search list:
+	// HOME=dir /usr/bin/security list-keychains -d user -s default.keychain-db
+	//
+	// Set the default keychain:
+	// HOME=dir /usr/bin/security default-keychain -s default.keychain-db
+	//
+	// Unlock the keychain:
+	// HOME=dir /usr/bin/security unlock-keychain -p "" default.keychain-db
+	//
+
+	home := os.Getenv("HOME")
+
+	if err := os.MkdirAll(filepath.Join(home, "Library", "Preferences"), os.ModePerm); err != nil {
+		return fmt.Errorf("error creating preferences directory: %w", err)
+	}
+
+	createCmd := exec.Command("/usr/bin/security", "create-keychain", "-p", "", "default.keychain-db")
+	createCmd.Env = os.Environ()
+	if err := createCmd.Run(); err != nil {
+		return fmt.Errorf("error creating keychain: %w", err)
+	}
+
+	listCmd := exec.Command("/usr/bin/security", "list-keychains", "-d", "user", "-s", "default.keychain-db")
+	listCmd.Env = os.Environ()
+	if err := listCmd.Run(); err != nil {
+		return fmt.Errorf("error listing keychains: %w", err)
+	}
+
+	defaultCmd := exec.Command("/usr/bin/security", "default-keychain", "-s", "default.keychain-db")
+	defaultCmd.Env = os.Environ()
+	if err := defaultCmd.Run(); err != nil {
+		return fmt.Errorf("error setting default keychain: %w", err)
+	}
+
+	unlockCmd := exec.Command("/usr/bin/security", "unlock-keychain", "-p", "", "default.keychain-db")
+	unlockCmd.Env = os.Environ()
+	if err := unlockCmd.Run(); err != nil {
+		return fmt.Errorf("error unlocking keychain: %w", err)
+	}
+
+	return nil
 }
 
 func createProject(projectName string) (string, error) {
@@ -1419,4 +1490,89 @@ func DeleteOrgAPIKey(id string) error {
 	)
 	cmd.Env = os.Environ()
 	return cmd.Run()
+}
+
+// createOrgServiceAccount creates a new organization service account.
+func createOrgServiceAccount(cliPath, name string) (string, string, error) {
+	payload := map[string]any{
+		"description":             "Test service account",
+		"name":                    name,
+		"roles":                   []string{"ORG_OWNER"},
+		"secretExpiresAfterHours": secretExpiresAfterHours,
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	args := []string{
+		apiEntity,
+		serviceAccountsEntity,
+		"createServiceAccount",
+		"--version",
+		serviceAccountAPIVersion,
+		"-P",
+		ProfileName(),
+		"--debug",
+	}
+
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	cmd.Stdin = bytes.NewReader(payloadBytes)
+
+	resp, err := RunAndGetStdOut(cmd)
+	if err != nil {
+		return "", "", fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	var serviceAccount map[string]any
+	if err := json.Unmarshal(resp, &serviceAccount); err != nil {
+		return "", "", fmt.Errorf("failed to unmarshal response: %w", err)
+	}
+
+	// Obtain client ID
+	clientID, ok := serviceAccount["clientId"].(string)
+	if !ok {
+		return "", "", errors.New("clientId not found in response")
+	}
+
+	// Obtain client secret
+	secrets, ok := serviceAccount["secrets"].([]any)
+	if !ok || len(secrets) == 0 {
+		return "", "", errors.New("secrets array not found or empty in response")
+	}
+	secret, ok := secrets[0].(map[string]any)
+	if !ok {
+		return "", "", errors.New("secret is not a valid object")
+	}
+	clientSecret, ok := secret["secret"].(string)
+	if !ok {
+		return "", "", errors.New("secret value not found in secret")
+	}
+
+	return clientID, clientSecret, nil
+}
+
+// deleteOrgServiceAccount deletes an organization service account.
+func deleteOrgServiceAccount(t *testing.T, cliPath, clientID string) {
+	t.Helper()
+
+	args := []string{
+		apiEntity,
+		serviceAccountsEntity,
+		"deleteServiceAccount",
+		"--clientId",
+		clientID,
+		"--version",
+		serviceAccountAPIVersion,
+		"-P",
+		ProfileName(),
+	}
+
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+
+	_, err := RunAndGetStdOut(cmd)
+	require.NoError(t, err, "failed to delete service account %s", clientID)
 }

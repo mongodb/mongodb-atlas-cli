@@ -16,13 +16,11 @@ package cli
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"net/http"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -41,12 +39,12 @@ type Refresher interface {
 	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
 }
 
-func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
+func (opts *RefresherOpts) InitFlow(c transport.ServiceGetter) func() error {
 	return func() error {
 		var err error
 		client := http.DefaultClient
 		client.Transport = transport.Default()
-		opts.flow, err = oauth.FlowWithConfig(c, client)
+		opts.flow, err = transport.FlowWithConfig(c, client, version.Version)
 		return err
 	}
 }
@@ -55,8 +53,6 @@ func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
 func (opts *RefresherOpts) WithFlow(f Refresher) {
 	opts.flow = f
 }
-
-var ErrInvalidRefreshToken = errors.New("session expired")
 
 func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	current, err := config.Token()
@@ -69,16 +65,6 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 	}
 	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
 	if err != nil {
-		var target *atlas.ErrorResponse
-		if errors.As(err, &target) && target.ErrorCode == "INVALID_REFRESH_TOKEN" {
-			return fmt.Errorf(
-				`%w
-
-Please note that your session expires periodically. 
-If you use Atlas CLI for automation, see https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-automate/ for best practices.
-To login, run: atlas auth login`,
-				ErrInvalidRefreshToken)
-		}
 		return err
 	}
 	config.SetAccessToken(t.AccessToken)

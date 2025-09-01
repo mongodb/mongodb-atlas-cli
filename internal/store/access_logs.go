@@ -35,23 +35,23 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *AccessLogOp
 	if opts != nil {
 		if opts.Start != "" {
 			startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-			result.Start(startTime)
+			result = result.Start(startTime)
 		}
 		if opts.End != "" {
 			endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-			result.End(endTime)
+			result = result.End(endTime)
 		}
 
 		if opts.NLogs > 0 {
-			result.NLogs(opts.NLogs)
+			result = result.NLogs(opts.NLogs)
 		}
 
 		if opts.IPAddress != "" {
-			result.IpAddress(opts.IPAddress)
+			result = result.IpAddress(opts.IPAddress)
 		}
 
 		if opts.AuthResult != nil {
-			result.AuthResult(*opts.AuthResult)
+			result = result.AuthResult(*opts.AuthResult)
 		}
 	}
 
@@ -66,23 +66,23 @@ func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *Acces
 	if opts != nil {
 		if opts.Start != "" {
 			startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-			result.Start(startTime)
+			result = result.Start(startTime)
 		}
 		if opts.End != "" {
 			endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-			result.End(endTime)
+			result = result.End(endTime)
 		}
 
 		if opts.NLogs > 0 {
-			result.NLogs(opts.NLogs)
+			result = result.NLogs(opts.NLogs)
 		}
 
 		if opts.IPAddress != "" {
-			result.IpAddress(opts.IPAddress)
+			result = result.IpAddress(opts.IPAddress)
 		}
 
 		if opts.AuthResult != nil {
-			result.AuthResult(*opts.AuthResult)
+			result = result.AuthResult(*opts.AuthResult)
 		}
 	}
 	res, _, err := result.Execute()

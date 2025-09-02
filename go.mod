@@ -23,7 +23,6 @@ require (
 	github.com/evergreen-ci/shrub v0.0.0-20250506131348-39cf0eb2b3dc
 	github.com/getkin/kin-openapi v0.133.0
 	github.com/go-test/deep v1.1.1
-	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.18.0
@@ -63,6 +62,7 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect

@@ -33,7 +33,7 @@ func InitProfile(profile string) error {
 		if err := config.SetName(profile); err != nil {
 			return err
 		}
-	} else if availableProfiles := config.List(); len(availableProfiles) == 1 && availableProfiles[0] == config.DefaultProfile {
+	} else if availableProfiles := config.List(); len(availableProfiles) == 1 {
 		if err := config.SetName(availableProfiles[0]); err != nil {
 			return err
 		}

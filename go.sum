@@ -320,8 +320,6 @@ github.com/mongodb-forks/digest v1.1.0 h1:7eUdsR1BtqLv0mdNm4OXs6ddWvR4X2/OsLwdKk
 github.com/mongodb-forks/digest v1.1.0/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
 github.com/mongodb-labs/cobra2snooty v1.19.1 h1:GDEQZWy8f/DeJlImNgVvStu6sgNi8nuSOR1Oskcw8BI=
 github.com/mongodb-labs/cobra2snooty v1.19.1/go.mod h1:Hyq4YadN8dwdOiz56MXwTuVN63p0WlkQwxdLxOSGdX8=
-github.com/mongodb/atlas-cli-core v0.0.0-20250822132614-230a610dbe0f h1:oSNF4zFkefc61U5K/C/rT6A0tsbu7cG/Tdo1ZVKbUGA=
-github.com/mongodb/atlas-cli-core v0.0.0-20250822132614-230a610dbe0f/go.mod h1:QDfVGpdfxXM1httLNXCKsfWTKv6slzCqBZxkkPIktlQ=
 github.com/mongodb/atlas-cli-core v0.0.0-20250901162552-2e62c5010f93 h1:arSkz/kAB+5jgo0efH24UByHsYe7QZ9cHgnAXZPRPeg=
 github.com/mongodb/atlas-cli-core v0.0.0-20250901162552-2e62c5010f93/go.mod h1:QDfVGpdfxXM1httLNXCKsfWTKv6slzCqBZxkkPIktlQ=
 github.com/montanaflynn/stats v0.7.1 h1:etflOAAHORrCC44V+aR6Ftzort912ZU+YLiSTuV8eaE=

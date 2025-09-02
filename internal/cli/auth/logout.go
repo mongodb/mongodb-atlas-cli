@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -154,12 +155,12 @@ func LogoutBuilder() *cobra.Command {
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
-			opts.config = config.Default()
-
 			// If the profile is set in the context, use it instead of the default profile
 			profile, ok := config.ProfileFromContext(cmd.Context())
 			if ok {
 				opts.config = profile
+			} else {
+				opts.config = config.Default()
 			}
 
 			// Only initialize OAuth flow if we have OAuth-based auth
@@ -173,13 +174,14 @@ func LogoutBuilder() *cobra.Command {
 			var message, entry string
 			var err error
 
+			fromProfile := fmt.Sprintf(" from profile %s?", opts.config.Name())
 			switch opts.config.AuthType() {
 			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()
-				message = "Are you sure you want to log out of account with public API key %s?"
+				message = "Are you sure you want to log out of account with public API key %s" + fromProfile
 			case config.ServiceAccount:
 				entry = opts.config.ClientID()
-				message = "Are you sure you want to log out of service account %s?"
+				message = "Are you sure you want to log out of service account %s" + fromProfile
 			case config.UserAccount:
 				entry, err = opts.config.AccessTokenSubject()
 				if err != nil {
@@ -190,7 +192,7 @@ func LogoutBuilder() *cobra.Command {
 					return ErrUnauthenticated
 				}
 
-				message = "Are you sure you want to log out of account %s?"
+				message = "Are you sure you want to log out of account %s" + fromProfile
 			case config.NoAuth, "":
 				entry = opts.config.Name()
 				message = "Are you sure you want to clear profile %s?"

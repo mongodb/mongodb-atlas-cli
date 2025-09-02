@@ -118,38 +118,42 @@ var _ AuthenticatedConfig = &testConfig{}
 
 func TestWithAuthentication(t *testing.T) {
 	tests := []struct {
-		name string
-		a    auth
+		name           string
+		setTestProfile func(p *config.Profile)
 	}{
 		{
 			name: "api keys",
-			a: auth{
-				username: "username",
-				password: "password",
+			setTestProfile: func(p *config.Profile) {
+				p.SetAuthType(config.APIKeys)
+				p.SetPublicAPIKey("test-key")
+				p.SetPrivateAPIKey("test-secret")
 			},
 		},
 		{
 			name: "service account",
-			a: auth{
-				clientID:     "id",
-				clientSecret: "secret",
+			setTestProfile: func(p *config.Profile) {
+				p.SetAuthType(config.ServiceAccount)
+				p.SetClientID("id")
+				p.SetClientSecret("secret")
 			},
 		},
 		{
 			name: "user account",
-			a: auth{
-				refreshToken: "token",
-				accessToken: &atlasauth.Token{
-					AccessToken:  "access",
-					RefreshToken: "refresh",
-				},
+			setTestProfile: func(p *config.Profile) {
+				p.SetAuthType(config.UserAccount)
+				p.SetAccessToken("token")
 			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, err := New(Service("cloud"), WithAuthentication(tt.a))
+			// Set up profile for testing
+			profile := config.NewProfile("test", config.NewInMemoryStore())
+			tt.setTestProfile(profile)
+			config.SetDefaultProfile(profile)
+
+			c, err := New(Service("cloud"), WithAuthentication())
 			require.NoError(t, err)
 			require.NotNil(t, c.httpClient)
 			require.NotNil(t, c.httpClient.Transport)

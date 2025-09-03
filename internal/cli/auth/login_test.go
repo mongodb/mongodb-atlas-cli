@@ -32,6 +32,8 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const jsonOutput = "json"
+
 func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
@@ -284,7 +286,7 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 		TrackAsk(gomock.Any(), opts).
 		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
 			if o, ok := answer.(*LoginOpts); ok {
-				o.Output = "json" //nolint:goconst
+				o.Output = jsonOutput
 			}
 			return nil
 		})

@@ -17,6 +17,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -48,23 +49,33 @@ func InitProfile(profile string) error {
 	return nil
 }
 
-// initAuthType initializes the authentication type based on the current configuration.
-// If the user has set credentials via environment variables and has not set
-// 'MONGODB_ATLAS_AUTH_TYPE', it will set the auth type accordingly.
+// initAuthType sets the AuthType if environment variables are being used.
+// This will override authType if it already exists from a profile in config,
+// which is desired behavior as environment variables take precedence.
 func initAuthType() {
-	// If the auth type is already set, we don't need to do anything.
-	authType := config.AuthType()
-	if authType != "" {
+	if envVarAuthType := detectEnvVars(); envVarAuthType != "" {
+		config.SetAuthType(envVarAuthType)
 		return
 	}
-	// If the auth type is not set, we try to determine it based on the available credentials.
-	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
-		config.SetAuthType(config.APIKeys)
+}
+
+// detectEnvVars detects environment variables and returns the appropriate
+// authentication mechanism.
+func detectEnvVars() config.AuthMechanism {
+	// Check for Service Account credentials
+	if (os.Getenv("MONGODB_ATLAS_CLIENT_ID") != "" && os.Getenv("MONGODB_ATLAS_CLIENT_SECRET") != "") ||
+		(os.Getenv("MCLI_CLIENT_ID") != "" && os.Getenv("MCLI_CLIENT_SECRET") != "") {
+		return config.ServiceAccount
 	}
-	if config.AccessToken() != "" && config.RefreshToken() != "" {
-		config.SetAuthType(config.UserAccount)
+	// Check for API Key credentials
+	if (os.Getenv("MONGODB_ATLAS_PUBLIC_API_KEY") != "" && os.Getenv("MONGODB_ATLAS_PRIVATE_API_KEY") != "") ||
+		(os.Getenv("MCLI_PUBLIC_API_KEY") != "" && os.Getenv("MCLI_PRIVATE_API_KEY") != "") {
+		return config.APIKeys
 	}
-	if config.ClientID() != "" && config.ClientSecret() != "" {
-		config.SetAuthType(config.ServiceAccount)
+	// Check for User Account credentials
+	if (os.Getenv("MONGODB_ATLAS_ACCESS_TOKEN") != "" && os.Getenv("MONGODB_ATLAS_REFRESH_TOKEN") != "") ||
+		(os.Getenv("MCLI_ACCESS_TOKEN") != "" && os.Getenv("MCLI_REFRESH_TOKEN") != "") {
+		return config.UserAccount
 	}
+	return ""
 }

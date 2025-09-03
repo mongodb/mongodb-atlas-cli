@@ -75,7 +75,7 @@ pkg:golang/github.com/mholt/archives@v0.1.3
 pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.0
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0
-pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20250901162552-2e62c5010f93
+pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20250903130314-af1597538b48
 pkg:golang/github.com/montanaflynn/stats@v0.7.1
 pkg:golang/github.com/nwaples/rardecode/v2@v2.1.0
 pkg:golang/github.com/pelletier/go-toml/v2@v2.2.3

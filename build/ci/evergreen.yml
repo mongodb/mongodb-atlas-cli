@@ -129,6 +129,7 @@ functions:
           CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)
           cat <<EOF > "$CONFIG_PATH"
           skip_update_check = true
+          telemetry_enabled = false
 
           [__e2e]
           org_id = '${atlas_org_id}'
@@ -137,7 +138,6 @@ functions:
           private_api_key = '${atlas_private_api_key}'
           ops_manager_url = '${mcli_ops_manager_url}'
           service = 'cloud'
-          telemetry_enabled = false
           output = 'plaintext'
 
           [__e2e_gov]
@@ -147,7 +147,6 @@ functions:
           private_api_key = '${atlas_gov_private_api_key}'
           ops_manager_url = '${mcli_cloud_gov_ops_manager_url}'
           service = 'cloudgov'
-          telemetry_enabled = false
           output = 'plaintext'
 
           [__e2e_snapshot]
@@ -157,7 +156,6 @@ functions:
           private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
           ops_manager_url = 'http://localhost:8080/'
           service = 'cloud'
-          telemetry_enabled = false
           output = 'plaintext'
           EOF
     - command: subprocess.exec

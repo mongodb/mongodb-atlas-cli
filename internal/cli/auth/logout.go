@@ -174,14 +174,14 @@ func LogoutBuilder() *cobra.Command {
 			var message, entry string
 			var err error
 
-			logoutMessage := fmt.Sprintf("Are you sure you want to log out of profile %s ", opts.config.Name())
+			logoutMessage := fmt.Sprintf("Are you sure you want to log out of profile %s", opts.config.Name())
 			switch opts.config.AuthType() {
 			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()
-				message = logoutMessage + "with public API key %s?"
+				message = logoutMessage + " with public API key %s?"
 			case config.ServiceAccount:
 				entry = opts.config.ClientID()
-				message = logoutMessage + "with service account %s?"
+				message = logoutMessage + " with service account %s?"
 			case config.UserAccount:
 				entry, err = opts.config.AccessTokenSubject()
 				if err != nil {
@@ -192,10 +192,10 @@ func LogoutBuilder() *cobra.Command {
 					return ErrUnauthenticated
 				}
 
-				message = logoutMessage + "with user account %s?"
+				message = logoutMessage + " with user account %s?"
 			case config.NoAuth, "":
 				entry = opts.config.Name()
-				message = logoutMessage + "?"
+				message = logoutMessage + " ?"
 			}
 
 			opts.Entry = entry

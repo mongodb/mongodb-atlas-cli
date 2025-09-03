@@ -194,7 +194,7 @@ func LogoutBuilder() *cobra.Command {
 				message = logoutMessage + " with user account %s?"
 			case config.NoAuth, "":
 				entry = opts.config.Name()
-				message = logoutMessage + " ?"
+				message = logoutMessage + "?"
 			}
 
 			opts.Entry = entry

@@ -16,7 +16,6 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -174,7 +173,7 @@ func LogoutBuilder() *cobra.Command {
 			var message, entry string
 			var err error
 
-			logoutMessage := fmt.Sprintf("Are you sure you want to log out of profile %s", opts.config.Name())
+			logoutMessage := "Are you sure you want to log out of profile " + opts.config.Name()
 			switch opts.config.AuthType() {
 			case config.APIKeys:
 				entry = opts.config.PublicAPIKey()

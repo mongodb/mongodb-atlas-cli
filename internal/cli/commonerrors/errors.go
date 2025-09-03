@@ -28,8 +28,8 @@ var (
 	errClusterUnsupported         = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
 	errOutsideVPN                 = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
 	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
-	ErrUnauthorized               = errors.New(`this action requires authentication
-	
+	ErrUnauthorized               = errors.New(`unauthorized
+
 To log in using your Atlas username and password or to set credentials using a Service account or API keys, run: atlas auth login`)
 	ErrInvalidRefreshToken = errors.New(`session expired
 

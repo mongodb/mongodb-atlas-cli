@@ -124,7 +124,7 @@ Use the --help flag with any command for more info on that command.`,
 				log.SetLevel(log.DebugLevel)
 			}
 
-			if err := cli.InitProfile(profile); err != nil {
+			if err := config.InitProfile(profile); err != nil {
 				return err
 			}
 

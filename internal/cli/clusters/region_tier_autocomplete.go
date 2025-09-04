@@ -158,7 +158,7 @@ func (opts *autoCompleteOpts) initStore(ctx context.Context) error {
 func (opts *autoCompleteOpts) parseFlags(cmd *cobra.Command) error {
 	profile := cmd.Flag(flag.Profile).Value.String()
 
-	if err := cli.InitProfile(profile); err != nil {
+	if err := config.InitProfile(profile); err != nil {
 		return err
 	}
 

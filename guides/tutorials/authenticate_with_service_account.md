@@ -52,7 +52,7 @@ Enter [?] on any option to get help.
 ? Client Secret: <your-service-account-client-secret>  
 ```
 
-Input these credentials accurately and press Enter.
+Input these credentials accurately and press **Enter**.
 
 ---
 ### Step 4: Select Default Project and Output Format

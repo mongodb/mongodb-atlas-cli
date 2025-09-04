@@ -58,21 +58,7 @@ func loadConfig() (*config.Profile, error) {
 	if err := migrator.Migrate(); err != nil {
 		return nil, fmt.Errorf("error migrating config: %w", err)
 	}
-
-	configStore, initErr := config.NewDefaultStore()
-
-	if initErr != nil {
-		return nil, fmt.Errorf("error loading config: %w. Please run `atlas auth login` to reconfigure your profile", initErr)
-	}
-
-	if !configStore.IsSecure() {
-		fmt.Fprintf(os.Stderr, "Warning: Secure storage is not available, falling back to insecure storage\n")
-	}
-
-	profile := config.NewProfile(config.DefaultProfile, configStore)
-	config.SetProfile(profile)
-
-	return profile, nil
+	return config.LoadAtlasCLIConfig()
 }
 
 func trackInitError(e error, rootCmd *cobra.Command) {

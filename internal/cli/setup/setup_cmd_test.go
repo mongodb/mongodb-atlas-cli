@@ -48,6 +48,7 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	config.SetProfile(profile)
 
 	mockStore.EXPECT().GetHierarchicalValue("test-profile", "auth_type").Return("api_keys").Times(1)
+	mockStore.EXPECT().GetHierarchicalValue("test-profile", "client_id").Return("").Times(1) // This call is AuthType checking if env variables are available
 	require.NoError(t, opts.PreRun(ctx))
 
 	assert.Equal(t, 0, buf.Len())

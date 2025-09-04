@@ -34,7 +34,7 @@ After running `atlas auth login`, you will see the following prompt:
   APIKeys - (for existing automations)  
 ```
 
-Use the arrow keys to select ServiceAccount and press Enter.
+Use the arrow keys to select ServiceAccount and press **Enter**.
 
 ---
 ### Step 3: Enter Service Account Credentials
@@ -56,9 +56,9 @@ Input these credentials accurately and press **Enter**.
 
 ---
 ### Step 4: Select Default Project and Output Format
-If your Service Account is on the organization level, you will be prompted to select a default project. This will be the project which commands will be executed to by default.
+If your Service Account is at organization level, the CLI will prompt you to select a default project. This will be the project to which commands will be executed by default.
 
-After, you will be prompted to select output format.
+Next, the CLI will prompt you to select the output format.
 
 ```
 ? Choose a default project:  [Use arrows to move, type to filter]

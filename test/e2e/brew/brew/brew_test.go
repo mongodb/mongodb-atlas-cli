@@ -27,7 +27,7 @@ import (
 
 const (
 	profileString = "PROFILE NAME"
-	errorMessage  = "Error: unathorized"
+	errorMessage  = "Error: unauthorized"
 )
 
 func TestAtlasCLIConfig(t *testing.T) {

@@ -115,11 +115,10 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	if err != nil {
 		return err
 	}
-	// TODO:  uncomment after plugin release - to be done by CLOUDP-340658
-	// // validate plugin version is compatible
-	// if err := plugin.ValidateVersion(*installedPlugin.Github, installedPlugin.Version); err != nil {
-	// 	return err
-	// }
+	// validate plugin version is compatible
+	if err := plugin.ValidateVersion(*installedPlugin.Github, installedPlugin.Version); err != nil {
+		return err
+	}
 
 	return installedPlugin.Run(cmd, args)
 }

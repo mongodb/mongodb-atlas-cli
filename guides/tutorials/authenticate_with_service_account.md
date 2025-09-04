@@ -1,6 +1,6 @@
 # Authenticate Using a Service Account in Atlas CLI
 
-This tutorial guides you through authenticating your MongoDB Atlas CLI profile using Service Accounts, enabling streamlined automation for MongoDB resources. Service Accounts, also referred to as OAuth Applications, allow programmatic access through a secure Client ID and Secret—ideal for scripting use cases and CI/CD workflows.
+This tutorial provides step-by-step instructions for authenticating your MongoDB Atlas CLI profile using Service Accounts, allowing you to automate and and manage MongoDB resources. Service Accounts, also referred to as OAuth Applications, allows programmatic access through a secure Client ID and Secret—ideal for scripting use cases and CI/CD workflows.
 
 ---
 

@@ -9,7 +9,7 @@ Before starting, ensure you have:
 
 * MongoDB Atlas CLI installed.
 * An active MongoDB Atlas Organization.
-* A Service Account created and configured. Refer to [Grant Programmatic Access to an Organization](https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-an-organization) for details.
+* A Service Account created and configured. See [Grant Programmatic Access to an Organization](https://www.mongodb.com/docs/atlas/configure-api-access/#grant-programmatic-access-to-an-organization) for further details.
 * The Client ID and Client Secret of your Service Account.
 
 ---

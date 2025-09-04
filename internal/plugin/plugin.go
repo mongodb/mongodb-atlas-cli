@@ -166,10 +166,9 @@ type Plugin struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
-	// TODO:  uncomment after plugin release - to be done by CLOUDP-340658
-	// if err := ValidateVersion(*p.Github, p.Version); err != nil {
-	// 	return err
-	// }
+	if err := ValidateVersion(*p.Github, p.Version); err != nil {
+		return err
+	}
 
 	p.setTelemetry()
 
@@ -303,7 +302,6 @@ func ValidateVersion(gh Github, version *semver.Version) error {
 		return nil // No version requirement for this plugin
 	}
 
-	// TODO check if version is optional, if so, check if version is available and return nil
 	minVersion, err := semver.NewVersion(minVersionStr)
 	if err != nil {
 		return err

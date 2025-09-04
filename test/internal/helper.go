@@ -279,10 +279,6 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_SERVERLESS_INSTANCE_WHEN_TERMINATION_PROTECTION_ENABLED") {
 			return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
 		}
-
-		if err := removeTerminationProtectionFromServerlessInstance(projectID, clusterName); err != nil {
-			return err
-		}
 	}
 
 	return watchServerlessInstanceForProject(projectID, clusterName)

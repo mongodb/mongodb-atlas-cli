@@ -335,11 +335,6 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 			return
 		}
 
-		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
-			g.t.Logf("Cluster %q was already deleted", g.ClusterName)
-			return
-		}
-
 		g.t.Errorf("unexpected error deleting cluster: %v", err)
 	})
 }

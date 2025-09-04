@@ -118,8 +118,9 @@ const (
 
 	deletingState = "DELETING"
 
-	maxRetryAttempts   = 10
-	sleepTimeInSeconds = 30
+	maxRetryAttempts       = 10
+	sleepTimeInSeconds     = 30
+	clusterDeletionTimeout = 30 * time.Minute
 
 	// CLI Plugins System constants.
 	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
@@ -233,7 +234,32 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
+func removeTerminationProtectionFromServerlessInstance(projectID, serverlessInstanceName string) error {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	args := []string{
+		serverlessEntity,
+		"update",
+		serverlessInstanceName,
+		"--disableTerminationProtection",
+		"-P",
+		ProfileName(),
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	updateCmd := exec.Command(cliPath, args...)
+	updateCmd.Env = os.Environ()
+	if resp, err := RunAndGetStdOut(updateCmd); err != nil {
+		return fmt.Errorf("error updating serverless instance %w: %s", err, string(resp))
+	}
+
+	return watchServerlessInstanceForProject(projectID, serverlessInstanceName)
+}
+
+func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) error {
 	t.Helper()
 
 	args := []string{
@@ -249,10 +275,17 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(deleteCmd)
-	require.NoError(t, err, string(resp))
+	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
+		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_SERVERLESS_INSTANCE_WHEN_TERMINATION_PROTECTION_ENABLED") {
+			return fmt.Errorf("error deleting serverless instance %w: %s", err, string(resp))
+		}
 
-	_ = watchServerlessInstanceForProject(projectID, clusterName)
+		if err := removeTerminationProtectionFromServerlessInstance(projectID, clusterName); err != nil {
+			return err
+		}
+	}
+
+	return watchServerlessInstanceForProject(projectID, clusterName)
 }
 
 func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, enableBackup bool) (string, error) {
@@ -389,17 +422,43 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 
 func DeleteClusterForProject(projectID, clusterName string) error {
 	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
-		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
-			return err
+		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			return nil
 		}
 
-		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
-			return err
+		if strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
+			if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
+				return err
+			}
+			return internalDeleteClusterForProject(projectID, clusterName)
 		}
-		return internalDeleteClusterForProject(projectID, clusterName)
+
+		return err
 	}
 
 	return nil
+}
+
+// DeleteClusterForProjectWithRetry retries the deletion of a cluster for a
+// project if the error CLUSTER_ALREADY_REQUESTED_DELETION is encountered.
+func DeleteClusterForProjectWithRetry(t *testing.T, projectID, clusterName string) error {
+	t.Helper()
+	backoff := 1
+	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
+		if err := DeleteClusterForProject(projectID, clusterName); err != nil {
+			if strings.Contains(err.Error(), "CLUSTER_ALREADY_REQUESTED_DELETION") {
+				t.Logf("%d/%d attempts - cluster %q already requested deletion, retrying in %d seconds...", attempts, maxRetryAttempts, clusterName, backoff)
+				time.Sleep(time.Duration(backoff) * time.Second)
+				backoff *= 2
+				continue
+			}
+
+			return fmt.Errorf("unexpected error while deleting cluster %q: %w", clusterName, err)
+		}
+
+		return nil
+	}
+	return fmt.Errorf("failed to delete cluster %q after %d attempts", clusterName, maxRetryAttempts)
 }
 
 func deleteDatalakeForProject(cliPath, projectID, id string) error {
@@ -746,7 +805,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 					_ = WatchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, DeleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, DeleteClusterForProjectWithRetry(t, projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -1056,7 +1115,7 @@ func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
 					_ = watchServerlessInstanceForProject(projectID, serverlessInstance)
 					return
 				}
-				deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance)
+				require.NoError(t, deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance))
 			})
 		}(serverless.GetName(), serverless.GetStateName())
 	}

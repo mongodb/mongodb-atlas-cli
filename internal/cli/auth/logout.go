@@ -170,19 +170,18 @@ func LogoutBuilder() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			var message, entry string
-			var err error
+			var message string
 
-			logoutMessage := "Are you sure you want to log out of profile " + opts.config.Name()
+			entry := opts.config.Name()
+			logoutMessage := "Are you sure you want to log out of profile %s"
+
 			switch opts.config.AuthType() {
 			case config.APIKeys:
-				entry = opts.config.PublicAPIKey()
-				message = logoutMessage + " with public API key %s?"
+				message = logoutMessage + " with public API key " + opts.config.PublicAPIKey() + "?"
 			case config.ServiceAccount:
-				entry = opts.config.ClientID()
-				message = logoutMessage + " with service account %s?"
+				message = logoutMessage + " with service account " + opts.config.ClientID() + "?"
 			case config.UserAccount:
-				entry, err = opts.config.AccessTokenSubject()
+				subject, err := opts.config.AccessTokenSubject()
 				if err != nil {
 					return err
 				}
@@ -191,9 +190,8 @@ func LogoutBuilder() *cobra.Command {
 					return ErrUnauthenticated
 				}
 
-				message = logoutMessage + " with user account %s?"
+				message = logoutMessage + " with user account " + subject + "?"
 			case config.NoAuth, "":
-				entry = opts.config.Name()
 				message = logoutMessage + "?"
 			}
 

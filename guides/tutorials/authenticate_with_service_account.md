@@ -25,7 +25,7 @@ This command initiates the authentication setup for your Atlas CLI profile.
 
 ---
 ### Step 2: Select the Authentication Method
-After running atlas auth login, you will see the following prompt:
+After running `atlas auth login`, you will see the following prompt:
 
 ```
 ? Select authentication type:  [Use arrows to move, type to filter]  

@@ -14,53 +14,53 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - atlas/autogeneration
-          - atlas/backup/compliancepolicy
-          - atlas/backup/flex
-          - atlas/backup/exports/buckets
-          - atlas/backup/exports/jobs
-          - atlas/backup/restores
-          - atlas/backup/schedule
-          - atlas/backup/snapshot
-          - atlas/clusters/file
-          - atlas/clusters/flags
-          - atlas/clusters/flex
-          - atlas/clusters/m0
-          - atlas/clusters/sharded
-          - atlas/clusters/upgrade
-          - atlas/datafederation/db
-          - atlas/datafederation/privatenetwork
-          - atlas/datafederation/querylimits
-          - atlas/decrypt
-          - atlas/deployments/atlasclusters
-          - atlas/deployments/local/auth/deprecated
-          - atlas/deployments/local/auth/new
-          - atlas/deployments/local/nocli
-          - atlas/deployments/local/noauth
-          - atlas/generic
-          - atlas/interactive
+          # - atlas/autogeneration
+          # - atlas/backup/compliancepolicy
+          # - atlas/backup/flex
+          # - atlas/backup/exports/buckets
+          # - atlas/backup/exports/jobs
+          # - atlas/backup/restores
+          # - atlas/backup/schedule
+          # - atlas/backup/snapshot
+          # - atlas/clusters/file
+          # - atlas/clusters/flags
+          # - atlas/clusters/flex
+          # - atlas/clusters/m0
+          # - atlas/clusters/sharded
+          # - atlas/clusters/upgrade
+          # - atlas/datafederation/db
+          # - atlas/datafederation/privatenetwork
+          # - atlas/datafederation/querylimits
+          # - atlas/decrypt
+          # - atlas/deployments/atlasclusters
+          # - atlas/deployments/local/auth/deprecated
+          # - atlas/deployments/local/auth/new
+          # - atlas/deployments/local/nocli
+          # - atlas/deployments/local/noauth
+          # - atlas/generic
+          # - atlas/interactive
           - atlas/ldap
-          - atlas/livemigrations
-          - atlas/logs
-          - atlas/metrics
-          - atlas/networking
-          - atlas/onlinearchive
-          - atlas/performanceAdvisor
-          - atlas/plugin/install
-          - atlas/plugin/run
-          - atlas/plugin/uninstall
-          - atlas/plugin/update
-          - atlas/processes
+          # - atlas/livemigrations
+          # - atlas/logs
+          # - atlas/metrics
+          # - atlas/networking
+          # - atlas/onlinearchive
+          # - atlas/performanceAdvisor
+          # - atlas/plugin/install
+          # - atlas/plugin/run
+          # - atlas/plugin/uninstall
+          # - atlas/plugin/update
+          # - atlas/processes
           - atlas/search
-          - atlas/search_nodes
-          - atlas/serverless/instance
-          - atlas/streams
-          - atlas/streams_with_cluster
+          # - atlas/search_nodes
+          # - atlas/serverless/instance
+          # - atlas/streams
+          # - atlas/streams_with_cluster
           - atlas/clusters/iss
           - atlas/iam
-          - brew
-          - config
-          - kubernetes
+          # - brew
+          # - config
+          # - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:

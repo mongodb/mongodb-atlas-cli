@@ -2,6 +2,8 @@
 
 This tutorial provides step-by-step instructions for authenticating your MongoDB Atlas CLI profile using Service Accounts, allowing you to automate and and manage MongoDB resources. Service Accounts, also referred to as OAuth Applications, allows programmatic access through a secure Client ID and Secret—ideal for scripting use cases and CI/CD workflows.
 
+__Note:__ This process is interactive. For programmatic authentication, set enviroment variables `MONGODB_ATLAS_*` before using the AtlasCLI. See [Atlas CLI Environment Variables](https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-env-variables/) for all supported environment variables.
+
 ---
 
 ### Prerequisites
@@ -18,14 +20,14 @@ Before starting, ensure you have:
 Open your terminal and run the following command:
 
 ```
-atlas auth login
+atlas auth login --profile myProfile
 ```
 
-This command initiates the authentication setup for your Atlas CLI profile.
+This command initiates the interactive authentication setup guide for a Atlas CLI profile 'myProfile'.
 
 ---
 ### Step 2: Select the Authentication Method
-After running `atlas auth login`, you will see the following prompt:
+After running `atlas auth login --profile myProfile`, you will see the following prompt:
 
 ```
 ? Select authentication type:  [Use arrows to move, type to filter]  
@@ -72,4 +74,6 @@ Next, the CLI will prompt you to select the output format.
 
 ---
 ### Step 5: Authentication Complete
-At this point, your Atlas CLI profile is authenticated using your Service Account. You can now execute authenticated commands in Atlas CLI within the scope of your Service Account permissions.
+At this point, your Atlas CLI profile is authenticated using your Service Account. You can now execute authenticated commands in Atlas CLI within the scope of your Service Account permissions by adding `--profile myProfile` flag to any command you run.
+
+For example, `atlas cluster list --profile myProfile`

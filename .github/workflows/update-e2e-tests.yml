@@ -84,6 +84,7 @@ jobs:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
             skip_update_check = true
+            telemetry_enabled = false
 
             [__e2e]
             org_id = 'a0123456789abcdef012345a'
@@ -92,7 +93,6 @@ jobs:
             private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
             ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
-            telemetry_enabled = false
             output = 'plaintext'
 
             [__e2e_snapshot]
@@ -102,7 +102,6 @@ jobs:
             private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
             ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
-            telemetry_enabled = false
             output = 'plaintext'
           MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
           MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
@@ -175,6 +174,7 @@ jobs:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
             skip_update_check = true
+            telemetry_enabled = false
 
             [__e2e]
             org_id = 'a0123456789abcdef012345a'
@@ -183,7 +183,6 @@ jobs:
             private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
             ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
-            telemetry_enabled = false
             output = 'plaintext'
 
             [__e2e_snapshot]
@@ -193,7 +192,6 @@ jobs:
             private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
             ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
-            telemetry_enabled = false
             output = 'plaintext'
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"

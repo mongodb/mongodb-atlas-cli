@@ -177,11 +177,11 @@ jobs:
             skip_update_check = true
 
             [__e2e]
-            org_id = '${{ secrets.MONGODB_ATLAS_ORG_ID }}'
-            project_id = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
-            public_api_key = '${{ secrets.MONGODB_ATLAS_PROJECT_ID }}'
-            private_api_key = '${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}'
-            ops_manager_url = '${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}'
+            org_id = 'a0123456789abcdef012345a'
+            project_id = 'b0123456789abcdef012345b'
+            public_api_key = 'ABCDEF01'
+            private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
+            ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
             telemetry_enabled = false
             output = 'plaintext'
@@ -197,6 +197,11 @@ jobs:
             output = 'plaintext'
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
+          ./bin/atlas config set org_id "$MONGODB_ATLAS_ORG_ID" -P __e2e
+          ./bin/atlas config set project_id "$MONGODB_ATLAS_PROJECT_ID" -P __e2e
+          ./bin/atlas config set public_api_key "$MONGODB_ATLAS_PUBLIC_API_KEY" -P __e2e
+          ./bin/atlas config set private_api_key "$MONGODB_ATLAS_PRIVATE_API_KEY" -P __e2e
+          ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
@@ -211,6 +216,9 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
           E2E_TIMEOUT: 3h
       - name: Test Summary
         if: always()

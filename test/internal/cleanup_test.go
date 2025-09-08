@@ -76,6 +76,7 @@ func TestCleanup(t *testing.T) {
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)
 	}
+
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
@@ -83,9 +84,11 @@ func TestCleanup(t *testing.T) {
 	var projects admin.PaginatedAtlasGroup
 	req.NoError(json.Unmarshal(resp, &projects), string(resp))
 	t.Logf("projects:\n%s\n", resp)
+
 	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
 		if projectID == os.Getenv("MONGODB_ATLAS_PROJECT_ID") {
+			t.Log("skip deleting default project", projectID)
 			// we have to clean up data federations from default project
 			// as this is the only project configured for data federation
 			// (has a configured awsRoleId)

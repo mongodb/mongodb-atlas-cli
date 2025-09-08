@@ -16,7 +16,7 @@ Return the maintenance window details for your project.
 
 To learn more about maintenance windows, see https://www.mongodb.com/docs/atlas/tutorial/cluster-maintenance-window/.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Read Only role.
 
 Syntax
 ------

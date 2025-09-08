@@ -14,7 +14,7 @@ atlas streams instances download
 
 Download a compressed file that contains the logs for the specified Atlas Stream Processing instance.
 
-This command downloads a file with a .gz extension. To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
+This command downloads a file with a .gz extension. To use this command, you must authenticate with a user account, service account or an API key with the Project Data Access Read/Write role.
 
 Syntax
 ------

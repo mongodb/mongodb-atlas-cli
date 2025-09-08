@@ -14,7 +14,7 @@ atlas customDbRoles describe
 
 Return a single custom database role for your project.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Read Only role.
 
 Syntax
 ------

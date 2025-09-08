@@ -14,7 +14,7 @@ atlas clusters search indexes list
 
 List all Atlas Search indexes for a cluster.
 
-To use this command, you must authenticate with a user account or an API key with the Project Data Access Read/Write role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Data Access Read/Write role.
 
 Syntax
 ------

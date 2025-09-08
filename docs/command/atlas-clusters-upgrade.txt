@@ -16,7 +16,7 @@ Upgrade a shared cluster's tier, disk size, and/or MongoDB version.
 
 This command is unavailable for dedicated clusters.
 
-To use this command, you must authenticate with a user account or an API key with the Project Cluster Manager role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Cluster Manager role.
 
 Syntax
 ------

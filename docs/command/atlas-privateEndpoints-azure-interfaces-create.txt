@@ -16,7 +16,7 @@ Create a new interface for the specified Azure private endpoint.
 
 To learn more about how to set up private endpoints with the Atlas CLI, see the tutorial on the Atlas CLI tab here: https://www.mongodb.com/docs/atlas/security-cluster-private-endpoint/.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Owner role.
 
 Syntax
 ------

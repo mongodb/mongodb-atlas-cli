@@ -18,7 +18,7 @@ The access list can contain trusted IP addresses, AWS security group IDs, and en
 		
 The command doesn't overwrite existing entries in the access list. Instead, it adds the new entries to the list of entries.
 
-To use this command, you must authenticate with a user account or an API key with the Read Write role.
+To use this command, you must authenticate with a user account, service account or an API key with the Read Write role.
 
 Syntax
 ------

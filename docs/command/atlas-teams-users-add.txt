@@ -16,7 +16,7 @@ Add the specified MongoDB user to a team for your organization.
 
 You can add users that are part of the organization or users that have been sent an invitation to join the organization.
 
-To use this command, you must authenticate with a user account or an API key with the Organization User Admin role.
+To use this command, you must authenticate with a user account, service account or an API key with the Organization User Admin role.
 
 Syntax
 ------

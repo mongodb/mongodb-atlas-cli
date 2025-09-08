@@ -18,7 +18,7 @@ The network peering create command checks if a VPC exists in the region you spec
 		
 To learn more about network peering connections, see https://www.mongodb.com/docs/atlas/security-vpc-peering/.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Owner role.
 
 Syntax
 ------

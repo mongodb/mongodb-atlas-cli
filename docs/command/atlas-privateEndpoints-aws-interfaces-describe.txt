@@ -14,7 +14,7 @@ atlas privateEndpoints aws interfaces describe
 
 Return the details for the specified AWS private endpoint interface for your project.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account, service account or an API key with the Project Read Only role.
 
 Syntax
 ------

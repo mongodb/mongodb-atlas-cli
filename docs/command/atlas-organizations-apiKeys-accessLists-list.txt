@@ -16,7 +16,7 @@ Return all IP access list entries for your API Key.
 
 To view possible values for the apiKeyID argument, run atlas organizations apiKeys list.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Organization Member role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Organization Member role.
 
 Syntax
 ------

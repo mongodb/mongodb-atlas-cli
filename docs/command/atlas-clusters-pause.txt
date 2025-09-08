@@ -14,7 +14,7 @@ atlas clusters pause
 
 Pause the specified running MongoDB cluster.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Cluster Manager role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Cluster Manager role.
 Atlas supports this command only for M10+ clusters.
 
 Syntax

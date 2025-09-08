@@ -14,7 +14,7 @@ atlas organizations apiKeys accessLists delete
 
 Remove the specified IP access list entry from your API Key.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Read Write role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Read Write role.
 
 Syntax
 ------

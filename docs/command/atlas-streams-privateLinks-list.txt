@@ -14,7 +14,7 @@ atlas streams privateLinks list
 
 Lists the PrivateLink endpoints in the project that can be used as Atlas Stream Processor connections.
 
-To use this command, you must authenticate with a user account, service account or an API key with any of the following roles: Project Owner, Project Stream Processing Owner.
+To use this command, you must authenticate with a user account, a service account, or an API key with any of the following roles: Project Owner, Project Stream Processing Owner.
 
 Syntax
 ------

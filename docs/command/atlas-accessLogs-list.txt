@@ -14,7 +14,7 @@ atlas accessLogs list
 
 Retrieve the access logs of a cluster identified by the cluster's name or hostname.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Monitoring Admin role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Monitoring Admin role.
 
 Syntax
 ------

@@ -18,7 +18,7 @@ The Performance Advisor monitors queries that MongoDB considers slow and suggest
 		
 If you don't set the duration option or the since option, this command returns data from the last 24 hours.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Data Access Read/Write role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Data Access Read/Write role.
 
 Syntax
 ------

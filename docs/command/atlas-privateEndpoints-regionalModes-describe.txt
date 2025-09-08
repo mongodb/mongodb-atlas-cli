@@ -16,7 +16,7 @@ Return the regionalized private endpoint setting for your project.
 
 Use this command to check whether you can create multiple private resources per region.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Read Only role.
 
 Syntax
 ------

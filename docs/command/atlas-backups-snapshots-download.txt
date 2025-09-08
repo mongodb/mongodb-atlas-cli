@@ -15,7 +15,7 @@ atlas backups snapshots download
 Download one snapshot for the specified flex cluster.
 
 You can download a snapshot for an Atlas Flex cluster.
-To use this command, you must authenticate with a user account, service account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Owner role.
 Atlas supports this command only for Flex clusters.
 
 Syntax

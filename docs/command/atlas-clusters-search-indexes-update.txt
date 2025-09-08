@@ -14,7 +14,7 @@ atlas clusters search indexes update
 
 Modify a search index for a cluster.
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Data Access Admin role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Data Access Admin role.
 
 Syntax
 ------

@@ -19,7 +19,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 
 Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M5, a FLEX tier will be created instead. For the migration guide, visit: https://dochub.mongodb.org/core/flex-migration.\n
 
-To use this command, you must authenticate with a user account, service account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Owner role.
 
 Syntax
 ------

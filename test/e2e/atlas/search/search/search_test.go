@@ -203,6 +203,30 @@ func TestSearch(t *testing.T) {
 		a.Equal(analyzer, *index.GetLatestDefinition().Analyzer)
 	})
 
+	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"list",
+			"--clusterName", g.ClusterName,
+			"--db=sample_mflix",
+			"--collection=movies",
+			"--projectId", g.ProjectID,
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		var indexes []atlasv2.ClusterSearchIndex
+		require.NoError(t, json.Unmarshal(resp, &indexes))
+		assert.NotEmpty(t, indexes)
+	})
+
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -459,30 +483,6 @@ func TestSearch(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &index))
 		assert.Equal(t, indexName, index.Name)
 	})
-
-	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			searchEntity,
-			indexEntity,
-			"list",
-			"--clusterName", g.ClusterName,
-			"--db=sample_mflix",
-			"--collection=movies",
-			"--projectId", g.ProjectID,
-			"-o=json",
-			"-P",
-			internal.ProfileName(),
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-
-		var indexes []atlasv2.ClusterSearchIndex
-		require.NoError(t, json.Unmarshal(resp, &indexes))
-		assert.NotEmpty(t, indexes)
-	})
 }
 
 func TestSearchDeprecated(t *testing.T) {
@@ -644,6 +644,30 @@ func TestSearchDeprecated(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(indexID, index.GetIndexID())
 		a.Equal(analyzer, index.GetAnalyzer())
+	})
+
+	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			searchEntity,
+			indexEntity,
+			"list",
+			"--clusterName", g.ClusterName,
+			"--db=sample_mflix",
+			"--collection=movies",
+			"--projectId", g.ProjectID,
+			"-o=json",
+			"-P",
+			internal.ProfileName(),
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		var indexes []atlasv2.ClusterSearchIndex
+		require.NoError(t, json.Unmarshal(resp, &indexes))
+		assert.NotEmpty(t, indexes)
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -896,29 +920,5 @@ func TestSearchDeprecated(t *testing.T) {
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
 		assert.Equal(t, indexName, index.Name)
-	})
-
-	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			searchEntity,
-			indexEntity,
-			"list",
-			"--clusterName", g.ClusterName,
-			"--db=sample_mflix",
-			"--collection=movies",
-			"--projectId", g.ProjectID,
-			"-o=json",
-			"-P",
-			internal.ProfileName(),
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-
-		var indexes []atlasv2.ClusterSearchIndex
-		require.NoError(t, json.Unmarshal(resp, &indexes))
-		assert.NotEmpty(t, indexes)
 	})
 }

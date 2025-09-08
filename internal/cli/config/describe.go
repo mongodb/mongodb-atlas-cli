@@ -33,7 +33,10 @@ var descTemplate = `SETTING	VALUE{{ range $key, $value := . }}
 {{$key}}	{{$value}}{{end}}
 `
 
-const redacted = "redacted"
+const (
+	redacted      = "redacted"
+	servicePrefix = "atlascli_"
+)
 
 // AddSecureProperties adds secure properties to the map with "redacted" value
 // if they are available in the config.
@@ -46,29 +49,14 @@ func (opts *describeOpts) AddSecureProperties(m map[string]string) (map[string]s
 	if !configStore.IsSecure() {
 		return m, nil
 	}
+	serviceName := servicePrefix + opts.name
 
 	// We are using a keyring client directly here to avoid printing env vars
 	secureKeyring := secure.NewDefaultKeyringClient()
-	// Service Account
-	if v, err := secureKeyring.Get(opts.name, "client_id"); err == nil && v != "" {
-		m["client_id"] = redacted
-	}
-	if v, err := secureKeyring.Get(opts.name, "client_secret"); err == nil && v != "" {
-		m["client_secret"] = redacted
-	}
-	// API Keys
-	if v, err := secureKeyring.Get(opts.name, "public_api_key"); err == nil && v != "" {
-		m["public_api_key"] = redacted
-	}
-	if v, err := secureKeyring.Get(opts.name, "private_api_key"); err == nil && v != "" {
-		m["private_api_key"] = redacted
-	}
-	// User Account
-	if v, err := secureKeyring.Get(opts.name, "access_token"); err == nil && v != "" {
-		m["access_token"] = redacted
-	}
-	if v, err := secureKeyring.Get(opts.name, "refresh_token"); err == nil && v != "" {
-		m["refresh_token"] = redacted
+	for _, key := range config.SecureProperties {
+		if v, err := secureKeyring.Get(serviceName, key); err == nil && v != "" {
+			m[key] = redacted
+		}
 	}
 
 	return m, nil

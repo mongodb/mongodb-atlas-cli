@@ -20,10 +20,10 @@ set -euo pipefail
 # Prompt if user wants to use cloud-dev.mongodb.com 
 read -p "Do you want to set ops_manager_url to cloud-dev.mongodb.com? [Y/n] " -n 1 -r
 echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    ops_manager_url="https://cloud-dev.mongodb.com/"
+if [[ -z "$REPLY" || $REPLY =~ ^[Yy]$ ]]; then
+    ops_manager_url="https://cloud-dev.mongodb.com/" # Default to cloud-dev.mongodb.com
 else
-    ops_manager_url="https://cloud.mongodb.com/" # Default to cloud.mongodb.com
+    ops_manager_url="https://cloud.mongodb.com/"
 fi
 
 ./bin/atlas config set ops_manager_url $ops_manager_url -P __e2e

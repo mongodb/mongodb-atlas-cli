@@ -606,6 +606,9 @@ func TempConfigFolder(t *testing.T) string {
 	t.Setenv("XDG_CONFIG_HOME", tmpDir)
 	t.Setenv("AppData", tmpDir)
 
+	// Silence storage warning for e2e tests to reduce noise in the output.
+	t.Setenv("MONGODB_ATLAS_SILENCE_STORAGE_WARNING", "true")
+
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

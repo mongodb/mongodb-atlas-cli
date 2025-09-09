@@ -123,10 +123,10 @@ pkg:golang/golang.org/x/sys@v0.35.0
 pkg:golang/golang.org/x/term@v0.34.0
 pkg:golang/golang.org/x/text@v0.28.0
 pkg:golang/golang.org/x/time@v0.12.0
-pkg:golang/google.golang.org/api@v0.248.0
-pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250603155806-513f23925822
+pkg:golang/google.golang.org/api@v0.249.0
+pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250707201910-8d1bb00bc6a7
 pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250818200422-3122310a409c
 pkg:golang/google.golang.org/genproto@v0.0.0-20250603155806-513f23925822
-pkg:golang/google.golang.org/grpc@v1.74.2
+pkg:golang/google.golang.org/grpc@v1.75.0
 pkg:golang/google.golang.org/protobuf@v1.36.8
 pkg:golang/gopkg.in/yaml.v3@v3.0.1

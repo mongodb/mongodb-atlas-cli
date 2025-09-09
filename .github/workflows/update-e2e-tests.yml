@@ -84,6 +84,7 @@ jobs:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
             skip_update_check = true
+            silence_storage_warning = true
             telemetry_enabled = false
 
             [__e2e]
@@ -174,6 +175,7 @@ jobs:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
             skip_update_check = true
+            silence_storage_warning = true
             telemetry_enabled = false
 
             [__e2e]

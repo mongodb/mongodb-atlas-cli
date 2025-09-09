@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 755
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Tue, 09 Sep 2025 18:18:39 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 71
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getFlexCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=2dd276f5858806ffd578852f539065f80160e49b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-yknpwzy-shard-00-00.chqr1f2.mongodb-dev.net:27017,ac-yknpwzy-shard-00-01.chqr1f2.mongodb-dev.net:27017,ac-yknpwzy-shard-00-02.chqr1f2.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-ynj66s-shard-0","standardSrv":"mongodb+srv://cluster-928.chqr1f2.mongodb-dev.net"},"createDate":"2025-09-09T18:15:09Z","groupId":"b0123456789abcdef012345b","id":"68c06eadd0aac61920e3abef","mongoDBVersion":"8.0.13","name":"cluster-928","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"DELETING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

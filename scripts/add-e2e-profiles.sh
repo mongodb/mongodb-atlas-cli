@@ -46,7 +46,6 @@ cat <<EOF >> "$CONFIG_PATH"
   private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
   ops_manager_url = 'http://localhost:8080/'
   service = 'cloud'
-  silence_storage_warning = true 
   telemetry_enabled = false
   output = 'plaintext'
 EOF

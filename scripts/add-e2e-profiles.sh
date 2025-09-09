@@ -30,6 +30,7 @@ fi
 ./bin/atlas config init -P __e2e
 ./bin/atlas config set output plaintext -P __e2e
 ./bin/atlas config set telemetry_enabled false -P __e2e
+./bin/atlas config set silence_storage_warning true -P __e2e
 
 ./bin/atlas config delete __e2e_snapshot --force >/dev/null 2>&1 || true
 
@@ -45,6 +46,7 @@ cat <<EOF >> "$CONFIG_PATH"
   private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
   ops_manager_url = 'http://localhost:8080/'
   service = 'cloud'
+  silence_storage_warning = true 
   telemetry_enabled = false
   output = 'plaintext'
 EOF

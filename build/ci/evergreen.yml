@@ -129,6 +129,7 @@ functions:
           CONFIG_PATH=$(./bin/atlas config edit 2>/dev/null)
           cat <<EOF > "$CONFIG_PATH"
           skip_update_check = true
+          silence_storage_warning = true
           telemetry_enabled = false
 
           [__e2e]
@@ -188,6 +189,7 @@ functions:
         env:
           <<: *go_env
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
+          MONGODB_ATLAS_SILENCE_STORAGE_WARNING: "true"
           DO_NOT_TRACK: "1"
           TEST_MODE: live
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --

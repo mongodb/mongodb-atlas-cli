@@ -16,11 +16,13 @@ package config
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/config/secure"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -34,44 +36,50 @@ var descTemplate = `SETTING	VALUE{{ range $key, $value := . }}
 `
 
 const (
-	redacted      = "redacted"
-	servicePrefix = "atlascli_"
+	redactedSecureText = "[redacted - source: secure storage]"
+	redactedConfigText = "[redacted - source: config file]"
+	servicePrefix      = "atlascli_"
 )
 
-// AddSecureProperties adds secure properties to the map with "redacted" value
-// if they are available in the config.
-func (opts *describeOpts) AddSecureProperties(m map[string]string) (map[string]string, error) {
-	// Check if secure storage is available
-	configStore, err := config.NewDefaultStore()
-	if err != nil {
-		return nil, err
-	}
-	if !configStore.IsSecure() {
-		return m, nil
-	}
-	serviceName := servicePrefix + opts.name
+func (*describeOpts) GetConfig(configStore config.Store, profileName string) (map[string]string, error) {
+	// Get the profile map, this only contains properties coming from the insecure store
+	profileMap := configStore.GetProfileStringMap(profileName)
 
-	// We are using a keyring client directly here to avoid printing env vars
-	secureKeyring := secure.NewDefaultKeyringClient()
+	redactedText := redactedConfigText
+	if configStore.IsSecure() {
+		redactedText = redactedSecureText
+	}
+
+	// Redact values
 	for _, key := range config.SecureProperties {
-		if v, err := secureKeyring.Get(serviceName, key); err == nil && v != "" {
-			m[key] = redacted
+		if v := configStore.GetProfileValue(profileName, key); v != nil && v != "" {
+			profileMap[key] = redactedText
 		}
 	}
 
-	return m, nil
+	return profileMap, nil
 }
 
 func (opts *describeOpts) Run() error {
-	if !config.Exists(opts.name) {
-		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
-	}
-
-	if err := config.SetName(opts.name); err != nil {
+	// Create a new insecure store
+	insecure, err := config.NewViperStore(afero.NewOsFs(), false)
+	if err != nil {
 		return err
 	}
 
-	mapConfig, err := opts.AddSecureProperties(config.Map())
+	// Check if profile exists
+	profileNames := insecure.GetProfileNames()
+	if !slices.Contains(profileNames, opts.name) {
+		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
+	}
+
+	// Create a new secure store
+	secureStore := secure.NewSecureStore(profileNames, config.SecureProperties)
+
+	// Create a new config proxy store
+	configStore := config.NewStore(insecure, secureStore)
+
+	mapConfig, err := opts.GetConfig(configStore, opts.name)
 	if err != nil {
 		return err
 	}

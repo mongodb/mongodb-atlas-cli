@@ -56,7 +56,7 @@ func EditBuilder() *cobra.Command {
 		Short: "Opens the config file with the default text editor.",
 		Long: `Uses the default editor to open the config file. You can use EDITOR or VISUAL envs to change the default.
 
-Note: You will not be able to modify authentication credentials directly in the config file if they are stored securely. To view all properties associated with a profile, use "atlas config describe". To modify authentication credentials stored securely, use "atlas config set".`,
+Note: You can't modify authentication credentials directly in the config file if they are stored securely. To view all properties associated with a profile, use "atlas config describe". To modify authentication credentials stored securely, use "atlas config set".`,
 		Example: `  # To open the config
   atlas config edit
 `,

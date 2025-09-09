@@ -14,7 +14,7 @@ atlas alerts settings describe
 
 Return the details for the specified alert settings for your project.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Read Only role.
 
 Syntax
 ------

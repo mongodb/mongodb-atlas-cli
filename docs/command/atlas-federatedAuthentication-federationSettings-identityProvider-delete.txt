@@ -14,7 +14,7 @@ atlas federatedAuthentication federationSettings identityProvider delete
 
 Remove the specified identity provider from your federation settings.
 
-To use this command, you must authenticate with a user account or an API key with the Org Owner role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Org Owner role.
 
 Syntax
 ------

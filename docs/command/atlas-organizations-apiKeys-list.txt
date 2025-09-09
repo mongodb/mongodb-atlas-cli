@@ -14,7 +14,7 @@ atlas organizations apiKeys list
 
 Return all API keys for your organization.
 
-To use this command, you must authenticate with a user account or an API key with the Organization Member role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Organization Member role.
 
 Syntax
 ------

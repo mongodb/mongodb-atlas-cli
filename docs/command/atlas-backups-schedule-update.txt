@@ -16,7 +16,7 @@ Modify the backup schedule for the specified cluster for your project.
 
 The backup schedule defines when MongoDB takes scheduled snapshots and how long it stores those snapshots.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Owner role.
 
 Syntax
 ------

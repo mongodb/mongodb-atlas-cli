@@ -14,7 +14,7 @@ atlas backups exports jobs create
 
 Export one backup snapshot for an M10 or higher Atlas cluster to an existing AWS S3 bucket.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account, a service account, or an API key with the Project Owner role.
 
 Syntax
 ------

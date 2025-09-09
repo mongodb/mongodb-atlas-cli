@@ -16,6 +16,7 @@ package config
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -32,16 +33,49 @@ var descTemplate = `SETTING	VALUE{{ range $key, $value := . }}
 {{$key}}	{{$value}}{{end}}
 `
 
+const (
+	redactedSecureText = "[redacted - source: secure storage]"
+	redactedConfigText = "[redacted - source: config file]"
+	servicePrefix      = "atlascli_"
+)
+
+func (*describeOpts) GetConfig(configStore config.Store, profileName string) (map[string]string, error) {
+	// Get the profile map, this only contains properties coming from the insecure store
+	profileMap := configStore.GetProfileStringMap(profileName)
+
+	redactedText := redactedConfigText
+	if configStore.IsSecure() {
+		redactedText = redactedSecureText
+	}
+
+	// Redact values
+	for _, key := range config.SecureProperties {
+		if v := configStore.GetProfileValue(profileName, key); v != nil && v != "" {
+			profileMap[key] = redactedText
+		}
+	}
+
+	return profileMap, nil
+}
+
 func (opts *describeOpts) Run() error {
-	if !config.Exists(opts.name) {
+	// Create a new config proxy store
+	configStore, err := config.NewStoreWithEnvOption(false)
+	if err != nil {
+		return fmt.Errorf("could not create config store: %w", err)
+	}
+
+	profileNames := configStore.GetProfileNames()
+	if !slices.Contains(profileNames, opts.name) {
 		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
 	}
 
-	if err := config.SetName(opts.name); err != nil {
+	mapConfig, err := opts.GetConfig(configStore, opts.name)
+	if err != nil {
 		return err
 	}
 
-	return opts.Print(config.Map())
+	return opts.Print(mapConfig)
 }
 
 func DescribeBuilder() *cobra.Command {

@@ -193,6 +193,11 @@ jobs:
             ops_manager_url = 'http://localhost:8080/'
             service = 'cloud'
             output = 'plaintext'
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
           ./bin/atlas config set org_id "$MONGODB_ATLAS_ORG_ID" -P __e2e

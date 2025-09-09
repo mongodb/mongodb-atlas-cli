@@ -47,9 +47,9 @@ require (
 	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0
 	go.mongodb.org/mongo-driver v1.17.4
 	go.uber.org/mock v0.6.0
-	golang.org/x/mod v0.27.0
+	golang.org/x/mod v0.28.0
 	golang.org/x/net v0.43.0
-	golang.org/x/sys v0.35.0
+	golang.org/x/sys v0.36.0
 	golang.org/x/tools v0.36.0
 	google.golang.org/api v0.248.0
 	google.golang.org/protobuf v1.36.8
@@ -175,7 +175,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
 	golang.org/x/crypto v0.41.0 // indirect
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.31.0
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/term v0.34.0 // indirect
 	golang.org/x/text v0.28.0 // indirect

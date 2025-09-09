@@ -19,10 +19,8 @@ import (
 	"slices"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/atlas-cli-core/config/secure"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -61,23 +59,16 @@ func (*describeOpts) GetConfig(configStore config.Store, profileName string) (ma
 }
 
 func (opts *describeOpts) Run() error {
-	// Create a new insecure store
-	insecure, err := config.NewViperStore(afero.NewOsFs(), false)
+	// Create a new config proxy store
+	configStore, err := config.NewStoreWithEnvOption(false)
 	if err != nil {
-		return err
+		return fmt.Errorf("could not create config store: %w", err)
 	}
 
-	// Check if profile exists
-	profileNames := insecure.GetProfileNames()
+	profileNames := configStore.GetProfileNames()
 	if !slices.Contains(profileNames, opts.name) {
 		return fmt.Errorf("you don't have a profile named '%s'", opts.name)
 	}
-
-	// Create a new secure store
-	secureStore := secure.NewSecureStore(profileNames, config.SecureProperties)
-
-	// Create a new config proxy store
-	configStore := config.NewStore(insecure, secureStore)
 
 	mapConfig, err := opts.GetConfig(configStore, opts.name)
 	if err != nil {

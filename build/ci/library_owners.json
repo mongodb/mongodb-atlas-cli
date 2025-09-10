@@ -47,7 +47,6 @@
 	"go.mongodb.org/atlas": "apix-2",
 	"go.mongodb.org/mongo-driver": "apix-2",
 	"go.opentelemetry.io/otel": "apix-2",
-	"go.opentelemetry.io/otel/sdk": "apix-2",
 	"go.opentelemetry.io/otel/trace": "apix-2",
 	"go.uber.org/mock": "apix-2",
 	"golang.org/x/mod": "apix-2",

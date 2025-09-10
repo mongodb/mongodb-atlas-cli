@@ -17,7 +17,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         id: stale
         with:
           stale-issue-message: 'This issue has gone 30 days without any activity and meets the project’s definition of "stale". This will be auto-closed if there is no new activity over the next 30 days. If the issue is still relevant and active, you can simply comment with a "bump" to keep it open, or add the label "not_stale". Thanks for keeping our repository healthy!'

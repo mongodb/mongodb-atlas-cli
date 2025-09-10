@@ -85,7 +85,7 @@ func TestCleanup(t *testing.T) {
 	t.Logf("projects:\n%s\n", resp)
 	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
-		if projectID == os.Getenv("MONGODB_ATLAS_PROJECT_ID") {
+		if projectID == ProfileProjectID() || projectID == os.Getenv("MONGODB_ATLAS_PROJECT_ID") {
 			// we have to clean up data federations from default project
 			// as this is the only project configured for data federation
 			// (has a configured awsRoleId)

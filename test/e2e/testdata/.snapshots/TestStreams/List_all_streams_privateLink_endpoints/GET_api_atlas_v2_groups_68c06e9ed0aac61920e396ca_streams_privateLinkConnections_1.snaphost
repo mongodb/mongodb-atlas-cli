@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 500
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Tue, 09 Sep 2025 18:15:25 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 42
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::getPrivateLinkConnections
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=2dd276f5858806ffd578852f539065f80160e49b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c06e9ed0aac61920e396ca/streams/privateLinkConnections?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":"68c06eb6d0aac61920e3afed","dnsDomain":"test-namespace.servicebus.windows.net","provider":"AZURE","region":"US_EAST_2","serviceEndpointId":"/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace","state":"IDLE","vendor":"GENERIC"}],"totalCount":1}

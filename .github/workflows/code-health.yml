@@ -15,7 +15,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
           cache: false # see https://github.com/golangci/golangci-lint-action/issues/807
@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: |
@@ -71,7 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Install goveralls
@@ -90,7 +90,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Run check-library-owners
@@ -104,7 +104,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Generate docs
@@ -131,7 +131,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: make devtools
@@ -175,7 +175,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Generate mocks
@@ -229,7 +229,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - name: Run 'go mod tidy'
@@ -256,7 +256,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: ./build/ci/check-licenses.sh
@@ -269,7 +269,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v5
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: make check-templates
@@ -285,7 +285,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v5
       - name: Linting
-        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf
+        uses: hadolint/hadolint-action@3fc49fb50d59c6ab7917a2e4195dba633e515b29
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store
@@ -320,7 +320,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
       - run: |
@@ -341,6 +341,7 @@ jobs:
           CONFIG_PATH: ${{ steps.config-path.outputs.CONFIG_PATH }}
           CONFIG_CONTENT: |
             skip_update_check = true
+            silence_storage_warning = true
             telemetry_enabled = false
 
             [__e2e]

@@ -76,6 +76,14 @@ func ProfileName() string {
 	return "__e2e_snapshot"
 }
 
+func ProfileProjectID() string {
+	profile, err := ProfileData()
+	if err != nil {
+		return ""
+	}
+	return profile["project_id"]
+}
+
 func SkipCleanup() bool {
 	mode, err := TestRunMode()
 	if err != nil {

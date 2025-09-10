@@ -428,6 +428,7 @@ functions:
           - -auto-approve
           - -var
           - "certificate_path=${certificate_path}"
+          - "admin_password=${azure_vm_admin_password}"
   "ssh-ready":
     - command: shell.exec
       params:

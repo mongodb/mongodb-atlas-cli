@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
-Content-Length: 1194
+Content-Length: 665
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 09 Sep 2025 18:21:31 GMT
+Date: Thu, 11 Sep 2025 08:53:37 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 22
+X-Envoy-Upstream-Service-Time: 33
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=2dd276f5858806ffd578852f539065f80160e49b; versionString=master
+X-Mongodb-Service-Version: gitHash=7def82b85b6873452797c7216878fad7277292ef; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-214-feaebe104365505f810ce40822e87803706c3fcf","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-09-09T10:15:45Z","description":"CLI TEST Provider","displayName":"idp-214-feaebe104365505f810ce40822e87803706c3fcf","groupsClaim":"groups","id":"68bffe51b4fc4a302a2dda92","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"},{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-582","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-09-09T18:20:59Z","description":"CLI TEST Provider","displayName":"idp-582","groupsClaim":"groups","id":"68c0700b1c5e073d846aef18","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":2}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-531","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-09-11T08:53:06Z","description":"CLI TEST Provider","displayName":"idp-531","groupsClaim":"groups","id":"68c28df29fe19663d5b4da59","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}

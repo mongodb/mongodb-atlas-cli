@@ -1,0 +1,7 @@
+HTTP/2.0 401 Unauthorized
+Date: Thu, 11 Sep 2025 05:09:57 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="0fKG3syOQT52vPVEEOqUrnCDcXXt4/eC", algorithm=MD5, qop="auth", stale=false
+X-Envoy-Upstream-Service-Time: 5
+Content-Length: 0
+

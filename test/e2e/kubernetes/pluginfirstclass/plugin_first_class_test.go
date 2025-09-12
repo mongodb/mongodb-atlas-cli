@@ -14,50 +14,49 @@
 
 package pluginfirstclass
 
-// TODO: CLOUDP- uncomment once v1.1.7 of the kubernetes plugin is released
-// import (
-// 	"os"
-// 	"os/exec"
-// 	"testing"
+import (
+	"os"
+	"os/exec"
+	"testing"
 
-// 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
-// 	"github.com/stretchr/testify/assert"
-// 	"github.com/stretchr/testify/require"
-// )
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
 
-// func TestPluginKubernetes(t *testing.T) {
-// 	if testing.Short() {
-// 		t.Skip("skipping test in short mode")
-// 	}
+func TestPluginKubernetes(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
 
-// 	_ = internal.TempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-// 	g := internal.NewAtlasE2ETestGenerator(t)
+	g := internal.NewAtlasE2ETestGenerator(t)
 
-// 	cliPath, err := internal.AtlasCLIBin()
-// 	require.NoError(t, err)
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
 
-// 	g.Run("should install kubernetes plugin", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-// 		removeFirstClassPlugin(t, "atlas-cli-plugin-kubernetes", cliPath)
+	g.Run("should install kubernetes plugin", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		removeFirstClassPlugin(t, "atlas-cli-plugin-kubernetes", cliPath)
 
-// 		cmd := exec.Command(cliPath,
-// 			"kubernetes")
-// 		cmd.Env = os.Environ()
-// 		resp, err := cmd.CombinedOutput()
-// 		require.NoError(t, err, string(resp))
-// 		assert.Contains(t, string(resp), "Plugin mongodb/atlas-cli-plugin-kubernetes successfully installed\n")
-// 	})
-// }
+		cmd := exec.Command(cliPath,
+			"kubernetes")
+		cmd.Env = os.Environ()
+		resp, err := cmd.CombinedOutput()
+		require.NoError(t, err, string(resp))
+		assert.Contains(t, string(resp), "Plugin mongodb/atlas-cli-plugin-kubernetes successfully installed\n")
+	})
+}
 
-// func removeFirstClassPlugin(t *testing.T, name, cliPath string) {
-// 	t.Helper()
-// 	cmd := exec.Command(cliPath,
-// 		"plugin",
-// 		"uninstall",
-// 		name)
-// 	resp, err := cmd.CombinedOutput()
-// 	if err != nil {
-// 		require.Contains(t, string(resp), "Error: could not find plugin with name atlas-cli-plugin-kubernetes")
-// 		return
-// 	}
-// }
+func removeFirstClassPlugin(t *testing.T, name, cliPath string) {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		"plugin",
+		"uninstall",
+		name)
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		require.Contains(t, string(resp), "Error: could not find plugin with name atlas-cli-plugin-kubernetes")
+		return
+	}
+}

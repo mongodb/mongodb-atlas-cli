@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 12 Sep 2025 05:16:21 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 69
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=b421b1b66155fb20789dc96fd719d3aae9eb3be2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c3aab2239ada3657f0b12c/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-12T05:15:40Z","groupId":"68c3aab2239ada3657f0b12c","hostname":"atlas-1ywa3d-shard-00-00.muvrvc.mongodb-dev.net","id":"atlas-1ywa3d-shard-00-00.muvrvc.mongodb-dev.net:27017","lastPing":"2025-09-12T05:16:18Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c3aab2239ada3657f0b12c/processes/atlas-1ywa3d-shard-00-00.muvrvc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1ywa3d-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-577-shard-00-00.muvrvc.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-12T05:15:40Z","groupId":"68c3aab2239ada3657f0b12c","hostname":"atlas-1ywa3d-shard-00-01.muvrvc.mongodb-dev.net","id":"atlas-1ywa3d-shard-00-01.muvrvc.mongodb-dev.net:27017","lastPing":"2025-09-12T05:16:18Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c3aab2239ada3657f0b12c/processes/atlas-1ywa3d-shard-00-01.muvrvc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1ywa3d-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-577-shard-00-01.muvrvc.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-12T05:15:40Z","groupId":"68c3aab2239ada3657f0b12c","hostname":"atlas-1ywa3d-shard-00-02.muvrvc.mongodb-dev.net","id":"atlas-1ywa3d-shard-00-02.muvrvc.mongodb-dev.net:27017","lastPing":"2025-09-12T05:16:18Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c3aab2239ada3657f0b12c/processes/atlas-1ywa3d-shard-00-02.muvrvc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1ywa3d-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-577-shard-00-02.muvrvc.mongodb-dev.net","version":"8.0.13"}],"totalCount":3}

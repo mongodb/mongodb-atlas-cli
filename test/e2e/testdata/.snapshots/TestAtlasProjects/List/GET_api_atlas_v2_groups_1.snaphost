@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
-Content-Length: 1070
+Content-Length: 1361
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 11 Sep 2025 08:50:57 GMT
+Date: Mon, 15 Sep 2025 09:41:16 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 124
+X-Envoy-Upstream-Service-Time: 153
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::getAllGroups
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=7def82b85b6873452797c7216878fad7277292ef; versionString=master
+X-Mongodb-Service-Version: gitHash=9652236893be5322d086fed608e85c48d3ee06c0; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"clusterCount":3,"created":"2020-07-02T09:19:46Z","id":"b0123456789abcdef012345b","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b","rel":"self"}],"name":"Atlas CLI E2E","orgId":"a0123456789abcdef012345a","tags":[],"withDefaultAlertsSettings":true},{"clusterCount":0,"created":"2025-09-11T08:50:53Z","id":"68c28d6b8944c92620dbe73f","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c28d6b8944c92620dbe73f","rel":"self"}],"name":"e2e-proj-500","orgId":"a0123456789abcdef012345a","tags":[{"key":"env","value":"e2e"},{"key":"prod","value":"false"}],"withDefaultAlertsSettings":true},{"clusterCount":0,"created":"2025-09-11T08:50:30Z","id":"68c28d548944c92620dbe3ae","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c28d548944c92620dbe3ae","rel":"self"}],"name":"invitations-e2e-659","orgId":"a0123456789abcdef012345a","tags":[],"withDefaultAlertsSettings":true}],"totalCount":3}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"clusterCount":4,"created":"2020-07-02T09:19:46Z","id":"b0123456789abcdef012345b","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b","rel":"self"}],"name":"Atlas CLI E2E","orgId":"a0123456789abcdef012345a","tags":[],"withDefaultAlertsSettings":true},{"clusterCount":1,"created":"2025-09-15T09:39:15Z","id":"68c7dec0aba2015b4ab628df","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7dec0aba2015b4ab628df","rel":"self"}],"name":"accessLogs-e2e-172","orgId":"a0123456789abcdef012345a","tags":[],"withDefaultAlertsSettings":true},{"clusterCount":0,"created":"2025-09-15T09:41:12Z","id":"68c7df351e6f0e5f6a847a8e","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7df351e6f0e5f6a847a8e","rel":"self"}],"name":"e2e-proj-311","orgId":"a0123456789abcdef012345a","tags":[{"key":"env","value":"e2e"},{"key":"prod","value":"false"}],"withDefaultAlertsSettings":true},{"clusterCount":0,"created":"2025-09-15T09:40:48Z","id":"68c7df1eaba2015b4ab62cb7","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7df1eaba2015b4ab62cb7","rel":"self"}],"name":"invitations-e2e-989","orgId":"a0123456789abcdef012345a","tags":[],"withDefaultAlertsSettings":true}],"totalCount":4}

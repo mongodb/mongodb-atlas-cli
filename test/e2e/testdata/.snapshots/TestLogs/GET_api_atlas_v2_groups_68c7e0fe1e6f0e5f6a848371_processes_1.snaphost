@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 15 Sep 2025 09:57:45 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 95
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=9652236893be5322d086fed608e85c48d3ee06c0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7e0fe1e6f0e5f6a848371/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-15T09:56:57Z","groupId":"68c7e0fe1e6f0e5f6a848371","hostname":"atlas-ocig11-shard-00-00.6amuat.mongodb-dev.net","id":"atlas-ocig11-shard-00-00.6amuat.mongodb-dev.net:27017","lastPing":"2025-09-15T09:57:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7e0fe1e6f0e5f6a848371/processes/atlas-ocig11-shard-00-00.6amuat.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ocig11-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-659-shard-00-00.6amuat.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-15T09:56:57Z","groupId":"68c7e0fe1e6f0e5f6a848371","hostname":"atlas-ocig11-shard-00-01.6amuat.mongodb-dev.net","id":"atlas-ocig11-shard-00-01.6amuat.mongodb-dev.net:27017","lastPing":"2025-09-15T09:57:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7e0fe1e6f0e5f6a848371/processes/atlas-ocig11-shard-00-01.6amuat.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ocig11-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-659-shard-00-01.6amuat.mongodb-dev.net","version":"8.0.13"},{"created":"2025-09-15T09:56:57Z","groupId":"68c7e0fe1e6f0e5f6a848371","hostname":"atlas-ocig11-shard-00-02.6amuat.mongodb-dev.net","id":"atlas-ocig11-shard-00-02.6amuat.mongodb-dev.net:27017","lastPing":"2025-09-15T09:57:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c7e0fe1e6f0e5f6a848371/processes/atlas-ocig11-shard-00-02.6amuat.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ocig11-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-659-shard-00-02.6amuat.mongodb-dev.net","version":"8.0.13"}],"totalCount":3}

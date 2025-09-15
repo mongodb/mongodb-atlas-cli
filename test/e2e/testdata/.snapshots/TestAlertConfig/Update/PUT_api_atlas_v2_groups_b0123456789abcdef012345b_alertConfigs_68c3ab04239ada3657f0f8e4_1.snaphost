@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 640
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 12 Sep 2025 05:09:38 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 194
+X-Frame-Options: DENY
+X-Java-Method: ApiAlertConfigsResource::putAlertConfig
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=b421b1b66155fb20789dc96fd719d3aae9eb3be2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"created":"2025-09-12T05:09:24Z","enabled":false,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"68c3ab04239ada3657f0f8e4","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68c3ab04239ada3657f0f8e4","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68c3ab04239ada3657f0f8e4/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"68c3ab124e067c5f2503e454","smsEnabled":true,"typeName":"GROUP"}],"updated":"2025-09-12T05:09:38Z"}

@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 251
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Tue, 16 Sep 2025 05:18:46 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 2988
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchIndexConfigResource::createSearchIndex
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=0b20bea8a17c5dc9dc0e02860dd81debbb94aad8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"collectionName":"movies","database":"sample_mflix","indexID":"68c8f336edb740249d815725","latestDefinition":{"mappings":{"dynamic":true}},"latestDefinitionVersion":{"version":0},"name":"index-351","queryable":false,"status":"PENDING","type":"search"}

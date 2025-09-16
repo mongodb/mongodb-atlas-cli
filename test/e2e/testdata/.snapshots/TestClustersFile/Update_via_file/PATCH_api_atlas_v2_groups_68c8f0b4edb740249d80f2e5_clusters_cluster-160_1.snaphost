@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 3054
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Tue, 16 Sep 2025 05:15:25 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 868
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::updateCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=0b20bea8a17c5dc9dc0e02860dd81debbb94aad8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://cluster-160-shard-00-00.vuhykc.mongodb-dev.net:27017,cluster-160-shard-00-01.vuhykc.mongodb-dev.net:27017,cluster-160-shard-00-02.vuhykc.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-f1rpt1-shard-0","standardSrv":"mongodb+srv://cluster-160.vuhykc.mongodb-dev.net"},"createDate":"2025-09-16T05:08:10Z","diskSizeGB":40.0,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"68c8f0b4edb740249d80f2e5","id":"68c8f0baedb740249d80fe1a","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0b4edb740249d80f2e5/clusters/cluster-160","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0b4edb740249d80f2e5/clusters/cluster-160/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0b4edb740249d80f2e5/clusters/cluster-160/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.13","name":"cluster-160","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"68c8f0b9edb740249d80fe08","numShards":1,"regionConfigs":[{"analyticsSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":true}},"electableSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":1},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"EU_WEST_1"},{"analyticsSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":true}},"electableSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":1},"priority":6,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"},{"analyticsSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":true}},"electableSpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":1},"priority":5,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M30","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_WEST_1"}],"zoneId":"68c8f0b9edb740249d80fe10","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"UPDATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

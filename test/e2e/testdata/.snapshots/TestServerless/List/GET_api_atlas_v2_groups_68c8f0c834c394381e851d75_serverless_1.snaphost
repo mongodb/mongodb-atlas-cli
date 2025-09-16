@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1308
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 16 Sep 2025 05:08:49 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 119
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyServerlessInstanceDescriptionResource::getAllServerlessInstances
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=0b20bea8a17c5dc9dc0e02860dd81debbb94aad8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0c834c394381e851d75/serverless?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"connectionStrings":{"standardSrv":"mongodb+srv://cluster-462.2fenodd.mongodb-dev.net"},"createDate":"2025-09-16T05:08:31Z","groupId":"68c8f0c834c394381e851d75","id":"68c8f0cfedb740249d810d9d","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0c834c394381e851d75/serverless/cluster-462","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0c834c394381e851d75/serverless/cluster-462/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68c8f0c834c394381e851d75/serverless/cluster-462/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBVersion":"8.0.13","name":"cluster-462","providerSettings":{"backingProviderName":"AWS","effectiveDiskSizeGBLimit":5,"effectiveInstanceSizeName":"FLEX","effectiveProviderName":"TENANT","nextBackupDate":"2025-09-17T05:08:31Z","providerName":"SERVERLESS","regionName":"US_EAST_1","tenantBackupEnabled":true},"serverlessBackupOptions":{"serverlessContinuousBackupEnabled":false},"stateName":"IDLE","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false}],"totalCount":1}

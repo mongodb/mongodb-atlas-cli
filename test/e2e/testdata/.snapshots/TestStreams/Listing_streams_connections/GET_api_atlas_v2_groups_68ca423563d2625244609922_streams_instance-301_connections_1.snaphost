@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 473
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Wed, 17 Sep 2025 05:08:49 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 147
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::getConnections
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=7d87731c9eb038a2a49916ebfd3875c48ccb9be8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68ca423563d2625244609922/streams/instance-301/connections?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"authentication":{"mechanism":"SCRAM-256","username":"admin"},"bootstrapServers":"example.com:8080,fraud.example.com:8000","config":{"auto.offset.reset":"earliest"},"name":"connection-356","networking":{"access":{"type":"PUBLIC"}},"security":{"protocol":"PLAINTEXT"},"type":"Kafka"}],"totalCount":1}

@@ -29,8 +29,8 @@ func (opts *ListOps) Run() error {
 }
 
 const listTemplate = `NAME	DESCRIPTION	VERSION COMMANDS {{range valueOrEmptySlice .}}
-{{.Name}}	{{.Description}}	{{.Version}}	{{ (index .Commands 0).Name }} {{range slice .Commands 1 }}
-			{{.Name}}{{end}}
+{{.Name}}	{{.Description}}	{{.Version}}	{{ (index .Commands 0).Name }}{{if (index .Commands 0).Aliases}} [aliases: {{range $i, $alias := (index .Commands 0).Aliases}}{{if $i}}, {{end}}{{$alias}}{{end}}]{{end}} {{range slice .Commands 1 }}
+			{{.Name}}{{if .Aliases}} [aliases: {{range $i, $alias := .Aliases}}{{if $i}}, {{end}}{{$alias}}{{end}}]{{end}}{{end}}
 		{{end}}
 `
 

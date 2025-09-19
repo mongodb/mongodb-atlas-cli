@@ -37,7 +37,7 @@ func getTestPlugins(t *testing.T) *plugin.ValidatedPlugins {
 				Description: "plugin1 description",
 				Version:     version1,
 				Commands: []*plugin.Command{
-					{Name: "command1"},
+					{Name: "command1", Aliases: []string{"cmd1", "c1"}},
 					{Name: "command 2"},
 				},
 				Github: &plugin.Github{
@@ -50,7 +50,7 @@ func getTestPlugins(t *testing.T) *plugin.ValidatedPlugins {
 				Description: "plugin2 description",
 				Version:     version2,
 				Commands: []*plugin.Command{
-					{Name: "command3"},
+					{Name: "command3", Aliases: []string{"tf"}},
 					{Name: "command4"},
 				},
 				Github: &plugin.Github{

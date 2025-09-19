@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -30,13 +30,13 @@ type ClusterDescriber interface { //nolint:iface // right now requires some refa
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlasv2.SampleDatasetStatus, error) {
-	result, _, err := s.clientv2.ClustersApi.LoadSampleDataset(s.ctx, groupID, clusterName).Execute()
+	result, _, err := s.clientv2.ClustersApi.RequestSampleDatasetLoad(s.ctx, groupID, clusterName).Execute()
 	return result, err
 }
 
 // SampleDataStatus encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStatus, error) {
-	result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoadStatus(s.ctx, groupID, id).Execute()
+	result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoad(s.ctx, groupID, id).Execute()
 	return result, err
 }
 
@@ -169,6 +169,6 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 }
 
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
-	_, err := s.clientv2.ClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
+	_, err := s.clientv2.ClustersApi.RestartPrimaries(s.ctx, projectID, clusterName).Execute()
 	return err
 }

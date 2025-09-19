@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmptySlice .Results}}
@@ -35,7 +35,7 @@ const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmpty
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=processes . ProcessLister
 
 type ProcessLister interface {
-	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
+	Processes(*atlasv2.ListGroupProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
 }
 
 type ListOpts struct {
@@ -68,9 +68,9 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
+func (opts *ListOpts) newProcessesListParams() *atlasv2.ListGroupProcessesApiParams {
 	listOpts := opts.NewAtlasListOptions()
-	processesList := &atlasv2.ListAtlasProcessesApiParams{
+	processesList := &atlasv2.ListGroupProcessesApiParams{
 		GroupId: opts.ConfigProjectID(),
 	}
 	if listOpts.PageNum > 0 {

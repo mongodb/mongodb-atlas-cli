@@ -12,7 +12,7 @@ package slowquerylogs
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockPerformanceAdvisorSlowQueriesLister) EXPECT() *MockPerformanceAdvis
 }
 
 // PerformanceAdvisorSlowQueries mocks base method.
-func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0 *admin.ListSlowQueriesApiParams) (*admin.PerformanceAdvisorSlowQueryList, error) {
+func (m *MockPerformanceAdvisorSlowQueriesLister) PerformanceAdvisorSlowQueries(arg0 *admin.ListSlowQueryLogsApiParams) (*admin.PerformanceAdvisorSlowQueryList, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorSlowQueries", arg0)
 	ret0, _ := ret[0].(*admin.PerformanceAdvisorSlowQueryList)
@@ -68,13 +68,13 @@ func (c *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCal
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall) Do(f func(*admin.ListSlowQueriesApiParams) (*admin.PerformanceAdvisorSlowQueryList, error)) *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall {
+func (c *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall) Do(f func(*admin.ListSlowQueryLogsApiParams) (*admin.PerformanceAdvisorSlowQueryList, error)) *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall) DoAndReturn(f func(*admin.ListSlowQueriesApiParams) (*admin.PerformanceAdvisorSlowQueryList, error)) *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall {
+func (c *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall) DoAndReturn(f func(*admin.ListSlowQueryLogsApiParams) (*admin.PerformanceAdvisorSlowQueryList, error)) *MockPerformanceAdvisorSlowQueriesListerPerformanceAdvisorSlowQueriesCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

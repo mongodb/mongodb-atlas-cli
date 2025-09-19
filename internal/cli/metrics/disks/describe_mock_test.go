@@ -12,7 +12,7 @@ package disks
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockProcessDiskMeasurementsLister) EXPECT() *MockProcessDiskMeasurement
 }
 
 // ProcessDiskMeasurements mocks base method.
-func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0 *admin.GetDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessDiskMeasurementsLister) ProcessDiskMeasurements(arg0 *admin.GetProcessDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessDiskMeasurements", arg0)
 	ret0, _ := ret[0].(*admin.ApiMeasurementsGeneralViewAtlas)
@@ -68,13 +68,13 @@ func (c *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall) Return(ar
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall) Do(f func(*admin.GetDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall {
+func (c *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall) Do(f func(*admin.GetProcessDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall) DoAndReturn(f func(*admin.GetDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall {
+func (c *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall) DoAndReturn(f func(*admin.GetProcessDiskMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessDiskMeasurementsListerProcessDiskMeasurementsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

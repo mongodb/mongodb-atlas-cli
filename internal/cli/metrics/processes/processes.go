@@ -28,13 +28,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=processes_mock_test.go -package=processes . ProcessMeasurementLister
 
 type ProcessMeasurementLister interface {
-	ProcessMeasurements(*atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
+	ProcessMeasurements(*atlasv2.GetProcessMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
 }
 
 type Opts struct {
@@ -55,8 +55,8 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *Opts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetHostMeasurementsApiParams {
-	p := &atlasv2.GetHostMeasurementsApiParams{
+func (opts *Opts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetProcessMeasurementsApiParams {
+	p := &atlasv2.GetProcessMeasurementsApiParams{
 		GroupId:   groupID,
 		ProcessId: processID,
 	}

@@ -15,13 +15,13 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error) {
+func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListPerformanceAdvisorNamespacesApiParams) (*atlasv2.Namespaces, error) {
 	request := s.clientv2.PerformanceAdvisorApi.
-		ListSlowQueryNamespaces(s.ctx, opts.GroupId, opts.ProcessId)
+		ListPerformanceAdvisorNamespaces(s.ctx, opts.GroupId, opts.ProcessId)
 	if opts.Duration != nil {
 		request = request.Duration(*opts.Duration)
 	}
@@ -33,8 +33,8 @@ func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespac
 }
 
 // PerformanceAdvisorSlowQueries encapsulates the logic to manage different cloud providers.
-func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error) {
-	request := s.clientv2.PerformanceAdvisorApi.ListSlowQueries(s.ctx, opts.GroupId, opts.ProcessId)
+func (s *Store) PerformanceAdvisorSlowQueries(opts *atlasv2.ListSlowQueryLogsApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error) {
+	request := s.clientv2.PerformanceAdvisorApi.ListSlowQueryLogs(s.ctx, opts.GroupId, opts.ProcessId)
 	if opts.Duration != nil {
 		request = request.Duration(*opts.Duration)
 	}
@@ -76,12 +76,12 @@ func (s *Store) PerformanceAdvisorIndexes(opts *atlasv2.ListSuggestedIndexesApiP
 
 // EnablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
 func (s *Store) EnablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
-	_, err := s.clientv2.PerformanceAdvisorApi.EnableSlowOperationThresholding(s.ctx, projectID).Execute()
+	_, err := s.clientv2.PerformanceAdvisorApi.EnableManagedSlowMs(s.ctx, projectID).Execute()
 	return err
 }
 
 // DisablePerformanceAdvisorSlowOperationThreshold encapsulates the logic to manage different cloud providers.
 func (s *Store) DisablePerformanceAdvisorSlowOperationThreshold(projectID string) error {
-	_, err := s.clientv2.PerformanceAdvisorApi.DisableSlowOperationThresholding(s.ctx, projectID).Execute()
+	_, err := s.clientv2.PerformanceAdvisorApi.DisableManagedSlowMs(s.ctx, projectID).Execute()
 	return err
 }

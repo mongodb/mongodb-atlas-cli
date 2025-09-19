@@ -15,12 +15,12 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // X509Configuration retrieves the current user-managed certificates for a database user.
 func (s *Store) X509Configuration(projectID string) (*atlasv2.UserSecurity, error) {
-	result, _, err := s.clientv2.LDAPConfigurationApi.GetLdapConfiguration(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.LDAPConfigurationApi.GetUserSecurity(s.ctx, projectID).Execute()
 	return result, err
 }
 
@@ -31,12 +31,12 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 			Cas: &certificate,
 		},
 	}
-	result, _, err := s.clientv2.LDAPConfigurationApi.SaveLdapConfiguration(s.ctx, projectID, &userCertificate).Execute()
+	result, _, err := s.clientv2.LDAPConfigurationApi.UpdateUserSecurity(s.ctx, projectID, &userCertificate).Execute()
 	return result, err
 }
 
 // DisableX509Configuration disables customer-managed X.509 configuration for an Atlas project.
 func (s *Store) DisableX509Configuration(projectID string) error {
-	_, _, err := s.clientv2.X509AuthenticationApi.DisableCustomerManagedX509(s.ctx, projectID).Execute()
+	_, _, err := s.clientv2.X509AuthenticationApi.DisableSecurityCustomerX509(s.ctx, projectID).Execute()
 	return err
 }

@@ -25,13 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=settings . AlertConfigurationLister
 
 type AlertConfigurationLister interface {
-	AlertConfigurations(*atlasv2.ListAlertConfigurationsApiParams) (*atlasv2.PaginatedAlertConfig, error)
+	AlertConfigurations(*atlasv2.ListAlertConfigsApiParams) (*atlasv2.PaginatedAlertConfig, error)
 }
 
 type ListOpts struct {
@@ -55,7 +55,7 @@ var settingsListTemplate = `ID	TYPE	ENABLED{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListOpts) Run() error {
-	params := &atlasv2.ListAlertConfigurationsApiParams{
+	params := &atlasv2.ListAlertConfigsApiParams{
 		GroupId: opts.ConfigProjectID(),
 		PageNum: &opts.PageNum,
 	}

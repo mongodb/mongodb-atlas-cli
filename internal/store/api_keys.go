@@ -15,12 +15,12 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
-	res := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeys(s.ctx, orgID)
+	res := s.clientv2.ProgrammaticAPIKeysApi.ListOrgApiKeys(s.ctx, orgID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -30,31 +30,31 @@ func (s *Store) OrganizationAPIKeys(orgID string, opts *ListOptions) (*atlasv2.P
 
 // OrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKey(orgID, apiKeyID string) (*atlasv2.ApiKeyUserDetails, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.GetApiKey(s.ctx, orgID, apiKeyID).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.GetOrgApiKey(s.ctx, orgID, apiKeyID).Execute()
 	return result, err
 }
 
 // UpdateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateOrganizationAPIKey(orgID, apiKeyID string, input *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateApiKey(s.ctx, orgID, apiKeyID, input).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.UpdateOrgApiKey(s.ctx, orgID, apiKeyID, input).Execute()
 	return result, err
 }
 
 // CreateOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKey(s.ctx, orgID, input).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateOrgApiKey(s.ctx, orgID, input).Execute()
 	return result, err
 }
 
 // DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
-	_, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKey(s.ctx, orgID, id).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteOrgApiKey(s.ctx, orgID, id).Execute()
 	return err
 }
 
 // ProjectAPIKeys returns the API Keys for a specific project.
 func (s *Store) ProjectAPIKeys(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
-	res := s.clientv2.ProgrammaticAPIKeysApi.ListProjectApiKeys(s.ctx, projectID)
+	res := s.clientv2.ProgrammaticAPIKeysApi.ListGroupApiKeys(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -64,7 +64,7 @@ func (s *Store) ProjectAPIKeys(projectID string, opts *ListOptions) (*atlasv2.Pa
 
 // CreateProjectAPIKey creates an API Keys for a project.
 func (s *Store) CreateProjectAPIKey(projectID string, apiKeyInput *atlasv2.CreateAtlasProjectApiKey) (*atlasv2.ApiKeyUserDetails, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateProjectApiKey(s.ctx, projectID, apiKeyInput).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateGroupApiKey(s.ctx, projectID, apiKeyInput).Execute()
 	return result, err
 }
 
@@ -76,6 +76,6 @@ func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.U
 
 // DeleteProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
-	_, err := s.clientv2.ProgrammaticAPIKeysApi.RemoveProjectApiKey(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysApi.RemoveGroupApiKey(s.ctx, projectID, id).Execute()
 	return err
 }

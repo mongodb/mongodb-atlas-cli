@@ -17,7 +17,7 @@ package store
 import (
 	"strconv"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 type AccessLogOptions struct {
@@ -30,7 +30,7 @@ type AccessLogOptions struct {
 
 // AccessLogsByHostname encapsulates the logic to manage different cloud providers.
 func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
-	result := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname)
+	result := s.clientv2.AccessTrackingApi.GetAccessHistoryProcess(s.ctx, groupID, hostname)
 
 	if opts != nil {
 		if opts.Start != "" {
@@ -61,7 +61,7 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *AccessLogOp
 
 // AccessLogsByClusterName encapsulates the logic to manage different cloud providers.
 func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
-	result := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName)
+	result := s.clientv2.AccessTrackingApi.GetAccessHistoryCluster(s.ctx, groupID, clusterName)
 
 	if opts != nil {
 		if opts.Start != "" {

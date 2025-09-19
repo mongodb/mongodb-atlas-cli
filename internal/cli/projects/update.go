@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const updateTemplate = "Project '{{.Id}}' updated.\n"
@@ -37,7 +37,7 @@ const updateTemplate = "Project '{{.Id}}' updated.\n"
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=projects . ProjectUpdater
 
 type ProjectUpdater interface {
-	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)
+	UpdateProject(*atlasv2.UpdateGroupApiParams) (*atlasv2.Group, error)
 }
 
 type UpdateOpts struct {
@@ -70,13 +70,13 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateProjectApiParams, error) {
+func (opts *UpdateOpts) newUpdateProjectParams() (*atlasv2.UpdateGroupApiParams, error) {
 	groupUpdate := new(atlasv2.GroupUpdate)
 	if err := file.Load(opts.fs, opts.filename, groupUpdate); err != nil {
 		return nil, err
 	}
 
-	return &atlasv2.UpdateProjectApiParams{
+	return &atlasv2.UpdateGroupApiParams{
 		GroupId: opts.projectID, GroupUpdate: groupUpdate}, nil
 }
 

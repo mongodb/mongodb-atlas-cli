@@ -12,7 +12,7 @@ package accesslists
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockOrganizationAPIKeyAccessListLister) EXPECT() *MockOrganizationAPIKe
 }
 
 // OrganizationAPIKeyAccessLists mocks base method.
-func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0 *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
+func (m *MockOrganizationAPIKeyAccessListLister) OrganizationAPIKeyAccessLists(arg0 *admin.ListOrgAccessEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeyAccessLists", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessListResponse)
@@ -68,13 +68,13 @@ func (c *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall) Do(f func(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall {
+func (c *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall) Do(f func(*admin.ListOrgAccessEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall) DoAndReturn(f func(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall {
+func (c *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall) DoAndReturn(f func(*admin.ListOrgAccessEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListListerOrganizationAPIKeyAccessListsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

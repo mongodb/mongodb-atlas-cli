@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -57,7 +57,7 @@ func TestConfigList_Run(t *testing.T) {
 		},
 	}
 
-	params := &atlasv2.ListAlertConfigurationsApiParams{
+	params := &atlasv2.ListAlertConfigsApiParams{
 		GroupId: listOpts.ProjectID,
 		PageNum: &listOpts.PageNum,
 	}

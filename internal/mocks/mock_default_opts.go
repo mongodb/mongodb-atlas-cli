@@ -13,7 +13,7 @@ import (
 	reflect "reflect"
 
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -72,7 +72,7 @@ func (mr *MockProjectOrgsListerMockRecorder) Organization(id any) *gomock.Call {
 }
 
 // Organizations mocks base method.
-func (m *MockProjectOrgsLister) Organizations(arg0 *admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error) {
+func (m *MockProjectOrgsLister) Organizations(arg0 *admin.ListOrgsApiParams) (*admin.PaginatedOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedOrganization)

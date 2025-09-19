@@ -15,17 +15,17 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.
 func (s *Store) ProjectSettings(projectID string) (*atlasv2.GroupSettings, error) {
-	result, _, err := s.clientv2.ProjectsApi.GetProjectSettings(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.ProjectsApi.GetGroupSettings(s.ctx, projectID).Execute()
 	return result, err
 }
 
 // UpdateProjectSettings encapsulates the logic of updating settings of a particular project.
 func (s *Store) UpdateProjectSettings(projectID string, projectSettings *atlasv2.GroupSettings) (*atlasv2.GroupSettings, error) {
-	result, _, err := s.clientv2.ProjectsApi.UpdateProjectSettings(s.ctx, projectID, projectSettings).Execute()
+	result, _, err := s.clientv2.ProjectsApi.UpdateGroupSettings(s.ctx, projectID, projectSettings).Execute()
 	return result, err
 }

@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // CreateUser encapsulates the logic to manage different cloud providers.
@@ -32,13 +32,13 @@ func (s *Store) UserByID(userID string) (*atlasv2.CloudAppUser, error) {
 
 // UserByName encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUserByUsername(s.ctx, username).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUserByName(s.ctx, username).Execute()
 	return result, err
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationUsers(organizationID string, opts *ListOptions) (*atlasv2.PaginatedOrgUser, error) {
-	res := s.clientv2.MongoDBCloudUsersApi.ListOrganizationUsers(s.ctx, organizationID)
+	res := s.clientv2.MongoDBCloudUsersApi.ListOrgUsers(s.ctx, organizationID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}

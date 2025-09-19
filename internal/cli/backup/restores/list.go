@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=restores . RestoreJobsLister
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
-	RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
+	RestoreFlexClusterJobs(args *atlasv2.ListFlexRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
 }
 
 type ListOpts struct {
@@ -82,9 +82,9 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(restoreJobs)
 }
 
-func (opts *ListOpts) newListFlexBackupRestoreJobsAPIParams() *atlasv2.ListFlexBackupRestoreJobsApiParams {
+func (opts *ListOpts) newListFlexBackupRestoreJobsAPIParams() *atlasv2.ListFlexRestoreJobsApiParams {
 	includeCount := !opts.OmitCount
-	return &atlasv2.ListFlexBackupRestoreJobsApiParams{
+	return &atlasv2.ListFlexRestoreJobsApiParams{
 		GroupId:      opts.ConfigProjectID(),
 		Name:         opts.clusterName,
 		IncludeCount: &includeCount,

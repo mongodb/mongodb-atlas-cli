@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		Processes(&atlasv2.ListAtlasProcessesApiParams{}).
+		Processes(&atlasv2.ListGroupProcessesApiParams{}).
 		Return(expected, nil).
 		Times(1)
 

@@ -18,12 +18,12 @@ import (
 	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // DownloadLog encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()
+func (s *Store) DownloadLog(params *atlasv2.DownloadClusterLogApiParams) (io.ReadCloser, error) {
+	result, _, err := s.clientv2.MonitoringAndLogsApi.DownloadClusterLogWithParams(s.ctx, params).Execute()
 	if err != nil {
 		return nil, err
 	}

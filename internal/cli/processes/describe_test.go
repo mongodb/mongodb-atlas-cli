@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -37,7 +37,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		host: "host",
 		port: 1000,
 	}
-	params := atlasv2.GetAtlasProcessApiParams{
+	params := atlasv2.GetGroupProcessApiParams{
 		ProcessId: "host:1000",
 		GroupId:   "projectID",
 	}

@@ -13,7 +13,7 @@ import (
 	io "io"
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -42,7 +42,7 @@ func (m *MockDownloader) EXPECT() *MockDownloaderMockRecorder {
 }
 
 // DownloadLog mocks base method.
-func (m *MockDownloader) DownloadLog(arg0 *admin.GetHostLogsApiParams) (io.ReadCloser, error) {
+func (m *MockDownloader) DownloadLog(arg0 *admin.DownloadClusterLogApiParams) (io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadLog", arg0)
 	ret0, _ := ret[0].(io.ReadCloser)
@@ -69,13 +69,13 @@ func (c *MockDownloaderDownloadLogCall) Return(arg0 io.ReadCloser, arg1 error) *
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockDownloaderDownloadLogCall) Do(f func(*admin.GetHostLogsApiParams) (io.ReadCloser, error)) *MockDownloaderDownloadLogCall {
+func (c *MockDownloaderDownloadLogCall) Do(f func(*admin.DownloadClusterLogApiParams) (io.ReadCloser, error)) *MockDownloaderDownloadLogCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockDownloaderDownloadLogCall) DoAndReturn(f func(*admin.GetHostLogsApiParams) (io.ReadCloser, error)) *MockDownloaderDownloadLogCall {
+func (c *MockDownloaderDownloadLogCall) DoAndReturn(f func(*admin.DownloadClusterLogApiParams) (io.ReadCloser, error)) *MockDownloaderDownloadLogCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

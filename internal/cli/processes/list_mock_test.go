@@ -12,7 +12,7 @@ package processes
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockProcessLister) EXPECT() *MockProcessListerMockRecorder {
 }
 
 // Processes mocks base method.
-func (m *MockProcessLister) Processes(arg0 *admin.ListAtlasProcessesApiParams) (*admin.PaginatedHostViewAtlas, error) {
+func (m *MockProcessLister) Processes(arg0 *admin.ListGroupProcessesApiParams) (*admin.PaginatedHostViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Processes", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedHostViewAtlas)
@@ -68,13 +68,13 @@ func (c *MockProcessListerProcessesCall) Return(arg0 *admin.PaginatedHostViewAtl
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockProcessListerProcessesCall) Do(f func(*admin.ListAtlasProcessesApiParams) (*admin.PaginatedHostViewAtlas, error)) *MockProcessListerProcessesCall {
+func (c *MockProcessListerProcessesCall) Do(f func(*admin.ListGroupProcessesApiParams) (*admin.PaginatedHostViewAtlas, error)) *MockProcessListerProcessesCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockProcessListerProcessesCall) DoAndReturn(f func(*admin.ListAtlasProcessesApiParams) (*admin.PaginatedHostViewAtlas, error)) *MockProcessListerProcessesCall {
+func (c *MockProcessListerProcessesCall) DoAndReturn(f func(*admin.ListGroupProcessesApiParams) (*admin.PaginatedHostViewAtlas, error)) *MockProcessListerProcessesCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice .}}
@@ -35,7 +35,7 @@ const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=invitations . ProjectInvitationLister
 
 type ProjectInvitationLister interface {
-	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)
+	ProjectInvitations(*atlasv2.ListGroupInvitesApiParams) ([]atlasv2.GroupInvitation, error)
 }
 
 type ListOpts struct {
@@ -61,8 +61,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newInvitationOptions() *atlasv2.ListProjectInvitationsApiParams {
-	return &atlasv2.ListProjectInvitationsApiParams{
+func (opts *ListOpts) newInvitationOptions() *atlasv2.ListGroupInvitesApiParams {
+	return &atlasv2.ListGroupInvitesApiParams{
 		GroupId:  opts.ConfigProjectID(),
 		Username: &opts.username,
 	}

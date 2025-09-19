@@ -17,23 +17,23 @@ package store
 import (
 	"errors"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 var errTScheduledPolicyItemNotFound = errors.New("scheduled policy item not found")
 
 func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	return result, err
 }
 
 func (s *Store) UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, opts).Execute()
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateCompliancePolicy(s.ctx, projectID, opts).Execute()
 	return result, err
 }
 
 func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (s *Store) EnablePointInTimeRestore(projectID string, restoreWindowDays int
 }
 
 func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (s *Store) EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectio
 }
 
 func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (s *Store) EnableCopyProtection(projectID string) (*atlasv2.DataProtectionS
 	return s.updateDataProtectionSettings(projectID, compliancePolicy)
 }
 func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (s *Store) DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtecti
 }
 
 func (s *Store) DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (s *Store) EnableCompliancePolicy(projectID, authorizedEmail, authorizedFir
 }
 
 func (s *Store) CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *Store) CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupCom
 }
 
 func (s *Store) CreateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (s *Store) CreateScheduledPolicy(projectID string, policy *atlasv2.BackupCo
 }
 
 func (s *Store) UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (s *Store) UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupCo
 }
 
 func (s *Store) DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atlasv2.DataProtectionSettings20231001, error) {
-	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
+	compliancePolicy, _, err := s.clientv2.CloudBackupsApi.GetCompliancePolicy(s.ctx, projectID).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (s *Store) DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atl
 }
 
 func (s *Store) updateDataProtectionSettings(projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateDataProtectionSettings(s.ctx, projectID, compliancePolicy).Execute()
+	result, _, err := s.clientv2.CloudBackupsApi.UpdateCompliancePolicy(s.ctx, projectID, compliancePolicy).Execute()
 	if err != nil {
 		return nil, err
 	}

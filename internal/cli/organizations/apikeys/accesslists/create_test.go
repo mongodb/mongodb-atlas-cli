@@ -17,7 +17,7 @@ package accesslists
 import (
 	"testing"
 
-	"go.mongodb.org/atlas-sdk/v20250312006/admin"
+	"go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -33,7 +33,7 @@ func TestCreate_Run(t *testing.T) {
 
 	r, err := createOpts.newAccessListAPIKeysReq()
 
-	params := &admin.CreateApiKeyAccessListApiParams{
+	params := &admin.CreateOrgAccessEntryApiParams{
 		OrgId:                 createOpts.OrgID,
 		ApiUserId:             createOpts.apyKey,
 		UserAccessListRequest: r,

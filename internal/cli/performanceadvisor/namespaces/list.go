@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
@@ -35,7 +35,7 @@ const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=namespaces . PerformanceAdvisorNamespacesLister
 
 type PerformanceAdvisorNamespacesLister interface {
-	PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error)
+	PerformanceAdvisorNamespaces(opts *atlasv2.ListPerformanceAdvisorNamespacesApiParams) (*atlasv2.Namespaces, error)
 }
 
 type ListOpts struct {
@@ -68,8 +68,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newNamespaceOptions(project, host string) *atlasv2.ListSlowQueryNamespacesApiParams {
-	params := &atlasv2.ListSlowQueryNamespacesApiParams{
+func (opts *ListOpts) newNamespaceOptions(project, host string) *atlasv2.ListPerformanceAdvisorNamespacesApiParams {
+	params := &atlasv2.ListPerformanceAdvisorNamespacesApiParams{
 		GroupId:   project,
 		ProcessId: host,
 	}

@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 type EventListOpts struct {
@@ -41,8 +41,8 @@ type EventListOpts struct {
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=events . EventLister
 
 type EventLister interface {
-	OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)
-	ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)
+	OrganizationEvents(opts *atlasv2.ListOrgEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)
+	ProjectEvents(opts *atlasv2.ListGroupEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)
 }
 
 type ListOpts struct {
@@ -91,14 +91,14 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) NewOrgListOptions() (*atlasv2.ListOrganizationEventsApiParams, error) {
+func (opts *ListOpts) NewOrgListOptions() (*atlasv2.ListOrgEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := &atlasv2.ListOrganizationEventsApiParams{
+	p := &atlasv2.ListOrgEventsApiParams{
 		OrgId:     opts.orgID,
 		EventType: eventType,
 	}
@@ -120,13 +120,13 @@ func (opts *ListOpts) NewOrgListOptions() (*atlasv2.ListOrganizationEventsApiPar
 	return p, nil
 }
 
-func (opts *ListOpts) NewProjectListOptions() (*atlasv2.ListProjectEventsApiParams, error) {
+func (opts *ListOpts) NewProjectListOptions() (*atlasv2.ListGroupEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := &atlasv2.ListProjectEventsApiParams{
+	p := &atlasv2.ListGroupEventsApiParams{
 		GroupId:   opts.projectID,
 		EventType: eventType,
 	}

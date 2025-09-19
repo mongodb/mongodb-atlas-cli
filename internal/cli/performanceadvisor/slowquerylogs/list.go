@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
@@ -36,7 +36,7 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=slowquerylogs . PerformanceAdvisorSlowQueriesLister
 
 type PerformanceAdvisorSlowQueriesLister interface {
-	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)
+	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueryLogsApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)
 }
 
 type ListOpts struct {
@@ -72,8 +72,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newSlowQueryOptions(project, host string) *atlasv2.ListSlowQueriesApiParams {
-	params := &atlasv2.ListSlowQueriesApiParams{
+func (opts *ListOpts) newSlowQueryOptions(project, host string) *atlasv2.ListSlowQueryLogsApiParams {
+	params := &atlasv2.ListSlowQueryLogsApiParams{
 		GroupId:   project,
 		ProcessId: host,
 	}

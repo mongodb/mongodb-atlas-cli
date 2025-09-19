@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 var downloadMessage = "Download of %s completed.\n"
@@ -35,7 +35,7 @@ var downloadMessage = "Download of %s completed.\n"
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=instance . StreamsDownloader
 
 type StreamsDownloader interface {
-	DownloadAuditLog(*atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)
+	DownloadAuditLog(*atlasv2.DownloadAuditLogsApiParams) (io.ReadCloser, error)
 }
 
 type DownloadOpts struct {
@@ -56,7 +56,7 @@ func (opts *DownloadOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DownloadOpts) Run() error {
-	params := atlasv2.DownloadStreamTenantAuditLogsApiParams{
+	params := atlasv2.DownloadAuditLogsApiParams{
 		GroupId:    opts.ConfigProjectID(),
 		TenantName: opts.tenantName,
 	}

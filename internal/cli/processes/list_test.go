@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -38,7 +38,7 @@ func TestList_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		store: mockStore,
 	}
-	params := atlasv2.ListAtlasProcessesApiParams{
+	params := atlasv2.ListGroupProcessesApiParams{
 		IncludeCount: pointer.Get(true),
 	}
 

@@ -15,11 +15,11 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // ProcessMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessMeasurements(params *atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostMeasurementsWithParams(s.ctx, params).Execute()
+func (s *Store) ProcessMeasurements(params *atlasv2.GetProcessMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetProcessMeasurementsWithParams(s.ctx, params).Execute()
 	return result, err
 }

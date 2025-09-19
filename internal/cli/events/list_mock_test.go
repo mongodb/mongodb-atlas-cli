@@ -12,7 +12,7 @@ package events
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockEventLister) EXPECT() *MockEventListerMockRecorder {
 }
 
 // OrganizationEvents mocks base method.
-func (m *MockEventLister) OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error) {
+func (m *MockEventLister) OrganizationEvents(opts *admin.ListOrgEventsApiParams) (*admin.OrgPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationEvents", opts)
 	ret0, _ := ret[0].(*admin.OrgPaginatedEvent)
@@ -68,19 +68,19 @@ func (c *MockEventListerOrganizationEventsCall) Return(arg0 *admin.OrgPaginatedE
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockEventListerOrganizationEventsCall) Do(f func(*admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error)) *MockEventListerOrganizationEventsCall {
+func (c *MockEventListerOrganizationEventsCall) Do(f func(*admin.ListOrgEventsApiParams) (*admin.OrgPaginatedEvent, error)) *MockEventListerOrganizationEventsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockEventListerOrganizationEventsCall) DoAndReturn(f func(*admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error)) *MockEventListerOrganizationEventsCall {
+func (c *MockEventListerOrganizationEventsCall) DoAndReturn(f func(*admin.ListOrgEventsApiParams) (*admin.OrgPaginatedEvent, error)) *MockEventListerOrganizationEventsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
 
 // ProjectEvents mocks base method.
-func (m *MockEventLister) ProjectEvents(opts *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error) {
+func (m *MockEventLister) ProjectEvents(opts *admin.ListGroupEventsApiParams) (*admin.GroupPaginatedEvent, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectEvents", opts)
 	ret0, _ := ret[0].(*admin.GroupPaginatedEvent)
@@ -107,13 +107,13 @@ func (c *MockEventListerProjectEventsCall) Return(arg0 *admin.GroupPaginatedEven
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockEventListerProjectEventsCall) Do(f func(*admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error)) *MockEventListerProjectEventsCall {
+func (c *MockEventListerProjectEventsCall) Do(f func(*admin.ListGroupEventsApiParams) (*admin.GroupPaginatedEvent, error)) *MockEventListerProjectEventsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockEventListerProjectEventsCall) DoAndReturn(f func(*admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error)) *MockEventListerProjectEventsCall {
+func (c *MockEventListerProjectEventsCall) DoAndReturn(f func(*admin.ListGroupEventsApiParams) (*admin.GroupPaginatedEvent, error)) *MockEventListerProjectEventsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

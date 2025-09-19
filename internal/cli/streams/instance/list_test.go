@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -39,7 +39,7 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	listOpts.ProjectID = "list-project-id"
 
-	listParams := new(atlasv2.ListStreamInstancesApiParams)
+	listParams := new(atlasv2.ListStreamWorkspacesApiParams)
 	listParams.ItemsPerPage = &listOpts.ItemsPerPage
 	listParams.GroupId = listOpts.ProjectID
 	listParams.PageNum = &listOpts.PageNum

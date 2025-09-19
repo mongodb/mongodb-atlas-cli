@@ -15,25 +15,25 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // SearchNodes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchNodes(projectID, clusterName string) (*atlasv2.ApiSearchDeploymentResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.GetClusterSearchDeployment(s.ctx, projectID, clusterName).Execute()
 	return result, err
 }
 func (s *Store) CreateSearchNodes(projectID, clusterName string, spec *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.CreateClusterSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
 	return result, err
 }
 
 func (s *Store) UpdateSearchNodes(projectID, clusterName string, spec *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.UpdateClusterSearchDeployment(s.ctx, projectID, clusterName, spec).Execute()
 	return result, err
 }
 
 func (s *Store) DeleteSearchNodes(projectID, clusterName string) error {
-	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteClusterSearchDeployment(s.ctx, projectID, clusterName).Execute()
 	return err
 }

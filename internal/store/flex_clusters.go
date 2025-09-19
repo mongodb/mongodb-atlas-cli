@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // ListFlexClusters encapsulate the logic to manage different cloud providers.
@@ -67,7 +67,7 @@ func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate2
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.UpgradeFlexCluster(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.TenantUpgrade(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }
 

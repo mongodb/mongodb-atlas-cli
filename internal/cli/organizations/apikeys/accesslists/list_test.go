@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20250312006/admin"
+	"go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -32,7 +32,7 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	listOpts := opts.NewAtlasListOptions()
 
-	params := &admin.ListApiKeyAccessListsEntriesApiParams{
+	params := &admin.ListOrgAccessEntriesApiParams{
 		OrgId:        opts.OrgID,
 		ApiUserId:    opts.id,
 		PageNum:      pointer.Get(listOpts.PageNum),

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312006/admin"
+	"go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range valueOrEmptySlice .Results}}
@@ -34,7 +34,7 @@ const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range valueOrEmptySlice 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListLister
 
 type OrganizationAPIKeyAccessListLister interface {
-	OrganizationAPIKeyAccessLists(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+	OrganizationAPIKeyAccessLists(*admin.ListOrgAccessEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
 }
 
 type ListOpts struct {
@@ -55,7 +55,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 
 func (opts *ListOpts) Run() error {
 	listOpts := opts.NewAtlasListOptions()
-	params := &admin.ListApiKeyAccessListsEntriesApiParams{
+	params := &admin.ListOrgAccessEntriesApiParams{
 		OrgId:        opts.ConfigOrgID(),
 		ApiUserId:    opts.id,
 		PageNum:      &listOpts.PageNum,

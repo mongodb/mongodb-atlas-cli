@@ -15,15 +15,15 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 func (s *Store) Auditing(projectID string) (*atlasv2.AuditLog, error) {
-	result, _, err := s.clientv2.AuditingApi.GetAuditingConfiguration(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.AuditingApi.GetGroupAuditLog(s.ctx, projectID).Execute()
 	return result, err
 }
 
 func (s *Store) UpdateAuditingConfig(projectID string, r *atlasv2.AuditLog) (*atlasv2.AuditLog, error) {
-	result, _, err := s.clientv2.AuditingApi.UpdateAuditingConfiguration(s.ctx, projectID, r).Execute()
+	result, _, err := s.clientv2.AuditingApi.UpdateAuditLog(s.ctx, projectID, r).Execute()
 	return result, err
 }

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
@@ -34,7 +34,7 @@ const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=projects . ProjectCreator
 
 type ProjectCreator interface {
-	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
+	CreateProject(*atlasv2.CreateGroupApiParams) (*atlasv2.Group, error)
 }
 
 type CreateOpts struct {
@@ -119,8 +119,8 @@ func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	return nil
 }
 
-func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateProjectApiParams {
-	return &atlasv2.CreateProjectApiParams{
+func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateGroupApiParams {
+	return &atlasv2.CreateGroupApiParams{
 		ProjectOwnerId: &opts.projectOwnerID,
 		Group:          opts.newCreateProjectGroup(),
 	}

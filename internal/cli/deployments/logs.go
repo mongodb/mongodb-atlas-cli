@@ -34,13 +34,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=logs_mock_test.go -package=deployments . LogsDownloader
 
 type LogsDownloader interface {
-	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
+	DownloadLog(*atlasv2.DownloadClusterLogApiParams) (io.ReadCloser, error)
 }
 
 type DownloadOpts struct {
@@ -153,9 +153,9 @@ func (opts *DownloadOpts) downloadLogFile() error {
 	return nil
 }
 
-func (opts *DownloadOpts) newHostLogsParams() *atlasv2.GetHostLogsApiParams {
+func (opts *DownloadOpts) newHostLogsParams() *atlasv2.DownloadClusterLogApiParams {
 	fileBaseName := strings.TrimSuffix(opts.Name, filepath.Ext(opts.Name))
-	params := &atlasv2.GetHostLogsApiParams{
+	params := &atlasv2.DownloadClusterLogApiParams{
 		GroupId:  opts.ConfigProjectID(),
 		HostName: opts.Host,
 		LogName:  fileBaseName,

@@ -15,29 +15,29 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // Organizations encapsulate the logic to manage different cloud providers.
-func (s *Store) Organizations(params *atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationsWithParams(s.ctx, params).Execute()
+func (s *Store) Organizations(params *atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrgsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Organization encapsulate the logic to manage different cloud providers.
 func (s *Store) Organization(id string) (*atlasv2.AtlasOrganization, error) {
-	result, _, err := s.clientv2.OrganizationsApi.GetOrganization(s.ctx, id).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.GetOrg(s.ctx, id).Execute()
 	return result, err
 }
 
 // CreateAtlasOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganization(s.ctx, o).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrg(s.ctx, o).Execute()
 	return result, err
 }
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
-	_, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
+	_, err := s.clientv2.OrganizationsApi.DeleteOrg(s.ctx, id).Execute()
 	return err
 }

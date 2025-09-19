@@ -16,7 +16,7 @@ package store
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
@@ -51,7 +51,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDa
 
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
 func (s *Store) DBUserCertificates(projectID, username string, opts *ListOptions) (*atlasv2.PaginatedUserCert, error) {
-	res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
+	res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCerts(s.ctx, projectID, username)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -64,6 +64,6 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 	userCert := &atlasv2.UserCert{
 		MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 	}
-	cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCertificate(s.ctx, projectID, username, userCert).Execute()
+	cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCert(s.ctx, projectID, username, userCert).Execute()
 	return cert, err
 }

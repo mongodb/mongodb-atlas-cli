@@ -15,12 +15,12 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlasv2.TeamResponse, error) {
-	result, _, err := s.clientv2.TeamsApi.GetTeamById(s.ctx, orgID, teamID).Execute()
+	result, _, err := s.clientv2.TeamsApi.GetOrgTeam(s.ctx, orgID, teamID).Execute()
 	return result, err
 }
 
@@ -32,7 +32,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error
 
 // Teams encapsulates the logic to manage different cloud providers.
 func (s *Store) Teams(orgID string, opts *ListOptions) (*atlasv2.PaginatedTeam, error) {
-	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
+	res := s.clientv2.TeamsApi.ListOrgTeams(s.ctx, orgID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -41,35 +41,35 @@ func (s *Store) Teams(orgID string, opts *ListOptions) (*atlasv2.PaginatedTeam, 
 }
 
 func (s *Store) CreateTeam(orgID string, team *atlasv2.Team) (*atlasv2.Team, error) {
-	result, _, err := s.clientv2.TeamsApi.CreateTeam(s.ctx, orgID, team).Execute()
+	result, _, err := s.clientv2.TeamsApi.CreateOrgTeam(s.ctx, orgID, team).Execute()
 	return result, err
 }
 
 func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error) {
-	result, _, err := s.clientv2.TeamsApi.RenameTeam(s.ctx, orgID, teamID, team).Execute()
+	result, _, err := s.clientv2.TeamsApi.RenameOrgTeam(s.ctx, orgID, teamID, team).Execute()
 	return result, err
 }
 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
-	_, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
+	_, err := s.clientv2.TeamsApi.DeleteOrgTeam(s.ctx, orgID, teamID).Execute()
 	return err
 }
 
 // AddUsersToTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) AddUsersToTeam(orgID, teamID string, users []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error) {
-	result, _, err := s.clientv2.TeamsApi.AddTeamUser(s.ctx, orgID, teamID, &users).Execute()
+	result, _, err := s.clientv2.TeamsApi.AddTeamUsers(s.ctx, orgID, teamID, &users).Execute()
 	return result, err
 }
 
 // RemoveUserFromTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) RemoveUserFromTeam(orgID, teamID, userID string) error {
-	_, err := s.clientv2.TeamsApi.RemoveTeamUser(s.ctx, orgID, teamID, userID).Execute()
+	_, err := s.clientv2.TeamsApi.RemoveUserFromTeam(s.ctx, orgID, teamID, userID).Execute()
 	return err
 }
 
 // UpdateProjectTeamRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProjectTeamRoles(projectID, teamID string, team *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.UpdateTeamRoles(s.ctx, projectID, teamID, team).Execute()
+	result, _, err := s.clientv2.TeamsApi.UpdateGroupTeam(s.ctx, projectID, teamID, team).Execute()
 	return result, err
 }

@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -47,7 +47,7 @@ func TestDownloadOpts_Run(t *testing.T) {
 	downloadOpts.ProjectID = projectID
 	downloadOpts.tenantName = tenantName
 
-	downloadParams := new(atlasv2.DownloadStreamTenantAuditLogsApiParams)
+	downloadParams := new(atlasv2.DownloadAuditLogsApiParams)
 	downloadParams.EndDate = nil
 	downloadParams.StartDate = nil
 	downloadParams.GroupId = projectID

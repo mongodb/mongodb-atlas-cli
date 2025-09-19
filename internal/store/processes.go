@@ -15,17 +15,17 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // Process encapsulate the logic to manage different cloud providers.
-func (s *Store) Process(params *atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetAtlasProcessWithParams(s.ctx, params).Execute()
+func (s *Store) Process(params *atlasv2.GetGroupProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetGroupProcessWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
-func (s *Store) Processes(params *atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.ListAtlasProcessesWithParams(s.ctx, params).Execute()
+func (s *Store) Processes(params *atlasv2.ListGroupProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
+	result, _, err := s.clientv2.MonitoringAndLogsApi.ListGroupProcessesWithParams(s.ctx, params).Execute()
 	return result, err
 }

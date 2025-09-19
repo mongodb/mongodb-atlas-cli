@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312006/admin"
+	"go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const createTemplate = "Created new access list entry(s).\n"
@@ -33,7 +33,7 @@ const createTemplate = "Created new access list entry(s).\n"
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListCreator
 
 type OrganizationAPIKeyAccessListCreator interface {
-	CreateOrganizationAPIKeyAccessList(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+	CreateOrganizationAPIKeyAccessList(*admin.CreateOrgAccessEntryApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
 }
 
 type CreateOpts struct {
@@ -80,7 +80,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	params := &admin.CreateApiKeyAccessListApiParams{
+	params := &admin.CreateOrgAccessEntryApiParams{
 		OrgId:                 opts.ConfigOrgID(),
 		ApiUserId:             opts.apyKey,
 		UserAccessListRequest: req,

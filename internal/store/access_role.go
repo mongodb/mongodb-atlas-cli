@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
@@ -23,24 +23,24 @@ func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv
 	req := atlasv2.CloudProviderAccessRoleRequest{
 		ProviderName: provider,
 	}
-	result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID, &req).Execute()
+	result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccess(s.ctx, groupID, &req).Execute()
 	return result, err
 }
 
 // CloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProviderAccessRoles, error) {
-	result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccessRoles(s.ctx, groupID).Execute()
+	result, _, err := s.clientv2.CloudProviderAccessApi.ListCloudProviderAccess(s.ctx, groupID).Execute()
 	return result, err
 }
 
 // DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
 func (s *Store) DeauthorizeCloudProviderAccessRoles(groupID string, cloudProvider string, roleID string) error {
-	_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRole(s.ctx, groupID, cloudProvider, roleID).Execute()
+	_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeProviderAccessRole(s.ctx, groupID, cloudProvider, roleID).Execute()
 	return err
 }
 
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlasv2.CloudProviderAccessRoleRequestUpdate) (*atlasv2.CloudProviderAccessRole, error) {
-	result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, req).Execute()
+	result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeProviderAccessRole(s.ctx, groupID, roleID, req).Execute()
 	return result, err
 }

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
@@ -33,7 +33,7 @@ const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=processes . ProcessDescriber
 
 type ProcessDescriber interface {
-	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)
+	Process(*atlasv2.GetGroupProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)
 }
 
 type DescribeOpts struct {
@@ -63,8 +63,8 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func newProcessParams(projectID string, processID string) *atlasv2.GetAtlasProcessApiParams {
-	return &atlasv2.GetAtlasProcessApiParams{
+func newProcessParams(projectID string, processID string) *atlasv2.GetGroupProcessApiParams {
+	return &atlasv2.GetGroupProcessApiParams{
 		GroupId:   projectID,
 		ProcessId: processID,
 	}

@@ -12,7 +12,7 @@ package instance
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312007/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockStreamsLister) EXPECT() *MockStreamsListerMockRecorder {
 }
 
 // ProjectStreams mocks base method.
-func (m *MockStreamsLister) ProjectStreams(arg0 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
+func (m *MockStreamsLister) ProjectStreams(arg0 *admin.ListStreamWorkspacesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectStreams", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedApiStreamsTenant)
@@ -68,13 +68,13 @@ func (c *MockStreamsListerProjectStreamsCall) Return(arg0 *admin.PaginatedApiStr
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockStreamsListerProjectStreamsCall) Do(f func(*admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error)) *MockStreamsListerProjectStreamsCall {
+func (c *MockStreamsListerProjectStreamsCall) Do(f func(*admin.ListStreamWorkspacesApiParams) (*admin.PaginatedApiStreamsTenant, error)) *MockStreamsListerProjectStreamsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockStreamsListerProjectStreamsCall) DoAndReturn(f func(*admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error)) *MockStreamsListerProjectStreamsCall {
+func (c *MockStreamsListerProjectStreamsCall) DoAndReturn(f func(*admin.ListStreamWorkspacesApiParams) (*admin.PaginatedApiStreamsTenant, error)) *MockStreamsListerProjectStreamsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

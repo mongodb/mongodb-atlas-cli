@@ -15,30 +15,30 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // CreateIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateIntegration(projectID, integrationType string, integration *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateThirdPartyIntegration(s.ctx,
+	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.CreateGroupIntegration(s.ctx,
 		integrationType, projectID, integration).Execute()
 	return resp, err
 }
 
 // Integrations encapsulates the logic to manage different cloud providers.
 func (s *Store) Integrations(projectID string) (*atlasv2.PaginatedIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.ListThirdPartyIntegrations(s.ctx, projectID).Execute()
+	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.ListGroupIntegrations(s.ctx, projectID).Execute()
 	return resp, err
 }
 
 // DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
-	_, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
+	_, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteGroupIntegration(s.ctx, integrationType, projectID).Execute()
 	return err
 }
 
 // Integration encapsulates the logic to manage different cloud providers.
 func (s *Store) Integration(projectID, integrationType string) (*atlasv2.ThirdPartyIntegration, error) {
-	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.GetThirdPartyIntegration(s.ctx, projectID, integrationType).Execute()
+	resp, _, err := s.clientv2.ThirdPartyIntegrationsApi.GetGroupIntegration(s.ctx, projectID, integrationType).Execute()
 	return resp, err
 }

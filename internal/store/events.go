@@ -15,17 +15,17 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312006/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error) {
-	result, _, err := s.clientv2.EventsApi.ListProjectEventsWithParams(s.ctx, opts).Execute()
+func (s *Store) ProjectEvents(opts *atlasv2.ListGroupEventsApiParams) (*atlasv2.GroupPaginatedEvent, error) {
+	result, _, err := s.clientv2.EventsApi.ListGroupEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error) {
-	result, _, err := s.clientv2.EventsApi.ListOrganizationEventsWithParams(s.ctx, opts).Execute()
+func (s *Store) OrganizationEvents(opts *atlasv2.ListOrgEventsApiParams) (*atlasv2.OrgPaginatedEvent, error) {
+	result, _, err := s.clientv2.EventsApi.ListOrgEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }

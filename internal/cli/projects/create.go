@@ -34,7 +34,7 @@ const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=projects . ProjectCreator
 
 type ProjectCreator interface {
-	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
+	CreateProject(*atlasv2.CreateGroupApiParams) (*atlasv2.Group, error)
 }
 
 type CreateOpts struct {
@@ -119,8 +119,8 @@ func (opts *CreateOpts) newRegionUsageRestrictions() *string {
 	return nil
 }
 
-func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateProjectApiParams {
-	return &atlasv2.CreateProjectApiParams{
+func (opts *CreateOpts) newCreateProjectOptions() *atlasv2.CreateGroupApiParams {
+	return &atlasv2.CreateGroupApiParams{
 		ProjectOwnerId: &opts.projectOwnerID,
 		Group:          opts.newCreateProjectGroup(),
 	}

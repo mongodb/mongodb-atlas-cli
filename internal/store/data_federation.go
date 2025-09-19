@@ -24,38 +24,38 @@ import (
 
 // DataFederationList encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationList(projectID string) ([]atlasv2.DataLakeTenant, error) {
-	req := s.clientv2.DataFederationApi.ListFederatedDatabases(s.ctx, projectID)
+	req := s.clientv2.DataFederationApi.ListDataFederation(s.ctx, projectID)
 	result, _, err := req.Execute()
 	return result, err
 }
 
 // DataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederation(projectID, id string) (*atlasv2.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.GetFederatedDatabase(s.ctx, projectID, id).Execute()
+	result, _, err := s.clientv2.DataFederationApi.GetDataFederation(s.ctx, projectID, id).Execute()
 	return result, err
 }
 
 // CreateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateDataFederation(projectID string, opts *atlasv2.DataLakeTenant) (*atlasv2.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.CreateFederatedDatabase(s.ctx, projectID, opts).SkipRoleValidation(false).Execute()
+	result, _, err := s.clientv2.DataFederationApi.CreateDataFederation(s.ctx, projectID, opts).SkipRoleValidation(false).Execute()
 	return result, err
 }
 
 // UpdateDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateDataFederation(projectID, id string, opts *atlasv2.DataLakeTenant) (*atlasv2.DataLakeTenant, error) {
-	result, _, err := s.clientv2.DataFederationApi.UpdateFederatedDatabase(s.ctx, projectID, id, opts).SkipRoleValidation(false).Execute()
+	result, _, err := s.clientv2.DataFederationApi.UpdateDataFederation(s.ctx, projectID, id, opts).SkipRoleValidation(false).Execute()
 	return result, err
 }
 
 // DeleteDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederation(projectID, id string) error {
-	_, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteDataFederation(s.ctx, projectID, id).Execute()
 	return err
 }
 
 // DataFederationLogs encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationLogs(projectID, id string, startDate, endDate int64) (io.ReadCloser, error) {
-	req := s.clientv2.DataFederationApi.DownloadFederatedDatabaseQueryLogs(s.ctx, projectID, id)
+	req := s.clientv2.DataFederationApi.DownloadFederationQueryLogs(s.ctx, projectID, id)
 	if startDate != 0 {
 		req = req.StartDate(startDate)
 	}

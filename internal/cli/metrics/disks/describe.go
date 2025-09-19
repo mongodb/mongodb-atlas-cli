@@ -34,7 +34,7 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=disks . ProcessDiskMeasurementsLister
 
 type ProcessDiskMeasurementsLister interface {
-	ProcessDiskMeasurements(*atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
+	ProcessDiskMeasurements(*atlasv2.GetProcessDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
 }
 
 type DescribeOpts struct {
@@ -56,8 +56,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DescribeOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetDiskMeasurementsApiParams {
-	p := &atlasv2.GetDiskMeasurementsApiParams{
+func (opts *DescribeOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetProcessDiskMeasurementsApiParams {
+	p := &atlasv2.GetProcessDiskMeasurementsApiParams{
 		GroupId:       groupID,
 		ProcessId:     processID,
 		PartitionName: partitionName,

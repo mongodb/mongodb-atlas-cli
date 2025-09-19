@@ -27,7 +27,7 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigr
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateMigration(s.ctx, groupID, liveMigration).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateLiveMigrations(s.ctx, groupID, liveMigration).Execute()
 	return result, err
 }
 
@@ -45,6 +45,6 @@ func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.L
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.GetValidationStatus(context.Background(), groupID, liveMigrationID).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceApi.GetMigrationValidateStatus(context.Background(), groupID, liveMigrationID).Execute()
 	return result, err
 }

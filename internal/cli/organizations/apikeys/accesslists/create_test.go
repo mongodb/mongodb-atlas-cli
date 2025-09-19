@@ -33,7 +33,7 @@ func TestCreate_Run(t *testing.T) {
 
 	r, err := createOpts.newAccessListAPIKeysReq()
 
-	params := &admin.CreateApiKeyAccessListApiParams{
+	params := &admin.CreateOrgAccessEntryApiParams{
 		OrgId:                 createOpts.OrgID,
 		ApiUserId:             createOpts.apyKey,
 		UserAccessListRequest: r,

@@ -32,7 +32,7 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	listOpts := opts.NewAtlasListOptions()
 
-	params := &admin.ListApiKeyAccessListsEntriesApiParams{
+	params := &admin.ListOrgAccessEntriesApiParams{
 		OrgId:        opts.OrgID,
 		ApiUserId:    opts.id,
 		PageNum:      pointer.Get(listOpts.PageNum),

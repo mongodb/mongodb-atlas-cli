@@ -31,19 +31,19 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 		entry[i] = *ptr
 	}
 
-	result, _, err := s.clientv2.ProjectIPAccessListApi.CreateProjectIpAccessList(s.ctx, entries[0].GetGroupId(), &entry).Execute()
+	result, _, err := s.clientv2.ProjectIPAccessListApi.CreateAccessListEntry(s.ctx, entries[0].GetGroupId(), &entry).Execute()
 	return result, err
 }
 
 // DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
-	_, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
+	_, err := s.clientv2.ProjectIPAccessListApi.DeleteAccessListEntry(s.ctx, projectID, entry).Execute()
 	return err
 }
 
 // ProjectIPAccessLists encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectIPAccessLists(projectID string, opts *ListOptions) (*atlasv2.PaginatedNetworkAccess, error) {
-	res := s.clientv2.ProjectIPAccessListApi.ListProjectIpAccessLists(s.ctx, projectID)
+	res := s.clientv2.ProjectIPAccessListApi.ListAccessListEntries(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -53,6 +53,6 @@ func (s *Store) ProjectIPAccessLists(projectID string, opts *ListOptions) (*atla
 
 // IPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) IPAccessList(projectID, name string) (*atlasv2.NetworkPermissionEntry, error) {
-	result, _, err := s.clientv2.ProjectIPAccessListApi.GetProjectIpList(s.ctx, projectID, name).Execute()
+	result, _, err := s.clientv2.ProjectIPAccessListApi.GetAccessListEntry(s.ctx, projectID, name).Execute()
 	return result, err
 }

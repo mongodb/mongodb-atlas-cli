@@ -63,7 +63,7 @@ func (opts *AutoCompleteOpts) AutocompleteProcesses() cli.AutoFunc {
 }
 
 func (opts *AutoCompleteOpts) processSuggestion(toComplete string) ([]string, error) {
-	processesList := &atlasv2.ListAtlasProcessesApiParams{
+	processesList := &atlasv2.ListGroupProcessesApiParams{
 		GroupId: opts.ConfigProjectID(),
 	}
 	result, err := opts.store.Processes(processesList)

@@ -72,7 +72,7 @@ func (mr *MockProjectOrgsListerMockRecorder) Organization(id any) *gomock.Call {
 }
 
 // Organizations mocks base method.
-func (m *MockProjectOrgsLister) Organizations(arg0 *admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error) {
+func (m *MockProjectOrgsLister) Organizations(arg0 *admin.ListOrgsApiParams) (*admin.PaginatedOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedOrganization)

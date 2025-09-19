@@ -42,7 +42,7 @@ func (m *MockRestoreJobsLister) EXPECT() *MockRestoreJobsListerMockRecorder {
 }
 
 // RestoreFlexClusterJobs mocks base method.
-func (m *MockRestoreJobsLister) RestoreFlexClusterJobs(args *admin.ListFlexBackupRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error) {
+func (m *MockRestoreJobsLister) RestoreFlexClusterJobs(args *admin.ListFlexRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreFlexClusterJobs", args)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113)
@@ -69,13 +69,13 @@ func (c *MockRestoreJobsListerRestoreFlexClusterJobsCall) Return(arg0 *admin.Pag
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockRestoreJobsListerRestoreFlexClusterJobsCall) Do(f func(*admin.ListFlexBackupRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)) *MockRestoreJobsListerRestoreFlexClusterJobsCall {
+func (c *MockRestoreJobsListerRestoreFlexClusterJobsCall) Do(f func(*admin.ListFlexRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)) *MockRestoreJobsListerRestoreFlexClusterJobsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockRestoreJobsListerRestoreFlexClusterJobsCall) DoAndReturn(f func(*admin.ListFlexBackupRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)) *MockRestoreJobsListerRestoreFlexClusterJobsCall {
+func (c *MockRestoreJobsListerRestoreFlexClusterJobsCall) DoAndReturn(f func(*admin.ListFlexRestoreJobsApiParams) (*admin.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)) *MockRestoreJobsListerRestoreFlexClusterJobsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -67,7 +67,7 @@ func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate2
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.UpgradeFlexCluster(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.TenantUpgrade(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }
 

@@ -50,6 +50,6 @@ func (s *Store) UpdateIdentityProvider(opts *atlasv2.UpdateIdentityProviderApiPa
 
 // RevokeJwksFromIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) RevokeJwksFromIdentityProvider(federationSettingsID string, identityProviderID string) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.RevokeJwksFromIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationApi.RevokeIdentityProviderJwks(s.ctx, federationSettingsID, identityProviderID).Execute()
 	return err
 }

@@ -31,7 +31,7 @@ type ContainersListOptions struct {
 
 // PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).
+	result, _, err := s.clientv2.NetworkPeeringApi.ListGroupPeers(s.ctx, projectID).
 		ItemsPerPage(opts.ItemsPerPage).
 		PageNum(opts.PageNum).
 		ProviderName(opts.ProviderName).Execute()
@@ -43,25 +43,25 @@ func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions
 
 // PeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnection(projectID, peerID string) (*atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.GetPeeringConnection(s.ctx, projectID, peerID).Execute()
+	result, _, err := s.clientv2.NetworkPeeringApi.GetGroupPeer(s.ctx, projectID, peerID).Execute()
 	return result, err
 }
 
 // DeletePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePeeringConnection(projectID, peerID string) error {
-	_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringConnection(s.ctx, projectID, peerID).Execute()
+	_, _, err := s.clientv2.NetworkPeeringApi.DeleteGroupPeer(s.ctx, projectID, peerID).Execute()
 	return err
 }
 
 // CreatePeeringConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetworkPeeringConnectionSettings) (*atlasv2.BaseNetworkPeeringConnectionSettings, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringConnection(s.ctx, projectID, peer).Execute()
+	result, _, err := s.clientv2.NetworkPeeringApi.CreateGroupPeer(s.ctx, projectID, peer).Execute()
 	return result, err
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
 func (s *Store) ContainersByProvider(projectID string, opts *ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
-	res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
+	res := s.clientv2.NetworkPeeringApi.ListGroupContainers(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount).ProviderName(opts.ProviderName)
 	}
@@ -76,7 +76,7 @@ const maxPerPage = 100
 
 // AzureContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+	result, _, err := s.clientv2.NetworkPeeringApi.ListGroupContainers(s.ctx, projectID).
 		PageNum(0).
 		ItemsPerPage(maxPerPage).
 		ProviderName("Azure").
@@ -89,7 +89,7 @@ func (s *Store) AzureContainers(projectID string) ([]atlasv2.CloudProviderContai
 
 // AWSContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+	result, _, err := s.clientv2.NetworkPeeringApi.ListGroupContainers(s.ctx, projectID).
 		PageNum(0).
 		ItemsPerPage(maxPerPage).
 		ProviderName("AWS").
@@ -103,7 +103,7 @@ func (s *Store) AWSContainers(projectID string) ([]atlasv2.CloudProviderContaine
 
 // GCPContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContainer, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID).
+	result, _, err := s.clientv2.NetworkPeeringApi.ListGroupContainers(s.ctx, projectID).
 		PageNum(0).
 		ItemsPerPage(maxPerPage).
 		ProviderName("GCP").
@@ -116,7 +116,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 
 // AllContainers encapsulates the logic to manage different cloud providers.
 func (s *Store) AllContainers(projectID string, opts *ListOptions) ([]atlasv2.CloudProviderContainer, error) {
-	res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
+	res := s.clientv2.NetworkPeeringApi.ListGroupContainerAll(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -129,12 +129,12 @@ func (s *Store) AllContainers(projectID string, opts *ListOptions) ([]atlasv2.Cl
 
 // DeleteContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteContainer(projectID, containerID string) error {
-	_, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
+	_, err := s.clientv2.NetworkPeeringApi.DeleteGroupContainer(s.ctx, projectID, containerID).Execute()
 	return err
 }
 
 // CreateContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateContainer(projectID string, container *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error) {
-	result, _, err := s.clientv2.NetworkPeeringApi.CreatePeeringContainer(s.ctx, projectID, container).Execute()
+	result, _, err := s.clientv2.NetworkPeeringApi.CreateGroupContainer(s.ctx, projectID, container).Execute()
 	return result, err
 }

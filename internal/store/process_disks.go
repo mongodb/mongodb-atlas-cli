@@ -23,7 +23,7 @@ import (
 // ProcessDisks encapsulates the logic to manage different cloud providers.
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
 	processID := host + ":" + strconv.Itoa(port)
-	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
+	result, _, err := s.clientv2.MonitoringAndLogsApi.ListProcessDisks(s.ctx, groupID, processID).
 		ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount).Execute()
 	return result, err
 }

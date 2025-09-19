@@ -41,7 +41,7 @@ func (m *MockOrganizationLister) EXPECT() *MockOrganizationListerMockRecorder {
 }
 
 // Organizations mocks base method.
-func (m *MockOrganizationLister) Organizations(arg0 *admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error) {
+func (m *MockOrganizationLister) Organizations(arg0 *admin.ListOrgsApiParams) (*admin.PaginatedOrganization, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Organizations", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedOrganization)
@@ -68,13 +68,13 @@ func (c *MockOrganizationListerOrganizationsCall) Return(arg0 *admin.PaginatedOr
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockOrganizationListerOrganizationsCall) Do(f func(*admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error)) *MockOrganizationListerOrganizationsCall {
+func (c *MockOrganizationListerOrganizationsCall) Do(f func(*admin.ListOrgsApiParams) (*admin.PaginatedOrganization, error)) *MockOrganizationListerOrganizationsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockOrganizationListerOrganizationsCall) DoAndReturn(f func(*admin.ListOrganizationsApiParams) (*admin.PaginatedOrganization, error)) *MockOrganizationListerOrganizationsCall {
+func (c *MockOrganizationListerOrganizationsCall) DoAndReturn(f func(*admin.ListOrgsApiParams) (*admin.PaginatedOrganization, error)) *MockOrganizationListerOrganizationsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -31,7 +31,7 @@ import (
 
 type Lister interface {
 	Snapshots(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
-	FlexClusterSnapshots(*atlasv2.ListFlexBackupsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error)
+	FlexClusterSnapshots(*atlasv2.ListFlexBackupSnapshotsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error)
 }
 
 type ListOpts struct {
@@ -82,9 +82,9 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(snapshotsList)
 }
 
-func (opts *ListOpts) newListFlexBackupsAPIParams() *atlasv2.ListFlexBackupsApiParams {
+func (opts *ListOpts) newListFlexBackupsAPIParams() *atlasv2.ListFlexBackupSnapshotsApiParams {
 	includeCount := !opts.OmitCount
-	return &atlasv2.ListFlexBackupsApiParams{
+	return &atlasv2.ListFlexBackupSnapshotsApiParams{
 		GroupId:      opts.ConfigProjectID(),
 		Name:         opts.clusterName,
 		IncludeCount: &includeCount,

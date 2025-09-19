@@ -42,7 +42,7 @@ func (m *MockStreamsDownloader) EXPECT() *MockStreamsDownloaderMockRecorder {
 }
 
 // DownloadAuditLog mocks base method.
-func (m *MockStreamsDownloader) DownloadAuditLog(arg0 *admin.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error) {
+func (m *MockStreamsDownloader) DownloadAuditLog(arg0 *admin.DownloadAuditLogsApiParams) (io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadAuditLog", arg0)
 	ret0, _ := ret[0].(io.ReadCloser)
@@ -69,13 +69,13 @@ func (c *MockStreamsDownloaderDownloadAuditLogCall) Return(arg0 io.ReadCloser, a
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockStreamsDownloaderDownloadAuditLogCall) Do(f func(*admin.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)) *MockStreamsDownloaderDownloadAuditLogCall {
+func (c *MockStreamsDownloaderDownloadAuditLogCall) Do(f func(*admin.DownloadAuditLogsApiParams) (io.ReadCloser, error)) *MockStreamsDownloaderDownloadAuditLogCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockStreamsDownloaderDownloadAuditLogCall) DoAndReturn(f func(*admin.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)) *MockStreamsDownloaderDownloadAuditLogCall {
+func (c *MockStreamsDownloaderDownloadAuditLogCall) DoAndReturn(f func(*admin.DownloadAuditLogsApiParams) (io.ReadCloser, error)) *MockStreamsDownloaderDownloadAuditLogCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

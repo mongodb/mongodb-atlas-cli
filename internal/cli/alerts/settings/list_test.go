@@ -57,7 +57,7 @@ func TestConfigList_Run(t *testing.T) {
 		},
 	}
 
-	params := &atlasv2.ListAlertConfigurationsApiParams{
+	params := &atlasv2.ListAlertConfigsApiParams{
 		GroupId: listOpts.ProjectID,
 		PageNum: &listOpts.PageNum,
 	}

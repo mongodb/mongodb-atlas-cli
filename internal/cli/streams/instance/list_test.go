@@ -39,7 +39,7 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	listOpts.ProjectID = "list-project-id"
 
-	listParams := new(atlasv2.ListStreamInstancesApiParams)
+	listParams := new(atlasv2.ListStreamWorkspacesApiParams)
 	listParams.ItemsPerPage = &listOpts.ItemsPerPage
 	listParams.GroupId = listOpts.ProjectID
 	listParams.PageNum = &listOpts.PageNum

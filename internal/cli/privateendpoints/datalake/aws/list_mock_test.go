@@ -41,7 +41,7 @@ func (m *MockDataLakePrivateEndpointLister) EXPECT() *MockDataLakePrivateEndpoin
 }
 
 // DataLakePrivateEndpoints mocks base method.
-func (m *MockDataLakePrivateEndpointLister) DataLakePrivateEndpoints(arg0 *admin.ListDataFederationPrivateEndpointsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
+func (m *MockDataLakePrivateEndpointLister) DataLakePrivateEndpoints(arg0 *admin.ListPrivateEndpointIdsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataLakePrivateEndpoints", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedPrivateNetworkEndpointIdEntry)
@@ -68,13 +68,13 @@ func (c *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall) Return(a
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall) Do(f func(*admin.ListDataFederationPrivateEndpointsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)) *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall {
+func (c *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall) Do(f func(*admin.ListPrivateEndpointIdsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)) *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall) DoAndReturn(f func(*admin.ListDataFederationPrivateEndpointsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)) *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall {
+func (c *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall) DoAndReturn(f func(*admin.ListPrivateEndpointIdsApiParams) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)) *MockDataLakePrivateEndpointListerDataLakePrivateEndpointsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

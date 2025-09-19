@@ -41,7 +41,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		Processes(&atlasv2.ListAtlasProcessesApiParams{}).
+		Processes(&atlasv2.ListGroupProcessesApiParams{}).
 		Return(expected, nil).
 		Times(1)
 

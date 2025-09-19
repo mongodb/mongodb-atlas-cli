@@ -31,7 +31,7 @@ import (
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
-	RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
+	RestoreFlexClusterJobs(args *atlasv2.ListFlexRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
 }
 
 type ListOpts struct {
@@ -82,9 +82,9 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(restoreJobs)
 }
 
-func (opts *ListOpts) newListFlexBackupRestoreJobsAPIParams() *atlasv2.ListFlexBackupRestoreJobsApiParams {
+func (opts *ListOpts) newListFlexBackupRestoreJobsAPIParams() *atlasv2.ListFlexRestoreJobsApiParams {
 	includeCount := !opts.OmitCount
-	return &atlasv2.ListFlexBackupRestoreJobsApiParams{
+	return &atlasv2.ListFlexRestoreJobsApiParams{
 		GroupId:      opts.ConfigProjectID(),
 		Name:         opts.clusterName,
 		IncludeCount: &includeCount,

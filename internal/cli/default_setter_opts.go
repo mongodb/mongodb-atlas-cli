@@ -38,7 +38,7 @@ type ProjectOrgsLister interface {
 	Project(id string) (*atlasv2.Group, error)
 	Projects(*store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 	Organization(id string) (*atlasv2.AtlasOrganization, error)
-	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)
+	Organizations(*atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error)
 	GetOrgProjects(string, *store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
 }
 
@@ -112,7 +112,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results []atlasv2.AtlasOrgan
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
-	pagination := &atlasv2.ListOrganizationsApiParams{Name: &filter, ItemsPerPage: pointer.Get(resultsLimit)}
+	pagination := &atlasv2.ListOrgsApiParams{Name: &filter, ItemsPerPage: pointer.Get(resultsLimit)}
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
 		if atlasErr, ok := atlasv2.AsError(err); ok && atlasErr.GetError() == 404 {

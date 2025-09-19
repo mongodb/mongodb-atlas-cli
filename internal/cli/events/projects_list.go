@@ -31,7 +31,7 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=projects_list_mock_test.go -package=events . ProjectEventLister
 
 type ProjectEventLister interface {
-	ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)
+	ProjectEvents(opts *atlasv2.ListGroupEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)
 }
 
 type projectListOpts struct {
@@ -63,13 +63,13 @@ func (opts *projectListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *projectListOpts) NewProjectListOptions() (*atlasv2.ListProjectEventsApiParams, error) {
+func (opts *projectListOpts) NewProjectListOptions() (*atlasv2.ListGroupEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := &atlasv2.ListProjectEventsApiParams{
+	p := &atlasv2.ListGroupEventsApiParams{
 		GroupId:   opts.ConfigProjectID(),
 		EventType: eventType,
 	}

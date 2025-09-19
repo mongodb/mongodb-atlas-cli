@@ -41,7 +41,7 @@ func (m *MockOrganizationInvitationLister) EXPECT() *MockOrganizationInvitationL
 }
 
 // OrganizationInvitations mocks base method.
-func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 *admin.ListOrganizationInvitationsApiParams) ([]admin.OrganizationInvitation, error) {
+func (m *MockOrganizationInvitationLister) OrganizationInvitations(arg0 *admin.ListOrgInvitesApiParams) ([]admin.OrganizationInvitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationInvitations", arg0)
 	ret0, _ := ret[0].([]admin.OrganizationInvitation)
@@ -68,13 +68,13 @@ func (c *MockOrganizationInvitationListerOrganizationInvitationsCall) Return(arg
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockOrganizationInvitationListerOrganizationInvitationsCall) Do(f func(*admin.ListOrganizationInvitationsApiParams) ([]admin.OrganizationInvitation, error)) *MockOrganizationInvitationListerOrganizationInvitationsCall {
+func (c *MockOrganizationInvitationListerOrganizationInvitationsCall) Do(f func(*admin.ListOrgInvitesApiParams) ([]admin.OrganizationInvitation, error)) *MockOrganizationInvitationListerOrganizationInvitationsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockOrganizationInvitationListerOrganizationInvitationsCall) DoAndReturn(f func(*admin.ListOrganizationInvitationsApiParams) ([]admin.OrganizationInvitation, error)) *MockOrganizationInvitationListerOrganizationInvitationsCall {
+func (c *MockOrganizationInvitationListerOrganizationInvitationsCall) DoAndReturn(f func(*admin.ListOrgInvitesApiParams) ([]admin.OrganizationInvitation, error)) *MockOrganizationInvitationListerOrganizationInvitationsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

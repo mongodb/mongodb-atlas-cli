@@ -19,20 +19,20 @@ import (
 )
 
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationInvitations(params *atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error) {
-	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitationsWithParams(s.ctx, params).Execute()
+func (s *Store) OrganizationInvitations(params *atlasv2.ListOrgInvitesApiParams) ([]atlasv2.OrganizationInvitation, error) {
+	result, _, err := s.clientv2.OrganizationsApi.ListOrgInvitesWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // OrganizationInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitation(orgID, invitationID string) (*atlasv2.OrganizationInvitation, error) {
-	result, _, err := s.clientv2.OrganizationsApi.GetOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.GetOrgInvite(s.ctx, orgID, invitationID).Execute()
 	return result, err
 }
 
 // DeleteInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteInvitation(orgID, invitationID string) error {
-	_, err := s.clientv2.OrganizationsApi.DeleteOrganizationInvitation(s.ctx, orgID, invitationID).Execute()
+	_, err := s.clientv2.OrganizationsApi.DeleteOrgInvite(s.ctx, orgID, invitationID).Execute()
 	return err
 }
 
@@ -44,18 +44,18 @@ func (s *Store) UpdateOrganizationInvitation(orgID, invitationID string, invitat
 			TeamIds: invitation.TeamIds,
 		}
 
-		result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitationById(s.ctx, orgID,
+		result, _, err := s.clientv2.OrganizationsApi.UpdateOrgInviteById(s.ctx, orgID,
 			invitationID, &invitationRequest).Execute()
 		return result, err
 	}
-	result, _, err := s.clientv2.OrganizationsApi.UpdateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.UpdateOrgInvites(s.ctx, orgID, invitation).Execute()
 
 	return result, err
 }
 
 // InviteUser encapsulates the logic to manage different cloud providers.
 func (s *Store) InviteUser(orgID string, invitation *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error) {
-	result, _, err := s.clientv2.OrganizationsApi.CreateOrganizationInvitation(s.ctx, orgID, invitation).Execute()
+	result, _, err := s.clientv2.OrganizationsApi.CreateOrgInvite(s.ctx, orgID, invitation).Execute()
 
 	return result, err
 }

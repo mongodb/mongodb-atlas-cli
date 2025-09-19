@@ -41,7 +41,7 @@ func (m *MockProjectInvitationLister) EXPECT() *MockProjectInvitationListerMockR
 }
 
 // ProjectInvitations mocks base method.
-func (m *MockProjectInvitationLister) ProjectInvitations(arg0 *admin.ListProjectInvitationsApiParams) ([]admin.GroupInvitation, error) {
+func (m *MockProjectInvitationLister) ProjectInvitations(arg0 *admin.ListGroupInvitesApiParams) ([]admin.GroupInvitation, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectInvitations", arg0)
 	ret0, _ := ret[0].([]admin.GroupInvitation)
@@ -68,13 +68,13 @@ func (c *MockProjectInvitationListerProjectInvitationsCall) Return(arg0 []admin.
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockProjectInvitationListerProjectInvitationsCall) Do(f func(*admin.ListProjectInvitationsApiParams) ([]admin.GroupInvitation, error)) *MockProjectInvitationListerProjectInvitationsCall {
+func (c *MockProjectInvitationListerProjectInvitationsCall) Do(f func(*admin.ListGroupInvitesApiParams) ([]admin.GroupInvitation, error)) *MockProjectInvitationListerProjectInvitationsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockProjectInvitationListerProjectInvitationsCall) DoAndReturn(f func(*admin.ListProjectInvitationsApiParams) ([]admin.GroupInvitation, error)) *MockProjectInvitationListerProjectInvitationsCall {
+func (c *MockProjectInvitationListerProjectInvitationsCall) DoAndReturn(f func(*admin.ListGroupInvitesApiParams) ([]admin.GroupInvitation, error)) *MockProjectInvitationListerProjectInvitationsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

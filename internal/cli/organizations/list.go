@@ -35,7 +35,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=organizations . OrganizationLister
 
 type OrganizationLister interface {
-	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)
+	Organizations(*atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error)
 }
 
 type ListOpts struct {
@@ -63,8 +63,8 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrganizationsApiParams {
-	params := &atlasv2.ListOrganizationsApiParams{
+func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrgsApiParams {
+	params := &atlasv2.ListOrgsApiParams{
 		Name: &opts.name,
 	}
 	if listOpt := opts.NewAtlasListOptions(); listOpt != nil {

@@ -41,7 +41,7 @@ func (m *MockPerformanceAdvisorNamespacesLister) EXPECT() *MockPerformanceAdviso
 }
 
 // PerformanceAdvisorNamespaces mocks base method.
-func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(opts *admin.ListSlowQueryNamespacesApiParams) (*admin.Namespaces, error) {
+func (m *MockPerformanceAdvisorNamespacesLister) PerformanceAdvisorNamespaces(opts *admin.ListPerformanceAdvisorNamespacesApiParams) (*admin.Namespaces, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PerformanceAdvisorNamespaces", opts)
 	ret0, _ := ret[0].(*admin.Namespaces)
@@ -68,13 +68,13 @@ func (c *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall)
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall) Do(f func(*admin.ListSlowQueryNamespacesApiParams) (*admin.Namespaces, error)) *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall {
+func (c *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall) Do(f func(*admin.ListPerformanceAdvisorNamespacesApiParams) (*admin.Namespaces, error)) *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall) DoAndReturn(f func(*admin.ListSlowQueryNamespacesApiParams) (*admin.Namespaces, error)) *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall {
+func (c *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall) DoAndReturn(f func(*admin.ListPerformanceAdvisorNamespacesApiParams) (*admin.Namespaces, error)) *MockPerformanceAdvisorNamespacesListerPerformanceAdvisorNamespacesCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -30,7 +30,7 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=instance . StreamsLister
 
 type StreamsLister interface {
-	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
+	ProjectStreams(*atlasv2.ListStreamWorkspacesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
 }
 
 type ListOpts struct {
@@ -47,7 +47,7 @@ const (
 )
 
 func (opts *ListOpts) Run() error {
-	listParams := new(atlasv2.ListStreamInstancesApiParams)
+	listParams := new(atlasv2.ListStreamWorkspacesApiParams)
 	listParams.ItemsPerPage = &opts.ItemsPerPage
 	listParams.GroupId = opts.ProjectID
 	listParams.PageNum = &opts.PageNum

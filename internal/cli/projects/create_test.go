@@ -43,7 +43,7 @@ func TestCreate_Run(t *testing.T) {
 		},
 	}
 	createOpts.OrgID = "5a0a1e7e0f2912c554080adc"
-	params := &atlasv2.CreateProjectApiParams{
+	params := &atlasv2.CreateGroupApiParams{
 		ProjectOwnerId: &opts.projectOwnerID,
 		Group:          createOpts.newCreateProjectGroup(),
 	}

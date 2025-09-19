@@ -41,7 +41,7 @@ func (m *MockOrganizationAPIKeyAccessListCreator) EXPECT() *MockOrganizationAPIK
 }
 
 // CreateOrganizationAPIKeyAccessList mocks base method.
-func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0 *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
+func (m *MockOrganizationAPIKeyAccessListCreator) CreateOrganizationAPIKeyAccessList(arg0 *admin.CreateOrgAccessEntryApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKeyAccessList", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedApiUserAccessListResponse)
@@ -68,13 +68,13 @@ func (c *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessLi
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall) Do(f func(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall {
+func (c *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall) Do(f func(*admin.CreateOrgAccessEntryApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall) DoAndReturn(f func(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall {
+func (c *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall) DoAndReturn(f func(*admin.CreateOrgAccessEntryApiParams) (*admin.PaginatedApiUserAccessListResponse, error)) *MockOrganizationAPIKeyAccessListCreatorCreateOrganizationAPIKeyAccessListCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

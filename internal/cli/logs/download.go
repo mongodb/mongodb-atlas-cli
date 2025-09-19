@@ -40,7 +40,7 @@ var errEmptyLog = errors.New("log is empty")
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=logs . Downloader
 
 type Downloader interface {
-	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
+	DownloadLog(*atlasv2.DownloadClusterLogApiParams) (io.ReadCloser, error)
 }
 
 type DownloadOpts struct {
@@ -132,9 +132,9 @@ func (opts *DownloadOpts) initDefaultOut() error {
 	return nil
 }
 
-func (opts *DownloadOpts) newHostLogsParams() *atlasv2.GetHostLogsApiParams {
+func (opts *DownloadOpts) newHostLogsParams() *atlasv2.DownloadClusterLogApiParams {
 	fileBaseName := strings.TrimSuffix(opts.name, filepath.Ext(opts.name))
-	params := &atlasv2.GetHostLogsApiParams{
+	params := &atlasv2.DownloadClusterLogApiParams{
 		GroupId:  opts.ConfigProjectID(),
 		HostName: opts.host,
 		LogName:  fileBaseName,

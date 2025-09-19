@@ -41,7 +41,7 @@ func (m *MockProcessMeasurementLister) EXPECT() *MockProcessMeasurementListerMoc
 }
 
 // ProcessMeasurements mocks base method.
-func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetHostMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error) {
+func (m *MockProcessMeasurementLister) ProcessMeasurements(arg0 *admin.GetProcessMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessMeasurements", arg0)
 	ret0, _ := ret[0].(*admin.ApiMeasurementsGeneralViewAtlas)
@@ -68,13 +68,13 @@ func (c *MockProcessMeasurementListerProcessMeasurementsCall) Return(arg0 *admin
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockProcessMeasurementListerProcessMeasurementsCall) Do(f func(*admin.GetHostMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessMeasurementListerProcessMeasurementsCall {
+func (c *MockProcessMeasurementListerProcessMeasurementsCall) Do(f func(*admin.GetProcessMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessMeasurementListerProcessMeasurementsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockProcessMeasurementListerProcessMeasurementsCall) DoAndReturn(f func(*admin.GetHostMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessMeasurementListerProcessMeasurementsCall {
+func (c *MockProcessMeasurementListerProcessMeasurementsCall) DoAndReturn(f func(*admin.GetProcessMeasurementsApiParams) (*admin.ApiMeasurementsGeneralViewAtlas, error)) *MockProcessMeasurementListerProcessMeasurementsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

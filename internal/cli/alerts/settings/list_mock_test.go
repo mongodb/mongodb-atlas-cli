@@ -41,7 +41,7 @@ func (m *MockAlertConfigurationLister) EXPECT() *MockAlertConfigurationListerMoc
 }
 
 // AlertConfigurations mocks base method.
-func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 *admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error) {
+func (m *MockAlertConfigurationLister) AlertConfigurations(arg0 *admin.ListAlertConfigsApiParams) (*admin.PaginatedAlertConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AlertConfigurations", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedAlertConfig)
@@ -68,13 +68,13 @@ func (c *MockAlertConfigurationListerAlertConfigurationsCall) Return(arg0 *admin
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockAlertConfigurationListerAlertConfigurationsCall) Do(f func(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)) *MockAlertConfigurationListerAlertConfigurationsCall {
+func (c *MockAlertConfigurationListerAlertConfigurationsCall) Do(f func(*admin.ListAlertConfigsApiParams) (*admin.PaginatedAlertConfig, error)) *MockAlertConfigurationListerAlertConfigurationsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockAlertConfigurationListerAlertConfigurationsCall) DoAndReturn(f func(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)) *MockAlertConfigurationListerAlertConfigurationsCall {
+func (c *MockAlertConfigurationListerAlertConfigurationsCall) DoAndReturn(f func(*admin.ListAlertConfigsApiParams) (*admin.PaginatedAlertConfig, error)) *MockAlertConfigurationListerAlertConfigurationsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

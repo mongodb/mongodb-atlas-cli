@@ -20,30 +20,30 @@ import (
 
 // SearchIndexesDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexesDeprecated(projectID, clusterName, dbName, collName string) ([]atlasv2.ClusterSearchIndex, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexesDeprecated(s.ctx, projectID, clusterName, collName, dbName).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.ListClusterFtsIndex(s.ctx, projectID, clusterName, collName, dbName).Execute()
 	return result, err
 }
 
 // CreateSearchIndexesDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexesDeprecated(projectID, clusterName string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, index).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.CreateClusterFtsIndex(s.ctx, projectID, clusterName, index).Execute()
 	return result, err
 }
 
 // SearchIndexDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexDeprecated(projectID, clusterName, indexID string) (*atlasv2.ClusterSearchIndex, error) {
-	index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
+	index, _, err := s.clientv2.AtlasSearchApi.GetClusterFtsIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return index, err
 }
 
 // UpdateSearchIndexesDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexesDeprecated(projectID, clusterName, indexID string, index *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID, index).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.UpdateClusterFtsIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
 	return result, err
 }
 
 // DeleteSearchIndexDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndexDeprecated(projectID, clusterName, indexID string) error {
-	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteClusterFtsIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return err
 }

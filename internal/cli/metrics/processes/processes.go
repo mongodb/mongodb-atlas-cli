@@ -34,7 +34,7 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=processes_mock_test.go -package=processes . ProcessMeasurementLister
 
 type ProcessMeasurementLister interface {
-	ProcessMeasurements(*atlasv2.GetHostMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
+	ProcessMeasurements(*atlasv2.GetProcessMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
 }
 
 type Opts struct {
@@ -55,8 +55,8 @@ func (opts *Opts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *Opts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetHostMeasurementsApiParams {
-	p := &atlasv2.GetHostMeasurementsApiParams{
+func (opts *Opts) NewProcessMeasurementsAPIParams(groupID string, processID string) *atlasv2.GetProcessMeasurementsApiParams {
+	p := &atlasv2.GetProcessMeasurementsApiParams{
 		GroupId:   groupID,
 		ProcessId: processID,
 	}

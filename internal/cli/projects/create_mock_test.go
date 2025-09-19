@@ -41,7 +41,7 @@ func (m *MockProjectCreator) EXPECT() *MockProjectCreatorMockRecorder {
 }
 
 // CreateProject mocks base method.
-func (m *MockProjectCreator) CreateProject(arg0 *admin.CreateProjectApiParams) (*admin.Group, error) {
+func (m *MockProjectCreator) CreateProject(arg0 *admin.CreateGroupApiParams) (*admin.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProject", arg0)
 	ret0, _ := ret[0].(*admin.Group)
@@ -68,13 +68,13 @@ func (c *MockProjectCreatorCreateProjectCall) Return(arg0 *admin.Group, arg1 err
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockProjectCreatorCreateProjectCall) Do(f func(*admin.CreateProjectApiParams) (*admin.Group, error)) *MockProjectCreatorCreateProjectCall {
+func (c *MockProjectCreatorCreateProjectCall) Do(f func(*admin.CreateGroupApiParams) (*admin.Group, error)) *MockProjectCreatorCreateProjectCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockProjectCreatorCreateProjectCall) DoAndReturn(f func(*admin.CreateProjectApiParams) (*admin.Group, error)) *MockProjectCreatorCreateProjectCall {
+func (c *MockProjectCreatorCreateProjectCall) DoAndReturn(f func(*admin.CreateGroupApiParams) (*admin.Group, error)) *MockProjectCreatorCreateProjectCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

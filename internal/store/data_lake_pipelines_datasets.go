@@ -18,6 +18,6 @@ package store
 
 // DeletePipelineDataset encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePipelineDataset(projectID, pipelineName, id string) error {
-	_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipelineRunDataset(s.ctx, projectID, pipelineName, id).Execute()
+	_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipelineRun(s.ctx, projectID, pipelineName, id).Execute()
 	return err
 }

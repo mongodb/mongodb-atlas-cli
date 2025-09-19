@@ -42,7 +42,7 @@ func (m *MockLister) EXPECT() *MockListerMockRecorder {
 }
 
 // FlexClusterSnapshots mocks base method.
-func (m *MockLister) FlexClusterSnapshots(arg0 *admin.ListFlexBackupsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error) {
+func (m *MockLister) FlexClusterSnapshots(arg0 *admin.ListFlexBackupSnapshotsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FlexClusterSnapshots", arg0)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasFlexBackupSnapshot20241113)
@@ -69,13 +69,13 @@ func (c *MockListerFlexClusterSnapshotsCall) Return(arg0 *admin.PaginatedApiAtla
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockListerFlexClusterSnapshotsCall) Do(f func(*admin.ListFlexBackupsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error)) *MockListerFlexClusterSnapshotsCall {
+func (c *MockListerFlexClusterSnapshotsCall) Do(f func(*admin.ListFlexBackupSnapshotsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error)) *MockListerFlexClusterSnapshotsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockListerFlexClusterSnapshotsCall) DoAndReturn(f func(*admin.ListFlexBackupsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error)) *MockListerFlexClusterSnapshotsCall {
+func (c *MockListerFlexClusterSnapshotsCall) DoAndReturn(f func(*admin.ListFlexBackupSnapshotsApiParams) (*admin.PaginatedApiAtlasFlexBackupSnapshot20241113, error)) *MockListerFlexClusterSnapshotsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

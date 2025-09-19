@@ -54,13 +54,13 @@ func (s *Store) DeletePipeline(projectID, id string) error {
 
 // PipelineAvailableSchedules encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]atlasv2.DiskBackupApiPolicyItem, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineSchedules(s.ctx, projectID, pipelineName).Execute()
+	result, _, err := s.clientv2.DataLakePipelinesApi.GetAvailablePipelineSchedules(s.ctx, projectID, pipelineName).Execute()
 	return result, err
 }
 
 // PipelineAvailableSnapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, completedAfter *time.Time, listOps *ListOptions) (*atlasv2.PaginatedBackupSnapshot, error) {
-	request := s.clientv2.DataLakePipelinesApi.ListPipelineSnapshots(s.ctx, projectID, pipelineName)
+	request := s.clientv2.DataLakePipelinesApi.GetAvailablePipelineSnapshots(s.ctx, projectID, pipelineName)
 	if completedAfter != nil {
 		request = request.CompletedAfter(*completedAfter)
 	}
@@ -73,7 +73,7 @@ func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, compl
 
 // PipelineTrigger encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineTrigger(projectID, pipelineName, snapshotID string) (*atlasv2.IngestionPipelineRun, error) {
-	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerSnapshotIngestion(s.ctx, projectID, pipelineName,
+	result, _, err := s.clientv2.DataLakePipelinesApi.TriggerPipeline(s.ctx, projectID, pipelineName,
 		atlasv2.NewTriggerIngestionPipelineRequest(snapshotID)).Execute()
 	return result, err
 }

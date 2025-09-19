@@ -19,8 +19,8 @@ import (
 )
 
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
-func (s *Store) ProcessDiskMeasurements(params *atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetDiskMeasurementsWithParams(s.ctx, params).Execute()
+func (s *Store) ProcessDiskMeasurements(params *atlasv2.GetProcessDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
+	result, _, err := s.clientv2.MonitoringAndLogsApi.GetProcessDiskMeasurementsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 

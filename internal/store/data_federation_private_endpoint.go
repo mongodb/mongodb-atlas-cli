@@ -22,24 +22,24 @@ import (
 
 // DataFederationPrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationPrivateEndpoints(projectID string) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.ListDataFederationPrivateEndpoints(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.DataFederationApi.ListPrivateEndpointIds(s.ctx, projectID).Execute()
 	return result, err
 }
 
 // DataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationPrivateEndpoint(projectID, id string) (*atlasv2.PrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.GetDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
+	result, _, err := s.clientv2.DataFederationApi.GetPrivateEndpointId(s.ctx, projectID, id).Execute()
 	return result, err
 }
 
 // CreateDataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateDataFederationPrivateEndpoint(projectID string, opts *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.CreateDataFederationPrivateEndpoint(s.ctx, projectID, opts).Execute()
+	result, _, err := s.clientv2.DataFederationApi.CreatePrivateEndpointId(s.ctx, projectID, opts).Execute()
 	return result, err
 }
 
 // DeleteDataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederationPrivateEndpoint(projectID, id string) error {
-	_, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeletePrivateEndpointId(s.ctx, projectID, id).Execute()
 	return err
 }

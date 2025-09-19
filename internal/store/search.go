@@ -20,30 +20,30 @@ import (
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.SearchIndexResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.ListSearchIndex(s.ctx, projectID, clusterName, collName, dbName).Execute()
 	return result, err
 }
 
 // CreateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateSearchIndexes(projectID, clusterName string, index *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.CreateAtlasSearchIndex(s.ctx, projectID, clusterName, index).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.CreateClusterSearchIndex(s.ctx, projectID, clusterName, index).Execute()
 	return result, err
 }
 
 // SearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndex(projectID, clusterName, indexID string) (*atlasv2.SearchIndexResponse, error) {
-	index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+	index, _, err := s.clientv2.AtlasSearchApi.GetClusterSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return index, err
 }
 
 // UpdateSearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, index *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error) {
-	result, _, err := s.clientv2.AtlasSearchApi.UpdateAtlasSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
+	result, _, err := s.clientv2.AtlasSearchApi.UpdateClusterSearchIndex(s.ctx, projectID, clusterName, indexID, index).Execute()
 	return result, err
 }
 
 // DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
-	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteClusterSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return err
 }

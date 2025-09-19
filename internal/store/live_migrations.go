@@ -27,7 +27,7 @@ func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.CreatePushMigration(context.Background(), groupID, liveMigrationRequest).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceApi.CreateGroupLiveMigration(context.Background(), groupID, liveMigrationRequest).Execute()
 	return result, err
 }
 
@@ -36,6 +36,6 @@ func (s *Store) LiveMigrationDescribe(groupID, migrationID string) (*atlasv2.Liv
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.GetPushMigration(context.Background(), groupID, migrationID).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceApi.GetGroupLiveMigration(context.Background(), groupID, migrationID).Execute()
 	return result, err
 }

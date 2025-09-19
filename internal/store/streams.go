@@ -21,33 +21,33 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
 )
 
-func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.ListStreamInstancesWithParams(s.ctx, opts).Execute()
+func (s *Store) ProjectStreams(opts *atlasv2.ListStreamWorkspacesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.ListStreamWorkspacesWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 func (s *Store) AtlasStream(projectID, name string) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.GetStreamInstance(s.ctx, projectID, name).Execute()
+	result, _, err := s.clientv2.StreamsApi.GetStreamWorkspace(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
 func (s *Store) CreateStream(projectID string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.CreateStreamInstance(s.ctx, projectID, processor).Execute()
+	result, _, err := s.clientv2.StreamsApi.CreateStreamWorkspace(s.ctx, projectID, processor).Execute()
 	return result, err
 }
 
 func (s *Store) DeleteStream(projectID, name string) error {
-	_, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectID, name).Execute()
+	_, err := s.clientv2.StreamsApi.DeleteStreamWorkspace(s.ctx, projectID, name).Execute()
 	return err
 }
 
 func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamInstance(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
 	return result, err
 }
 
-func (s *Store) DownloadAuditLog(request *atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error) {
-	result, _, err := s.clientv2.StreamsApi.DownloadStreamTenantAuditLogsWithParams(s.ctx, request).Execute()
+func (s *Store) DownloadAuditLog(request *atlasv2.DownloadAuditLogsApiParams) (io.ReadCloser, error) {
+	result, _, err := s.clientv2.StreamsApi.DownloadAuditLogsWithParams(s.ctx, request).Execute()
 	if err != nil {
 		return nil, err
 	}

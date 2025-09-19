@@ -20,19 +20,19 @@ import (
 
 // CreateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()
+	result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDbRole(s.ctx, groupID, role).Execute()
 	return result, err
 }
 
 // DeleteDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteDatabaseRole(groupID, roleName string) error {
-	_, err := s.clientv2.CustomDatabaseRolesApi.DeleteCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
+	_, err := s.clientv2.CustomDatabaseRolesApi.DeleteCustomDbRole(s.ctx, groupID, roleName).Execute()
 	return err
 }
 
 // DatabaseRoles encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRoles(projectID string) ([]atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDatabaseRoles(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.CustomDatabaseRolesApi.ListCustomDbRoles(s.ctx, projectID).Execute()
 	return result, err
 }
 
@@ -42,12 +42,12 @@ func (s *Store) UpdateDatabaseRole(groupID, roleName string, role *atlasv2.UserC
 		Actions:        role.Actions,
 		InheritedRoles: role.InheritedRoles,
 	}
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDatabaseRole(s.ctx, groupID, roleName, &dbRole).Execute()
+	result, _, err := s.clientv2.CustomDatabaseRolesApi.UpdateCustomDbRole(s.ctx, groupID, roleName, &dbRole).Execute()
 	return result, err
 }
 
 // DatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) DatabaseRole(groupID, roleName string) (*atlasv2.UserCustomDBRole, error) {
-	result, _, err := s.clientv2.CustomDatabaseRolesApi.GetCustomDatabaseRole(s.ctx, groupID, roleName).Execute()
+	result, _, err := s.clientv2.CustomDatabaseRolesApi.GetCustomDbRole(s.ctx, groupID, roleName).Execute()
 	return result, err
 }

@@ -31,7 +31,7 @@ import (
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=orgs_list_mock_test.go -package=events . OrganizationEventLister
 
 type OrganizationEventLister interface {
-	OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)
+	OrganizationEvents(opts *atlasv2.ListOrgEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)
 }
 
 type orgListOpts struct {
@@ -62,14 +62,14 @@ func (opts *orgListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *orgListOpts) NewOrgListOptions() (*atlasv2.ListOrganizationEventsApiParams, error) {
+func (opts *orgListOpts) NewOrgListOptions() (*atlasv2.ListOrgEventsApiParams, error) {
 	var eventType []string
 	var err error
 
 	if len(opts.EventType) > 0 {
 		eventType = opts.EventType
 	}
-	p := &atlasv2.ListOrganizationEventsApiParams{
+	p := &atlasv2.ListOrgEventsApiParams{
 		OrgId:     opts.ConfigOrgID(),
 		EventType: &eventType,
 	}

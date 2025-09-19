@@ -38,7 +38,7 @@ func TestList_Run(t *testing.T) {
 	listOpts := &ListOpts{
 		store: mockStore,
 	}
-	params := atlasv2.ListAtlasProcessesApiParams{
+	params := atlasv2.ListGroupProcessesApiParams{
 		IncludeCount: pointer.Get(true),
 	}
 

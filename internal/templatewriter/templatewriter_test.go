@@ -83,6 +83,34 @@ func Test_Print(t *testing.T) {
 			expected: "items: ",
 			wantErr:  require.NoError,
 		},
+		{
+			name:     "formatAliases with aliases",
+			template: "command{{formatAliases .Aliases}}",
+			data:     struct{ Aliases []string }{Aliases: []string{"cmd1", "c1"}},
+			expected: "command [aliases: cmd1, c1]",
+			wantErr:  require.NoError,
+		},
+		{
+			name:     "formatAliases with single alias",
+			template: "command{{formatAliases .Aliases}}",
+			data:     struct{ Aliases []string }{Aliases: []string{"tf"}},
+			expected: "command [aliases: tf]",
+			wantErr:  require.NoError,
+		},
+		{
+			name:     "formatAliases with no aliases",
+			template: "command{{formatAliases .Aliases}}",
+			data:     struct{ Aliases []string }{Aliases: []string{}},
+			expected: "command",
+			wantErr:  require.NoError,
+		},
+		{
+			name:     "formatAliases with nil aliases",
+			template: "command{{formatAliases .Aliases}}",
+			data:     struct{ Aliases []string }{Aliases: nil},
+			expected: "command",
+			wantErr:  require.NoError,
+		},
 	}
 
 	for _, conf := range tests {

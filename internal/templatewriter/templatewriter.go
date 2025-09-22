@@ -17,6 +17,7 @@ package templatewriter
 import (
 	"io"
 	"reflect"
+	"strings"
 	"text/tabwriter"
 	"text/template"
 )
@@ -30,6 +31,7 @@ const (
 
 var funcMap = template.FuncMap{
 	"valueOrEmptySlice": valueOrEmptySlice,
+	"formatAliases":     formatAliases,
 }
 
 func valueOrEmptySlice(slice any) (result any) {
@@ -43,6 +45,16 @@ func valueOrEmptySlice(slice any) (result any) {
 	}
 
 	return slice
+}
+
+// formatAliases formats command aliases for display.
+// Returns a formatted string like " [aliases: cmd1, c2]" if aliases exist,
+// or an empty string if no aliases are present.
+func formatAliases(aliases []string) string {
+	if len(aliases) == 0 {
+		return ""
+	}
+	return " [aliases: " + strings.Join(aliases, ", ") + "]"
 }
 
 // newTabWriter returns a tabwriter that handles tabs(`\t) to space columns evenly.

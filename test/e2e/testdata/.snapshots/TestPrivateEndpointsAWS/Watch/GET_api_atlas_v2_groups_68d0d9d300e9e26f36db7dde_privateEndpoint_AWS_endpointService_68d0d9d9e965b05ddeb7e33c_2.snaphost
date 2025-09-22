@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 225
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 22 Sep 2025 05:11:33 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 71
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=fb6d89c1c589837728b90948fef9d4777653520e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"AWS","endpointServiceName":"com.amazonaws.vpce.sa-east-1.vpce-svc-08d58f173717755a6","errorMessage":null,"id":"68d0d9d9e965b05ddeb7e33c","interfaceEndpoints":[],"regionName":"SA_EAST_1","status":"AVAILABLE"}

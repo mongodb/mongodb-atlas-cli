@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 22 Sep 2025 05:30:53 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 65
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=fb6d89c1c589837728b90948fef9d4777653520e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0dc8500e9e26f36dbc612/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-22T05:28:15Z","groupId":"68d0dc8500e9e26f36dbc612","hostname":"atlas-8a46p3-shard-00-00.gemnfn.mongodb-dev.net","id":"atlas-8a46p3-shard-00-00.gemnfn.mongodb-dev.net:27017","lastPing":"2025-09-22T05:30:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0dc8500e9e26f36dbc612/processes/atlas-8a46p3-shard-00-00.gemnfn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8a46p3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-617-shard-00-00.gemnfn.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-22T05:28:15Z","groupId":"68d0dc8500e9e26f36dbc612","hostname":"atlas-8a46p3-shard-00-01.gemnfn.mongodb-dev.net","id":"atlas-8a46p3-shard-00-01.gemnfn.mongodb-dev.net:27017","lastPing":"2025-09-22T05:30:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0dc8500e9e26f36dbc612/processes/atlas-8a46p3-shard-00-01.gemnfn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8a46p3-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-617-shard-00-01.gemnfn.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-22T05:28:15Z","groupId":"68d0dc8500e9e26f36dbc612","hostname":"atlas-8a46p3-shard-00-02.gemnfn.mongodb-dev.net","id":"atlas-8a46p3-shard-00-02.gemnfn.mongodb-dev.net:27017","lastPing":"2025-09-22T05:30:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0dc8500e9e26f36dbc612/processes/atlas-8a46p3-shard-00-02.gemnfn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8a46p3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-617-shard-00-02.gemnfn.mongodb-dev.net","version":"8.0.14"}],"totalCount":3}

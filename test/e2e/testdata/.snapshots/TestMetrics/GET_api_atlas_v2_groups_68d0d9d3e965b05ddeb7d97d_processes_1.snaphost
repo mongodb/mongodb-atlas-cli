@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 22 Sep 2025 05:18:50 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 99
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=fb6d89c1c589837728b90948fef9d4777653520e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0d9d3e965b05ddeb7d97d/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-22T05:16:38Z","groupId":"68d0d9d3e965b05ddeb7d97d","hostname":"atlas-t4642g-shard-00-00.4yar4j.mongodb-dev.net","id":"atlas-t4642g-shard-00-00.4yar4j.mongodb-dev.net:27017","lastPing":"2025-09-22T05:18:45Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0d9d3e965b05ddeb7d97d/processes/atlas-t4642g-shard-00-00.4yar4j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t4642g-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-602-shard-00-00.4yar4j.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-22T05:16:39Z","groupId":"68d0d9d3e965b05ddeb7d97d","hostname":"atlas-t4642g-shard-00-01.4yar4j.mongodb-dev.net","id":"atlas-t4642g-shard-00-01.4yar4j.mongodb-dev.net:27017","lastPing":"2025-09-22T05:18:45Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0d9d3e965b05ddeb7d97d/processes/atlas-t4642g-shard-00-01.4yar4j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t4642g-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-602-shard-00-01.4yar4j.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-22T05:16:39Z","groupId":"68d0d9d3e965b05ddeb7d97d","hostname":"atlas-t4642g-shard-00-02.4yar4j.mongodb-dev.net","id":"atlas-t4642g-shard-00-02.4yar4j.mongodb-dev.net:27017","lastPing":"2025-09-22T05:18:45Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68d0d9d3e965b05ddeb7d97d/processes/atlas-t4642g-shard-00-02.4yar4j.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t4642g-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-602-shard-00-02.4yar4j.mongodb-dev.net","version":"8.0.14"}],"totalCount":3}

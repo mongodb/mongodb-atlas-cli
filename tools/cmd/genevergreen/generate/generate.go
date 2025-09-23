@@ -31,9 +31,11 @@ var (
 		"6.0",
 		"7.0",
 		"8.0",
+		"8.2",
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
+		"8.2": {},
 		"8.0": {"debian11"},
 		"7.0": {"ubuntu2404"},
 		"6.0": {"ubuntu2404"},

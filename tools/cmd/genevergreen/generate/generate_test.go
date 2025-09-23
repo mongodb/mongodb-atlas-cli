@@ -68,8 +68,8 @@ func TestPublishStableTasks(t *testing.T) {
 	}
 
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 3)
-	assert.Len(t, c.Tasks, 90)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 120)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -92,7 +92,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 18)
+	assert.Len(t, c.Tasks, 24)
 }
 
 func TestRepoTasks(t *testing.T) {
@@ -112,6 +112,6 @@ func TestRepoTasks(t *testing.T) {
 		}
 	}
 
-	assert.Len(t, c.Variants, 3)
-	assert.Len(t, c.Tasks, 36)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 48)
 }

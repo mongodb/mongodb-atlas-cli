@@ -115,3 +115,10 @@ func TestRepoTasks(t *testing.T) {
 	assert.Len(t, c.Variants, 4)
 	assert.Len(t, c.Tasks, 48)
 }
+
+func TestGetGpgServerVersion(t *testing.T) {
+	assert.Equal(t, "8.0", getGpgServerVersion("8.2"))
+	assert.Equal(t, "8.0", getGpgServerVersion("8.0"))
+	assert.Equal(t, "7.0", getGpgServerVersion("7.0"))
+	assert.Equal(t, "6.0", getGpgServerVersion("6.0"))
+}

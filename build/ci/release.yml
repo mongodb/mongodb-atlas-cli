@@ -271,6 +271,7 @@ functions:
           - project
           - revision
           - server_version
+          - pgp_server_version
           - created_at
           - image
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/meta
@@ -297,6 +298,7 @@ functions:
           - entrypoint
           - mongo_package
           - mongo_repo
+          - pgp_server_version
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
         binary: ./docker-build.sh
   "create-windows-host":

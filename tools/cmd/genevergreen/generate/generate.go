@@ -108,12 +108,13 @@ func RepoTasks(c *shrub.Configuration) {
 					Dependency(newDependency(os, serverVersion, repo)).
 					Function("clone").
 					FunctionWithVars("docker build repo", map[string]string{
-						"server_version": serverVersion,
-						"package":        pkg,
-						"entrypoint":     entrypoint,
-						"image":          os,
-						"mongo_package":  "mongodb-" + repo,
-						"mongo_repo":     mongoRepo,
+						"server_version":     serverVersion,
+						"pgp_server_version": getGpgServerVersion(serverVersion),
+						"package":            pkg,
+						"entrypoint":         entrypoint,
+						"image":              os,
+						"mongo_package":      "mongodb-" + repo,
+						"mongo_repo":         mongoRepo,
 					})
 				c.Tasks = append(c.Tasks, t)
 				v.AddTasks(t.Name)
@@ -169,8 +170,9 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 				Variant: "goreleaser_atlascli_snapshot",
 			}).Function("clone").
 				FunctionWithVars("docker build meta", map[string]string{
-					"image":          postPkgImg[os],
-					"server_version": sv,
+					"image":              postPkgImg[os],
+					"server_version":     sv,
+					"pgp_server_version": getGpgServerVersion(sv),
 				})
 
 			c.Tasks = append(c.Tasks, t)
@@ -179,6 +181,11 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	c.Variants = append(c.Variants, v)
+}
+
+func getGpgServerVersion(serverVersion string) string {
+	// minor version uses the same major version gpg key e.g. 8.2 uses 8.0 gpg key
+	return strings.Split(serverVersion, ".")[0] + ".0"
 }
 
 const buildNamePrefix = "generated_release_atlascli_publish_"

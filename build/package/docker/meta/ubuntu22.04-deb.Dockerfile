@@ -14,7 +14,7 @@ RUN set -eux; \
 	if ! command -v ps > /dev/null; then \
 		apt-get install -y --no-install-recommends procps; \
 	fi; \
-	curl -L https://www.mongodb.org/static/pgp/server-${server_version}.asc | apt-key add -; \
+	curl -L https://www.mongodb.org/static/pgp/server-${pgp_server_version}.asc | apt-key add -; \
 	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
 	rm -rf /var/lib/apt/lists/*
 

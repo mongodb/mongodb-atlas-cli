@@ -3,6 +3,7 @@ FROM artifactory.corp.mongodb.com/dockerhub/ubuntu:22.04
 ARG url
 ARG entrypoint
 ARG server_version
+ARG pgp_server_version
 
 RUN set -eux; \
 	apt-get update; \

@@ -3,6 +3,7 @@ FROM registry.suse.com/suse/sle15
 ARG url
 ARG entrypoint
 ARG server_version
+ARG pgp_server_version
 
 RUN rpm --import https://pgp.mongodb.com/server-${server_version}.asc
 

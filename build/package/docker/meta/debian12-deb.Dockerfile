@@ -3,6 +3,7 @@ FROM artifactory.corp.mongodb.com/dockerhub/debian:12-slim
 ARG url
 ARG entrypoint
 ARG server_version
+ARG pgp_server_version
 
 RUN set -eux; \
 	apt-get update; \

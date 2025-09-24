@@ -3,10 +3,11 @@ FROM registry.access.redhat.com/ubi9/ubi
 ARG url
 ARG entrypoint
 ARG server_version
+ARG pgp_server_version
 
 RUN rm -rf /etc/yum.repos.d/*
 
-RUN printf "[mongodb-org-${server_version}]\nname=MongoDB Repository\nbaseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/\ngpgcheck=1\nenabled=1\ngpgkey=https://pgp.mongodb.com/server-${server_version}.asc\n" > /etc/yum.repos.d/mongodb-org-${server_version}.repo
+RUN printf "[mongodb-org-${server_version}]\nname=MongoDB Repository\nbaseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/${server_version}/x86_64/\ngpgcheck=1\nenabled=1\ngpgkey=https://pgp.mongodb.com/server-${pgp_server_version}.asc\n" > /etc/yum.repos.d/mongodb-org-${server_version}.repo
 
 RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \

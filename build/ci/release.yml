@@ -237,6 +237,7 @@ functions:
           - distro
           - edition
           - server_version
+          - pgp_server_version
           - project
           - revision
           - created_at

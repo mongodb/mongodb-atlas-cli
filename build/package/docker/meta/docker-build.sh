@@ -30,5 +30,6 @@ docker build \
 	--build-arg url="${URL-}" \
 	--build-arg entrypoint="${ENTRYPOINT-}" \
 	--build-arg server_version="${server_version-}" \
+	--build-arg pgp_server_version="${pgp_server_version-}" \
 	-t "atlascli-${image-}" \
 	-f "${image-}.Dockerfile" .

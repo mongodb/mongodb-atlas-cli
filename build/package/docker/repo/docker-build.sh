@@ -18,6 +18,7 @@ set -Eeou pipefail
 
 docker build \
 	--build-arg server_version="${server_version-}" \
+	--build-arg pgp_server_version="${pgp_server_version-}" \
 	--build-arg package="${package-}" \
 	--build-arg entrypoint="${entrypoint-}" \
 	--build-arg mongo_package="${mongo_package-}" \

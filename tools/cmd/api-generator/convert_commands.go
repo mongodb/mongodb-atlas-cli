@@ -101,6 +101,7 @@ func extractSunsetDate(extensions map[string]any) *time.Time {
 type operationExtensions struct {
 	skip             bool
 	operationID      string
+	shortOperationID string
 	operationAliases []string
 }
 
@@ -108,6 +109,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 	ext := operationExtensions{
 		skip:             false,
 		operationID:      operation.OperationID,
+		shortOperationID: "",
 		operationAliases: []string{},
 	}
 
@@ -131,6 +133,11 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 		}
 	}
 
+	if shortOperationID, ok := operation.Extensions["x-xgen-operation-id-override"].(string); ok && shortOperationID != "" {
+		ext.shortOperationID = shortOperationID
+		ext.operationAliases = append(ext.operationAliases, strcase.ToLowerCamel(operation.OperationID))
+	}
+
 	return ext
 }
 
@@ -141,6 +148,7 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 	}
 
 	operationID := extensions.operationID
+	shortOperationID := extensions.shortOperationID
 	aliases := extensions.operationAliases
 
 	httpVerb, err := api.ToHTTPVerb(verb)
@@ -167,21 +175,16 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	if overrides := extractOverrides(operation.Extensions); overrides != nil {
-		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
-			operationID = overriddenOperationID
-		}
-	}
-
 	watcher, err := extractWatcherProperties(operation.Extensions)
 	if err != nil {
 		return nil, err
 	}
 
 	command := api.Command{
-		OperationID: operationID,
-		Aliases:     aliases,
-		Description: description,
+		OperationID:      operationID,
+		ShortOperationID: strcase.ToLowerCamel(shortOperationID),
+		Aliases:          aliases,
+		Description:      description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
 			QueryParameters: parameters.query,

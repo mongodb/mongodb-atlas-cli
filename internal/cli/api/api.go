@@ -98,7 +98,15 @@ func createAPICommandGroupToCobraCommand(group shared_api.Group) *cobra.Command 
 //nolint:gocyclo
 func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error) {
 	// command properties
-	commandName := strcase.ToLowerCamel(command.OperationID)
+	var commandName = strcase.ToLowerCamel(command.OperationID)
+	var commandAliases = command.Aliases
+
+	// Prefer to use shortOperationID if present
+	if command.ShortOperationID != "" {
+		commandName = strcase.ToLowerCamel(command.ShortOperationID)
+		commandAliases = append(commandAliases, strcase.ToLowerCamel(command.OperationID))
+	}
+
 	shortDescription, longDescription := splitShortAndLongDescription(command.Description)
 
 	// flag values
@@ -114,7 +122,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 
 	cmd := &cobra.Command{
 		Use:     commandName,
-		Aliases: command.Aliases,
+		Aliases: commandAliases,
 		Short:   shortDescription,
 		Long:    longDescription,
 		Annotations: map[string]string{

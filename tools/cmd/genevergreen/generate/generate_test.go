@@ -61,6 +61,8 @@ func TestPublishStableTasks(t *testing.T) {
 			commandFound = true
 			distro := c.Vars["distro"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// ensure unsupportedNewOs is not used
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], distro)
 			assert.NotEmpty(t, distro)
@@ -83,6 +85,8 @@ func TestPostPkgMetaTasks(t *testing.T) {
 			}
 			image := c.Vars["image"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// find the key from the image
 			for key, value := range postPkgImg {
 				if value == image {
@@ -106,6 +110,8 @@ func TestRepoTasks(t *testing.T) {
 			}
 			image := c.Vars["image"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// ensure unsupportedNewOs is not used
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], image)
 			assert.NotEmpty(t, image)

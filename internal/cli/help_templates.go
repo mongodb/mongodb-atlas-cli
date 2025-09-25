@@ -20,5 +20,4 @@ const (
 	HelpTemplate = `{{.Short | trimTrailingWhitespaces}} {{.Long | trimTrailingWhitespaces}}
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
-
 )

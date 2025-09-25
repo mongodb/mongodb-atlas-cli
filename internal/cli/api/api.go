@@ -71,15 +71,15 @@ func Builder() *cobra.Command {
 func createRootAPICommand() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "api",
-		Short: "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + `Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.`,
-		Long: `This feature in public preview streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
+		Short: `Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.`,
+		Long: `This feature streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 For more information on
 - Atlas Administration API see: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
 	}
 
-	rootCmd.SetHelpTemplate(cli.ExperimentalHelpTemplate)
+	rootCmd.SetHelpTemplate(cli.HelpTemplate)
 
 	return rootCmd
 }

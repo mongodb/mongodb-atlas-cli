@@ -21,12 +21,4 @@ const (
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
 
-	ExperimentalText = "The atlas api sub-command, " +
-		"automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and " +
-		"is currently in Public Preview (please provide feedback " +
-		"at https://feedback.mongodb.com/forums/930808-atlas-cli).\n" +
-		"Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint " +
-		"documentation link.\n\n"
-
-	ExperimentalHelpTemplate = "Public Preview: " + ExperimentalText + HelpTemplate
 )

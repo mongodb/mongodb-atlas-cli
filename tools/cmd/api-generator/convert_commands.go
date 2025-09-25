@@ -113,32 +113,55 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 		operationAliases: []string{},
 	}
 
-	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if extSkip, okSkip := extensions["skip"].(bool); okSkip && extSkip {
-			ext.skip = extSkip
-		}
-
-		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
-			for _, alias := range extAliases {
-				if sAlias, ok := alias.(string); ok && sAlias != "" {
-					ext.operationAliases = append(ext.operationAliases, sAlias)
-				}
-			}
-		}
-
-		if overrides := extractOverrides(operation.Extensions); overrides != nil {
-			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
-				ext.operationID = overriddenOperationID
-			}
-		}
-	}
-
-	if shortOperationID, ok := operation.Extensions["x-xgen-operation-id-override"].(string); ok && shortOperationID != "" {
-		ext.shortOperationID = shortOperationID
-		ext.operationAliases = append(ext.operationAliases, strcase.ToLowerCamel(operation.OperationID))
-	}
+	processAtlasCLIExtensions(&ext, operation.Extensions)
+	processShortOperationIDOverride(&ext, operation)
 
 	return ext
+}
+
+func processAtlasCLIExtensions(ext *operationExtensions, extensions map[string]any) {
+	atlasCLIExt, ok := extensions["x-xgen-atlascli"].(map[string]any)
+	if !ok || atlasCLIExt == nil {
+		return
+	}
+
+	if extSkip, okSkip := atlasCLIExt["skip"].(bool); okSkip && extSkip {
+		ext.skip = extSkip
+	}
+
+	if extAliases, okExtAliases := atlasCLIExt["command-aliases"].([]any); okExtAliases && extAliases != nil {
+		for _, alias := range extAliases {
+			if sAlias, ok := alias.(string); ok && sAlias != "" {
+				ext.operationAliases = append(ext.operationAliases, sAlias)
+			}
+		}
+	}
+
+	if overrides := extractOverrides(extensions); overrides != nil {
+		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+			ext.operationID = overriddenOperationID
+		}
+	}
+}
+
+func processShortOperationIDOverride(ext *operationExtensions, operation *openapi3.Operation) {
+	shortOperationID, ok := operation.Extensions["x-xgen-operation-id-override"].(string)
+	if !ok || shortOperationID == "" {
+		return
+	}
+
+	ext.shortOperationID = shortOperationID
+
+	// Only add original operation ID to aliases if there's no Atlas CLI operation ID override
+	overrides := extractOverrides(operation.Extensions)
+	if overrides == nil {
+		ext.operationAliases = append(ext.operationAliases, strcase.ToLowerCamel(operation.OperationID))
+		return
+	}
+
+	if _, hasOverride := overrides["operationId"].(string); !hasOverride {
+		ext.operationAliases = append(ext.operationAliases, strcase.ToLowerCamel(operation.OperationID))
+	}
 }
 
 func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation) (*api.Command, error) {
@@ -175,6 +198,13 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
+	if overrides := extractOverrides(operation.Extensions); overrides != nil {
+		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+			operationID = overriddenOperationID
+			shortOperationID = ""
+		}
+	}
+
 	watcher, err := extractWatcherProperties(operation.Extensions)
 	if err != nil {
 		return nil, err
@@ -182,7 +212,7 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 
 	command := api.Command{
 		OperationID:      operationID,
-		ShortOperationID: strcase.ToLowerCamel(shortOperationID),
+		ShortOperationID: shortOperationID,
 		Aliases:          aliases,
 		Description:      description,
 		RequestParameters: api.RequestParameters{

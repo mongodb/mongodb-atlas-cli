@@ -24,7 +24,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
@@ -55,14 +54,6 @@ func isAPICommand(cmd *cobra.Command) bool {
 
 func setDisableAutoGenTag(cmd *cobra.Command) {
 	cmd.DisableAutoGenTag = true
-}
-
-func markExperimentalToAPICommands(cmd *cobra.Command) {
-	if cmd.CommandPath() == "atlas api" {
-		return // Skip the root command
-	}
-	cmd.Short = "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short
-	cmd.Long = cli.ExperimentalText + cmd.Long
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {
@@ -285,7 +276,6 @@ func applyTransformations(cmd *cobra.Command) error {
 
 	if isAPICommand(cmd) {
 		removeCommandsWithOnlyPrivatePreview(cmd)
-		markExperimentalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
 		if err := updateExamples(cmd); err != nil {
 			return err

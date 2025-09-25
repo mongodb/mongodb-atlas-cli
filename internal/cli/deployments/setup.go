@@ -53,7 +53,7 @@ import (
 const (
 	internalMongodPort         = 27017
 	mdb7                       = "7.0"
-	mdb8                       = "8.2"
+	mdb8                       = "8.0"
 	defaultSettings            = "default"
 	customSettings             = "custom"
 	cancelSettings             = "cancel"

@@ -21,10 +21,12 @@ import (
 	"io"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/Masterminds/semver/v3"
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -156,7 +158,8 @@ func getLocalDevImage() string {
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
-	return getLocalDevImage() + ":" + opts.MdbVersion
+	v, _ := semver.NewVersion(opts.MdbVersion)
+	return getLocalDevImage() + ":" + strconv.FormatUint(v.Major(), 10)
 }
 
 func (opts *DeploymentOpts) Spin(funcs ...func() error) error {

@@ -79,7 +79,7 @@ For more information on
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
 	}
 
-	rootCmd.SetHelpTemplate(cli.HelpTemplate)
+	rootCmd.SetHelpTemplate(cli.APICommandHelpTemplate)
 
 	return rootCmd
 }

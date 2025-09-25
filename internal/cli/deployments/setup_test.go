@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
@@ -308,5 +309,48 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 	// Verify
 	if err := opts.Run(ctx); err == nil {
 		t.Fatal("Run() unexpected success, should fail")
+	}
+}
+
+func TestValidateFlags_mdbVersions(t *testing.T) {
+	testCases := []struct {
+		name          string
+		version       string
+		expectedError error
+	}{
+		{name: "mdb70", version: mdb70, expectedError: nil},
+		{name: "mdb80", version: mdb80, expectedError: nil},
+		{name: "mdb8", version: mdb8, expectedError: nil},
+		{name: "mdb7", version: mdb7, expectedError: nil},
+		{name: "mdb82", version: "8.2", expectedError: errInvalidMongoDBVersion},
+		{name: "invalid", version: "9.0", expectedError: errInvalidMongoDBVersion},
+	}
+	for _, testCase := range testCases {
+		opts := &SetupOpts{}
+		opts.MdbVersion = testCase.version
+		err := opts.validateFlags()
+		if testCase.expectedError != nil {
+			assert.ErrorIs(t, err, testCase.expectedError)
+		} else {
+			assert.NoError(t, err)
+		}
+	}
+}
+
+func TestSetupOpts_MongodDockerImageName(t *testing.T) {
+	testCases := []struct {
+		name          string
+		version       string
+		expectedImage string
+	}{
+		{name: "mdb70", version: mdb70, expectedImage: "docker.io/mongodb/mongodb-atlas-local:7"},
+		{name: "mdb80", version: mdb80, expectedImage: "docker.io/mongodb/mongodb-atlas-local:8"},
+		{name: "mdb8", version: mdb8, expectedImage: "docker.io/mongodb/mongodb-atlas-local:8"},
+		{name: "mdb7", version: mdb7, expectedImage: "docker.io/mongodb/mongodb-atlas-local:7"},
+	}
+	for _, testCase := range testCases {
+		opts := &SetupOpts{}
+		opts.MdbVersion = testCase.version
+		assert.Equal(t, testCase.expectedImage, opts.MongodDockerImageName())
 	}
 }

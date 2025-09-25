@@ -52,8 +52,10 @@ import (
 
 const (
 	internalMongodPort         = 27017
-	mdb7                       = "7.0"
-	mdb8                       = "8.0"
+	mdb70                      = "7.0"
+	mdb80                      = "8.0"
+	mdb8                       = "8"
+	mdb7                       = "7"
 	defaultSettings            = "default"
 	customSettings             = "custom"
 	cancelSettings             = "cancel"
@@ -106,7 +108,8 @@ var (
 		options.VsCodeConnect:  "MongoDB for VsCode",
 		skipConnect:            "Skip Connection",
 	}
-	mdbVersions = []string{mdb7, mdb8}
+	mdbVersions      = []string{mdb70, mdb80, mdb8, mdb7}
+	mdbMajorVersions = []string{mdb7, mdb8}
 )
 
 type SetupOpts struct {
@@ -347,8 +350,8 @@ func (opts *SetupOpts) promptDeploymentName() error {
 
 func (opts *SetupOpts) promptMdbVersion() error {
 	p := &survey.Select{
-		Message: "Major MongoDB Version",
-		Options: mdbVersions,
+		Message: "Major MongoDB Version (latest minor version will be used)",
+		Options: mdbMajorVersions,
 		Default: opts.MdbVersion,
 		Help:    "Major MongoDB Version for the deployment. Atlas CLI applies the latest minor version available.",
 	}
@@ -517,7 +520,7 @@ func (opts *SetupOpts) setDefaultSettings() error {
 		if err := templatewriter.Print(os.Stderr, `
 [Default Settings]
 Deployment Name	{{.DeploymentName}}
-MongoDB Version	{{.MdbVersion}}
+MongoDB Major Version	{{.MdbVersion}} (latest minor version)
 
 `, opts); err != nil {
 			return err

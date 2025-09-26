@@ -175,13 +175,6 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	if overrides := extractOverrides(operation.Extensions); overrides != nil {
-		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
-			operationID = overriddenOperationID
-			shortOperationID = ""
-		}
-	}
-
 	if shortOperationID != "" {
 		aliases = append(aliases, strcase.ToLowerCamel(operationID))
 	}

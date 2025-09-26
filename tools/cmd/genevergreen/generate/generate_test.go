@@ -61,6 +61,8 @@ func TestPublishStableTasks(t *testing.T) {
 			commandFound = true
 			distro := c.Vars["distro"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// ensure unsupportedNewOs is not used
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], distro)
 			assert.NotEmpty(t, distro)
@@ -68,8 +70,8 @@ func TestPublishStableTasks(t *testing.T) {
 	}
 
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 3)
-	assert.Len(t, c.Tasks, 90)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 120)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -83,6 +85,8 @@ func TestPostPkgMetaTasks(t *testing.T) {
 			}
 			image := c.Vars["image"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// find the key from the image
 			for key, value := range postPkgImg {
 				if value == image {
@@ -92,7 +96,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 18)
+	assert.Len(t, c.Tasks, 24)
 }
 
 func TestRepoTasks(t *testing.T) {
@@ -106,12 +110,21 @@ func TestRepoTasks(t *testing.T) {
 			}
 			image := c.Vars["image"]
 			serverVersion := c.Vars["server_version"]
+			pgpServerVersion := c.Vars["pgp_server_version"]
+			assert.NotEmpty(t, pgpServerVersion)
 			// ensure unsupportedNewOs is not used
 			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], image)
 			assert.NotEmpty(t, image)
 		}
 	}
 
-	assert.Len(t, c.Variants, 3)
-	assert.Len(t, c.Tasks, 36)
+	assert.Len(t, c.Variants, 4)
+	assert.Len(t, c.Tasks, 48)
+}
+
+func TestGetGpgServerVersion(t *testing.T) {
+	assert.Equal(t, "8.0", getGpgServerVersion("8.2"))
+	assert.Equal(t, "8.0", getGpgServerVersion("8.0"))
+	assert.Equal(t, "7.0", getGpgServerVersion("7.0"))
+	assert.Equal(t, "6.0", getGpgServerVersion("6.0"))
 }

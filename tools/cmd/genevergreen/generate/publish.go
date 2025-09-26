@@ -86,12 +86,13 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 		Function("clone").
 		Function("install curator").
 		FunctionWithVars("push", map[string]string{
-			"distro":          distro,
-			"ext":             extension,
-			"server_version":  taskServerVersion,
-			"notary_key_name": notaryKey,
-			"arch":            arch,
-			"edition":         edition,
+			"distro":             distro,
+			"ext":                extension,
+			"server_version":     taskServerVersion,
+			"pgp_server_version": getGpgServerVersion(taskServerVersion),
+			"notary_key_name":    notaryKey,
+			"arch":               arch,
+			"edition":            edition,
 		})
 	return t
 }

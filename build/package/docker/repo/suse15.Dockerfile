@@ -3,6 +3,7 @@ FROM registry.suse.com/suse/sle15
 ARG package
 ARG entrypoint
 ARG server_version
+ARG pgp_server_version
 ARG mongo_package
 ARG mongo_repo
 

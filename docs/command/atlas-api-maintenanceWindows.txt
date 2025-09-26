@@ -14,7 +14,7 @@ atlas api maintenanceWindows
 
 Returns, edits, and removes maintenance windows.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.

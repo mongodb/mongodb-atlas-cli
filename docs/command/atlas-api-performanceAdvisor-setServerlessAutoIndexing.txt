@@ -14,7 +14,7 @@ atlas api performanceAdvisor setServerlessAutoIndexing
 
 Set whether the Serverless Auto Indexing feature is enabled.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 This endpoint sets a value for Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. However, the value returned is not indicative of the Auto Indexing state as Auto Indexing is unavailable for Flex clusters. This endpoint will be sunset in January 2026.

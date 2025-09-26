@@ -14,7 +14,7 @@ atlas api atlasSearch listAtlasSearchIndexesCluster
 
 Returns all Atlas Search indexes on the specified cluster.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting Service Account or API Key must have the Project Data Access Read Write role.

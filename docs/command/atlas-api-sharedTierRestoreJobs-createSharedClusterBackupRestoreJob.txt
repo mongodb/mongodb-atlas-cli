@@ -14,7 +14,7 @@ atlas api sharedTierRestoreJobs createSharedClusterBackupRestoreJob
 
 Restores the specified M2 or M5 cluster.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting Service Account or API Key must have the Project Owner role.

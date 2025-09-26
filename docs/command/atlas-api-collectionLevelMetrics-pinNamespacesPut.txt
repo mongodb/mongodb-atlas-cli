@@ -14,7 +14,7 @@ atlas api collectionLevelMetrics pinNamespacesPut
 
 Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 This initializes a pinned namespaces list or replaces any existing pinned namespaces list for the Group and Cluster.

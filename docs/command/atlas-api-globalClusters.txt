@@ -14,7 +14,7 @@ atlas api globalClusters
 
 Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn't populate a collection with data. Similarly, deleting a managed namespace doesn't delete the associated collection.

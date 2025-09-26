@@ -14,7 +14,7 @@ atlas api invoices queryLineItemsFromSingleInvoice
 
 Query the lineItems of the specified invoice and return the result JSON.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 A unique 24-hexadecimal digit string identifies the invoice.

@@ -14,7 +14,7 @@ atlas api cloudProviderAccess listCloudProviderAccessRoles
 
 Returns all cloud provider access roles with access to the specified project.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.

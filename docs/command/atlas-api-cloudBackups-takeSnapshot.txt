@@ -14,7 +14,7 @@ atlas api cloudBackups takeSnapshot
 
 Takes one on-demand snapshot for the specified cluster.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot.

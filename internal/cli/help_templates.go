@@ -21,10 +21,10 @@ const (
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
 
-	ExperimentalText = "The atlas api sub-command, " +
+	APICommandText = "The atlas api sub-command, " +
 		"automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.\n" +
 		"Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint " +
 		"documentation link.\n\n"
 
-	APICommandHelpTemplate = ExperimentalText + HelpTemplate
+	APICommandHelpTemplate = APICommandText + HelpTemplate
 )

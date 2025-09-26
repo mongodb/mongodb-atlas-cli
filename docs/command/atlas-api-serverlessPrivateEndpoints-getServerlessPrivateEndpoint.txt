@@ -14,6 +14,9 @@ atlas api serverlessPrivateEndpoints getServerlessPrivateEndpoint
 
 Return one private endpoint for one serverless instance.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 Identify this endpoint using its unique ID. You must have at least the Project Read Only role for the project to successfully call this resource.
 
 

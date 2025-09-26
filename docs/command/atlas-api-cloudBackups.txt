@@ -14,6 +14,9 @@ atlas api cloudBackups
 
 Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 This resource applies only to clusters that use Cloud Backups.
 
 Options

@@ -14,6 +14,9 @@ atlas api federatedAuthentication updateConnectedOrgConfig
 
 Updates one connected organization configuration from the specified federation.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 
 

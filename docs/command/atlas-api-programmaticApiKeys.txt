@@ -14,6 +14,9 @@ atlas api programmaticApiKeys
 
 Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
 
 Options

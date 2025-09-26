@@ -14,6 +14,9 @@ atlas api serverlessInstances createServerlessInstance
 
 Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 This endpoint will no longer be supported starting January 2026. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect. Please use the createFlexCluster endpoint instead.
 
 

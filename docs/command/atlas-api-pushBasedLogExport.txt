@@ -14,6 +14,9 @@ atlas api pushBasedLogExport
 
 You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 Atlas exports logs every 5 minutes.
 
 Options

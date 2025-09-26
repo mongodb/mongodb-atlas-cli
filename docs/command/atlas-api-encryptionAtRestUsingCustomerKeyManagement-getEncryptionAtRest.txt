@@ -14,6 +14,9 @@ atlas api encryptionAtRestUsingCustomerKeyManagement getEncryptionAtRest
 
 Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 MongoDB Cloud encrypts all storage even if you don't use your own key management. This resource requires the requesting Service Account or API Key to have the Project Owner role.
 
 

@@ -14,6 +14,9 @@ atlas api sharedTierRestoreJobs getSharedClusterBackupRestoreJob
 
 Returns the specified restore job for the specified M2 or M5 cluster.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
 

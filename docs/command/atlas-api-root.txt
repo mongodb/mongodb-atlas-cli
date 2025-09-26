@@ -14,6 +14,9 @@ atlas api root
 
 Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 This starts the MongoDB Cloud API.
 
 Options

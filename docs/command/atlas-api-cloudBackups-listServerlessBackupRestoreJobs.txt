@@ -14,6 +14,9 @@ atlas api cloudBackups listServerlessBackupRestoreJobs
 
 Returns all restore jobs for one serverless instance from the specified project.
 
+The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API.
+Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
+
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
 

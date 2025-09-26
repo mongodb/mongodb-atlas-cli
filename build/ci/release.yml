@@ -242,10 +242,6 @@ functions:
           - revision
           - created_at
           - ext
-          - signing_auth_token_46
-          - signing_auth_token_50
-          - signing_auth_token_60
-          - signing_auth_token_70
           - arch
         env:
           <<: *go_env

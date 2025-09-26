@@ -242,14 +242,9 @@ functions:
           - revision
           - created_at
           - ext
-          - signing_auth_token_46
-          - signing_auth_token_50
-          - signing_auth_token_60
-          - signing_auth_token_70
           - arch
         env:
           <<: *go_env
-          NOTARY_KEY_NAME: ${notary_key_name|server-5.0}
           BARQUE_USERNAME: ${barque_user}
           BARQUE_API_KEY: ${barque_api_key}
         binary: build/package/curator-push.sh

@@ -90,7 +90,6 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 			"ext":                extension,
 			"server_version":     taskServerVersion,
 			"pgp_server_version": getGpgServerVersion(taskServerVersion),
-			"notary_key_name":    notaryKey,
 			"arch":               arch,
 			"edition":            edition,
 		})

@@ -175,10 +175,6 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	if shortOperationID != "" {
-		aliases = append(aliases, strcase.ToLowerCamel(operationID))
-	}
-
 	watcher, err := extractWatcherProperties(operation.Extensions)
 	if err != nil {
 		return nil, err

@@ -99,13 +99,15 @@ func createAPICommandGroupToCobraCommand(group shared_api.Group) *cobra.Command 
 func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)
+	commandOperationID := command.OperationID
 	commandAliases := command.Aliases
 
 	if command.ShortOperationID != "" {
 		// Add original operation ID to aliases
 		commandAliases = append(commandAliases, commandName)
-		// Use shortOperationID as command name
+		// Use shortOperationID
 		commandName = strcase.ToLowerCamel(command.ShortOperationID)
+		commandOperationID = command.ShortOperationID
 	}
 
 	shortDescription, longDescription := splitShortAndLongDescription(command.Description)
@@ -127,7 +129,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 		Short:   shortDescription,
 		Long:    longDescription,
 		Annotations: map[string]string{
-			"operationId": command.OperationID,
+			"operationId": commandOperationID,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile

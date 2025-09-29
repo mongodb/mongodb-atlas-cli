@@ -1,19 +1,19 @@
 HTTP/2.0 201 Created
 Content-Length: 609
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 22 Sep 2025 05:13:52 GMT
+Date: Mon, 29 Sep 2025 05:14:17 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
-Location: http://localhost:8080/api/atlas/v1.0/users/68d0db1100e9e26f36dbbff3
+Location: http://localhost:8080/api/atlas/v1.0/users/68da15ab9753435100117f95
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
-Sunset: Fri, 31 Jul 2026 00:00:00 GMT
+Sunset: Tue, 15 Sep 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 2064
+X-Envoy-Upstream-Service-Time: 1783
 X-Frame-Options: DENY
 X-Java-Method: ApiUsersResource::addUser
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=fb6d89c1c589837728b90948fef9d4777653520e; versionString=master
+X-Mongodb-Service-Version: gitHash=c7491fc07a553523a316c0a8888423c45573c08c; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"country":"US","createdAt":"2025-09-22T05:13:53Z","emailAddress":"cli-test-8206@moongodb.com","firstName":"TestFirstName","id":"68d0db1100e9e26f36dbbff3","lastName":"TestLastName","links":[{"href":"http://localhost:8080/api/atlas/v2/users/68d0db1100e9e26f36dbbff3","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/68d0db1100e9e26f36dbbff3/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/68d0db1100e9e26f36dbbff3/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[],"teamIds":[],"username":"cli-test-8206@moongodb.com"}
+{"country":"US","createdAt":"2025-09-29T05:14:19Z","emailAddress":"cli-test-6424@moongodb.com","firstName":"TestFirstName","id":"68da15ab9753435100117f95","lastName":"TestLastName","links":[{"href":"http://localhost:8080/api/atlas/v2/users/68da15ab9753435100117f95","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/68da15ab9753435100117f95/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/68da15ab9753435100117f95/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[],"teamIds":[],"username":"cli-test-6424@moongodb.com"}

@@ -54,13 +54,13 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-accessTracking-listAccessLogsByClusterName` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's name.
-* :ref:`atlas-api-accessTracking-listAccessLogsByHostname` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's hostname.
+* :ref:`atlas-api-accessTracking-getGroupDbAccessHistoryCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's name.
+* :ref:`atlas-api-accessTracking-getGroupDbAccessHistoryProcess` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's hostname.
 
 
 .. toctree::
    :titlesonly:
 
-   listAccessLogsByClusterName </command/atlas-api-accessTracking-listAccessLogsByClusterName>
-   listAccessLogsByHostname </command/atlas-api-accessTracking-listAccessLogsByHostname>
+   getGroupDbAccessHistoryCluster </command/atlas-api-accessTracking-getGroupDbAccessHistoryCluster>
+   getGroupDbAccessHistoryProcess </command/atlas-api-accessTracking-getGroupDbAccessHistoryProcess>
 

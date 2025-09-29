@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-projectIpAccessList-createProjectIpAccessList` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Adds one or more access list entries to the specified project.
-* :ref:`atlas-api-projectIpAccessList-deleteProjectIpAccessList` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one access list entry from the specified project's IP access list.
-* :ref:`atlas-api-projectIpAccessList-getProjectIpAccessListStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of one project IP access list entry.
-* :ref:`atlas-api-projectIpAccessList-getProjectIpList` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one access list entry from the specified project's IP access list.
-* :ref:`atlas-api-projectIpAccessList-listProjectIpAccessLists` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all access list entries from the specified project's IP access list.
+* :ref:`atlas-api-projectIpAccessList-createGroupAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Adds one or more access list entries to the specified project.
+* :ref:`atlas-api-projectIpAccessList-deleteGroupAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one access list entry from the specified project's IP access list.
+* :ref:`atlas-api-projectIpAccessList-getGroupAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one access list entry from the specified project's IP access list.
+* :ref:`atlas-api-projectIpAccessList-getGroupAccessListStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of one project IP access list entry.
+* :ref:`atlas-api-projectIpAccessList-listGroupAccessListEntries` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all access list entries from the specified project's IP access list.
 
 
 .. toctree::
    :titlesonly:
 
-   createProjectIpAccessList </command/atlas-api-projectIpAccessList-createProjectIpAccessList>
-   deleteProjectIpAccessList </command/atlas-api-projectIpAccessList-deleteProjectIpAccessList>
-   getProjectIpAccessListStatus </command/atlas-api-projectIpAccessList-getProjectIpAccessListStatus>
-   getProjectIpList </command/atlas-api-projectIpAccessList-getProjectIpList>
-   listProjectIpAccessLists </command/atlas-api-projectIpAccessList-listProjectIpAccessLists>
+   createGroupAccessListEntry </command/atlas-api-projectIpAccessList-createGroupAccessListEntry>
+   deleteGroupAccessListEntry </command/atlas-api-projectIpAccessList-deleteGroupAccessListEntry>
+   getGroupAccessListEntry </command/atlas-api-projectIpAccessList-getGroupAccessListEntry>
+   getGroupAccessListStatus </command/atlas-api-projectIpAccessList-getGroupAccessListStatus>
+   listGroupAccessListEntries </command/atlas-api-projectIpAccessList-listGroupAccessListEntries>
 

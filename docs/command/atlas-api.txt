@@ -188,6 +188,7 @@ Related Commands
 * :ref:`atlas-api-collectionLevelMetrics` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, and edits pinned namespaces for the specified cluster or process.
 * :ref:`atlas-api-customDatabaseRoles` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes custom database user privilege roles.
 * :ref:`atlas-api-dataFederation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes Federated Database Instances.
+* :ref:`atlas-api-dataLakePipelines` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
 * :ref:`atlas-api-databaseUsers` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes database users.
 * :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns and edits the Encryption at Rest using Customer Key Management configuration.
 * :ref:`atlas-api-events` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns events.
@@ -243,6 +244,7 @@ Related Commands
    collectionLevelMetrics </command/atlas-api-collectionLevelMetrics>
    customDatabaseRoles </command/atlas-api-customDatabaseRoles>
    dataFederation </command/atlas-api-dataFederation>
+   dataLakePipelines </command/atlas-api-dataLakePipelines>
    databaseUsers </command/atlas-api-databaseUsers>
    encryptionAtRestUsingCustomerKeyManagement </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement>
    events </command/atlas-api-events>

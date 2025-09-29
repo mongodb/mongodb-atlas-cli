@@ -54,11 +54,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-rollingIndex-createRollingIndex` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates an index on the cluster identified by its name in a rolling manner.
+* :ref:`atlas-api-rollingIndex-createGroupClusterIndexRollingIndex` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates an index on the cluster identified by its name in a rolling manner.
 
 
 .. toctree::
    :titlesonly:
 
-   createRollingIndex </command/atlas-api-rollingIndex-createRollingIndex>
+   createGroupClusterIndexRollingIndex </command/atlas-api-rollingIndex-createGroupClusterIndexRollingIndex>
 

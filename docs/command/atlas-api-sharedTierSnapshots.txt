@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for all snapshots for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-downloadGroupClusterBackupTenant` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-getGroupClusterBackupTenantSnapshot` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-listGroupClusterBackupTenantSnapshots` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for all snapshots for the specified shared cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   downloadSharedClusterBackup </command/atlas-api-sharedTierSnapshots-downloadSharedClusterBackup>
-   getSharedClusterBackup </command/atlas-api-sharedTierSnapshots-getSharedClusterBackup>
-   listSharedClusterBackups </command/atlas-api-sharedTierSnapshots-listSharedClusterBackups>
+   downloadGroupClusterBackupTenant </command/atlas-api-sharedTierSnapshots-downloadGroupClusterBackupTenant>
+   getGroupClusterBackupTenantSnapshot </command/atlas-api-sharedTierSnapshots-getGroupClusterBackupTenantSnapshot>
+   listGroupClusterBackupTenantSnapshots </command/atlas-api-sharedTierSnapshots-listGroupClusterBackupTenantSnapshots>
 

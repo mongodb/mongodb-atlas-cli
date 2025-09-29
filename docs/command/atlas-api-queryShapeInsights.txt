@@ -55,12 +55,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-api-queryShapeInsights-getGroupClusterQueryShapeInsightDetails` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the metadata and statistics summary for a given query shape hash.
-* :ref:`atlas-api-queryShapeInsights-getGroupClusterQueryShapeInsightSummaries` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of query shape statistics summaries for a given cluster.
+* :ref:`atlas-api-queryShapeInsights-listGroupClusterQueryShapeInsightSummaries` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of query shape statistics summaries for a given cluster.
 
 
 .. toctree::
    :titlesonly:
 
    getGroupClusterQueryShapeInsightDetails </command/atlas-api-queryShapeInsights-getGroupClusterQueryShapeInsightDetails>
-   getGroupClusterQueryShapeInsightSummaries </command/atlas-api-queryShapeInsights-getGroupClusterQueryShapeInsightSummaries>
+   listGroupClusterQueryShapeInsightSummaries </command/atlas-api-queryShapeInsights-listGroupClusterQueryShapeInsightSummaries>
 

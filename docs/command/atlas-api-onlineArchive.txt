@@ -54,21 +54,21 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-onlineArchive-createOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one online archive.
-* :ref:`atlas-api-onlineArchive-deleteOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one online archive.
-* :ref:`atlas-api-onlineArchive-downloadOnlineArchiveQueryLogs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Downloads query logs for the specified online archive.
-* :ref:`atlas-api-onlineArchive-getOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one online archive for one cluster.
-* :ref:`atlas-api-onlineArchive-listOnlineArchives` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details of all online archives.
-* :ref:`atlas-api-onlineArchive-updateOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates, pauses, or resumes one online archive.
+* :ref:`atlas-api-onlineArchive-createGroupClusterOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one online archive.
+* :ref:`atlas-api-onlineArchive-deleteGroupClusterOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one online archive.
+* :ref:`atlas-api-onlineArchive-downloadGroupClusterOnlineArchiveQueryLogs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Downloads query logs for the specified online archive.
+* :ref:`atlas-api-onlineArchive-getGroupClusterOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one online archive for one cluster.
+* :ref:`atlas-api-onlineArchive-listGroupClusterOnlineArchives` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details of all online archives.
+* :ref:`atlas-api-onlineArchive-updateGroupClusterOnlineArchive` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates, pauses, or resumes one online archive.
 
 
 .. toctree::
    :titlesonly:
 
-   createOnlineArchive </command/atlas-api-onlineArchive-createOnlineArchive>
-   deleteOnlineArchive </command/atlas-api-onlineArchive-deleteOnlineArchive>
-   downloadOnlineArchiveQueryLogs </command/atlas-api-onlineArchive-downloadOnlineArchiveQueryLogs>
-   getOnlineArchive </command/atlas-api-onlineArchive-getOnlineArchive>
-   listOnlineArchives </command/atlas-api-onlineArchive-listOnlineArchives>
-   updateOnlineArchive </command/atlas-api-onlineArchive-updateOnlineArchive>
+   createGroupClusterOnlineArchive </command/atlas-api-onlineArchive-createGroupClusterOnlineArchive>
+   deleteGroupClusterOnlineArchive </command/atlas-api-onlineArchive-deleteGroupClusterOnlineArchive>
+   downloadGroupClusterOnlineArchiveQueryLogs </command/atlas-api-onlineArchive-downloadGroupClusterOnlineArchiveQueryLogs>
+   getGroupClusterOnlineArchive </command/atlas-api-onlineArchive-getGroupClusterOnlineArchive>
+   listGroupClusterOnlineArchives </command/atlas-api-onlineArchive-listGroupClusterOnlineArchives>
+   updateGroupClusterOnlineArchive </command/atlas-api-onlineArchive-updateGroupClusterOnlineArchive>
 

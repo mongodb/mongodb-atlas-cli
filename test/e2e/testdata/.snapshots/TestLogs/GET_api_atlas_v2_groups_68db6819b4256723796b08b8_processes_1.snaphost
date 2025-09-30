@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 30 Sep 2025 05:27:23 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 76
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=984fa3768425d2eb34538875e9176eaba8935777; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68db6819b4256723796b08b8/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-09-30T05:26:42Z","groupId":"68db6819b4256723796b08b8","hostname":"atlas-ct9kjl-shard-00-00.esyjvy.mongodb-dev.net","id":"atlas-ct9kjl-shard-00-00.esyjvy.mongodb-dev.net:27017","lastPing":"2025-09-30T05:27:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68db6819b4256723796b08b8/processes/atlas-ct9kjl-shard-00-00.esyjvy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ct9kjl-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-329-shard-00-00.esyjvy.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-30T05:26:42Z","groupId":"68db6819b4256723796b08b8","hostname":"atlas-ct9kjl-shard-00-01.esyjvy.mongodb-dev.net","id":"atlas-ct9kjl-shard-00-01.esyjvy.mongodb-dev.net:27017","lastPing":"2025-09-30T05:27:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68db6819b4256723796b08b8/processes/atlas-ct9kjl-shard-00-01.esyjvy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ct9kjl-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-329-shard-00-01.esyjvy.mongodb-dev.net","version":"8.0.14"},{"created":"2025-09-30T05:26:42Z","groupId":"68db6819b4256723796b08b8","hostname":"atlas-ct9kjl-shard-00-02.esyjvy.mongodb-dev.net","id":"atlas-ct9kjl-shard-00-02.esyjvy.mongodb-dev.net:27017","lastPing":"2025-09-30T05:27:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68db6819b4256723796b08b8/processes/atlas-ct9kjl-shard-00-02.esyjvy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ct9kjl-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-329-shard-00-02.esyjvy.mongodb-dev.net","version":"8.0.14"}],"totalCount":3}

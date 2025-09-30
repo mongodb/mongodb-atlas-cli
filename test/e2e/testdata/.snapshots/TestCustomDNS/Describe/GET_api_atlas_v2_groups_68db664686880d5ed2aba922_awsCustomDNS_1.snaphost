@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 16
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 30 Sep 2025 05:10:38 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasAWSCustomDNSEnabledResource::getAWSCustomDNSEnabled
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=984fa3768425d2eb34538875e9176eaba8935777; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"enabled":true}

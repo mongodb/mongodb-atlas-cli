@@ -40,7 +40,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/customdns"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datafederation"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalake"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/datalakepipelines"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/dbusers"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/events"
@@ -188,7 +187,6 @@ Use the --help flag with any command for more info on that command.`,
 		customdbroles.Builder(),
 		accesslists.Builder(),
 		datalake.Builder(),
-		datalakepipelines.Builder(),
 		alerts.Builder(),
 		backup.Builder(),
 		events.Builder(),

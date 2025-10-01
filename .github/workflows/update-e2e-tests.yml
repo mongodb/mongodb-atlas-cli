@@ -3,7 +3,7 @@ name: Update E2E Tests Snapshots
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 5 * * 1-5 # weekdays at 5:00 AM UTC
+    - cron: 15 2 * * 1 # every Monday at 2:15 AM UTC
   pull_request:
     types: [labeled]
 jobs:

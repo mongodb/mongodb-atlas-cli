@@ -493,6 +493,8 @@ func (e *dockerImpl) ContainerHealthStatus(ctx context.Context, name string) (Do
 		return DockerHealthcheckStatusHealthy, nil
 	case string(DockerHealthcheckStatusUnhealthy):
 		return DockerHealthcheckStatusUnhealthy, nil
+	case "": // Empty string means no health check configured or status not available
+		return DockerHealthcheckStatusNone, nil
 	default:
 		return "", fmt.Errorf("unknown health status: %s", statusString)
 	}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1871
+Content-Type: application/json
+Date: Wed, 01 Oct 2025 05:08:46 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=a4a956a28a3bb18b2524b466e071f8375467af64; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-868.o2idsts.mongodb-dev.net"},"createDate":"2025-10-01T05:08:35Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"68dcb7495a2f96450021b072","id":"68dcb7535b2d552e98f84127","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/68dcb7495a2f96450021b072/clusters/cluster-868","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/68dcb7495a2f96450021b072/clusters/cluster-868/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/68dcb7495a2f96450021b072/clusters/cluster-868/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.14","mongoURIUpdated":"2025-10-01T05:08:35Z","name":"cluster-868","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_2"},"replicationFactor":3,"replicationSpec":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"68dcb7535b2d552e98f84103","numShards":1,"regionsConfig":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

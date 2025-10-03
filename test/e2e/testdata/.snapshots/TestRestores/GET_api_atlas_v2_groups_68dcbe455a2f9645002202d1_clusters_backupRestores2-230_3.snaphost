@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2709
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Wed, 01 Oct 2025 05:46:53 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 113
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=a4a956a28a3bb18b2524b466e071f8375467af64; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":true,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://backuprestores2-230-shard-00-00.hwppzu.mongodb-dev.net:27017,backuprestores2-230-shard-00-01.hwppzu.mongodb-dev.net:27017,backuprestores2-230-shard-00-02.hwppzu.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-yvfwpa-shard-0","standardSrv":"mongodb+srv://backuprestores2-230.hwppzu.mongodb-dev.net"},"createDate":"2025-10-01T05:38:23Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"68dcbe455a2f9645002202d1","id":"68dcbe4f5a2f964500220676","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68dcbe455a2f9645002202d1/clusters/backupRestores2-230","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68dcbe455a2f9645002202d1/clusters/backupRestores2-230/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68dcbe455a2f9645002202d1/clusters/backupRestores2-230/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.14","name":"backupRestores2-230","paused":false,"pitEnabled":true,"redactClientLogData":false,"replicationSpecs":[{"id":"68dcbe4f5a2f96450022066f","regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"effectiveAnalyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"effectiveElectableSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":3},"effectiveReadOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"}],"zoneId":"68dcbe4f5a2f96450022066e","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

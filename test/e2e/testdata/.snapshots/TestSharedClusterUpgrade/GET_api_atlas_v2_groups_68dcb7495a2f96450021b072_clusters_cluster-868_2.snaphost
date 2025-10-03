@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1555
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Wed, 01 Oct 2025 05:08:42 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 84
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=a4a956a28a3bb18b2524b466e071f8375467af64; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-868.o2idsts.mongodb-dev.net"},"createDate":"2025-10-01T05:08:35Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"68dcb7495a2f96450021b072","id":"68dcb7535b2d552e98f84127","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68dcb7495a2f96450021b072/clusters/cluster-868","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68dcb7495a2f96450021b072/clusters/cluster-868/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68dcb7495a2f96450021b072/clusters/cluster-868/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.14","name":"cluster-868","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"68dcb7535b2d552e98f8410b","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_2"}],"zoneId":"68dcb7535b2d552e98f8410a","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

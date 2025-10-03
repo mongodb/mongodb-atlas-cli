@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-x509Authentication-createDatabaseUserCertificate` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Generates one X.509 certificate for the specified MongoDB user.
-* :ref:`atlas-api-x509Authentication-disableCustomerManagedX509` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
-* :ref:`atlas-api-x509Authentication-listDatabaseUserCertificates` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all unexpired X.509 certificates for the specified MongoDB user.
+* :ref:`atlas-api-x509Authentication-createGroupDatabaseUserCert` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Generates one X.509 certificate for the specified MongoDB user.
+* :ref:`atlas-api-x509Authentication-disableGroupUserSecurityCustomerX509` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
+* :ref:`atlas-api-x509Authentication-listGroupDatabaseUserCerts` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all unexpired X.509 certificates for the specified MongoDB user.
 
 
 .. toctree::
    :titlesonly:
 
-   createDatabaseUserCertificate </command/atlas-api-x509Authentication-createDatabaseUserCertificate>
-   disableCustomerManagedX509 </command/atlas-api-x509Authentication-disableCustomerManagedX509>
-   listDatabaseUserCertificates </command/atlas-api-x509Authentication-listDatabaseUserCertificates>
+   createGroupDatabaseUserCert </command/atlas-api-x509Authentication-createGroupDatabaseUserCert>
+   disableGroupUserSecurityCustomerX509 </command/atlas-api-x509Authentication-disableGroupUserSecurityCustomerX509>
+   listGroupDatabaseUserCerts </command/atlas-api-x509Authentication-listGroupDatabaseUserCerts>
 

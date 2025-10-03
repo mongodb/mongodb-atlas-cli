@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one private endpoint for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Remove one private endpoint from one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return one private endpoint for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all private endpoints for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-createGroupPrivateEndpointServerlessInstanceEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-deleteGroupPrivateEndpointServerlessInstanceEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Remove one private endpoint from one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-getGroupPrivateEndpointServerlessInstanceEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-listGroupPrivateEndpointServerlessInstanceEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all private endpoints for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-updateGroupPrivateEndpointServerlessInstanceEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one private endpoint for one serverless instance.
 
 
 .. toctree::
    :titlesonly:
 
-   createServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint>
-   deleteServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint>
-   getServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint>
-   listServerlessPrivateEndpoints </command/atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints>
-   updateServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint>
+   createGroupPrivateEndpointServerlessInstanceEndpoint </command/atlas-api-serverlessPrivateEndpoints-createGroupPrivateEndpointServerlessInstanceEndpoint>
+   deleteGroupPrivateEndpointServerlessInstanceEndpoint </command/atlas-api-serverlessPrivateEndpoints-deleteGroupPrivateEndpointServerlessInstanceEndpoint>
+   getGroupPrivateEndpointServerlessInstanceEndpoint </command/atlas-api-serverlessPrivateEndpoints-getGroupPrivateEndpointServerlessInstanceEndpoint>
+   listGroupPrivateEndpointServerlessInstanceEndpoint </command/atlas-api-serverlessPrivateEndpoints-listGroupPrivateEndpointServerlessInstanceEndpoint>
+   updateGroupPrivateEndpointServerlessInstanceEndpoint </command/atlas-api-serverlessPrivateEndpoints-updateGroupPrivateEndpointServerlessInstanceEndpoint>
 

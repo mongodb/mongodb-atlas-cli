@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-ldapConfiguration-deleteLdapConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the current LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapConfigurationStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of one request to verify one LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-saveLdapConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Edits the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-verifyLdapConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Verifies the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-deleteGroupUserSecurityLdapUserToDnMapping` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getGroupUserSecurity` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the current LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getGroupUserSecurityLdapVerify` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of one request to verify one LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-updateGroupUserSecurity` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Edits the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-verifyGroupUserSecurityLdap` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Verifies the LDAP configuration for the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   deleteLdapConfiguration </command/atlas-api-ldapConfiguration-deleteLdapConfiguration>
-   getLdapConfiguration </command/atlas-api-ldapConfiguration-getLdapConfiguration>
-   getLdapConfigurationStatus </command/atlas-api-ldapConfiguration-getLdapConfigurationStatus>
-   saveLdapConfiguration </command/atlas-api-ldapConfiguration-saveLdapConfiguration>
-   verifyLdapConfiguration </command/atlas-api-ldapConfiguration-verifyLdapConfiguration>
+   deleteGroupUserSecurityLdapUserToDnMapping </command/atlas-api-ldapConfiguration-deleteGroupUserSecurityLdapUserToDnMapping>
+   getGroupUserSecurity </command/atlas-api-ldapConfiguration-getGroupUserSecurity>
+   getGroupUserSecurityLdapVerify </command/atlas-api-ldapConfiguration-getGroupUserSecurityLdapVerify>
+   updateGroupUserSecurity </command/atlas-api-ldapConfiguration-updateGroupUserSecurity>
+   verifyGroupUserSecurityLdap </command/atlas-api-ldapConfiguration-verifyGroupUserSecurityLdap>
 

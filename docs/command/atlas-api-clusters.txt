@@ -54,47 +54,47 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-clusters-autoScalingConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the internal configuration of AutoScaling for sharded clusters.
-* :ref:`atlas-api-clusters-createCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one cluster in the specified project.
-* :ref:`atlas-api-clusters-deleteCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one cluster from the specified project.
-* :ref:`atlas-api-clusters-getCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-getClusterAdvancedConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the advanced configuration details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-getClusterStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of all changes that you made to the specified cluster in the specified project.
-* :ref:`atlas-api-clusters-getSampleDatasetLoadStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Checks the progress of loading the sample dataset into one cluster.
-* :ref:`atlas-api-clusters-grantMongoDbEmployeeAccess` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
-* :ref:`atlas-api-clusters-listCloudProviderRegions` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the list of regions available for the specified cloud provider at the specified tier.
-* :ref:`atlas-api-clusters-listClusters` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for all clusters in the specific project to which you have access.
-* :ref:`atlas-api-clusters-listClustersForAllProjects` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for all clusters in all projects to which you have access.
-* :ref:`atlas-api-clusters-loadSampleDataset` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests loading the MongoDB sample dataset into the specified cluster.
-* :ref:`atlas-api-clusters-pinFeatureCompatibilityVersion` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date.
-* :ref:`atlas-api-clusters-revokeMongoDbEmployeeAccess` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Revokes a previously granted MongoDB employee cluster access.
-* :ref:`atlas-api-clusters-testFailover` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Starts a failover test for the specified cluster in the specified project.
-* :ref:`atlas-api-clusters-unpinFeatureCompatibilityVersion` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Unpins the current fixed Feature Compatibility Version (FCV).
-* :ref:`atlas-api-clusters-updateCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-updateClusterAdvancedConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the advanced configuration details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-upgradeSharedCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project.
+* :ref:`atlas-api-clusters-autoGroupClusterScalingConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the internal configuration of AutoScaling for sharded clusters.
+* :ref:`atlas-api-clusters-createGroupCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one cluster in the specified project.
+* :ref:`atlas-api-clusters-deleteGroupCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one cluster from the specified project.
+* :ref:`atlas-api-clusters-getGroupCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for one cluster in the specified project.
+* :ref:`atlas-api-clusters-getGroupClusterProcessArgs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the advanced configuration details for one cluster in the specified project.
+* :ref:`atlas-api-clusters-getGroupClusterStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of all changes that you made to the specified cluster in the specified project.
+* :ref:`atlas-api-clusters-getGroupSampleDatasetLoad` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Checks the progress of loading the sample dataset into one cluster.
+* :ref:`atlas-api-clusters-grantGroupClusterMongoDbEmployeeAccess` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
+* :ref:`atlas-api-clusters-listClusterDetails` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for all clusters in all projects to which you have access.
+* :ref:`atlas-api-clusters-listGroupClusterProviderRegions` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the list of regions available for the specified cloud provider at the specified tier.
+* :ref:`atlas-api-clusters-listGroupClusters` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for all clusters in the specific project to which you have access.
+* :ref:`atlas-api-clusters-pinGroupClusterFeatureCompatibilityVersion` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date.
+* :ref:`atlas-api-clusters-requestGroupSampleDatasetLoad` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests loading the MongoDB sample dataset into the specified cluster.
+* :ref:`atlas-api-clusters-restartGroupClusterPrimaries` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Starts a failover test for the specified cluster in the specified project.
+* :ref:`atlas-api-clusters-revokeGroupClusterMongoDbEmployeeAccess` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Revokes a previously granted MongoDB employee cluster access.
+* :ref:`atlas-api-clusters-unpinGroupClusterFeatureCompatibilityVersion` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Unpins the current fixed Feature Compatibility Version (FCV).
+* :ref:`atlas-api-clusters-updateGroupCluster` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the details for one cluster in the specified project.
+* :ref:`atlas-api-clusters-updateGroupClusterProcessArgs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the advanced configuration details for one cluster in the specified project.
+* :ref:`atlas-api-clusters-upgradeGroupClusterTenantUpgrade` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   autoScalingConfiguration </command/atlas-api-clusters-autoScalingConfiguration>
-   createCluster </command/atlas-api-clusters-createCluster>
-   deleteCluster </command/atlas-api-clusters-deleteCluster>
-   getCluster </command/atlas-api-clusters-getCluster>
-   getClusterAdvancedConfiguration </command/atlas-api-clusters-getClusterAdvancedConfiguration>
-   getClusterStatus </command/atlas-api-clusters-getClusterStatus>
-   getSampleDatasetLoadStatus </command/atlas-api-clusters-getSampleDatasetLoadStatus>
-   grantMongoDbEmployeeAccess </command/atlas-api-clusters-grantMongoDbEmployeeAccess>
-   listCloudProviderRegions </command/atlas-api-clusters-listCloudProviderRegions>
-   listClusters </command/atlas-api-clusters-listClusters>
-   listClustersForAllProjects </command/atlas-api-clusters-listClustersForAllProjects>
-   loadSampleDataset </command/atlas-api-clusters-loadSampleDataset>
-   pinFeatureCompatibilityVersion </command/atlas-api-clusters-pinFeatureCompatibilityVersion>
-   revokeMongoDbEmployeeAccess </command/atlas-api-clusters-revokeMongoDbEmployeeAccess>
-   testFailover </command/atlas-api-clusters-testFailover>
-   unpinFeatureCompatibilityVersion </command/atlas-api-clusters-unpinFeatureCompatibilityVersion>
-   updateCluster </command/atlas-api-clusters-updateCluster>
-   updateClusterAdvancedConfiguration </command/atlas-api-clusters-updateClusterAdvancedConfiguration>
-   upgradeSharedCluster </command/atlas-api-clusters-upgradeSharedCluster>
+   autoGroupClusterScalingConfiguration </command/atlas-api-clusters-autoGroupClusterScalingConfiguration>
+   createGroupCluster </command/atlas-api-clusters-createGroupCluster>
+   deleteGroupCluster </command/atlas-api-clusters-deleteGroupCluster>
+   getGroupCluster </command/atlas-api-clusters-getGroupCluster>
+   getGroupClusterProcessArgs </command/atlas-api-clusters-getGroupClusterProcessArgs>
+   getGroupClusterStatus </command/atlas-api-clusters-getGroupClusterStatus>
+   getGroupSampleDatasetLoad </command/atlas-api-clusters-getGroupSampleDatasetLoad>
+   grantGroupClusterMongoDbEmployeeAccess </command/atlas-api-clusters-grantGroupClusterMongoDbEmployeeAccess>
+   listClusterDetails </command/atlas-api-clusters-listClusterDetails>
+   listGroupClusterProviderRegions </command/atlas-api-clusters-listGroupClusterProviderRegions>
+   listGroupClusters </command/atlas-api-clusters-listGroupClusters>
+   pinGroupClusterFeatureCompatibilityVersion </command/atlas-api-clusters-pinGroupClusterFeatureCompatibilityVersion>
+   requestGroupSampleDatasetLoad </command/atlas-api-clusters-requestGroupSampleDatasetLoad>
+   restartGroupClusterPrimaries </command/atlas-api-clusters-restartGroupClusterPrimaries>
+   revokeGroupClusterMongoDbEmployeeAccess </command/atlas-api-clusters-revokeGroupClusterMongoDbEmployeeAccess>
+   unpinGroupClusterFeatureCompatibilityVersion </command/atlas-api-clusters-unpinGroupClusterFeatureCompatibilityVersion>
+   updateGroupCluster </command/atlas-api-clusters-updateGroupCluster>
+   updateGroupClusterProcessArgs </command/atlas-api-clusters-updateGroupClusterProcessArgs>
+   upgradeGroupClusterTenantUpgrade </command/atlas-api-clusters-upgradeGroupClusterTenantUpgrade>
 

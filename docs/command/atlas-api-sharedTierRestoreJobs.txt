@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierRestoreJobs-createSharedClusterBackupRestoreJob` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Restores the specified M2 or M5 cluster.
-* :ref:`atlas-api-sharedTierRestoreJobs-getSharedClusterBackupRestoreJob` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the specified restore job for the specified M2 or M5 cluster.
-* :ref:`atlas-api-sharedTierRestoreJobs-listSharedClusterBackupRestoreJobs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all restore jobs for the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-createGroupClusterBackupTenantRestore` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Restores the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-getGroupClusterBackupTenantRestore` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the specified restore job for the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-listGroupClusterBackupTenantRestores` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all restore jobs for the specified M2 or M5 cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   createSharedClusterBackupRestoreJob </command/atlas-api-sharedTierRestoreJobs-createSharedClusterBackupRestoreJob>
-   getSharedClusterBackupRestoreJob </command/atlas-api-sharedTierRestoreJobs-getSharedClusterBackupRestoreJob>
-   listSharedClusterBackupRestoreJobs </command/atlas-api-sharedTierRestoreJobs-listSharedClusterBackupRestoreJobs>
+   createGroupClusterBackupTenantRestore </command/atlas-api-sharedTierRestoreJobs-createGroupClusterBackupTenantRestore>
+   getGroupClusterBackupTenantRestore </command/atlas-api-sharedTierRestoreJobs-getGroupClusterBackupTenantRestore>
+   listGroupClusterBackupTenantRestores </command/atlas-api-sharedTierRestoreJobs-listGroupClusterBackupTenantRestores>
 

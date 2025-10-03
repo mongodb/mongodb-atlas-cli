@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-customDatabaseRoles-createCustomDatabaseRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one custom role in the specified project.
-* :ref:`atlas-api-customDatabaseRoles-deleteCustomDatabaseRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one custom role from the specified project.
-* :ref:`atlas-api-customDatabaseRoles-getCustomDatabaseRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one custom role for the specified project.
-* :ref:`atlas-api-customDatabaseRoles-listCustomDatabaseRoles` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all custom roles for the specified project.
-* :ref:`atlas-api-customDatabaseRoles-updateCustomDatabaseRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one custom role in the specified project.
+* :ref:`atlas-api-customDatabaseRoles-createGroupCustomDbRoleRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one custom role in the specified project.
+* :ref:`atlas-api-customDatabaseRoles-deleteGroupCustomDbRoleRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one custom role from the specified project.
+* :ref:`atlas-api-customDatabaseRoles-getGroupCustomDbRoleRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one custom role for the specified project.
+* :ref:`atlas-api-customDatabaseRoles-listGroupCustomDbRoleRoles` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all custom roles for the specified project.
+* :ref:`atlas-api-customDatabaseRoles-updateGroupCustomDbRoleRole` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one custom role in the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   createCustomDatabaseRole </command/atlas-api-customDatabaseRoles-createCustomDatabaseRole>
-   deleteCustomDatabaseRole </command/atlas-api-customDatabaseRoles-deleteCustomDatabaseRole>
-   getCustomDatabaseRole </command/atlas-api-customDatabaseRoles-getCustomDatabaseRole>
-   listCustomDatabaseRoles </command/atlas-api-customDatabaseRoles-listCustomDatabaseRoles>
-   updateCustomDatabaseRole </command/atlas-api-customDatabaseRoles-updateCustomDatabaseRole>
+   createGroupCustomDbRoleRole </command/atlas-api-customDatabaseRoles-createGroupCustomDbRoleRole>
+   deleteGroupCustomDbRoleRole </command/atlas-api-customDatabaseRoles-deleteGroupCustomDbRoleRole>
+   getGroupCustomDbRoleRole </command/atlas-api-customDatabaseRoles-getGroupCustomDbRoleRole>
+   listGroupCustomDbRoleRoles </command/atlas-api-customDatabaseRoles-listGroupCustomDbRoleRoles>
+   updateGroupCustomDbRoleRole </command/atlas-api-customDatabaseRoles-updateGroupCustomDbRoleRole>
 

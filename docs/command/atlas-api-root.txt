@@ -55,12 +55,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-api-root-getSystemStatus` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: This resource returns information about the MongoDB application along with API key meta data.
-* :ref:`atlas-api-root-returnAllControlPlaneIpAddresses` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all control plane IP addresses.
+* :ref:`atlas-api-root-listControlPlaneIpAddresses` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all control plane IP addresses.
 
 
 .. toctree::
    :titlesonly:
 
    getSystemStatus </command/atlas-api-root-getSystemStatus>
-   returnAllControlPlaneIpAddresses </command/atlas-api-root-returnAllControlPlaneIpAddresses>
+   listControlPlaneIpAddresses </command/atlas-api-root-listControlPlaneIpAddresses>
 

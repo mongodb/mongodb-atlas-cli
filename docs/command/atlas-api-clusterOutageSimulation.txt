@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-clusterOutageSimulation-endOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Ends a cluster outage simulation.
-* :ref:`atlas-api-clusterOutageSimulation-getOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one outage simulation for one cluster.
-* :ref:`atlas-api-clusterOutageSimulation-startOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Starts a cluster outage simulation.
+* :ref:`atlas-api-clusterOutageSimulation-endGroupClusterOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Ends a cluster outage simulation.
+* :ref:`atlas-api-clusterOutageSimulation-getGroupClusterOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one outage simulation for one cluster.
+* :ref:`atlas-api-clusterOutageSimulation-startGroupClusterOutageSimulation` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Starts a cluster outage simulation.
 
 
 .. toctree::
    :titlesonly:
 
-   endOutageSimulation </command/atlas-api-clusterOutageSimulation-endOutageSimulation>
-   getOutageSimulation </command/atlas-api-clusterOutageSimulation-getOutageSimulation>
-   startOutageSimulation </command/atlas-api-clusterOutageSimulation-startOutageSimulation>
+   endGroupClusterOutageSimulation </command/atlas-api-clusterOutageSimulation-endGroupClusterOutageSimulation>
+   getGroupClusterOutageSimulation </command/atlas-api-clusterOutageSimulation-getGroupClusterOutageSimulation>
+   startGroupClusterOutageSimulation </command/atlas-api-clusterOutageSimulation-startGroupClusterOutageSimulation>
 

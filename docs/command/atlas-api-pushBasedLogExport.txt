@@ -54,17 +54,17 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-pushBasedLogExport-createPushBasedLogConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Configures the project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Disables the push-based log export feature by resetting the project level settings to its default configuration.
-* :ref:`atlas-api-pushBasedLogExport-getPushBasedLogConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Fetches the current project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-createGroupPushBasedLogExport` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Configures the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-deleteGroupPushBasedLogExport` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Disables the push-based log export feature by resetting the project level settings to its default configuration.
+* :ref:`atlas-api-pushBasedLogExport-getGroupPushBasedLogExport` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Fetches the current project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-updateGroupPushBasedLogExport` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the project level settings for the push-based log export feature.
 
 
 .. toctree::
    :titlesonly:
 
-   createPushBasedLogConfiguration </command/atlas-api-pushBasedLogExport-createPushBasedLogConfiguration>
-   deletePushBasedLogConfiguration </command/atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration>
-   getPushBasedLogConfiguration </command/atlas-api-pushBasedLogExport-getPushBasedLogConfiguration>
-   updatePushBasedLogConfiguration </command/atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration>
+   createGroupPushBasedLogExport </command/atlas-api-pushBasedLogExport-createGroupPushBasedLogExport>
+   deleteGroupPushBasedLogExport </command/atlas-api-pushBasedLogExport-deleteGroupPushBasedLogExport>
+   getGroupPushBasedLogExport </command/atlas-api-pushBasedLogExport-getGroupPushBasedLogExport>
+   updateGroupPushBasedLogExport </command/atlas-api-pushBasedLogExport-updateGroupPushBasedLogExport>
 

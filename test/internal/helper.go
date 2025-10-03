@@ -1512,7 +1512,7 @@ func createOrgServiceAccount(cliPath, name string) (string, string, error) {
 	args := []string{
 		apiEntity,
 		serviceAccountsEntity,
-		"createServiceAccount",
+		"createOrgServiceAccount",
 		"--version",
 		serviceAccountAPIVersion,
 		"-P",
@@ -1564,7 +1564,7 @@ func deleteOrgServiceAccount(t *testing.T, cliPath, clientID string) {
 	args := []string{
 		apiEntity,
 		serviceAccountsEntity,
-		"deleteServiceAccount",
+		"deleteOrgServiceAccount",
 		"--clientId",
 		clientID,
 		"--version",

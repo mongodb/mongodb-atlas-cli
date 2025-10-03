@@ -31,6 +31,7 @@ type Group struct {
 
 type Command struct {
 	OperationID       string
+	ShortOperationID  string
 	Aliases           []string
 	Description       string
 	RequestParameters RequestParameters

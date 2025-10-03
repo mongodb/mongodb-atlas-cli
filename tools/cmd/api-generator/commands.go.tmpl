@@ -33,8 +33,9 @@ var Commands = shared_api.GroupedAndSortedCommands{
 		Commands: []shared_api.Command{
 		{{- range .Commands }}
 			{
-				OperationID: `{{ .OperationID }}`,
-				Aliases: {{if not .Aliases}} nil {{else}} []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} } {{end}},
+				OperationID:      `{{ .OperationID }}`,
+				ShortOperationID: `{{ .ShortOperationID }}`,
+				Aliases:          {{if not .Aliases}} nil {{else}} []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} } {{end}},
 				Description: `{{ .Description }}`,
 				RequestParameters: shared_api.RequestParameters{
 					URL: `{{ .RequestParameters.URL }}`,

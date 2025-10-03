@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 448
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Wed, 01 Oct 2025 05:11:15 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 83
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getRestoreJob
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=a4a956a28a3bb18b2524b466e071f8375467af64; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"deliveryType":"RESTORE","expirationDate":"2025-10-01T11:09:55Z","id":"68dcb7a35b2d552e98f86427","instanceName":"test-flex","projectId":"b0123456789abcdef012345b","restoreFinishedDate":"2025-10-01T05:11:10Z","restoreScheduledDate":"2025-10-01T05:09:55Z","snapshotFinishedDate":"2025-09-23T17:06:59Z","snapshotId":"68d2d368a707123980a26f3d","status":"COMPLETED","targetDeploymentItemName":"cluster-247","targetProjectId":"b0123456789abcdef012345b"}

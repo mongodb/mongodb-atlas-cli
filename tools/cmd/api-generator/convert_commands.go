@@ -130,6 +130,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 			}
 		}
 
+		// OperationID override for x-xgen-atlascli. This takes priority over x-xgen-operation-id-override.
 		if overrides := extractOverrides(operation.Extensions); overrides != nil {
 			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
 				ext.operationID = overriddenOperationID

@@ -75,7 +75,7 @@ var distros = map[string]Platform{
 	},
 }
 
-func newPublishTask(taskName, extension, edition, distro, taskServerVersion, notaryKey, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
+func newPublishTask(taskName, extension, edition, distro, taskServerVersion, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {
 	t := &shrub.Task{
 		Name: taskName,
 	}
@@ -98,7 +98,6 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, not
 
 func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
 	taskServerVersion := sv + ".0"
-	notaryKey := "server-" + sv
 	taskSv := "_" + sv
 	if !stable {
 		taskServerVersion += "-rc1"
@@ -111,7 +110,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 			}
 			for _, a := range d.architectures {
 				taskName := fmt.Sprintf("push_atlascli_%s_%s_%s%s%s", k, r, a, strings.ReplaceAll(taskSv, ".", ""), stableSuffix)
-				t := newPublishTask(taskName, d.extension, r, k, taskServerVersion, notaryKey, a, stable, dependency)
+				t := newPublishTask(taskName, d.extension, r, k, taskServerVersion, a, stable, dependency)
 				c.Tasks = append(c.Tasks, t)
 				v.AddTasks(t.Name)
 			}

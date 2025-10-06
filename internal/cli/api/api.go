@@ -71,7 +71,7 @@ func Builder() *cobra.Command {
 func createRootAPICommand() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "api",
-		Short: `Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.`,
+		Short: `Access all features of the Atlas Administration API through the Atlas CLI by using the 'atlas api <tag> <operationId>' command.`,
 		Long: `This feature streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 For more information on

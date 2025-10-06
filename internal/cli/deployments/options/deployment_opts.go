@@ -82,6 +82,7 @@ var (
 
 var localStateMap = map[string]string{
 	"running":  IdleState,
+	"Up":       IdleState, // nerdctl/containerd "Up" state should be treated as running
 	"removing": DeletingState,
 	// a "created" container is ready to be started but is currently stopped
 	"created":    StoppedState,

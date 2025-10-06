@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 1070
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 29 Sep 2025 05:10:14 GMT
+Date: Mon, 06 Oct 2025 02:45:57 GMT
 Location: http://localhost:8080//api/atlas/v1.0
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 2191
+X-Envoy-Upstream-Service-Time: 2606
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=c7491fc07a553523a316c0a8888423c45573c08c; versionString=master
+X-Mongodb-Service-Version: gitHash=64234f10104966a07bfb5fc82e6fff2689d96ec9; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2025-09-29T05:10:16Z","id":"68da14b69753435100115bd2","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/68da14b69753435100115bd2/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"auditing-e2e-222","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}
+{"clusterCount":0,"created":"2025-10-06T02:45:59Z","id":"68e32d65065c07374c4533da","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d65065c07374c4533da/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"auditing-e2e-324","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}

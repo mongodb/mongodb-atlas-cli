@@ -1,7 +1,7 @@
 HTTP/2.0 200 OK
 Content-Length: 368
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 29 Sep 2025 05:13:31 GMT
+Date: Mon, 06 Oct 2025 02:47:36 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
@@ -10,7 +10,7 @@ X-Envoy-Upstream-Service-Time: 37
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationTeamsResource::getTeams
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=c7491fc07a553523a316c0a8888423c45573c08c; versionString=master
+X-Mongodb-Service-Version: gitHash=64234f10104966a07bfb5fc82e6fff2689d96ec9; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"id":"68da15684e603f222fda5341","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/68da15684e603f222fda5341","rel":"self"}],"name":"teams725_renamed"}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"id":"68e32db9065c07374c454cae","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/68e32db9065c07374c454cae","rel":"self"}],"name":"teams565_renamed"}],"totalCount":1}

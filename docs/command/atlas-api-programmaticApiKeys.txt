@@ -12,9 +12,9 @@ atlas api programmaticApiKeys
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
+Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
@@ -54,20 +54,20 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-programmaticApiKeys-addGroupApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Assigns the specified organization API key to the specified project.
-* :ref:`atlas-api-programmaticApiKeys-createGroupApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates and assigns the specified organization API key to the specified project.
-* :ref:`atlas-api-programmaticApiKeys-createOrgApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one API key for the specified organization.
-* :ref:`atlas-api-programmaticApiKeys-createOrgApiKeyAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates the access list entries for the specified organization API key.
-* :ref:`atlas-api-programmaticApiKeys-deleteOrgApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one organization API key from the specified organization.
-* :ref:`atlas-api-programmaticApiKeys-deleteOrgApiKeyAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes the specified access list entry from the specified organization API key.
-* :ref:`atlas-api-programmaticApiKeys-getOrgApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one organization API key.
-* :ref:`atlas-api-programmaticApiKeys-getOrgApiKeyAccessListEntry` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one access list entry for the specified organization API key.
-* :ref:`atlas-api-programmaticApiKeys-listGroupApiKeys` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all organization API keys that you assigned to the specified project.
-* :ref:`atlas-api-programmaticApiKeys-listOrgApiKeyAccessListEntries` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all access list entries that you configured for the specified organization API key.
-* :ref:`atlas-api-programmaticApiKeys-listOrgApiKeys` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all organization API keys for the specified organization.
-* :ref:`atlas-api-programmaticApiKeys-removeGroupApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one organization API key from the specified project.
-* :ref:`atlas-api-programmaticApiKeys-updateGroupApiKeyRoles` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the roles of the organization API key that you specify for the project that you specify.
-* :ref:`atlas-api-programmaticApiKeys-updateOrgApiKey` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one organization API key in the specified organization.
+* :ref:`atlas-api-programmaticApiKeys-addGroupApiKey` - Assigns the specified organization API key to the specified project.
+* :ref:`atlas-api-programmaticApiKeys-createGroupApiKey` - Creates and assigns the specified organization API key to the specified project.
+* :ref:`atlas-api-programmaticApiKeys-createOrgAccessEntry` - Creates the access list entries for the specified organization API key.
+* :ref:`atlas-api-programmaticApiKeys-createOrgApiKey` - Creates one API key for the specified organization.
+* :ref:`atlas-api-programmaticApiKeys-deleteAccessEntry` - Removes the specified access list entry from the specified organization API key.
+* :ref:`atlas-api-programmaticApiKeys-deleteOrgApiKey` - Removes one organization API key from the specified organization.
+* :ref:`atlas-api-programmaticApiKeys-getOrgAccessEntry` - Returns one access list entry for the specified organization API key.
+* :ref:`atlas-api-programmaticApiKeys-getOrgApiKey` - Returns one organization API key.
+* :ref:`atlas-api-programmaticApiKeys-listGroupApiKeys` - Returns all organization API keys that you assigned to the specified project.
+* :ref:`atlas-api-programmaticApiKeys-listOrgAccessEntries` - Returns all access list entries that you configured for the specified organization API key.
+* :ref:`atlas-api-programmaticApiKeys-listOrgApiKeys` - Returns all organization API keys for the specified organization.
+* :ref:`atlas-api-programmaticApiKeys-removeGroupApiKey` - Removes one organization API key from the specified project.
+* :ref:`atlas-api-programmaticApiKeys-updateApiKeyRoles` - Updates the roles of the organization API key that you specify for the project that you specify.
+* :ref:`atlas-api-programmaticApiKeys-updateOrgApiKey` - Updates one organization API key in the specified organization.
 
 
 .. toctree::
@@ -75,16 +75,16 @@ Related Commands
 
    addGroupApiKey </command/atlas-api-programmaticApiKeys-addGroupApiKey>
    createGroupApiKey </command/atlas-api-programmaticApiKeys-createGroupApiKey>
+   createOrgAccessEntry </command/atlas-api-programmaticApiKeys-createOrgAccessEntry>
    createOrgApiKey </command/atlas-api-programmaticApiKeys-createOrgApiKey>
-   createOrgApiKeyAccessListEntry </command/atlas-api-programmaticApiKeys-createOrgApiKeyAccessListEntry>
+   deleteAccessEntry </command/atlas-api-programmaticApiKeys-deleteAccessEntry>
    deleteOrgApiKey </command/atlas-api-programmaticApiKeys-deleteOrgApiKey>
-   deleteOrgApiKeyAccessListEntry </command/atlas-api-programmaticApiKeys-deleteOrgApiKeyAccessListEntry>
+   getOrgAccessEntry </command/atlas-api-programmaticApiKeys-getOrgAccessEntry>
    getOrgApiKey </command/atlas-api-programmaticApiKeys-getOrgApiKey>
-   getOrgApiKeyAccessListEntry </command/atlas-api-programmaticApiKeys-getOrgApiKeyAccessListEntry>
    listGroupApiKeys </command/atlas-api-programmaticApiKeys-listGroupApiKeys>
-   listOrgApiKeyAccessListEntries </command/atlas-api-programmaticApiKeys-listOrgApiKeyAccessListEntries>
+   listOrgAccessEntries </command/atlas-api-programmaticApiKeys-listOrgAccessEntries>
    listOrgApiKeys </command/atlas-api-programmaticApiKeys-listOrgApiKeys>
    removeGroupApiKey </command/atlas-api-programmaticApiKeys-removeGroupApiKey>
-   updateGroupApiKeyRoles </command/atlas-api-programmaticApiKeys-updateGroupApiKeyRoles>
+   updateApiKeyRoles </command/atlas-api-programmaticApiKeys-updateApiKeyRoles>
    updateOrgApiKey </command/atlas-api-programmaticApiKeys-updateOrgApiKey>
 

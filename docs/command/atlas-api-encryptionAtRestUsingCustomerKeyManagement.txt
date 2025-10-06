@@ -12,9 +12,9 @@ atlas api encryptionAtRestUsingCustomerKeyManagement
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns and edits the Encryption at Rest using Customer Key Management configuration.
+Returns and edits the Encryption at Rest using Customer Key Management configuration.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 MongoDB Cloud encrypts all storage whether or not you use your own key management.
@@ -54,21 +54,21 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createGroupEncryptionAtRestPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates a private endpoint in the specified region for encryption at rest using customer key management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getGroupEncryptionAtRest` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getGroupEncryptionAtRestPrivateEndpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-listGroupEncryptionAtRestPrivateEndpoints` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestGroupEncryptionAtRestPrivateEndpointDeletion` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateGroupEncryptionAtRest` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createRestPrivateEndpoint` - Creates a private endpoint in the specified region for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest` - Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getRestPrivateEndpoint` - Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-listRestPrivateEndpoints` - Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestPrivateEndpointDeletion` - Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest` - Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
 
 
 .. toctree::
    :titlesonly:
 
-   createGroupEncryptionAtRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-createGroupEncryptionAtRestPrivateEndpoint>
-   getGroupEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getGroupEncryptionAtRest>
-   getGroupEncryptionAtRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getGroupEncryptionAtRestPrivateEndpoint>
-   listGroupEncryptionAtRestPrivateEndpoints </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-listGroupEncryptionAtRestPrivateEndpoints>
-   requestGroupEncryptionAtRestPrivateEndpointDeletion </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestGroupEncryptionAtRestPrivateEndpointDeletion>
-   updateGroupEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateGroupEncryptionAtRest>
+   createRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-createRestPrivateEndpoint>
+   getEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest>
+   getRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getRestPrivateEndpoint>
+   listRestPrivateEndpoints </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-listRestPrivateEndpoints>
+   requestPrivateEndpointDeletion </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestPrivateEndpointDeletion>
+   updateEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest>
 

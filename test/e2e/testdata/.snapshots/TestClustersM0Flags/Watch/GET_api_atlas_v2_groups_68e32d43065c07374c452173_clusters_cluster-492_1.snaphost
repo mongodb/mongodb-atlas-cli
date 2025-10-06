@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1426
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 06 Oct 2025 02:45:33 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 91
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=64234f10104966a07bfb5fc82e6fff2689d96ec9; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-492.uumkrjr.mongodb-dev.net"},"createDate":"2025-10-06T02:45:29Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"68e32d43065c07374c452173","id":"68e32d492a8cab75bf43602e","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d43065c07374c452173/clusters/cluster-492","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d43065c07374c452173/clusters/cluster-492/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68e32d43065c07374c452173/clusters/cluster-492/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.15","name":"cluster-492","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"68e32d492a8cab75bf436022","numShards":1,"regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0"},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"68e32d492a8cab75bf436029","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

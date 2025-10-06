@@ -265,17 +265,12 @@ const (
 	DeliveryType                                  = "deliveryType"                                  // Type of the backup restore delivery
 	EnableServerlessContinuousBackup              = "enableServerlessContinuousBackup"              // EnableServerlessContinuousBackup flag
 	DisableServerlessContinuousBackup             = "disableServerlessContinuousBackup"             // DisableServerlessContinuousBackup flag
-	SinkType                                      = "sinkType"                                      // SinkType flag
-	SinkMetadataProvider                          = "sinkMetadataProvider"                          // SinkMetadataProvider flag
-	SinkMetadataRegion                            = "sinkMetadataRegion"                            // SinkMetadataRegion flag
-	SinkPartitionField                            = "sinkPartitionField"                            // SinkPartitionField flag
 	SourceType                                    = "sourceType"                                    // SourceType flag
 	SourceClusterName                             = "sourceClusterName"                             // SourceClusterName flag
 	SourceCollectionName                          = "sourceCollectionName"                          // SourceCollectionName flag
 	SourceDatabaseName                            = "sourceDatabaseName"                            // SourceDatabaseName flag
 	SourcePolicyItemID                            = "sourcePolicyItemId"                            // SourcePolicyItemID flag
 	Transform                                     = "transform"                                     // Transform flag
-	Pipeline                                      = "pipeline"                                      // Pipeline flag
 	CompletedAfter                                = "completedAfter"                                // CompletedAfter flag
 	Tag                                           = "tag"                                           // Tag flag
 	EnableWatch                                   = "watch"                                         // EnableWatch flag

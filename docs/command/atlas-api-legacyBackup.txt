@@ -12,9 +12,9 @@ atlas api legacyBackup
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
+Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 
@@ -54,31 +54,31 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-legacyBackup-createGroupClusterRestoreJob` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Restores one legacy backup for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-deleteGroupClusterSnapshot` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one legacy backup snapshot for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-getGroupClusterBackupCheckpoint` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one legacy backup checkpoint for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-getGroupClusterRestoreJob` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one legacy backup restore job for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-getGroupClusterSnapshot` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one legacy backup snapshot for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-getGroupClusterSnapshotSchedule` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the snapshot schedule for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-listGroupClusterBackupCheckpoints` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all legacy backup checkpoints for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-listGroupClusterRestoreJobs` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all legacy backup restore jobs for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-listGroupClusterSnapshots` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all legacy backup snapshots for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-updateGroupClusterSnapshot` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Changes the expiration date for one legacy backup snapshot for one cluster in the specified project.
-* :ref:`atlas-api-legacyBackup-updateGroupClusterSnapshotSchedule` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the snapshot schedule for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-createClusterRestoreJob` - Restores one legacy backup for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-deleteClusterSnapshot` - Removes one legacy backup snapshot for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-getClusterBackupCheckpoint` - Returns one legacy backup checkpoint for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-getClusterRestoreJob` - Returns one legacy backup restore job for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-getClusterSnapshot` - Returns one legacy backup snapshot for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-getClusterSnapshotSchedule` - Returns the snapshot schedule for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-listClusterBackupCheckpoints` - Returns all legacy backup checkpoints for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-listClusterRestoreJobs` - Returns all legacy backup restore jobs for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-listClusterSnapshots` - Returns all legacy backup snapshots for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-updateClusterSnapshot` - Changes the expiration date for one legacy backup snapshot for one cluster in the specified project.
+* :ref:`atlas-api-legacyBackup-updateClusterSnapshotSchedule` - Updates the snapshot schedule for one cluster in the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   createGroupClusterRestoreJob </command/atlas-api-legacyBackup-createGroupClusterRestoreJob>
-   deleteGroupClusterSnapshot </command/atlas-api-legacyBackup-deleteGroupClusterSnapshot>
-   getGroupClusterBackupCheckpoint </command/atlas-api-legacyBackup-getGroupClusterBackupCheckpoint>
-   getGroupClusterRestoreJob </command/atlas-api-legacyBackup-getGroupClusterRestoreJob>
-   getGroupClusterSnapshot </command/atlas-api-legacyBackup-getGroupClusterSnapshot>
-   getGroupClusterSnapshotSchedule </command/atlas-api-legacyBackup-getGroupClusterSnapshotSchedule>
-   listGroupClusterBackupCheckpoints </command/atlas-api-legacyBackup-listGroupClusterBackupCheckpoints>
-   listGroupClusterRestoreJobs </command/atlas-api-legacyBackup-listGroupClusterRestoreJobs>
-   listGroupClusterSnapshots </command/atlas-api-legacyBackup-listGroupClusterSnapshots>
-   updateGroupClusterSnapshot </command/atlas-api-legacyBackup-updateGroupClusterSnapshot>
-   updateGroupClusterSnapshotSchedule </command/atlas-api-legacyBackup-updateGroupClusterSnapshotSchedule>
+   createClusterRestoreJob </command/atlas-api-legacyBackup-createClusterRestoreJob>
+   deleteClusterSnapshot </command/atlas-api-legacyBackup-deleteClusterSnapshot>
+   getClusterBackupCheckpoint </command/atlas-api-legacyBackup-getClusterBackupCheckpoint>
+   getClusterRestoreJob </command/atlas-api-legacyBackup-getClusterRestoreJob>
+   getClusterSnapshot </command/atlas-api-legacyBackup-getClusterSnapshot>
+   getClusterSnapshotSchedule </command/atlas-api-legacyBackup-getClusterSnapshotSchedule>
+   listClusterBackupCheckpoints </command/atlas-api-legacyBackup-listClusterBackupCheckpoints>
+   listClusterRestoreJobs </command/atlas-api-legacyBackup-listClusterRestoreJobs>
+   listClusterSnapshots </command/atlas-api-legacyBackup-listClusterSnapshots>
+   updateClusterSnapshot </command/atlas-api-legacyBackup-updateClusterSnapshot>
+   updateClusterSnapshotSchedule </command/atlas-api-legacyBackup-updateClusterSnapshotSchedule>
 

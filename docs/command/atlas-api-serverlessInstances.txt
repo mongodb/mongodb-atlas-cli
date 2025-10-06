@@ -12,9 +12,9 @@ atlas api serverlessInstances
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes serverless instances.
+Returns, adds, edits, and removes serverless instances.
 
-The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
+The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
 
 
@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-serverlessInstances-createGroupServerlessInstance` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
-* :ref:`atlas-api-serverlessInstances-deleteGroupServerlessInstance` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one serverless instance from the specified project.
-* :ref:`atlas-api-serverlessInstances-getGroupServerlessInstance` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one serverless instance in the specified project.
-* :ref:`atlas-api-serverlessInstances-listGroupServerlessInstances` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for all serverless instances in the specified project.
-* :ref:`atlas-api-serverlessInstances-updateGroupServerlessInstance` - `Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-createServerlessInstance` - Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
+* :ref:`atlas-api-serverlessInstances-deleteServerlessInstance` - Removes one serverless instance from the specified project.
+* :ref:`atlas-api-serverlessInstances-getServerlessInstance` - Returns details for one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-listServerlessInstances` - Returns details for all serverless instances in the specified project.
+* :ref:`atlas-api-serverlessInstances-updateServerlessInstance` - Updates one serverless instance in the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   createGroupServerlessInstance </command/atlas-api-serverlessInstances-createGroupServerlessInstance>
-   deleteGroupServerlessInstance </command/atlas-api-serverlessInstances-deleteGroupServerlessInstance>
-   getGroupServerlessInstance </command/atlas-api-serverlessInstances-getGroupServerlessInstance>
-   listGroupServerlessInstances </command/atlas-api-serverlessInstances-listGroupServerlessInstances>
-   updateGroupServerlessInstance </command/atlas-api-serverlessInstances-updateGroupServerlessInstance>
+   createServerlessInstance </command/atlas-api-serverlessInstances-createServerlessInstance>
+   deleteServerlessInstance </command/atlas-api-serverlessInstances-deleteServerlessInstance>
+   getServerlessInstance </command/atlas-api-serverlessInstances-getServerlessInstance>
+   listServerlessInstances </command/atlas-api-serverlessInstances-listServerlessInstances>
+   updateServerlessInstance </command/atlas-api-serverlessInstances-updateServerlessInstance>
 

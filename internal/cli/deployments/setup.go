@@ -117,15 +117,16 @@ type SetupOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	cli.InputOpts
-	mongodbClient mongodbclient.MongoDBClient
-	settings      string
-	connectWith   string
-	force         bool
-	bindIPAll     bool
-	mongodIP      string
-	initdb        string
-	s             *spinner.Spinner
-	atlasSetup    *setup.Opts
+	mongodbClient   mongodbclient.MongoDBClient
+	settings        string
+	connectWith     string
+	containerEngine string
+	force           bool
+	bindIPAll       bool
+	mongodIP        string
+	initdb          string
+	s               *spinner.Spinner
+	atlasSetup      *setup.Opts
 }
 
 func (opts *SetupOpts) initMongoDBClient() error {
@@ -469,6 +470,10 @@ func (opts *SetupOpts) validateFlags() error {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
+	if err := opts.validateContainerEngine(); err != nil {
+		return err
+	}
+
 	if opts.initdb != "" {
 		info, err := os.Stat(opts.initdb)
 		if err != nil {
@@ -584,6 +589,19 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		return vscode.SaveConnection(cs, opts.DeploymentName, opts.DeploymentType)
 	}
 
+	return nil
+}
+
+func (opts *SetupOpts) validateContainerEngine() error {
+	// Default to docker if not set
+	if opts.containerEngine == "" {
+		opts.containerEngine = "docker"
+	}
+
+	validEngines := []string{"docker", "containerd", "podman"}
+	if !search.StringInSliceFold(validEngines, opts.containerEngine) {
+		return fmt.Errorf("invalid container engine: %s. Valid values are: %s", opts.containerEngine, strings.Join(validEngines, ", "))
+	}
 	return nil
 }
 
@@ -746,7 +764,7 @@ func SetupBuilder() *cobra.Command {
 				opts.validateTier,
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initMongoDBClient,
 			)
 		},
@@ -767,6 +785,7 @@ func SetupBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().BoolVar(&opts.bindIPAll, flag.BindIPAll, false, usage.BindIPAll)
 	cmd.Flags().StringVar(&opts.initdb, flag.InitDB, "", usage.InitDB)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)
@@ -786,6 +805,9 @@ func SetupBuilder() *cobra.Command {
 	})
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return connectWithOptions, cobra.ShellCompDirectiveDefault
+	})
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
 	})
 	return cmd
 }

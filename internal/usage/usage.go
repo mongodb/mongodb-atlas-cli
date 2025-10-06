@@ -404,4 +404,5 @@ dbName and collection are required only for built-in roles.`
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. Note: Unsupported fields in the JSON file are ignored."
 	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
 	AutoScalingMode            = "Mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling."
+	ContainerEngine            = "Container engine to use for local deployments. Valid values are docker, containerd, and podman (Linux only)."
 )

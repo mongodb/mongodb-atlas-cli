@@ -30,6 +30,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
+const (
+	darwinOS    = "darwin"
+	localhostIP = "127.0.0.1"
+)
+
 var ErrNerdctlNotFound = fmt.Errorf("%w: container engine not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
 var ErrDeterminingContainerdVersion = errors.New("could not determine containerd version")
 var minContainerdVersion = semver.New(0, 0, 0, "", "")
@@ -48,9 +53,8 @@ func (*containerdImpl) Name() string {
 	return "containerd"
 }
 
-// detectNerdctlMethod determines whether to use direct nerdctl or lima nerdctl
 func (e *containerdImpl) detectNerdctlMethod() {
-	if runtime.GOOS == "darwin" {
+	if runtime.GOOS == darwinOS {
 		// On macOS, use lima nerdctl (direct nerdctl won't work)
 		e.useDirectNerdctl = false
 	} else {
@@ -83,7 +87,17 @@ func (e *containerdImpl) Ready() error {
 func (e *containerdImpl) VerifyVersion(ctx context.Context) error {
 	versionBytes, err := e.run(ctx, "version", "--format", "{{.Client.Version}}")
 	if err != nil {
-		return errors.Join(ErrDeterminingContainerdVersion, err)
+		if !e.useDirectNerdctl && runtime.GOOS == darwinOS {
+			// On macOS using Lima
+			return fmt.Errorf("failed to connect to Lima nerdctl: %w.\n"+
+				"Try: limactl start", err)
+		}
+
+		// On Linux/Windows using direct nerdctl
+		if strings.Contains(err.Error(), "executable file not found") {
+			return fmt.Errorf("nerdctl not found. Please install nerdctl: %w", err)
+		}
+		return fmt.Errorf("failed to connect to nerdctl daemon: %w. Make sure containerd is running", err)
 	}
 
 	version, err := semver.NewVersion(strings.TrimSpace(string(versionBytes)))
@@ -103,7 +117,7 @@ func (e *containerdImpl) run(ctx context.Context, args ...string) ([]byte, error
 	if e.useDirectNerdctl {
 		cmd = exec.CommandContext(ctx, "nerdctl", args...)
 	} else {
-		cmd = exec.CommandContext(ctx, "lima", append([]string{"nerdctl"}, args...)...)
+		cmd = exec.CommandContext(ctx, "lima", append([]string{"nerdctl"}, args...)...) //nolint:gosec // lima command with nerdctl args is expected
 	}
 
 	buf, err := cmd.Output()
@@ -126,7 +140,7 @@ func (e *containerdImpl) ContainerLogs(ctx context.Context, name string) ([]stri
 // This mimics Docker's behavior of automatically allocating random ports
 // when no host port is specified, which containerd/nerdctl doesn't do in rootless mode.
 func findRandomUnusedPort() (int, error) {
-	listener, err := net.Listen("tcp", ":0")
+	listener, err := net.Listen("tcp", ":0") //nolint:gosec // binding to all interfaces is intentional for random port allocation
 	if err != nil {
 		return 0, err
 	}
@@ -143,7 +157,7 @@ func containerdPortsFlags(flags *RunFlags) []string {
 	args := []string{}
 	if flags.Ports != nil {
 		for _, mapping := range flags.Ports {
-			mapping.HostAddress = "127.0.0.1"
+			mapping.HostAddress = localhostIP
 			if flags.BindIPAll != nil && *flags.BindIPAll {
 				mapping.HostAddress = ""
 			}
@@ -262,17 +276,17 @@ func (e *containerdImpl) ContainerList(ctx context.Context, labels ...string) ([
 
 // parseNerdctlContainers parses nerdctl's JSON output format which differs from Docker's format
 func parseNerdctlContainers(data []byte) ([]Container, error) {
-	var containers []Container
+	// Pre-allocate slice based on estimated number of lines
+	lines := strings.Count(strings.TrimSpace(string(data)), "\n") + 1
+	containers := make([]Container, 0, lines)
 
 	// Split by lines since nerdctl outputs one JSON object per line
-	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-
-	for _, line := range lines {
+	for line := range strings.SplitSeq(strings.TrimSpace(string(data)), "\n") {
 		if strings.TrimSpace(line) == "" {
 			continue
 		}
 
-		var c map[string]interface{}
+		var c map[string]any
 		if err := json.Unmarshal([]byte(line), &c); err != nil {
 			return nil, fmt.Errorf("%w: %w", errDecodingJSON, err)
 		}
@@ -299,9 +313,9 @@ func parseNerdctlContainers(data []byte) ([]Container, error) {
 		labelsStr := safeStringFromMap(c, "Labels")
 		cont.Labels = map[string]string{}
 		if labelsStr != "" {
-			for _, label := range strings.Split(labelsStr, ",") {
-				segments := strings.SplitN(label, "=", 2)
-				if len(segments) == 2 {
+			for label := range strings.SplitSeq(labelsStr, ",") {
+				segments := strings.SplitN(label, "=", 2) //nolint:mnd // split label into key=value (2 parts)
+				if len(segments) == 2 {                   //nolint:mnd // check for key=value pair (2 parts)
 					cont.Labels[segments[0]] = segments[1]
 				}
 			}
@@ -314,7 +328,7 @@ func parseNerdctlContainers(data []byte) ([]Container, error) {
 }
 
 // safeStringFromMap safely extracts a string value from a map, returning empty string if nil or not a string
-func safeStringFromMap(m map[string]interface{}, key string) string {
+func safeStringFromMap(m map[string]any, key string) string {
 	if val, exists := m[key]; exists && val != nil {
 		if str, ok := val.(string); ok {
 			return str
@@ -456,7 +470,7 @@ func (e *containerdImpl) ImageHealthCheck(ctx context.Context, name string) (*Im
 	}, nil
 }
 
-func (e *containerdImpl) ContainerHealthStatus(ctx context.Context, name string) (DockerHealthcheckStatus, error) {
+func (e *containerdImpl) ContainerHealthStatus(ctx context.Context, name string) (DockerHealthcheckStatus, error) { //nolint:gocyclo // complex health check logic is necessary
 	buf, err := e.run(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
 	if err != nil {
 		if strings.Contains(err.Error(), "Health") || strings.Contains(err.Error(), "healthcheck") {
@@ -489,30 +503,30 @@ func (e *containerdImpl) ContainerHealthStatus(ctx context.Context, name string)
 			return DockerHealthcheckStatusNone, nil
 		}
 
-		if imageHealthCheck != nil {
-			startedAtBuf, err := e.run(ctx, "inspect", "--format", "{{.State.StartedAt}}", name)
-			if err == nil {
-				startedAtStr := strings.TrimSpace(string(startedAtBuf))
-				if startedAt, err := time.Parse(time.RFC3339Nano, startedAtStr); err == nil {
-					uptime := time.Since(startedAt)
+		if imageHealthCheck == nil {
+			return DockerHealthcheckStatusNone, nil
+		}
 
-					// Trigger healthcheck after 5 seconds to initialize it (same workaround as podman)
-					if uptime > 5*time.Second {
-						_, _ = e.run(ctx, "healthcheck", name)
+		startedAtBuf, err := e.run(ctx, "inspect", "--format", "{{.State.StartedAt}}", name)
+		if err == nil {
+			startedAtStr := strings.TrimSpace(string(startedAtBuf))
+			if startedAt, err := time.Parse(time.RFC3339Nano, startedAtStr); err == nil {
+				uptime := time.Since(startedAt)
 
-						buf, err = e.run(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
-						if err == nil {
-							statusString = strings.TrimSpace(string(buf))
-						}
+				// Trigger healthcheck after 5 seconds to initialize it (same workaround as podman)
+				if uptime > 5*time.Second {
+					_, _ = e.run(ctx, "healthcheck", name)
+
+					buf, err = e.run(ctx, "inspect", "--format", "{{.State.Health.Status}}", name)
+					if err == nil {
+						statusString = strings.TrimSpace(string(buf))
 					}
 				}
 			}
+		}
 
-			if statusString == "" {
-				return DockerHealthcheckStatusStarting, nil
-			}
-		} else {
-			return DockerHealthcheckStatusNone, nil
+		if statusString == "" {
+			return DockerHealthcheckStatusStarting, nil
 		}
 	}
 

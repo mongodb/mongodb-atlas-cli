@@ -18,53 +18,34 @@
 package container
 
 import (
-	"context"
-	"time"
-
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
+const (
+	dockerEngine     = "docker"
+	containerdEngine = "containerd"
+)
+
 func New() Engine {
-	// Try Docker first
-	docker := newDockerEngine()
-	if isEngineReady(docker) {
-		_, _ = log.Debug("Using Docker engine")
-		return docker
-	}
-
-	// Try containerd second
-	containerd := newContainerdEngine()
-	if isEngineReady(containerd) {
-		_, _ = log.Debug("Using containerd engine")
-		return containerd
-	}
-
-	// Try Podman third
-	podman := newPodmanEngine()
-	if isEngineReady(podman) {
-		_, _ = log.Debug("Using Podman engine")
-		return podman
-	}
-
-	// If none are ready, return Docker as the default (it will show appropriate error messages)
-	_, _ = log.Debug("No engines ready, defaulting to Docker engine")
-	return docker
+	return NewWithEngine(dockerEngine)
 }
 
-// isEngineReady checks if an engine is both available and functional
-func isEngineReady(engine Engine) bool {
-	// First check if the binary is available
-	if err := engine.Ready(); err != nil {
-		return false
+func NewWithEngine(engineName string) Engine {
+	switch engineName {
+	case dockerEngine:
+		engine := newDockerEngine()
+		_, _ = log.Debug("Using Docker engine")
+		return engine
+	case containerdEngine:
+		engine := newContainerdEngine()
+		_, _ = log.Debug("Using containerd engine")
+		return engine
+	case podmanEngine:
+		engine := newPodmanEngine()
+		_, _ = log.Debug("Using Podman engine")
+		return engine
+	default:
+		_, _ = log.Debug("Unknown engine, defaulting to Docker engine")
+		return newDockerEngine()
 	}
-
-	// Then check if the daemon/service is actually working
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	if err := engine.VerifyVersion(ctx); err != nil {
-		return false
-	}
-
-	return true
 }

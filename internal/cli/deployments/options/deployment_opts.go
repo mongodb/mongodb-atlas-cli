@@ -125,9 +125,13 @@ type ClusterLister interface {
 }
 
 func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {
+	return opts.InitStoreWithEngine(ctx, writer, "docker")
+}
+
+func (opts *DeploymentOpts) InitStoreWithEngine(ctx context.Context, writer io.Writer, engineName string) func() error {
 	return func() error {
 		var err error
-		opts.ContainerEngine = container.New()
+		opts.ContainerEngine = container.NewWithEngine(engineName)
 		opts.Config = config.Default()
 		opts.CredStore = config.Default()
 		if opts.AtlasClusterListStore, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx)); err != nil {

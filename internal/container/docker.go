@@ -295,7 +295,7 @@ func parseContainers(buf []byte) ([]Container, error) {
 
 		labels := c["Labels"].(string)
 		cont.Labels = map[string]string{}
-		for _, label := range strings.Split(labels, ",") {
+		for label := range strings.SplitSeq(labels, ",") {
 			segments := strings.SplitN(label, "=", 2) //nolint //max 2 fields
 			if len(segments) == 2 {                   //nolint //max 2 fields
 				cont.Labels[segments[0]] = segments[1]

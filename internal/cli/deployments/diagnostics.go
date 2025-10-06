@@ -23,6 +23,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/mem"
 	"github.com/spf13/cobra"
@@ -32,6 +34,7 @@ type diagnosticsOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	options.DeploymentOpts
+	containerEngine string
 }
 
 type diagnostic struct {
@@ -151,13 +154,18 @@ func DiagnosticsBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, ""),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.Run(cmd.Context())
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

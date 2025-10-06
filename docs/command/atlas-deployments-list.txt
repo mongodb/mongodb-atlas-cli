@@ -35,6 +35,10 @@ Options
      - Type
      - Required
      - Description
+   * - --containerEngine
+     - string
+     - false
+     - Container engine to use for local deployments. Valid values are docker, containerd, and podman (Linux only).
    * - -h, --help
      - 
      - false

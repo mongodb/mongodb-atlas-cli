@@ -39,6 +39,10 @@ Options
      - string
      - false
      - Name of the collection.
+   * - --containerEngine
+     - string
+     - false
+     - Container engine to use for local deployments. Valid values are docker, containerd, and podman (Linux only).
    * - --db
      - string
      - false

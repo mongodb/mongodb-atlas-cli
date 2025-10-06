@@ -33,6 +33,7 @@ type ListOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	options.DeploymentOpts
+	containerEngine string
 }
 
 const listTemplate = `NAME	TYPE	MDB VER	STATE
@@ -120,7 +121,7 @@ func ListBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
@@ -134,9 +135,13 @@ func ListBuilder() *cobra.Command {
 
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
+	})
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
 	})
 	_ = cmd.Flags().MarkHidden(flag.TypeFlag)
 

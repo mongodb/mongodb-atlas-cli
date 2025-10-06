@@ -45,8 +45,9 @@ type ListOpts struct {
 	cli.OutputOpts
 	options.DeploymentOpts
 	search.IndexOpts
-	mongodbClient mongodbclient.MongoDBClient
-	store         Lister
+	containerEngine string
+	mongodbClient   mongodbclient.MongoDBClient
+	store           Lister
 }
 
 func (opts *ListOpts) Run(ctx context.Context) error {
@@ -141,7 +142,7 @@ func ListBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.InitOutput(w, listTemplate),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
@@ -156,12 +157,17 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

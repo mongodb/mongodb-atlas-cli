@@ -57,6 +57,10 @@ Options
      - Name of the collection.
 
        Mutually exclusive with --file.
+   * - --containerEngine
+     - string
+     - false
+     - Container engine to use for local deployments. Valid values are docker, containerd, and podman (Linux only).
    * - --db
      - string
      - false

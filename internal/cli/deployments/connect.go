@@ -74,7 +74,7 @@ func ConnectBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.InitAtlasStore(cmd.Context()),
 			)
 		},
@@ -89,6 +89,7 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWithConnect)
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, ConnectionStringTypeStandard, usage.ConnectionStringType)
@@ -99,6 +100,9 @@ func ConnectBuilder() *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 		return options.DeploymentTypeOptions, cobra.ShellCompDirectiveDefault
 	})
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }
@@ -106,7 +110,8 @@ func ConnectBuilder() *cobra.Command {
 type ConnectOpts struct {
 	cli.OutputOpts
 	options.DeploymentOpts
-	ConnectWith string
+	ConnectWith     string
+	containerEngine string
 	ConnectToAtlasOpts
 }
 

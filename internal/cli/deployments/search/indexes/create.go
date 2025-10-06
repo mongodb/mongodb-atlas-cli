@@ -71,6 +71,7 @@ type CreateOpts struct {
 	cli.OutputOpts
 	options.DeploymentOpts
 	search.IndexOpts
+	containerEngine  string
 	mongodbClient    mongodbclient.MongoDBClient
 	connectionString string
 	store            SearchIndexCreatorDescriber
@@ -401,7 +402,7 @@ func CreateBuilder() *cobra.Command {
 
 			return opts.PreRunE(
 				opts.InitOutput(w, createTemplate),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
@@ -419,6 +420,7 @@ func CreateBuilder() *cobra.Command {
 
 	// Atlas and Local
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
@@ -436,6 +438,10 @@ func CreateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.Database, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.Collection, flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

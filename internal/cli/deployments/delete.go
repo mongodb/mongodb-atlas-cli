@@ -48,7 +48,8 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.WatchOpts
 	options.DeploymentOpts
-	atlasStore ClusterDeleter
+	containerEngine string
+	atlasStore      ClusterDeleter
 }
 
 func (opts *DeleteOpts) initAtlasStore(ctx context.Context) func() error {
@@ -157,7 +158,7 @@ Deleting a deployment will not remove saved connections from MongoDB for VS Code
 			return opts.PreRunE(
 				opts.initAtlasStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -169,11 +170,16 @@ Deleting a deployment will not remove saved connections from MongoDB for VS Code
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
 	opts.AddProjectOptsFlags(cmd)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

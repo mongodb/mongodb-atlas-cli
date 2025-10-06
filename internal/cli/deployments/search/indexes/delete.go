@@ -45,8 +45,9 @@ type DeleteOpts struct {
 	*cli.DeleteOpts
 	options.DeploymentOpts
 	search.IndexOpts
-	mongodbClient mongodbclient.MongoDBClient
-	store         Deleter
+	containerEngine string
+	mongodbClient   mongodbclient.MongoDBClient
+	store           Deleter
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
@@ -132,7 +133,7 @@ func DeleteBuilder() *cobra.Command {
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
@@ -152,11 +153,16 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 
 	opts.AddProjectOptsFlags(cmd)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

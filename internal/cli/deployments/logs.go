@@ -48,11 +48,12 @@ type DownloadOpts struct {
 	cli.ProjectOpts
 	cli.DownloaderOpts
 	options.DeploymentOpts
-	downloadStore LogsDownloader
-	Host          string
-	Name          string
-	start         int64
-	end           int64
+	downloadStore   LogsDownloader
+	containerEngine string
+	Host            string
+	Name            string
+	start           int64
+	end             int64
 }
 
 var (
@@ -254,7 +255,7 @@ func LogsBuilder() *cobra.Command {
 		GroupID: "all",
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""))
 		},
@@ -267,6 +268,7 @@ func LogsBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 
@@ -277,6 +279,10 @@ func LogsBuilder() *cobra.Command {
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.Host, flag.Hostname, "", usage.LogHostName)
 	cmd.Flags().StringVar(&opts.Name, flag.Name, "", usage.LogName)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

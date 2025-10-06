@@ -45,9 +45,10 @@ type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	options.DeploymentOpts
-	indexID       string
-	mongodbClient mongodbclient.MongoDBClient
-	store         Describer
+	containerEngine string
+	indexID         string
+	mongodbClient   mongodbclient.MongoDBClient
+	store           Describer
 }
 
 func (opts *DescribeOpts) Run(ctx context.Context) error {
@@ -137,7 +138,7 @@ func DescribeBuilder() *cobra.Command {
 			w := cmd.OutOrStdout()
 			return opts.PreRunE(
 				opts.InitOutput(w, describeTemplate),
-				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.InitStoreWithEngine(cmd.Context(), cmd.OutOrStdout(), opts.containerEngine),
 				opts.initStore(cmd.Context()),
 				opts.initMongoDBClient,
 			)
@@ -154,11 +155,16 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
+	cmd.Flags().StringVar(&opts.containerEngine, flag.ContainerEngine, "", usage.ContainerEngine)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
+
+	_ = cmd.RegisterFlagCompletionFunc(flag.ContainerEngine, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{"docker", "containerd", "podman"}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

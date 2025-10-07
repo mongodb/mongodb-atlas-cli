@@ -5,7 +5,7 @@ ARG entrypoint
 ARG server_version
 ARG pgp_server_version
 
-RUN rpm --import https://pgp.mongodb.com/server-${server_version}.asc
+RUN rpm --import https://pgp.mongodb.com/server-${pgp_server_version}.asc
 
 RUN zypper addrepo --gpgcheck "https://repo.mongodb.org/zypper/suse/15/mongodb-org/${server_version}/x86_64/" mongodb
 

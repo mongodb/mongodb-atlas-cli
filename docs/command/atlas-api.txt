@@ -215,6 +215,7 @@ Related Commands
 * :ref:`atlas-api-resourcePolicies` - Configure and manage Atlas Resource Policies within your organization.
 * :ref:`atlas-api-rollingIndex` - Creates one index to a database deployment in a rolling manner.
 * :ref:`atlas-api-root` - Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
+* :ref:`atlas-api-sandbox` - Returns, adds, edits, and removes sandbox templates.
 * :ref:`atlas-api-serverlessInstances` - Returns, adds, edits, and removes serverless instances.
 * :ref:`atlas-api-serverlessPrivateEndpoints` - Returns, adds, edits, and removes private endpoints for serverless instances.
 * :ref:`atlas-api-serviceAccounts` - Endpoints for managing Service Accounts and secrets.
@@ -270,6 +271,7 @@ Related Commands
    resourcePolicies </command/atlas-api-resourcePolicies>
    rollingIndex </command/atlas-api-rollingIndex>
    root </command/atlas-api-root>
+   sandbox </command/atlas-api-sandbox>
    serverlessInstances </command/atlas-api-serverlessInstances>
    serverlessPrivateEndpoints </command/atlas-api-serverlessPrivateEndpoints>
    serviceAccounts </command/atlas-api-serviceAccounts>

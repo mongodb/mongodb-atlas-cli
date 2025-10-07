@@ -123,7 +123,7 @@ linters:
       alias:
         - pkg: go.mongodb.org/atlas-sdk/v20240530005/admin
           alias: atlasClustersPinned
-        - pkg: go.mongodb.org/atlas-sdk/v20250312007/admin
+        - pkg: go.mongodb.org/atlas-sdk/v20250312008/admin
           alias: atlasv2
         - pkg: go.mongodb.org/atlas/mongodbatlas
           alias: atlas

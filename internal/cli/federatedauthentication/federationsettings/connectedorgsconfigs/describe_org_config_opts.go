@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsDescriber

@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
 )
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.

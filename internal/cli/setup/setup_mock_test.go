@@ -14,7 +14,7 @@ import (
 
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20250312007/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20250312008/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

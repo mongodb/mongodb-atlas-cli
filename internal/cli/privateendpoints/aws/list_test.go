@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312007/admin"
+	"go.mongodb.org/atlas-sdk/v20250312008/admin"
 	"go.uber.org/mock/gomock"
 )
 

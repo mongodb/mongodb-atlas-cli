@@ -57,7 +57,7 @@ Related Commands
 * :ref:`atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint` - Creates one private endpoint for one serverless instance.
 * :ref:`atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint` - Remove one private endpoint from one serverless instance.
 * :ref:`atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint` - Return one private endpoint for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints` - Returns all private endpoints for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoint` - Returns all private endpoints for one serverless instance.
 * :ref:`atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint` - Updates one private endpoint for one serverless instance.
 
 
@@ -67,6 +67,6 @@ Related Commands
    createServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint>
    deleteServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint>
    getServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint>
-   listServerlessPrivateEndpoints </command/atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints>
+   listServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoint>
    updateServerlessPrivateEndpoint </command/atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint>
 

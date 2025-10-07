@@ -56,11 +56,11 @@ Related Commands
 
 * :ref:`atlas-api-resourcePolicies-createOrgResourcePolicy` - Create one Atlas Resource Policy for an org.
 * :ref:`atlas-api-resourcePolicies-deleteOrgResourcePolicy` - Delete one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-getNonCompliantResources` - Return all non-compliant resources for an org.
 * :ref:`atlas-api-resourcePolicies-getOrgResourcePolicy` - Return one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-getResourcesNonCompliant` - Return all non-compliant resources for an org.
 * :ref:`atlas-api-resourcePolicies-listOrgResourcePolicies` - Return all Atlas Resource Policies for the org.
 * :ref:`atlas-api-resourcePolicies-updateOrgResourcePolicy` - Update one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-validateAtlasResourcePolicy` - Validate one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-validateResourcePolicies` - Validate one Atlas Resource Policy for an org.
 
 
 .. toctree::
@@ -68,9 +68,9 @@ Related Commands
 
    createOrgResourcePolicy </command/atlas-api-resourcePolicies-createOrgResourcePolicy>
    deleteOrgResourcePolicy </command/atlas-api-resourcePolicies-deleteOrgResourcePolicy>
+   getNonCompliantResources </command/atlas-api-resourcePolicies-getNonCompliantResources>
    getOrgResourcePolicy </command/atlas-api-resourcePolicies-getOrgResourcePolicy>
-   getResourcesNonCompliant </command/atlas-api-resourcePolicies-getResourcesNonCompliant>
    listOrgResourcePolicies </command/atlas-api-resourcePolicies-listOrgResourcePolicies>
    updateOrgResourcePolicy </command/atlas-api-resourcePolicies-updateOrgResourcePolicy>
-   validateAtlasResourcePolicy </command/atlas-api-resourcePolicies-validateAtlasResourcePolicy>
+   validateResourcePolicies </command/atlas-api-resourcePolicies-validateResourcePolicies>
 

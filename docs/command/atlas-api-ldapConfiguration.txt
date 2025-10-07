@@ -54,19 +54,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-ldapConfiguration-deleteLdapConfiguration` - Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapConfiguration` - Returns the current LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapConfigurationStatus` - Returns the status of one request to verify one LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-saveLdapConfiguration` - Edits the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-verifyLdapConfiguration` - Verifies the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-deleteLdapUserMapping` - Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getUserSecurity` - Returns the current LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getUserSecurityVerify` - Returns the status of one request to verify one LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-updateUserSecurity` - Edits the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-verifyUserSecurityLdap` - Verifies the LDAP configuration for the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   deleteLdapConfiguration </command/atlas-api-ldapConfiguration-deleteLdapConfiguration>
-   getLdapConfiguration </command/atlas-api-ldapConfiguration-getLdapConfiguration>
-   getLdapConfigurationStatus </command/atlas-api-ldapConfiguration-getLdapConfigurationStatus>
-   saveLdapConfiguration </command/atlas-api-ldapConfiguration-saveLdapConfiguration>
-   verifyLdapConfiguration </command/atlas-api-ldapConfiguration-verifyLdapConfiguration>
+   deleteLdapUserMapping </command/atlas-api-ldapConfiguration-deleteLdapUserMapping>
+   getUserSecurity </command/atlas-api-ldapConfiguration-getUserSecurity>
+   getUserSecurityVerify </command/atlas-api-ldapConfiguration-getUserSecurityVerify>
+   updateUserSecurity </command/atlas-api-ldapConfiguration-updateUserSecurity>
+   verifyUserSecurityLdap </command/atlas-api-ldapConfiguration-verifyUserSecurityLdap>
 

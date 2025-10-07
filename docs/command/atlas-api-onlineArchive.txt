@@ -56,7 +56,7 @@ Related Commands
 
 * :ref:`atlas-api-onlineArchive-createOnlineArchive` - Creates one online archive.
 * :ref:`atlas-api-onlineArchive-deleteOnlineArchive` - Removes one online archive.
-* :ref:`atlas-api-onlineArchive-downloadOnlineArchiveQueryLogs` - Downloads query logs for the specified online archive.
+* :ref:`atlas-api-onlineArchive-downloadQueryLogs` - Downloads query logs for the specified online archive.
 * :ref:`atlas-api-onlineArchive-getOnlineArchive` - Returns one online archive for one cluster.
 * :ref:`atlas-api-onlineArchive-listOnlineArchives` - Returns details of all online archives.
 * :ref:`atlas-api-onlineArchive-updateOnlineArchive` - Updates, pauses, or resumes one online archive.
@@ -67,7 +67,7 @@ Related Commands
 
    createOnlineArchive </command/atlas-api-onlineArchive-createOnlineArchive>
    deleteOnlineArchive </command/atlas-api-onlineArchive-deleteOnlineArchive>
-   downloadOnlineArchiveQueryLogs </command/atlas-api-onlineArchive-downloadOnlineArchiveQueryLogs>
+   downloadQueryLogs </command/atlas-api-onlineArchive-downloadQueryLogs>
    getOnlineArchive </command/atlas-api-onlineArchive-getOnlineArchive>
    listOnlineArchives </command/atlas-api-onlineArchive-listOnlineArchives>
    updateOnlineArchive </command/atlas-api-onlineArchive-updateOnlineArchive>

@@ -55,14 +55,14 @@ Related Commands
 ----------------
 
 * :ref:`atlas-api-flexSnapshots-downloadFlexBackup` - Requests one snapshot for the specified flex cluster.
-* :ref:`atlas-api-flexSnapshots-getFlexBackup` - Returns one snapshot of one flex cluster from the specified project.
-* :ref:`atlas-api-flexSnapshots-listFlexBackups` - Returns all snapshots of one flex cluster from the specified project.
+* :ref:`atlas-api-flexSnapshots-getFlexBackupSnapshot` - Returns one snapshot of one flex cluster from the specified project.
+* :ref:`atlas-api-flexSnapshots-listFlexBackupSnapshots` - Returns all snapshots of one flex cluster from the specified project.
 
 
 .. toctree::
    :titlesonly:
 
    downloadFlexBackup </command/atlas-api-flexSnapshots-downloadFlexBackup>
-   getFlexBackup </command/atlas-api-flexSnapshots-getFlexBackup>
-   listFlexBackups </command/atlas-api-flexSnapshots-listFlexBackups>
+   getFlexBackupSnapshot </command/atlas-api-flexSnapshots-getFlexBackupSnapshot>
+   listFlexBackupSnapshots </command/atlas-api-flexSnapshots-listFlexBackupSnapshots>
 

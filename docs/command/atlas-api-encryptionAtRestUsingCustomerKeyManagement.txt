@@ -54,21 +54,21 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createEncryptionAtRestPrivateEndpoint` - Creates a private endpoint in the specified region for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createRestPrivateEndpoint` - Creates a private endpoint in the specified region for encryption at rest using customer key management.
 * :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest` - Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpoint` - Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpointsForCloudProvider` - Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestEncryptionAtRestPrivateEndpointDeletion` - Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getRestPrivateEndpoint` - Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-listRestPrivateEndpoints` - Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestPrivateEndpointDeletion` - Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
 * :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest` - Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
 
 
 .. toctree::
    :titlesonly:
 
-   createEncryptionAtRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-createEncryptionAtRestPrivateEndpoint>
+   createRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-createRestPrivateEndpoint>
    getEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest>
-   getEncryptionAtRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpoint>
-   getEncryptionAtRestPrivateEndpointsForCloudProvider </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpointsForCloudProvider>
-   requestEncryptionAtRestPrivateEndpointDeletion </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestEncryptionAtRestPrivateEndpointDeletion>
+   getRestPrivateEndpoint </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-getRestPrivateEndpoint>
+   listRestPrivateEndpoints </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-listRestPrivateEndpoints>
+   requestPrivateEndpointDeletion </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestPrivateEndpointDeletion>
    updateEncryptionAtRest </command/atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest>
 

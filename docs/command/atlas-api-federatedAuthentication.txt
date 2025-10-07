@@ -56,7 +56,7 @@ Related Commands
 
 * :ref:`atlas-api-federatedAuthentication-createIdentityProvider` - Creates one identity provider within the specified federation.
 * :ref:`atlas-api-federatedAuthentication-createRoleMapping` - Adds one role mapping to the specified organization in the specified federation.
-* :ref:`atlas-api-federatedAuthentication-deleteFederationApp` - Deletes the federation settings instance and all associated data, including identity providers and domains.
+* :ref:`atlas-api-federatedAuthentication-deleteFederationSetting` - Deletes the federation settings instance and all associated data, including identity providers and domains.
 * :ref:`atlas-api-federatedAuthentication-deleteIdentityProvider` - Deletes one identity provider in the specified federation.
 * :ref:`atlas-api-federatedAuthentication-deleteRoleMapping` - Removes one role mapping in the specified organization from the specified federation.
 * :ref:`atlas-api-federatedAuthentication-getConnectedOrgConfig` - Returns the specified connected org config from the specified federation.
@@ -68,7 +68,7 @@ Related Commands
 * :ref:`atlas-api-federatedAuthentication-listIdentityProviders` - Returns all identity providers with the provided protocol and type in the specified federation.
 * :ref:`atlas-api-federatedAuthentication-listRoleMappings` - Returns all role mappings from the specified organization in the specified federation.
 * :ref:`atlas-api-federatedAuthentication-removeConnectedOrgConfig` - Removes one connected organization configuration from the specified federation.
-* :ref:`atlas-api-federatedAuthentication-revokeJwksFromIdentityProvider` - Revokes the JWKS tokens from the requested OIDC identity provider.
+* :ref:`atlas-api-federatedAuthentication-revokeIdentityProviderJwks` - Revokes the JWKS tokens from the requested OIDC identity provider.
 * :ref:`atlas-api-federatedAuthentication-updateConnectedOrgConfig` - Updates one connected organization configuration from the specified federation.
 * :ref:`atlas-api-federatedAuthentication-updateIdentityProvider` - Updates one identity provider in the specified federation.
 * :ref:`atlas-api-federatedAuthentication-updateRoleMapping` - Updates one role mapping in the specified organization in the specified federation.
@@ -79,7 +79,7 @@ Related Commands
 
    createIdentityProvider </command/atlas-api-federatedAuthentication-createIdentityProvider>
    createRoleMapping </command/atlas-api-federatedAuthentication-createRoleMapping>
-   deleteFederationApp </command/atlas-api-federatedAuthentication-deleteFederationApp>
+   deleteFederationSetting </command/atlas-api-federatedAuthentication-deleteFederationSetting>
    deleteIdentityProvider </command/atlas-api-federatedAuthentication-deleteIdentityProvider>
    deleteRoleMapping </command/atlas-api-federatedAuthentication-deleteRoleMapping>
    getConnectedOrgConfig </command/atlas-api-federatedAuthentication-getConnectedOrgConfig>
@@ -91,7 +91,7 @@ Related Commands
    listIdentityProviders </command/atlas-api-federatedAuthentication-listIdentityProviders>
    listRoleMappings </command/atlas-api-federatedAuthentication-listRoleMappings>
    removeConnectedOrgConfig </command/atlas-api-federatedAuthentication-removeConnectedOrgConfig>
-   revokeJwksFromIdentityProvider </command/atlas-api-federatedAuthentication-revokeJwksFromIdentityProvider>
+   revokeIdentityProviderJwks </command/atlas-api-federatedAuthentication-revokeIdentityProviderJwks>
    updateConnectedOrgConfig </command/atlas-api-federatedAuthentication-updateConnectedOrgConfig>
    updateIdentityProvider </command/atlas-api-federatedAuthentication-updateIdentityProvider>
    updateRoleMapping </command/atlas-api-federatedAuthentication-updateRoleMapping>

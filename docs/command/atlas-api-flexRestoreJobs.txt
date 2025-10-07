@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-flexRestoreJobs-createFlexBackupRestoreJob` - Restores one snapshot of one flex cluster from the specified project.
-* :ref:`atlas-api-flexRestoreJobs-getFlexBackupRestoreJob` - Returns one restore job for one flex cluster from the specified project.
-* :ref:`atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs` - Returns all restore jobs for one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-createFlexRestoreJob` - Restores one snapshot of one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-getFlexRestoreJob` - Returns one restore job for one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-listFlexRestoreJobs` - Returns all restore jobs for one flex cluster from the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   createFlexBackupRestoreJob </command/atlas-api-flexRestoreJobs-createFlexBackupRestoreJob>
-   getFlexBackupRestoreJob </command/atlas-api-flexRestoreJobs-getFlexBackupRestoreJob>
-   listFlexBackupRestoreJobs </command/atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs>
+   createFlexRestoreJob </command/atlas-api-flexRestoreJobs-createFlexRestoreJob>
+   getFlexRestoreJob </command/atlas-api-flexRestoreJobs-getFlexRestoreJob>
+   listFlexRestoreJobs </command/atlas-api-flexRestoreJobs-listFlexRestoreJobs>
 

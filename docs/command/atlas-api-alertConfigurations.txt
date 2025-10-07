@@ -54,25 +54,25 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-alertConfigurations-createAlertConfiguration` - Creates one alert configuration for the specified project.
-* :ref:`atlas-api-alertConfigurations-deleteAlertConfiguration` - Removes one alert configuration from the specified project.
-* :ref:`atlas-api-alertConfigurations-getAlertConfiguration` - Returns the specified alert configuration from the specified project.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurationMatchersFieldNames` - Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurations` - Returns all alert configurations for one project.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurationsByAlertId` - Returns all alert configurations set for the specified alert.
-* :ref:`atlas-api-alertConfigurations-toggleAlertConfiguration` - Enables or disables the specified alert configuration in the specified project.
-* :ref:`atlas-api-alertConfigurations-updateAlertConfiguration` - Updates one alert configuration in the specified project.
+* :ref:`atlas-api-alertConfigurations-createAlertConfig` - Creates one alert configuration for the specified project.
+* :ref:`atlas-api-alertConfigurations-deleteAlertConfig` - Removes one alert configuration from the specified project.
+* :ref:`atlas-api-alertConfigurations-getAlertConfig` - Returns the specified alert configuration from the specified project.
+* :ref:`atlas-api-alertConfigurations-getAlertConfigs` - Returns all alert configurations set for the specified alert.
+* :ref:`atlas-api-alertConfigurations-listAlertConfigs` - Returns all alert configurations for one project.
+* :ref:`atlas-api-alertConfigurations-listMatcherFieldNames` - Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
+* :ref:`atlas-api-alertConfigurations-toggleAlertConfig` - Enables or disables the specified alert configuration in the specified project.
+* :ref:`atlas-api-alertConfigurations-updateAlertConfig` - Updates one alert configuration in the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   createAlertConfiguration </command/atlas-api-alertConfigurations-createAlertConfiguration>
-   deleteAlertConfiguration </command/atlas-api-alertConfigurations-deleteAlertConfiguration>
-   getAlertConfiguration </command/atlas-api-alertConfigurations-getAlertConfiguration>
-   listAlertConfigurationMatchersFieldNames </command/atlas-api-alertConfigurations-listAlertConfigurationMatchersFieldNames>
-   listAlertConfigurations </command/atlas-api-alertConfigurations-listAlertConfigurations>
-   listAlertConfigurationsByAlertId </command/atlas-api-alertConfigurations-listAlertConfigurationsByAlertId>
-   toggleAlertConfiguration </command/atlas-api-alertConfigurations-toggleAlertConfiguration>
-   updateAlertConfiguration </command/atlas-api-alertConfigurations-updateAlertConfiguration>
+   createAlertConfig </command/atlas-api-alertConfigurations-createAlertConfig>
+   deleteAlertConfig </command/atlas-api-alertConfigurations-deleteAlertConfig>
+   getAlertConfig </command/atlas-api-alertConfigurations-getAlertConfig>
+   getAlertConfigs </command/atlas-api-alertConfigurations-getAlertConfigs>
+   listAlertConfigs </command/atlas-api-alertConfigurations-listAlertConfigs>
+   listMatcherFieldNames </command/atlas-api-alertConfigurations-listMatcherFieldNames>
+   toggleAlertConfig </command/atlas-api-alertConfigurations-toggleAlertConfig>
+   updateAlertConfig </command/atlas-api-alertConfigurations-updateAlertConfig>
 

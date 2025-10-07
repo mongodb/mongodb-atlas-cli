@@ -57,9 +57,9 @@ Related Commands
 
 * :ref:`atlas-api-globalClusters-createCustomZoneMapping` - Creates one custom zone mapping for the specified global cluster.
 * :ref:`atlas-api-globalClusters-createManagedNamespace` - Creates one managed namespace within the specified global cluster.
-* :ref:`atlas-api-globalClusters-deleteAllCustomZoneMappings` - Removes all custom zone mappings for the specified global cluster.
-* :ref:`atlas-api-globalClusters-deleteManagedNamespace` - Removes one managed namespace within the specified global cluster.
-* :ref:`atlas-api-globalClusters-getManagedNamespace` - Returns one managed namespace within the specified global cluster.
+* :ref:`atlas-api-globalClusters-deleteCustomZoneMapping` - Removes all custom zone mappings for the specified global cluster.
+* :ref:`atlas-api-globalClusters-deleteManagedNamespaces` - Removes one managed namespace within the specified global cluster.
+* :ref:`atlas-api-globalClusters-getClusterGlobalWrites` - Returns one managed namespace within the specified global cluster.
 
 
 .. toctree::
@@ -67,7 +67,7 @@ Related Commands
 
    createCustomZoneMapping </command/atlas-api-globalClusters-createCustomZoneMapping>
    createManagedNamespace </command/atlas-api-globalClusters-createManagedNamespace>
-   deleteAllCustomZoneMappings </command/atlas-api-globalClusters-deleteAllCustomZoneMappings>
-   deleteManagedNamespace </command/atlas-api-globalClusters-deleteManagedNamespace>
-   getManagedNamespace </command/atlas-api-globalClusters-getManagedNamespace>
+   deleteCustomZoneMapping </command/atlas-api-globalClusters-deleteCustomZoneMapping>
+   deleteManagedNamespaces </command/atlas-api-globalClusters-deleteManagedNamespaces>
+   getClusterGlobalWrites </command/atlas-api-globalClusters-getClusterGlobalWrites>
 

@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierRestoreJobs-createSharedClusterBackupRestoreJob` - Restores the specified M2 or M5 cluster.
-* :ref:`atlas-api-sharedTierRestoreJobs-getSharedClusterBackupRestoreJob` - Returns the specified restore job for the specified M2 or M5 cluster.
-* :ref:`atlas-api-sharedTierRestoreJobs-listSharedClusterBackupRestoreJobs` - Returns all restore jobs for the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-createBackupTenantRestore` - Restores the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-getBackupTenantRestore` - Returns the specified restore job for the specified M2 or M5 cluster.
+* :ref:`atlas-api-sharedTierRestoreJobs-listBackupTenantRestores` - Returns all restore jobs for the specified M2 or M5 cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   createSharedClusterBackupRestoreJob </command/atlas-api-sharedTierRestoreJobs-createSharedClusterBackupRestoreJob>
-   getSharedClusterBackupRestoreJob </command/atlas-api-sharedTierRestoreJobs-getSharedClusterBackupRestoreJob>
-   listSharedClusterBackupRestoreJobs </command/atlas-api-sharedTierRestoreJobs-listSharedClusterBackupRestoreJobs>
+   createBackupTenantRestore </command/atlas-api-sharedTierRestoreJobs-createBackupTenantRestore>
+   getBackupTenantRestore </command/atlas-api-sharedTierRestoreJobs-getBackupTenantRestore>
+   listBackupTenantRestores </command/atlas-api-sharedTierRestoreJobs-listBackupTenantRestores>
 

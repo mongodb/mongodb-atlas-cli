@@ -58,8 +58,8 @@ Related Commands
 * :ref:`atlas-api-flexClusters-deleteFlexCluster` - Removes one flex cluster from the specified project.
 * :ref:`atlas-api-flexClusters-getFlexCluster` - Returns details for one flex cluster in the specified project.
 * :ref:`atlas-api-flexClusters-listFlexClusters` - Returns details for all flex clusters in the specified project.
+* :ref:`atlas-api-flexClusters-tenantUpgrade` - Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project.
 * :ref:`atlas-api-flexClusters-updateFlexCluster` - Updates one flex cluster in the specified project.
-* :ref:`atlas-api-flexClusters-upgradeFlexCluster` - Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project.
 
 
 .. toctree::
@@ -69,6 +69,6 @@ Related Commands
    deleteFlexCluster </command/atlas-api-flexClusters-deleteFlexCluster>
    getFlexCluster </command/atlas-api-flexClusters-getFlexCluster>
    listFlexClusters </command/atlas-api-flexClusters-listFlexClusters>
+   tenantUpgrade </command/atlas-api-flexClusters-tenantUpgrade>
    updateFlexCluster </command/atlas-api-flexClusters-updateFlexCluster>
-   upgradeFlexCluster </command/atlas-api-flexClusters-upgradeFlexCluster>
 

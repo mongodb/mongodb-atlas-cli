@@ -57,19 +57,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-thirdPartyIntegrations-createThirdPartyIntegration` - Adds the settings for configuring one third-party service integration.
-* :ref:`atlas-api-thirdPartyIntegrations-deleteThirdPartyIntegration` - Removes the settings that permit configuring one third-party service integration.
-* :ref:`atlas-api-thirdPartyIntegrations-getThirdPartyIntegration` - Returns the settings for configuring integration with one third-party service.
-* :ref:`atlas-api-thirdPartyIntegrations-listThirdPartyIntegrations` - Returns the settings that permit integrations with all configured third-party services.
-* :ref:`atlas-api-thirdPartyIntegrations-updateThirdPartyIntegration` - Updates the settings for configuring integration with one third-party service.
+* :ref:`atlas-api-thirdPartyIntegrations-createGroupIntegration` - Adds the settings for configuring one third-party service integration.
+* :ref:`atlas-api-thirdPartyIntegrations-deleteGroupIntegration` - Removes the settings that permit configuring one third-party service integration.
+* :ref:`atlas-api-thirdPartyIntegrations-getGroupIntegration` - Returns the settings for configuring integration with one third-party service.
+* :ref:`atlas-api-thirdPartyIntegrations-listGroupIntegrations` - Returns the settings that permit integrations with all configured third-party services.
+* :ref:`atlas-api-thirdPartyIntegrations-updateGroupIntegration` - Updates the settings for configuring integration with one third-party service.
 
 
 .. toctree::
    :titlesonly:
 
-   createThirdPartyIntegration </command/atlas-api-thirdPartyIntegrations-createThirdPartyIntegration>
-   deleteThirdPartyIntegration </command/atlas-api-thirdPartyIntegrations-deleteThirdPartyIntegration>
-   getThirdPartyIntegration </command/atlas-api-thirdPartyIntegrations-getThirdPartyIntegration>
-   listThirdPartyIntegrations </command/atlas-api-thirdPartyIntegrations-listThirdPartyIntegrations>
-   updateThirdPartyIntegration </command/atlas-api-thirdPartyIntegrations-updateThirdPartyIntegration>
+   createGroupIntegration </command/atlas-api-thirdPartyIntegrations-createGroupIntegration>
+   deleteGroupIntegration </command/atlas-api-thirdPartyIntegrations-deleteGroupIntegration>
+   getGroupIntegration </command/atlas-api-thirdPartyIntegrations-getGroupIntegration>
+   listGroupIntegrations </command/atlas-api-thirdPartyIntegrations-listGroupIntegrations>
+   updateGroupIntegration </command/atlas-api-thirdPartyIntegrations-updateGroupIntegration>
 

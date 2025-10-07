@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-x509Authentication-createDatabaseUserCertificate` - Generates one X.509 certificate for the specified MongoDB user.
-* :ref:`atlas-api-x509Authentication-disableCustomerManagedX509` - Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
-* :ref:`atlas-api-x509Authentication-listDatabaseUserCertificates` - Returns all unexpired X.509 certificates for the specified MongoDB user.
+* :ref:`atlas-api-x509Authentication-createDatabaseUserCert` - Generates one X.509 certificate for the specified MongoDB user.
+* :ref:`atlas-api-x509Authentication-disableSecurityCustomerX509` - Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
+* :ref:`atlas-api-x509Authentication-listDatabaseUserCerts` - Returns all unexpired X.509 certificates for the specified MongoDB user.
 
 
 .. toctree::
    :titlesonly:
 
-   createDatabaseUserCertificate </command/atlas-api-x509Authentication-createDatabaseUserCertificate>
-   disableCustomerManagedX509 </command/atlas-api-x509Authentication-disableCustomerManagedX509>
-   listDatabaseUserCertificates </command/atlas-api-x509Authentication-listDatabaseUserCertificates>
+   createDatabaseUserCert </command/atlas-api-x509Authentication-createDatabaseUserCert>
+   disableSecurityCustomerX509 </command/atlas-api-x509Authentication-disableSecurityCustomerX509>
+   listDatabaseUserCerts </command/atlas-api-x509Authentication-listDatabaseUserCerts>
 

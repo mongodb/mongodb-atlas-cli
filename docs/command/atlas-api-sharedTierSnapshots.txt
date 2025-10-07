@@ -54,15 +54,15 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - Requests one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - Returns details for one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - Returns details for all snapshots for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-downloadClusterBackupTenant` - Requests one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-getBackupTenantSnapshot` - Returns details for one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-listClusterBackupSnapshots` - Returns details for all snapshots for the specified shared cluster.
 
 
 .. toctree::
    :titlesonly:
 
-   downloadSharedClusterBackup </command/atlas-api-sharedTierSnapshots-downloadSharedClusterBackup>
-   getSharedClusterBackup </command/atlas-api-sharedTierSnapshots-getSharedClusterBackup>
-   listSharedClusterBackups </command/atlas-api-sharedTierSnapshots-listSharedClusterBackups>
+   downloadClusterBackupTenant </command/atlas-api-sharedTierSnapshots-downloadClusterBackupTenant>
+   getBackupTenantSnapshot </command/atlas-api-sharedTierSnapshots-getBackupTenantSnapshot>
+   listClusterBackupSnapshots </command/atlas-api-sharedTierSnapshots-listClusterBackupSnapshots>
 

@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
 )
 
 const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmptySlice .Results}}

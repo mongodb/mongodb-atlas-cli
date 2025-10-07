@@ -188,6 +188,15 @@ Before adding a command please make sure that your api exists in the GO SDK.
 > [!TIP]  
 > Atlas CLI provides an experimental generator, make sure to try it out in [tools/cli-generator](./tools/cli-generator)
 
+### Making changes to API Generator
+
+API generator is a tool that generates code based on Atlas OpenAPI specification.
+It is used to generate `./internal/api/commands.go` file that contains all API commands.
+
+If you are making changes to the generator please make sure to run `make gen-api-commands` to update the generated code. 
+
+Please also run `UPDATE_SNAPSHOTS=true go test ./...` from the `tools/cmd/api-generator` directory to update the snapshots. When you run the command for the first time it will fail, showing the diff. Upon running the command again the test will pass as the snapshots have been updated.
+
 ### API Interactions
 
 Atlas CLI use [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) for all backend integration.

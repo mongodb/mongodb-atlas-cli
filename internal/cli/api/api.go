@@ -71,15 +71,15 @@ func Builder() *cobra.Command {
 func createRootAPICommand() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "api",
-		Short: "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + `Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.`,
-		Long: `This feature in public preview streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
+		Short: `Access all features of the Atlas Administration API through the Atlas CLI by using the 'atlas api <tag> <operationId>' command.`,
+		Long: `This feature streamlines script development by letting you interact directly with any Atlas Administration API endpoint through the Atlas CLI.
 
 For more information on
 - Atlas Administration API see: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
 	}
 
-	rootCmd.SetHelpTemplate(cli.ExperimentalHelpTemplate)
+	rootCmd.SetHelpTemplate(cli.APICommandHelpTemplate)
 
 	return rootCmd
 }
@@ -99,6 +99,17 @@ func createAPICommandGroupToCobraCommand(group shared_api.Group) *cobra.Command 
 func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)
+	commandOperationID := command.OperationID
+	commandAliases := command.Aliases
+
+	if command.ShortOperationID != "" {
+		// Add original operation ID to aliases
+		commandAliases = append(commandAliases, commandName)
+		// Use shortOperationID
+		commandName = strcase.ToLowerCamel(command.ShortOperationID)
+		commandOperationID = command.ShortOperationID
+	}
+
 	shortDescription, longDescription := splitShortAndLongDescription(command.Description)
 
 	// flag values
@@ -114,11 +125,11 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 
 	cmd := &cobra.Command{
 		Use:     commandName,
-		Aliases: command.Aliases,
+		Aliases: commandAliases,
 		Short:   shortDescription,
 		Long:    longDescription,
 		Annotations: map[string]string{
-			"operationId": command.OperationID,
+			"operationId": commandOperationID,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile

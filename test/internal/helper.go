@@ -36,7 +36,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312007/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -1512,7 +1512,7 @@ func createOrgServiceAccount(cliPath, name string) (string, string, error) {
 	args := []string{
 		apiEntity,
 		serviceAccountsEntity,
-		"createServiceAccount",
+		"createOrgServiceAccount",
 		"--version",
 		serviceAccountAPIVersion,
 		"-P",
@@ -1564,7 +1564,7 @@ func deleteOrgServiceAccount(t *testing.T, cliPath, clientID string) {
 	args := []string{
 		apiEntity,
 		serviceAccountsEntity,
-		"deleteServiceAccount",
+		"deleteOrgServiceAccount",
 		"--clientId",
 		clientID,
 		"--version",

@@ -101,6 +101,7 @@ func extractSunsetDate(extensions map[string]any) *time.Time {
 type operationExtensions struct {
 	skip             bool
 	operationID      string
+	shortOperationID string
 	operationAliases []string
 }
 
@@ -108,7 +109,12 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 	ext := operationExtensions{
 		skip:             false,
 		operationID:      operation.OperationID,
+		shortOperationID: "",
 		operationAliases: []string{},
+	}
+
+	if shortOperationID, ok := operation.Extensions["x-xgen-operation-id-override"].(string); ok && shortOperationID != "" {
+		ext.shortOperationID = shortOperationID
 	}
 
 	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
@@ -124,9 +130,11 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 			}
 		}
 
+		// OperationID override for x-xgen-atlascli. This takes priority over x-xgen-operation-id-override.
 		if overrides := extractOverrides(operation.Extensions); overrides != nil {
 			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
 				ext.operationID = overriddenOperationID
+				ext.shortOperationID = ""
 			}
 		}
 	}
@@ -141,6 +149,7 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 	}
 
 	operationID := extensions.operationID
+	shortOperationID := extensions.shortOperationID
 	aliases := extensions.operationAliases
 
 	httpVerb, err := api.ToHTTPVerb(verb)
@@ -179,9 +188,10 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 	}
 
 	command := api.Command{
-		OperationID: operationID,
-		Aliases:     aliases,
-		Description: description,
+		OperationID:      operationID,
+		ShortOperationID: shortOperationID,
+		Aliases:          aliases,
+		Description:      description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
 			QueryParameters: parameters.query,

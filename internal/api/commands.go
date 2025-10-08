@@ -1539,7 +1539,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupClusterSearchDeployment`,
+						OperationID: `getGroupClusterSearchDeployment`,
 						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -1787,7 +1787,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupClusterSearchDeployment`,
+						OperationID: `getGroupClusterSearchDeployment`,
 						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -2743,7 +2743,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupClusterSearchDeployment`,
+						OperationID: `getGroupClusterSearchDeployment`,
 						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -3287,10 +3287,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupClusterBackupExport`,
+						OperationID: `getGroupClusterBackupExport`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
+							`exportId`:    `body:$.id`,
 							`groupId`:     `input:groupId`,
 						},
 					},
@@ -3665,7 +3666,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupClusterBackupSnapshot`,
+						OperationID: `getGroupClusterBackupSnapshot`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -3822,7 +3823,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupBackupCompliancePolicy`,
+						OperationID: `getGroupBackupCompliancePolicy`,
 						Version:     shared_api.NewStableVersion(2023, 10, 1),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
@@ -5279,11 +5280,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `takeGroupClusterBackupSnapshots`,
+						OperationID: `getGroupClusterBackupSnapshot`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
+							`snapshotId`:  `body:$.id`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -5376,7 +5378,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupBackupCompliancePolicy`,
+						OperationID: `getGroupBackupCompliancePolicy`,
 						Version:     shared_api.NewStableVersion(2023, 10, 1),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
@@ -5552,7 +5554,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupClusterBackupSnapshot`,
+						OperationID: `getGroupClusterBackupSnapshot`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -6515,7 +6517,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `endGroupClusterOutageSimulation`,
+						OperationID: `getGroupClusterOutageSimulation`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -6671,7 +6673,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `startGroupClusterOutageSimulation`,
+						OperationID: `getGroupClusterOutageSimulation`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
@@ -6851,10 +6853,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupCluster`,
+						OperationID: `getGroupCluster`,
 						Version:     shared_api.NewStableVersion(2024, 8, 5),
 						Params: map[string]string{
-							`groupId`: `body:$.groupId`,
+							`clusterName`: `body:$.name`,
+							`groupId`:     `body:$.groupId`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -6959,8 +6962,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupCluster`,
-						Version:     shared_api.NewStableVersion(2023, 1, 1),
+						OperationID: `getGroupCluster`,
+						Version:     shared_api.NewStableVersion(2024, 8, 5),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -7779,11 +7782,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `requestGroupSampleDatasetLoad`,
+						OperationID: `getGroupSampleDatasetLoad`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
-							`groupId`: `input:groupId`,
-							`name`:    `input:name`,
+							`groupId`:         `input:groupId`,
+							`sampleDatasetId`: `body:$.id`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -13027,10 +13030,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupFlexCluster`,
+						OperationID: `getGroupFlexCluster`,
 						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
+							`name`:    `body:$.name`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -13116,7 +13120,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupFlexCluster`,
+						OperationID: `getGroupFlexCluster`,
 						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
@@ -13424,7 +13428,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupFlexCluster`,
+						OperationID: `getGroupFlexCluster`,
 						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
@@ -13519,11 +13523,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupFlexClusterBackupRestoreJob`,
+						OperationID: `getGroupFlexClusterBackupRestoreJob`,
 						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
-							`groupId`: `input:groupId`,
-							`name`:    `input:name`,
+							`groupId`:      `input:groupId`,
+							`name`:         `input:name`,
+							`restoreJobId`: `body:$.id`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -15275,10 +15280,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `verifyGroupUserSecurityLdap`,
+						OperationID: `getGroupUserSecurityLdapVerify`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
-							`groupId`: `input:groupId`,
+							`groupId`:   `input:groupId`,
+							`requestId`: `body:$.requestId`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -20572,9 +20578,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupClusterOnlineArchive`,
+						OperationID: `getGroupClusterOnlineArchive`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
+							`archiveId`:   `body:$.id`,
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
 						},
@@ -20675,7 +20682,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupClusterOnlineArchive`,
+						OperationID: `getGroupClusterOnlineArchive`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`archiveId`:   `input:archiveId`,
@@ -21044,7 +21051,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupClusterOnlineArchive`,
+						OperationID: `getGroupClusterOnlineArchive`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`archiveId`:   `input:archiveId`,
@@ -23081,10 +23088,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupPrivateEndpointEndpointService`,
+						OperationID: `getGroupPrivateEndpointEndpointService`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
-							`groupId`: `input:groupId`,
+							`cloudProvider`:     `body:$.cloudProvider`,
+							`endpointServiceId`: `body:$.id`,
+							`groupId`:           `input:groupId`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -23261,7 +23270,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupPrivateEndpointEndpointService`,
+						OperationID: `getGroupPrivateEndpointEndpointService`,
 						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`cloudProvider`:     `body:$.cloudProvider`,
@@ -28020,10 +28029,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `createGroupServerlessInstance`,
-						Version:     shared_api.NewStableVersion(2023, 1, 1),
+						OperationID: `getGroupFlexCluster`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
+							`name`:    `body:$.name`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{
@@ -28111,8 +28121,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `deleteGroupServerlessInstance`,
-						Version:     shared_api.NewStableVersion(2023, 1, 1),
+						OperationID: `getGroupFlexCluster`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `input:name`,
@@ -28367,11 +28377,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
-						OperationID: `updateGroupServerlessInstance`,
-						Version:     shared_api.NewStableVersion(2023, 1, 1),
+						OperationID: `getGroupFlexCluster`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
-							`name`:    `input:name`,
+							`name`:    `body:$.name`,
 						},
 					},
 					Expect: &shared_api.WatcherExpectProperties{

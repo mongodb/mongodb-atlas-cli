@@ -42564,7 +42564,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-10-01"
-                        operation-id: updateGroupBackupCompliancePolicy
+                        operation-id: getGroupBackupCompliancePolicy
                         params:
                             groupId: input:groupId
                     expect:
@@ -42666,7 +42666,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-10-01"
-                        operation-id: updateGroupBackupCompliancePolicy
+                        operation-id: getGroupBackupCompliancePolicy
                         params:
                             groupId: input:groupId
                     expect:
@@ -43196,8 +43196,9 @@ paths:
                 watcher:
                     get:
                         version: "2024-08-05"
-                        operation-id: createGroupCluster
+                        operation-id: getGroupCluster
                         params:
+                            clusterName: body:$.name
                             groupId: body:$.groupId
                     expect:
                         match:
@@ -43273,8 +43274,8 @@ paths:
             x-xgen-atlascli:
                 watcher:
                     get:
-                        version: "2023-01-01"
-                        operation-id: deleteGroupCluster
+                        version: "2024-08-05"
+                        operation-id: getGroupCluster
                         params:
                             clusterName: input:clusterName
                             groupId: input:groupId
@@ -43730,10 +43731,11 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: createGroupClusterBackupExport
+                        operation-id: getGroupClusterBackupExport
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
+                            exportId: body:$.id
                     expect:
                         match:
                             path: $.state
@@ -44197,10 +44199,11 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: takeGroupClusterBackupSnapshots
+                        operation-id: getGroupClusterBackupSnapshot
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
+                            snapshotId: body:$.id
                     expect:
                         match:
                             path: $.status
@@ -44254,7 +44257,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: deleteGroupClusterBackupSnapshot
+                        operation-id: getGroupClusterBackupSnapshot
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -44365,7 +44368,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: updateGroupClusterBackupSnapshot
+                        operation-id: getGroupClusterBackupSnapshot
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -45875,10 +45878,11 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: createGroupClusterOnlineArchive
+                        operation-id: getGroupClusterOnlineArchive
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
+                            archiveId: body:$.id
                     expect:
                         match:
                             path: $.state
@@ -45936,7 +45940,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: deleteGroupClusterOnlineArchive
+                        operation-id: getGroupClusterOnlineArchive
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -46052,7 +46056,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: updateGroupClusterOnlineArchive
+                        operation-id: getGroupClusterOnlineArchive
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -46185,7 +46189,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: endGroupClusterOutageSimulation
+                        operation-id: getGroupClusterOutageSimulation
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -46292,7 +46296,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: startGroupClusterOutageSimulation
+                        operation-id: getGroupClusterOutageSimulation
                         params:
                             groupId: input:groupId
                             clusterName: input:clusterName
@@ -47037,7 +47041,7 @@ paths:
                 watcher:
                     get:
                         version: "2024-05-30"
-                        operation-id: deleteGroupClusterSearchDeployment
+                        operation-id: getGroupClusterSearchDeployment
                         params:
                             clusterName: input:clusterName
                             groupId: input:groupId
@@ -47153,7 +47157,7 @@ paths:
                 watcher:
                     get:
                         version: "2024-05-30"
-                        operation-id: updateGroupClusterSearchDeployment
+                        operation-id: getGroupClusterSearchDeployment
                         params:
                             clusterName: input:clusterName
                             groupId: input:groupId
@@ -47223,7 +47227,7 @@ paths:
                 watcher:
                     get:
                         version: "2024-05-30"
-                        operation-id: updateGroupClusterSearchDeployment
+                        operation-id: getGroupClusterSearchDeployment
                         params:
                             clusterName: input:clusterName
                             groupId: input:groupId
@@ -50518,9 +50522,10 @@ paths:
                 watcher:
                     get:
                         version: "2024-11-13"
-                        operation-id: createGroupFlexCluster
+                        operation-id: getGroupFlexCluster
                         params:
                             groupId: input:groupId
+                            name: body:$.name
                     expect:
                         match:
                             path: $.stateName
@@ -50569,7 +50574,7 @@ paths:
                 watcher:
                     get:
                         version: "2024-11-13"
-                        operation-id: deleteGroupFlexCluster
+                        operation-id: getGroupFlexCluster
                         params:
                             name: input:name
                             groupId: input:groupId
@@ -50666,7 +50671,7 @@ paths:
                 watcher:
                     get:
                         version: "2024-11-13"
-                        operation-id: updateGroupFlexCluster
+                        operation-id: getGroupFlexCluster
                         params:
                             name: input:name
                             groupId: input:groupId
@@ -50815,10 +50820,11 @@ paths:
                 watcher:
                     get:
                         version: "2024-11-13"
-                        operation-id: createGroupFlexClusterBackupRestoreJob
+                        operation-id: getGroupFlexClusterBackupRestoreJob
                         params:
                             name: input:name
                             groupId: input:groupId
+                            restoreJobId: body:$.id
                     expect:
                         match:
                             path: $.status
@@ -52821,9 +52827,10 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: createGroupPipeline
+                        operation-id: getGroupPipeline
                         params:
                             groupId: input:groupId
+                            pipelineName: body:$.name
                     expect:
                         match:
                             path: $.state
@@ -52868,7 +52875,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: deleteGroupPipeline
+                        operation-id: getGroupPipeline
                         params:
                             groupId: input:groupId
                             pipelineName: input:pipelineName
@@ -52966,7 +52973,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: updateGroupPipeline
+                        operation-id: getGroupPipeline
                         params:
                             groupId: input:groupId
                             pipelineName: input:pipelineName
@@ -53460,7 +53467,7 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: deleteGroupPrivateEndpointEndpointService
+                        operation-id: getGroupPrivateEndpointEndpointService
                         params:
                             cloudProvider: body:$.cloudProvider
                             groupId: input:groupId
@@ -53741,9 +53748,11 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: createGroupPrivateEndpointEndpointService
+                        operation-id: getGroupPrivateEndpointEndpointService
                         params:
+                            cloudProvider: body:$.cloudProvider
                             groupId: input:groupId
+                            endpointServiceId: body:$.id
                     expect:
                         match:
                             path: $.status
@@ -55454,10 +55463,10 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: requestGroupSampleDatasetLoad
+                        operation-id: getGroupSampleDatasetLoad
                         params:
                             groupId: input:groupId
-                            name: input:name
+                            sampleDatasetId: body:$.id
                     expect:
                         match:
                             path: $.state
@@ -55597,10 +55606,11 @@ paths:
             x-xgen-atlascli:
                 watcher:
                     get:
-                        version: "2023-01-01"
-                        operation-id: createGroupServerlessInstance
+                        version: "2024-11-13"
+                        operation-id: getGroupFlexCluster
                         params:
                             groupId: input:groupId
+                            name: body:$.name
                     expect:
                         match:
                             path: $.status
@@ -56000,8 +56010,8 @@ paths:
             x-xgen-atlascli:
                 watcher:
                     get:
-                        version: "2023-01-01"
-                        operation-id: deleteGroupServerlessInstance
+                        version: "2024-11-13"
+                        operation-id: getGroupFlexCluster
                         params:
                             groupId: input:groupId
                             name: input:name
@@ -56115,11 +56125,11 @@ paths:
             x-xgen-atlascli:
                 watcher:
                     get:
-                        version: "2023-01-01"
-                        operation-id: updateGroupServerlessInstance
+                        version: "2024-11-13"
+                        operation-id: getGroupFlexCluster
                         params:
                             groupId: input:groupId
-                            name: input:name
+                            name: body:$.name
                     expect:
                         match:
                             path: $.status
@@ -58271,9 +58281,10 @@ paths:
                 watcher:
                     get:
                         version: "2023-01-01"
-                        operation-id: verifyGroupUserSecurityLdap
+                        operation-id: getGroupUserSecurityLdapVerify
                         params:
                             groupId: input:groupId
+                            requestId: body:$.requestId
                     expect:
                         match:
                             path: $.status

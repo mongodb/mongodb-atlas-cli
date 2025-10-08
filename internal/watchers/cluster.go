@@ -34,8 +34,9 @@ var ClusterDeleted = &StateTransition{
 }
 
 var ClusterCreated = &StateTransition{
-	StartState: pointer.Get(clusterCreating),
-	EndState:   pointer.Get(clusterIdle),
+	StartState:      pointer.Get(clusterCreating),
+	EndState:        pointer.Get(clusterIdle),
+	RetryableStates: []string{clusterUpdating},
 }
 
 type AtlasClusterStateDescriber struct {

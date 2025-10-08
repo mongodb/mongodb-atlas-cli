@@ -1845,6 +1845,21 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createOrgSandboxConfig`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createOrgServiceAccount`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -3596,6 +3611,28 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteOrgSandboxConfig`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`sandboxConfigId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the sandbox configuration.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`:           `4888442a3354817a7320eb61`,
+					`sandboxConfigId`: `507f1f77bcf86cd799439011`,
+				},
+			},
+			},
+		},
+	},
 	`deleteOrgServiceAccount`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clientId`: {
@@ -4029,6 +4066,36 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`generateGroupSandboxClusterDescription`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`sandboxConfigId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the sandbox configuration.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:         `32b6e34b3d91647abb20e7b8`,
+					`sandboxConfigId`: `507f1f77bcf86cd799439011`,
 				},
 			},
 			},
@@ -7460,6 +7527,34 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getOrgSandboxConfig`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`sandboxConfigId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the sandbox configuration.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`:           `4888442a3354817a7320eb61`,
+					`sandboxConfigId`: `507f1f77bcf86cd799439011`,
+				},
+			},
+			},
+		},
+	},
 	`getOrgServiceAccount`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clientId`: {
@@ -10683,6 +10778,36 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listOrgSandboxConfig`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
 	`listOrgServiceAccountAccessList`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clientId`: {
@@ -12766,6 +12891,24 @@ var metadata = metadatatypes.Metadata{
 			},
 			`resourcePolicyId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateOrgSandboxConfig`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`sandboxConfigId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the sandbox configuration.`,
 			},
 		},
 		Examples: nil,

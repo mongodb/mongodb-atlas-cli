@@ -60,7 +60,7 @@ components:
                 pattern: ^([a-f0-9]{24})$
                 type: string
             x-xgen-IPA-exception:
-                xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             x-xgen-atlascli:
                 aliases:
                     - projectId
@@ -116,7 +116,7 @@ components:
                 pattern: ^([a-f0-9]{24})$
                 type: string
             x-xgen-IPA-exception:
-                xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
         pageNum:
             description: Number of the page that displays the current set of the total objects that the response returns.
             in: query
@@ -150,6 +150,15 @@ components:
             schema:
                 example: my.host.name.com:27017
                 pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-f]{1,4}\:){7}([0-9a-f]{1,4})|(([a-z0-9]+\.){1,10}[a-z]+)?(\:[0-9]{4,5})$
+                type: string
+        sandboxConfigId:
+            description: Unique 24-hexadecimal digit string that identifies the sandbox configuration.
+            in: path
+            name: sandboxConfigId
+            required: true
+            schema:
+                example: 507f1f77bcf86cd799439011
+                pattern: ^([a-f0-9]{24})$
                 type: string
         start:
             description: Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set **period**.
@@ -931,7 +940,7 @@ components:
                           title: Azure Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
                           enum:
                             - US_GOV_WEST_1
@@ -974,7 +983,7 @@ components:
                           title: AWS Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                     type: object
                 status:
                     description: State of the Encryption At Rest private endpoint.
@@ -1069,6 +1078,12 @@ components:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     autoScaling:
                         $ref: '#/components/schemas/AdvancedAutoScalingSettings'
+                    effectiveAnalyticsSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveElectableSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveReadOnlySpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     readOnlySpecs:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                   type: object
@@ -4252,6 +4267,10 @@ components:
                     default: false
                     description: Flag that indicates whether termination protection is enabled on the cluster. If set to `true`, MongoDB Cloud won't delete the cluster. If set to `false`, MongoDB Cloud will delete the cluster.
                     type: boolean
+                useAwsTimeBasedSnapshotCopyForFastInitialSync:
+                    default: false
+                    description: Flag that indicates whether AWS time-based snapshot copies will be used instead of slower standard snapshot copies during fast Atlas cross-region initial syncs. This flag is only relevant for clusters containing AWS nodes.
+                    type: boolean
                 versionReleaseSystem:
                     default: LTS
                     description: Method by which the cluster maintains the MongoDB versions. If value is `CONTINUOUS`, you must not specify **mongoDBMajorVersion**.
@@ -5208,7 +5227,7 @@ components:
                           title: Azure Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
                           enum:
                             - US_GOV_WEST_1
@@ -5251,7 +5270,7 @@ components:
                           title: AWS Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                     type: object
                 status:
                     description: State of the Encryption At Rest private endpoint.
@@ -5455,6 +5474,12 @@ components:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     autoScaling:
                         $ref: '#/components/schemas/AdvancedAutoScalingSettings'
+                    effectiveAnalyticsSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveElectableSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveReadOnlySpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     readOnlySpecs:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                   type: object
@@ -5748,6 +5773,7 @@ components:
                     type: string
                 dbName:
                     description: Human-readable label of the database that contains the collection that contains the online archive.
+                    maxLength: 64
                     type: string
                     writeOnly: true
                 groupId:
@@ -6282,7 +6308,7 @@ components:
                   title: AWS Instance Sizes
                   type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                    xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                 - enum:
                     - M10
                     - M20
@@ -6309,7 +6335,7 @@ components:
                   title: Azure Instance Sizes
                   type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                    xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                 - enum:
                     - M10
                     - M20
@@ -8359,7 +8385,7 @@ components:
                           title: AWS Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Microsoft Azure Regions.
                           enum:
                             - US_CENTRAL
@@ -8418,7 +8444,7 @@ components:
                           title: Azure Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Google Compute Regions.
                           enum:
                             - EASTERN_US
@@ -8474,7 +8500,7 @@ components:
                           title: GCP Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                     type: object
             title: Cloud Service Provider Settings for Multi-Cloud Clusters
             type: object
@@ -8557,7 +8583,7 @@ components:
                           title: AWS Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Microsoft Azure Regions.
                           enum:
                             - US_CENTRAL
@@ -8616,7 +8642,7 @@ components:
                           title: Azure Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Google Compute Regions.
                           enum:
                             - EASTERN_US
@@ -8672,7 +8698,7 @@ components:
                           title: GCP Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                     type: object
             title: Cloud Service Provider Settings
             type: object
@@ -9262,6 +9288,10 @@ components:
                 terminationProtectionEnabled:
                     default: false
                     description: Flag that indicates whether termination protection is enabled on the cluster. If set to `true`, MongoDB Cloud won't delete the cluster. If set to `false`, MongoDB Cloud will delete the cluster.
+                    type: boolean
+                useAwsTimeBasedSnapshotCopyForFastInitialSync:
+                    default: false
+                    description: Flag that indicates whether AWS time-based snapshot copies will be used instead of slower standard snapshot copies during fast Atlas cross-region initial syncs. This flag is only relevant for clusters containing AWS nodes.
                     type: boolean
                 versionReleaseSystem:
                     default: LTS
@@ -13116,7 +13146,7 @@ components:
                     type: integer
             type: object
         DedicatedHardwareSpec20240805:
-            description: Hardware specifications for read-only nodes in the region. Read-only nodes can never become the primary member, but can enable local reads. If you don't specify this parameter, no read-only nodes are deployed to the region.
+            description: The current hardware specifications for read only nodes in the region.
             oneOf:
                 - $ref: '#/components/schemas/AWSHardwareSpec20240805'
                 - $ref: '#/components/schemas/AzureHardwareSpec20240805'
@@ -13133,6 +13163,7 @@ components:
                     description: Number of nodes of the given type for MongoDB Cloud to deploy to the region.
                     format: int32
                     type: integer
+            readOnly: true
             type: object
         DefaultAlertConfigViewForNdsGroup:
             description: Other alerts which don't have extra details beside of basic one.
@@ -15314,6 +15345,10 @@ components:
                         $ref: '#/components/schemas/DeleteCopiedBackups'
                     type: array
                     writeOnly: true
+                deleteSnapshots:
+                    description: Flag that indicates whether to delete Snapshots that MongoDB Cloud took previously when deleting the associated backup policy.
+                    type: boolean
+                    writeOnly: true
                 export:
                     $ref: '#/components/schemas/AutoExportPolicyView'
                 extraRetentionSettings:
@@ -15387,6 +15422,10 @@ components:
                     items:
                         $ref: '#/components/schemas/DeleteCopiedBackups20240805'
                     type: array
+                    writeOnly: true
+                deleteSnapshots:
+                    description: Flag that indicates whether to delete Snapshots that MongoDB Cloud took previously when deleting the associated backup policy.
+                    type: boolean
                     writeOnly: true
                 export:
                     $ref: '#/components/schemas/AutoExportPolicyView'
@@ -16141,7 +16180,7 @@ components:
                           title: Azure Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                         - description: Physical location where MongoDB Cloud deploys your AWS-hosted MongoDB cluster nodes. The region you choose can affect network latency for clients accessing your databases. When MongoDB Cloud deploys a dedicated cluster, it checks if a VPC or VPC connection exists for that provider and region. If not, MongoDB Cloud creates them as part of the deployment. MongoDB Cloud assigns the VPC a CIDR block. To limit a new VPC peering connection to one CIDR block and region, create the connection first. Deploy the cluster after the connection starts.
                           enum:
                             - US_GOV_WEST_1
@@ -16184,7 +16223,7 @@ components:
                           title: AWS Regions
                           type: string
                           x-xgen-IPA-exception:
-                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers
+                            xgen-IPA-123-allowable-enum-values-should-not-exceed-20: Enum values standardized by cloud providers.
                     type: object
                 status:
                     description: State of the Encryption At Rest private endpoint.
@@ -16690,6 +16729,8 @@ components:
                     - HOST_MONGOT_STOP_REPLICATION
                     - HOST_MONGOT_SUFFICIENT_DISK_SPACE
                     - HOST_MONGOT_APPROACHING_STOP_REPLICATION
+                    - HOST_SEARCH_NODE_UNBLOCKED
+                    - HOST_SEARCH_NODE_INDEX_FAILED
                     - HOST_ENOUGH_DISK_SPACE
                     - HOST_NOT_ENOUGH_DISK_SPACE
                     - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
@@ -16757,6 +16798,7 @@ components:
                     - CLUSTER_INSTANCE_UPDATE_REQUESTED
                     - CLUSTER_INSTANCE_REPLACED
                     - CLUSTER_INSTANCE_REPLACE_CLEARED
+                    - CLUSTER_INSTANCE_VM_RESTART_CLEARED
                     - CLUSTER_INSTANCE_CONFIG_UPDATED
                     - CLUSTER_INSTANCE_AGENT_API_KEY_ROTATED
                     - CLUSTER_INSTANCE_SSL_ROTATED
@@ -17452,9 +17494,14 @@ components:
                     - ORG_MONGODB_VERSION_EOL_EXTENSION_ACCEPTED
                     - ORG_MONGODB_VERSION_EOL_EXTENSION_PENDING
                     - ORG_MONGODB_VERSION_EOL_EXTENSION_CANCELLED
+                    - ORG_BAAS_EOL_EXTENSION_ACCEPTED
+                    - ORG_BAAS_EOL_EXTENSION_PENDING
+                    - ORG_BAAS_EOL_EXTENSION_CANCELED
                     - GROUP_MOVED_FROM_ORG
                     - SANDBOX_ENABLED_FOR_ORG
                     - SANDBOX_DISABLED_FOR_ORG
+                    - SANDBOX_CONFIG_DELETED
+                    - SANDBOX_TEMPLATE_UPDATED
                   title: Org Event Types
                   type: string
                   x-xgen-IPA-exception:
@@ -20131,6 +20178,12 @@ components:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     autoScaling:
                         $ref: '#/components/schemas/AdvancedAutoScalingSettings'
+                    effectiveAnalyticsSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveElectableSpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
+                    effectiveReadOnlySpecs:
+                        $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                     readOnlySpecs:
                         $ref: '#/components/schemas/DedicatedHardwareSpec20240805'
                   type: object
@@ -21558,6 +21611,8 @@ components:
                 - HOST_MONGOT_STOP_REPLICATION
                 - HOST_MONGOT_SUFFICIENT_DISK_SPACE
                 - HOST_MONGOT_APPROACHING_STOP_REPLICATION
+                - HOST_SEARCH_NODE_UNBLOCKED
+                - HOST_SEARCH_NODE_INDEX_FAILED
                 - HOST_ENOUGH_DISK_SPACE
                 - HOST_NOT_ENOUGH_DISK_SPACE
                 - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
@@ -21586,6 +21641,7 @@ components:
                 - HOST_MONGOT_CRASHING_OOM
                 - HOST_MONGOT_STOP_REPLICATION
                 - HOST_MONGOT_APPROACHING_STOP_REPLICATION
+                - HOST_SEARCH_NODE_INDEX_FAILED
                 - HOST_NOT_ENOUGH_DISK_SPACE
                 - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
                 - SSH_KEY_NDS_HOST_ACCESS_REFRESHED
@@ -23353,6 +23409,13 @@ components:
                         - ATLAS_AWS_DATA_TRANSFER_SAME_REGION
                         - ATLAS_AWS_DATA_TRANSFER_DIFFERENT_REGION
                         - ATLAS_AWS_DATA_TRANSFER_INTERNET
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_1
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_2
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_3
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_4
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_5
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_6
+                        - ATLAS_AWS_TIME_BASED_SNAPSHOT_COPY_LEVEL_7
                         - ATLAS_AWS_BACKUP_SNAPSHOT_STORAGE
                         - ATLAS_AWS_BACKUP_DOWNLOAD_VM
                         - ATLAS_AWS_BACKUP_DOWNLOAD_VM_STORAGE
@@ -26563,6 +26626,7 @@ components:
                 - CLUSTER_INSTANCE_UPDATE_REQUESTED
                 - CLUSTER_INSTANCE_REPLACED
                 - CLUSTER_INSTANCE_REPLACE_CLEARED
+                - CLUSTER_INSTANCE_VM_RESTART_CLEARED
                 - CLUSTER_INSTANCE_CONFIG_UPDATED
                 - CLUSTER_INSTANCE_AGENT_API_KEY_ROTATED
                 - CLUSTER_INSTANCE_SSL_ROTATED
@@ -28704,9 +28768,14 @@ components:
                 - ORG_MONGODB_VERSION_EOL_EXTENSION_ACCEPTED
                 - ORG_MONGODB_VERSION_EOL_EXTENSION_PENDING
                 - ORG_MONGODB_VERSION_EOL_EXTENSION_CANCELLED
+                - ORG_BAAS_EOL_EXTENSION_ACCEPTED
+                - ORG_BAAS_EOL_EXTENSION_PENDING
+                - ORG_BAAS_EOL_EXTENSION_CANCELED
                 - GROUP_MOVED_FROM_ORG
                 - SANDBOX_ENABLED_FOR_ORG
                 - SANDBOX_DISABLED_FOR_ORG
+                - SANDBOX_CONFIG_DELETED
+                - SANDBOX_TEMPLATE_UPDATED
             example: ORG_CREATED
             title: Org Event Types
             type: string
@@ -30867,6 +30936,30 @@ components:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
                         $ref: '#/components/schemas/AuthFederationRoleMapping'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            type: object
+        PaginatedSandboxConfigs:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/SandboxConfigResponse'
                     readOnly: true
                     type: array
                 totalCount:
@@ -33120,6 +33213,55 @@ components:
                     readOnly: true
                     type: string
             type: object
+        SandboxClusterTemplateView:
+            description: Cluster template configuration for sandbox clusters.
+            properties:
+                provider:
+                    description: The provider for a cluster.
+                    example: AWS
+                    type: string
+                region:
+                    description: The region for a cluster.
+                    example: US_EAST_1
+                    type: string
+                tier:
+                    description: The tier for a cluster.
+                    example: M0
+                    type: string
+            type: object
+        SandboxConfigRequest:
+            description: Settings to configure the sandbox feature for an organization.
+            properties:
+                clusterTemplate:
+                    $ref: '#/components/schemas/SandboxClusterTemplateView'
+                enabled:
+                    description: Whether sandbox mode is enabled for the organization.
+                    type: boolean
+            type: object
+        SandboxConfigResponse:
+            description: Configuration details for the sandbox feature of an organization.
+            properties:
+                clusterTemplate:
+                    $ref: '#/components/schemas/SandboxClusterTemplateView'
+                enabled:
+                    description: Whether sandbox mode is enabled for the organization.
+                    type: boolean
+                id:
+                    description: The id of the sandbox config.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
+            type: object
+        SandboxConfigUpdateRequest:
+            description: Settings to update an existing sandbox for an organization.
+            properties:
+                clusterTemplate:
+                    $ref: '#/components/schemas/SandboxClusterTemplateView'
+                enabled:
+                    description: Whether sandbox mode is enabled for the organization.
+                    type: boolean
+            type: object
         SchemaAdvisorItemRecommendation:
             properties:
                 affectedNamespaces:
@@ -33651,11 +33793,13 @@ components:
             description: Index specifications for the collection's fields.
             properties:
                 dynamic:
-                    description: Flag that indicates whether the index uses dynamic or static mappings. Required if **mappings.fields** is omitted.
+                    description: Indicates whether the index uses static, default dynamic, or configurable dynamic mappings. Set to **true** to enable dynamic mapping with default type set or define object to specify the name of the configured type sets for dynamic mapping. If you specify configurable dynamic mappings, you must define the referred type sets in the **typeSets** field. Set to **false** to use only static mappings through **mappings.fields**.
+                    example:
+                        typeSet: typeSet1
                     externalDocs:
-                        description: Dynamic or Static Mappings
+                        description: Static, Dynamic or Configurable Dynamic Mappings
                         url: https://dochub.mongodb.org/core/field-mapping-definition-fts#static-and-dynamic-mappings
-                    type: boolean
+                    type: object
                 fields:
                     additionalProperties:
                         $ref: '#/components/schemas/Fields'
@@ -33989,6 +34133,25 @@ components:
                 - name
                 - source
             title: Synonym Mapping Definition
+            type: object
+        SearchTypeSets:
+            description: Type sets for an Atlas Search index definition.
+            externalDocs:
+                description: Type Sets
+                url: https://dochub.mongodb.org/core/atlas-search-configure-dynamic-indexing
+            properties:
+                name:
+                    description: Label that identifies the type set name. Each **typeSets.name** must be unique within the same index definition.
+                    type: string
+                types:
+                    description: List of types associated with the type set. Each type definition must include a "type" field specifying the search field type ("autocomplete", "boolean", "date", "geo", "number", "objectId", "string", "token", or "uuid") and may include additional configuration properties specific to that type.
+                    items:
+                        $ref: '#/components/schemas/BasicDBObject'
+                    maxItems: 100
+                    type: array
+            required:
+                - name
+            title: TypeSets
             type: object
         ServerlessAVGCommandExecutionTimeMetricThresholdView:
             properties:
@@ -35588,6 +35751,16 @@ components:
                         $ref: '#/components/schemas/Link'
                     readOnly: true
                     type: array
+                maxTierSize:
+                    description: Max tier size for the Stream Instance. Configures Memory / VCPU allowances. This field is not supported yet.
+                    enum:
+                        - SP50
+                        - SP30
+                        - SP10
+                        - SP5
+                        - SP2
+                    title: Stream Instance Max Tier Size
+                    type: string
                 tier:
                     description: Selected tier for the Stream Instance. Configures Memory / VCPU allowances.
                     enum:
@@ -36247,10 +36420,10 @@ components:
             description: User credentials required to connect to a Kafka Cluster. Includes the authentication type, as well as the parameters for that authentication mode.
             properties:
                 clientId:
-                    description: OIDC client identifier for authentication to the Kafka cluster. This field is not supported yet.
+                    description: OIDC client identifier for authentication to the Kafka cluster.
                     type: string
                 clientSecret:
-                    description: OIDC client secret for authentication to the Kafka cluster. This field is not supported yet.
+                    description: OIDC client secret for authentication to the Kafka cluster.
                     format: password
                     type: string
                     writeOnly: true
@@ -36267,7 +36440,7 @@ components:
                     description: Style of authentication. Can be one of PLAIN, SCRAM-256, SCRAM-512, or OAUTHBEARER.
                     type: string
                 method:
-                    description: SASL OAUTHBEARER authentication method. Can only be OIDC currently. This field is not supported yet.
+                    description: SASL OAUTHBEARER authentication method. Can only be OIDC currently.
                     type: string
                 password:
                     description: Password of the account to connect to the Kafka cluster.
@@ -36275,10 +36448,10 @@ components:
                     type: string
                     writeOnly: true
                 saslOauthbearerExtensions:
-                    description: SASL OAUTHBEARER extensions parameter for additional OAuth2 configuration. This field is not supported yet.
+                    description: SASL OAUTHBEARER extensions parameter for additional OAuth2 configuration.
                     type: string
                 scope:
-                    description: OIDC scope parameter defining the access permissions requested. This field is not supported yet.
+                    description: OIDC scope parameter defining the access permissions requested.
                     type: string
                 sslCertificate:
                     description: SSL certificate for client authentication to Kafka.
@@ -36292,7 +36465,7 @@ components:
                     type: string
                     writeOnly: true
                 tokenEndpointUrl:
-                    description: OIDC token endpoint URL for obtaining access tokens. This field is not supported yet.
+                    description: OIDC token endpoint URL for obtaining access tokens.
                     type: string
                 username:
                     description: Username of the account to connect to the Kafka cluster.
@@ -37752,6 +37925,12 @@ components:
                     items:
                         $ref: '#/components/schemas/SearchSynonymMappingDefinition'
                     type: array
+                typeSets:
+                    description: Type sets for the index.
+                    items:
+                        $ref: '#/components/schemas/SearchTypeSets'
+                    maxItems: 100
+                    type: array
             required:
                 - mappings
             title: Text Search Index Definition
@@ -37844,6 +38023,16 @@ components:
                     VICTOR_OPS: '#/components/schemas/VictorOps'
                     WEBHOOK: '#/components/schemas/Webhook'
                 propertyName: type
+            oneOf:
+                - $ref: '#/components/schemas/PagerDuty'
+                - $ref: '#/components/schemas/Slack'
+                - $ref: '#/components/schemas/Datadog'
+                - $ref: '#/components/schemas/NewRelic'
+                - $ref: '#/components/schemas/OpsGenie'
+                - $ref: '#/components/schemas/VictorOps'
+                - $ref: '#/components/schemas/Webhook'
+                - $ref: '#/components/schemas/Prometheus'
+                - $ref: '#/components/schemas/MicrosoftTeams'
             properties:
                 id:
                     description: Integration id.
@@ -40044,7 +40233,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 6d1feb3f4a77896c6eda8ce3e744affc6a1f024c
+    x-xgen-sha: 1177dfbdfac555a16fe8353ec746a727f05c6310
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -45235,7 +45424,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "204":
                     content:
@@ -45284,7 +45473,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "200":
                     content:
@@ -45333,7 +45522,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             requestBody:
                 content:
                     application/vnd.atlas.2023-01-01+json:
@@ -45773,6 +45962,8 @@ paths:
             summary: Create One Rolling Index
             tags:
                 - Rolling Index
+            x-xgen-changelog:
+                "2025-05-08": Corrects an issue where the endpoint would allow a rolling index build to be initiated while there was already an index build in progress. The endpoint now returns 400 if an index build is already in progress.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Rolling-Index/operation/createGroupClusterIndexRollingIndex
             x-xgen-method-verb-override:
                 customMethod: false
@@ -46085,7 +46276,7 @@ paths:
                     minimum: 1.1991456e+09
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: Date and time that specifies the end point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
                   in: query
                   name: endDate
@@ -46095,7 +46286,7 @@ paths:
                     minimum: 1.1991456e+09
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: Human-readable label that identifies the cluster that contains the collection for which you want to return the query logs from one online archive.
                   in: path
                   name: clusterName
@@ -46419,7 +46610,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: |-
                     Date and time up until which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
@@ -46432,7 +46623,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "200":
                     content:
@@ -46592,7 +46783,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: |-
                     Date and time up until which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
@@ -46605,7 +46796,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (`&`) between each processId.
                   in: query
                   name: processIds
@@ -46673,7 +46864,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: |-
                     Date and time up until which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
 
@@ -46686,7 +46877,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (`&`) between each processId.
                   in: query
                   name: processIds
@@ -47619,7 +47810,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "204":
                     content:
@@ -47666,7 +47857,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "200":
                     content:
@@ -47725,7 +47916,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             requestBody:
                 content:
                     application/vnd.atlas.2024-05-30+json:
@@ -49645,7 +49836,7 @@ paths:
                     type: string
                   x-xgen-IPA-exception:
                     xgen-IPA-117-description-must-not-use-html: Description predates IPA validation.
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                     xgen-IPA-117-description-should-not-use-inline-tables: Description predates IPA validation.
             responses:
                 "204":
@@ -49701,7 +49892,7 @@ paths:
                     type: string
                   x-xgen-IPA-exception:
                     xgen-IPA-117-description-must-not-use-html: Description predates IPA validation.
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                     xgen-IPA-117-description-should-not-use-inline-tables: Description predates IPA validation.
             responses:
                 "200":
@@ -49759,7 +49950,7 @@ paths:
                     type: string
                   x-xgen-IPA-exception:
                     xgen-IPA-117-description-must-not-use-html: Description predates IPA validation.
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                     xgen-IPA-117-description-should-not-use-inline-tables: Description predates IPA validation.
             requestBody:
                 content:
@@ -51335,6 +51526,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ThirdPartyIntegration'
                             x-xgen-IPA-exception:
+                                xgen-IPA-104-get-method-response-has-no-input-fields: Subclass ApiPrometheusView has a write-only field.
                                 xgen-IPA-104-get-method-returns-response-suffixed-object: API predates IPA validation.
                             x-xgen-version: "2023-01-01"
                     description: OK
@@ -55068,7 +55260,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "200":
                     content:
@@ -55146,7 +55338,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
                 - description: Whether or not to include metrics extracted from the slow query log as separate fields.
                   in: query
                   name: includeMetrics
@@ -55249,7 +55441,7 @@ paths:
                     minimum: 1.1991456e+12
                     type: integer
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "200":
                     content:
@@ -55501,6 +55693,38 @@ paths:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getGroupSampleDatasetLoad
             x-xgen-operation-id-override: getSampleDatasetLoad
+    /api/atlas/v2/groups/{groupId}/sandbox/{sandboxConfigId}:generateClusterDescription:
+        get:
+            description: Return cluster description from sandbox template configuration.
+            operationId: generateGroupSandboxClusterDescription
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/sandboxConfigId'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/ClusterDescription20240805'
+                            x-xgen-preview:
+                                name: sandbox-resource
+                            x-xgen-version: preview
+                    description: OK
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Cluster Description from Sandbox Template Configuration
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/generateGroupSandboxClusterDescription
+            x-xgen-operation-id-override: generateSandboxClusterDescription
     /api/atlas/v2/groups/{groupId}/serverless:
         get:
             description: |-
@@ -58452,7 +58676,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "204":
                     content:
@@ -60587,6 +60811,177 @@ paths:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/validateOrgResourcePolicies
             x-xgen-operation-id-override: validateResourcePolicies
+    /api/atlas/v2/orgs/{orgId}/sandboxConfig:
+        get:
+            description: Return an array of sandbox configuration IDs for an organization.
+            operationId: listOrgSandboxConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedSandboxConfigs'
+                            x-xgen-preview:
+                                name: sandbox-resource
+                            x-xgen-version: preview
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Sandbox Configuration IDs for an Organization
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/listOrgSandboxConfig
+        post:
+            description: Create one sandbox configuration for an organization.
+            operationId: createOrgSandboxConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/SandboxConfigRequest'
+                description: Settings to configure the sandbox feature for an organization.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/SandboxConfigResponse'
+                            x-xgen-preview:
+                                name: sandbox-resource
+                            x-xgen-version: preview
+                    description: Created
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One Sandbox Configuration for an Organization
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/createOrgSandboxConfig
+    /api/atlas/v2/orgs/{orgId}/sandboxConfig/{sandboxConfigId}:
+        delete:
+            description: Delete the default sandbox configuration and disable sandbox for an organization.
+            operationId: deleteOrgSandboxConfig
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/sandboxConfigId'
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            x-xgen-preview:
+                                name: sandbox-resource
+                    description: No Content
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete the Default Sandbox Configuration and Disable Sandbox
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/deleteOrgSandboxConfig
+        get:
+            description: Return the default sandbox configuration for an organization.
+            operationId: getOrgSandboxConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/sandboxConfigId'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/SandboxConfigResponse'
+                            x-xgen-preview:
+                                name: sandbox-resource
+                            x-xgen-version: preview
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Default Sandbox Configuration for One Organization
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/getOrgSandboxConfig
+        patch:
+            description: Update an existing sandbox configuration for an organization.
+            operationId: updateOrgSandboxConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/sandboxConfigId'
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/SandboxConfigUpdateRequest'
+                description: Settings to update the sandbox configuration for an organization.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/SandboxConfigResponse'
+                            x-xgen-preview:
+                                name: sandbox-resource
+                            x-xgen-version: preview
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update an Existing Sandbox Configuration
+            tags:
+                - Sandbox
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Sandbox/operation/updateOrgSandboxConfig
     /api/atlas/v2/orgs/{orgId}/serviceAccounts:
         get:
             description: Returns all Service Accounts for the specified Organization.
@@ -61761,7 +62156,7 @@ paths:
                     pattern: ^([a-f0-9]{24})$
                     type: string
                   x-xgen-IPA-exception:
-                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                    xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs.
             responses:
                 "204":
                     content:
@@ -62274,6 +62669,8 @@ tags:
       name: Rolling Index
     - description: Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.
       name: Root
+    - description: Returns, adds, edits, and removes sandbox templates. Also enables/disables sandbox for an organization.
+      name: Sandbox
     - description: Returns, adds, edits, and removes serverless instances.
       name: Serverless Instances
     - description: Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.

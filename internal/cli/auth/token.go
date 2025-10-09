@@ -23,42 +23,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=token_mock_test.go -package=auth . TokenConfig
+
+type TokenConfig interface {
+	AccessToken() string
+	Name() string
+}
+
 type tokenOpts struct {
-	name string
 	cli.OutputOpts
+	config TokenConfig
 }
 
 var tokenTemplate = `{{.access_token}}`
 
-func (*tokenOpts) GetConfig(configStore config.Store, profileName string) (map[string]string, error) {
-	profileMap := configStore.GetProfileStringMap(profileName)
-
-	if v := configStore.GetProfileValue(profileName, "access_token"); v != nil && v != "" {
-		profileMap["access_token"] = v.(string)
-	} else {
-		return nil, fmt.Errorf("no access token found for profile %s", profileName)
-	}
-
-	return profileMap, nil
-}
-
 func (opts *tokenOpts) Run() error {
-	// Create a new config proxy store
-	configStore, err := config.NewStoreWithEnvOption(false)
-	if err != nil {
-		return fmt.Errorf("could not create config store: %w", err)
+	accessToken := opts.config.AccessToken()
+	if accessToken == "" {
+		return fmt.Errorf("no access token found for profile %s", opts.config.Name())
 	}
 
-	// get curren tprofile
-	profile := config.Default()
-	opts.name = profile.Name()
-
-	mapConfig, err := opts.GetConfig(configStore, opts.name)
-	if err != nil {
-		return err
+	tokenMap := map[string]string{
+		"access_token": accessToken,
 	}
 
-	return opts.Print(mapConfig)
+	return opts.Print(tokenMap)
 }
 
 func TokenBuilder() *cobra.Command {
@@ -78,8 +67,16 @@ func TokenBuilder() *cobra.Command {
   atlas auth token --profile <profile_name>
   `,
 		Args: require.NoArgs,
-		PreRun: func(cmd *cobra.Command, _ []string) {
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
+			// If the profile is set in the context, use it instead of the default profile
+			profile, ok := config.ProfileFromContext(cmd.Context())
+			if ok {
+				opts.config = profile
+			} else {
+				opts.config = config.Default()
+			}
+			return nil
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
 			return opts.Run()

@@ -105,9 +105,8 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 	if command.ShortOperationID != "" {
 		// Add original operation ID to aliases
 		commandAliases = append(commandAliases, commandName)
-		// Use shortOperationID
+		// Use shortOperationID as the command name
 		commandName = strcase.ToLowerCamel(command.ShortOperationID)
-		commandOperationID = command.ShortOperationID
 	}
 
 	shortDescription, longDescription := splitShortAndLongDescription(command.Description)

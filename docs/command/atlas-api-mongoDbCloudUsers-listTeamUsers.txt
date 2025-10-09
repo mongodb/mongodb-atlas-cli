@@ -51,9 +51,9 @@ Options
      - Required
      - Description
    * - --envelope
-     - 
+     - envelope
      - false
-     - flag that indicates whether Application wraps the response in an envelope JSON object
+     - Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.
    * - -h, --help
      - 
      - false
@@ -61,15 +61,15 @@ Options
    * - --itemsPerPage
      - int
      - false
-     - number of items that the response returns per page
+     - Number of items that the response returns per page.
    * - --orgId
      - string
      - true
-     - unique 24-hexadecimal digit string that identifies the organization that contains your projects
+     - Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.
    * - --orgMembershipStatus
      - string
      - false
-     - organization membership status to filter users by
+     - Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.
    * - -o, --output
      - string
      - false
@@ -81,23 +81,23 @@ Options
    * - --pageNum
      - int
      - false
-     - number of the page that displays the current set of the total objects that the response returns
+     - Number of the page that displays the current set of the total objects that the response returns.
    * - --pretty
      - 
      - false
-     - flag that indicates whether the response body should be in the prettyprint format
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --teamId
      - string
      - true
-     - unique 24-hexadecimal digit string that identifies the team whose application users you want to return
+     - Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.
    * - --userId
      - string
      - false
-     - unique 24-hexadecimal digit string to filter users by
+     - Unique 24-hexadecimal digit string to filter users by. Not supported in deprecated versions.
    * - --username
      - string
      - false
-     - email address to filter users by
+     - Email address to filter users by. Not supported in deprecated versions.
    * - --version
      - string
      - false
@@ -119,3 +119,8 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+--------
+
+.. literalinclude:: /includes/examples/atlas-api-mongoDbCloudUsers-listTeamUsers-2025-02-19-default.sh
+   :language: shell

@@ -49,9 +49,9 @@ func (err *InvalidStateError) Error() string {
 	}
 
 	if err.State != nil {
-		expected = fmt.Sprintf(expectedTemplate, *err.State)
+		expected = fmt.Sprintf(expectedTemplate, *err.ExpectedState)
 	} else {
-		expected = fmt.Sprintf(expectedErrorCode, *err.ErrorCode)
+		expected = fmt.Sprintf(expectedErrorCode, *err.ExpectedErrorCode)
 	}
 
 	return fmt.Sprintf("%s %s", got, expected)

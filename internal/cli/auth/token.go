@@ -35,24 +35,16 @@ type tokenOpts struct {
 	config TokenConfig
 }
 
-var tokenTemplate = `{{.access_token}}`
-
 func (opts *tokenOpts) Run() error {
 	accessToken := opts.config.AccessToken()
 	if accessToken == "" {
 		return fmt.Errorf("no access token found for profile %s", opts.config.Name())
 	}
-
-	tokenMap := map[string]string{
-		"access_token": accessToken,
-	}
-
-	return opts.Print(tokenMap)
+	return opts.Print(accessToken)
 }
 
 func TokenBuilder() *cobra.Command {
 	opts := &tokenOpts{}
-	opts.Template = tokenTemplate
 	cmd := &cobra.Command{
 		Use:    "token",
 		Hidden: true,
@@ -78,7 +70,7 @@ func TokenBuilder() *cobra.Command {
 			}
 			return nil
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
 	}

@@ -36,7 +36,6 @@ func Test_tokenOpts_Run_Success(t *testing.T) {
 		config: mockConfig,
 	}
 	opts.OutWriter = buf
-	opts.Template = tokenTemplate
 	opts.Output = "template" // Set output format to template
 
 	mockConfig.EXPECT().AccessToken().Return("test-access-token").Times(1)

@@ -42,7 +42,7 @@ func Test_tokenOpts_Run_Success(t *testing.T) {
 
 	err := opts.Run()
 	require.NoError(t, err)
-	assert.Equal(t, "test-access-token", buf.String())
+	assert.Equal(t, "test-access-token\n", buf.String())
 }
 
 func Test_tokenOpts_Run_NoToken(t *testing.T) {

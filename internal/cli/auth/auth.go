@@ -29,6 +29,7 @@ func Builder() *cobra.Command {
 		WhoAmIBuilder(),
 		LogoutBuilder(),
 		RegisterBuilder(),
+		TokenBuilder(),
 	)
 
 	return cmd

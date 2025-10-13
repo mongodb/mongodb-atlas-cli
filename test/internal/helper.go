@@ -840,7 +840,7 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	require.True(t, done, "failed to clean all private endpoints")
 }
 
-func deleteAllStreams(t *testing.T, cliPath, projectID string) {
+func DeleteAllStreams(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	streams := listStreamsByProject(t, cliPath, projectID)
@@ -864,6 +864,79 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 	}
 
 	require.True(t, done, "failed to clean all streams")
+}
+
+func DeleteAllStreamsConnections(t *testing.T, cliPath, projectID, instanceName string) {
+	t.Helper()
+
+	connections := listStreamsConnectionsByInstance(t, cliPath, projectID, instanceName)
+	if len(connections) == 0 {
+		return
+	}
+
+	for _, conn := range connections {
+		deleteStreamConnectionByInstance(t, cliPath, projectID, instanceName, conn.GetName())
+	}
+
+	done := false
+	for range 10 {
+		connections = listStreamsConnectionsByInstance(t, cliPath, projectID, instanceName)
+		if len(connections) == 0 {
+			t.Logf("all stream connections successfully deleted")
+			done = true
+			break
+		}
+		time.Sleep(sleep)
+	}
+
+	require.True(t, done, "failed to clean all stream connections")
+}
+
+func listStreamsConnectionsByInstance(t *testing.T, cliPath, projectID, instanceName string) []atlasv2.StreamsConnection {
+	t.Helper()
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		streamsEntity,
+		"connection",
+		"list",
+		"--instance",
+		instanceName,
+		"-o=json",
+		"--projectId",
+		projectID,
+		"-P",
+		ProfileName(),
+	)
+
+	cmd.Env = os.Environ()
+	resp, err := RunAndGetStdOut(cmd)
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var response atlasv2.PaginatedApiStreamsConnection
+	require.NoError(t, json.Unmarshal(resp, &response))
+	connections := response.GetResults()
+
+	return connections
+}
+
+func deleteStreamConnectionByInstance(t *testing.T, cliPath, projectID, instanceName, connectionName string) {
+	t.Helper()
+	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		streamsEntity,
+		"connection",
+		"delete",
+		"-i",
+		instanceName,
+		"--force",
+		connectionName,
+		"--projectId",
+		projectID,
+		"-P",
+		ProfileName(),
+	)
+
+	cmd.Env = os.Environ()
+	resp, err := RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
 }
 
 func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedApiStreamsTenant {

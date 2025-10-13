@@ -49,6 +49,12 @@ func TestStreams(t *testing.T) {
 
 	connectionName := g.Memory("connectionName", internal.Must(internal.RandEntityWithRevision("connection"))).(string)
 
+	// In case of test failure, delete the hanging resources
+	t.Cleanup(func() {
+		internal.DeleteAllStreamsConnections(t, cliPath, g.ProjectID, instanceName)
+		internal.DeleteAllStreams(t, cliPath, g.ProjectID)
+	})
+
 	g.Run("List all streams in the e2e project", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",

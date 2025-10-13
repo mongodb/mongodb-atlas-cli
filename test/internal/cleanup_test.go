@@ -120,7 +120,7 @@ func TestCleanup(t *testing.T) {
 			}
 			t.Run("delete all streams", func(t *testing.T) {
 				t.Parallel()
-				deleteAllStreams(t, cliPath, projectID)
+				DeleteAllStreams(t, cliPath, projectID)
 			})
 
 			t.Run("delete all clusters", func(t *testing.T) {

@@ -849,6 +849,7 @@ func DeleteAllStreams(t *testing.T, cliPath, projectID string) {
 	}
 
 	for _, stream := range streams.GetResults() {
+		deleteAllStreamsConnections(t, cliPath, projectID, *stream.Name)
 		deleteStream(t, cliPath, projectID, *stream.Name)
 	}
 
@@ -866,7 +867,7 @@ func DeleteAllStreams(t *testing.T, cliPath, projectID string) {
 	require.True(t, done, "failed to clean all streams")
 }
 
-func DeleteAllStreamsConnections(t *testing.T, cliPath, projectID, instanceName string) {
+func deleteAllStreamsConnections(t *testing.T, cliPath, projectID, instanceName string) {
 	t.Helper()
 
 	connections := listStreamsConnectionsByInstance(t, cliPath, projectID, instanceName)

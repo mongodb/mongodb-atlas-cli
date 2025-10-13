@@ -51,7 +51,6 @@ func TestStreams(t *testing.T) {
 
 	// In case of test failure, delete the hanging resources
 	t.Cleanup(func() {
-		internal.DeleteAllStreamsConnections(t, cliPath, g.ProjectID, instanceName)
 		internal.DeleteAllStreams(t, cliPath, g.ProjectID)
 	})
 

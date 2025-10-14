@@ -27,7 +27,7 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.18.0
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mholt/archives v0.1.5-0.20251009205813-e30ac6010726
+	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
 	github.com/mongodb/atlas-cli-core v0.0.0-20250909113945-ffb322e05f59
 	github.com/pelletier/go-toml v1.9.5

@@ -3,7 +3,7 @@ pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.16.5
 pkg:golang/cloud.google.com/go/compute/metadata@v0.9.0
 pkg:golang/cloud.google.com/go/iam@v1.5.2
-pkg:golang/cloud.google.com/go/kms@v1.23.0
+pkg:golang/cloud.google.com/go/kms@v1.23.1
 pkg:golang/cloud.google.com/go/longrunning@v0.6.7
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.19.1

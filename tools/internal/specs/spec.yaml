@@ -6486,6 +6486,7 @@ components:
                 - GCP_USAGE_REPORTED
                 - VERCEL_USAGE_REPORTED
                 - BECAME_PAYING_ORG
+                - BECAME_LINKED_ORG
                 - NEW_LINKED_ORG
                 - UNLINKED_ORG
                 - ORG_LINKED_TO_PAYING_ORG
@@ -6515,6 +6516,7 @@ components:
                 - PENDING_DEAL_APPLIED
                 - PENDING_DEAL_ACTIVATION_FAILED
                 - EVERGREEN_PRIORITY_MODIFIED
+                - CROSS_ORG_OPERATION_TICKET_TRACKING
             example: CHARGE_SUCCEEDED
             title: Billing Event Types
             type: string
@@ -13218,6 +13220,7 @@ components:
                             - FTS_INDEX_DELETION_FAILED
                             - FTS_INDEX_BUILD_COMPLETE
                             - FTS_INDEX_BUILD_FAILED
+                            - FTS_INDEX_STALE
                             - FTS_INDEXES_RESTORE_FAILED
                             - FTS_INDEXES_SYNONYM_MAPPING_INVALID
                           title: FTS Index Audit Types
@@ -13425,6 +13428,7 @@ components:
                             - FTS_INDEX_DELETION_FAILED
                             - FTS_INDEX_BUILD_COMPLETE
                             - FTS_INDEX_BUILD_FAILED
+                            - FTS_INDEX_STALE
                             - FTS_INDEXES_RESTORE_FAILED
                             - FTS_INDEXES_SYNONYM_MAPPING_INVALID
                           title: FTS Index Audit Types
@@ -16660,6 +16664,7 @@ components:
                     - FTS_INDEX_UPDATED
                     - FTS_INDEX_DELETED
                     - FTS_INDEX_CLEANED_UP
+                    - FTS_INDEX_STALE
                     - FTS_INDEXES_RESTORED
                     - FTS_INDEXES_RESTORE_FAILED
                     - FTS_INDEXES_SYNONYM_MAPPING_INVALID
@@ -17343,6 +17348,7 @@ components:
                     - GCP_USAGE_REPORTED
                     - VERCEL_USAGE_REPORTED
                     - BECAME_PAYING_ORG
+                    - BECAME_LINKED_ORG
                     - NEW_LINKED_ORG
                     - UNLINKED_ORG
                     - ORG_LINKED_TO_PAYING_ORG
@@ -17372,6 +17378,7 @@ components:
                     - PENDING_DEAL_APPLIED
                     - PENDING_DEAL_ACTIVATION_FAILED
                     - EVERGREEN_PRIORITY_MODIFIED
+                    - CROSS_ORG_OPERATION_TICKET_TRACKING
                   title: Billing Event Types
                   type: string
                   x-xgen-IPA-exception:
@@ -17679,6 +17686,7 @@ components:
                 - FTS_INDEX_UPDATED
                 - FTS_INDEX_DELETED
                 - FTS_INDEX_CLEANED_UP
+                - FTS_INDEX_STALE
                 - FTS_INDEXES_RESTORED
                 - FTS_INDEXES_RESTORE_FAILED
                 - FTS_INDEXES_SYNONYM_MAPPING_INVALID
@@ -40230,7 +40238,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 1177dfbdfac555a16fe8353ec746a727f05c6310
+    x-xgen-sha: 2b493d9aeeff5e5c27e4f5be769ea850a5622192
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

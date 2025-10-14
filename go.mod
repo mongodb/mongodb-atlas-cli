@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/kms v1.23.0
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.19.1
-	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.12.0
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.0
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.4.0
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2

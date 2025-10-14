@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2566
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Mon, 13 Oct 2025 03:00:48 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 86
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=7cb65da2bd7b1af261cd4e65daa41fa9ce35ac88; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-cvyfda6-shard-00-00.fvyuabd.mongodb-dev.net:27017,ac-cvyfda6-shard-00-01.fvyuabd.mongodb-dev.net:27017,ac-cvyfda6-shard-00-02.fvyuabd.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-yk2vsb-shard-0","standardSrv":"mongodb+srv://cluster-469.fvyuabd.mongodb-dev.net"},"createDate":"2025-10-13T02:50:44Z","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"68ec68e9cfe92f397ead3dbf","id":"68ec6905cfe92f397ead5cf9","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68ec68e9cfe92f397ead3dbf/clusters/cluster-469","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68ec68e9cfe92f397ead3dbf/clusters/cluster-469/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68ec68e9cfe92f397ead3dbf/clusters/cluster-469/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.15","name":"cluster-469","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"68ec6904cfe92f397ead5cf8","regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"effectiveAnalyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":0},"effectiveElectableSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":3},"effectiveReadOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":0},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":40.0,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_2"}],"zoneId":"68ec6904cfe92f397ead5cf7","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"UPDATING","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Disposition: attachment; filename="atlas-sjekpf-shard-00-00.tuilbv.mongodb-dev.net_2025-10-12T03:09:42.000000418_2025-10-13T03:09:42.000000418_MONGOS.log.gz"
+Content-Type: application/vnd.atlas.2023-02-01+gzip
+Date: Mon, 13 Oct 2025 03:09:42 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 113
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::logsForHost
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=7cb65da2bd7b1af261cd4e65daa41fa9ce35ac88; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+Content-Length: 0
+

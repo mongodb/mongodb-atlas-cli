@@ -55,7 +55,6 @@ const (
 	indexEntity                   = "index"
 	nodesEntity                   = "nodes"
 	datafederationEntity          = "datafederation"
-	datalakePipelineEntity        = "datalakepipeline"
 	alertsEntity                  = "alerts"
 	configEntity                  = "config"
 	dbusersEntity                 = "dbusers"
@@ -402,26 +401,6 @@ func DeleteClusterForProject(projectID, clusterName string) error {
 	return nil
 }
 
-func deleteDatalakeForProject(cliPath, projectID, id string) error {
-	args := []string{
-		datalakePipelineEntity,
-		"delete",
-		id,
-		"--force",
-		"-P",
-		ProfileName(),
-	}
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
-		return fmt.Errorf("error deleting datalake %w: %s", err, string(resp))
-	}
-	return nil
-}
-
 func NewAvailableRegion(projectID, tier, provider string) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
@@ -752,27 +731,6 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 				assert.NoError(t, DeleteClusterForProject(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
-	}
-}
-
-func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
-	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
-		datalakePipelineEntity,
-		"list",
-		"--projectId", projectID,
-		"-o=json",
-		"-P",
-		ProfileName(),
-	)
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	t.Log(string(resp))
-	require.NoError(t, err, string(resp))
-	var pipelines []atlasv2.DataLakeIngestionPipeline
-	require.NoError(t, json.Unmarshal(resp, &pipelines))
-	for _, p := range pipelines {
-		assert.NoError(t, deleteDatalakeForProject(cliPath, projectID, p.GetName()))
 	}
 }
 

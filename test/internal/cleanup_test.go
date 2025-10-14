@@ -127,10 +127,6 @@ func TestCleanup(t *testing.T) {
 				t.Parallel()
 				deleteAllClustersForProject(t, cliPath, projectID)
 			})
-			t.Run("delete datapipelines", func(t *testing.T) {
-				t.Parallel()
-				deleteDatapipelinesForProject(t, cliPath, projectID)
-			})
 			t.Run("delete data federations", func(t *testing.T) {
 				t.Parallel()
 				deleteAllDataFederations(t, cliPath, projectID)

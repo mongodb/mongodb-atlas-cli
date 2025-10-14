@@ -69,7 +69,7 @@ pkg:golang/github.com/kylelemons/godebug@v1.1.0
 pkg:golang/github.com/mattn/go-colorable@v0.1.13
 pkg:golang/github.com/mattn/go-isatty@v0.0.20
 pkg:golang/github.com/mgutz/ansi@v0.0.0-20200706080929-d51e80ef957d
-pkg:golang/github.com/mholt/archives@v0.1.5-0.20251009205813-e30ac6010726
+pkg:golang/github.com/mholt/archives@v0.1.5
 pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.1
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0

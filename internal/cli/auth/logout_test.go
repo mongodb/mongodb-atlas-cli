@@ -54,7 +54,7 @@ func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	mockTokenCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
@@ -87,7 +87,7 @@ func Test_logoutOpts_Run_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockAPIKeysCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
@@ -123,7 +123,7 @@ func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
 		Return(config.ServiceAccount).
 		Times(1)
 
-	mockServiceAccountCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -163,7 +163,7 @@ func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
 		Return(nil, nil).
 		Times(1)
 
-	mockTokenCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -197,7 +197,7 @@ func Test_logoutOpts_Run_Keep_APIKeys(t *testing.T) {
 		Return(config.APIKeys).
 		Times(1)
 
-	mockAPIKeysCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -234,7 +234,7 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 		Return(config.ServiceAccount).
 		Times(1)
 
-	mockServiceAccountCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 	mockConfig.
 		EXPECT().
@@ -268,9 +268,7 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 		Return(config.NoAuth).
 		Times(1)
 
-	mockAPIKeysCleanUp(mockConfig)
-	mockTokenCleanUp(mockConfig)
-	mockServiceAccountCleanUp(mockConfig)
+	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
 
 	mockConfig.
@@ -282,18 +280,7 @@ func Test_logoutOpts_Run_NoAuth(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func mockAPIKeysCleanUp(mockConfig *MockConfigDeleter) {
-	mockConfig.
-		EXPECT().
-		SetPublicAPIKey("").
-		Times(1)
-	mockConfig.
-		EXPECT().
-		SetPrivateAPIKey("").
-		Times(1)
-}
-
-func mockTokenCleanUp(mockConfig *MockConfigDeleter) {
+func mockConfigCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetRefreshToken("").
@@ -302,9 +289,6 @@ func mockTokenCleanUp(mockConfig *MockConfigDeleter) {
 		EXPECT().
 		SetAccessToken("").
 		Times(1)
-}
-
-func mockServiceAccountCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetClientID("").
@@ -312,6 +296,14 @@ func mockServiceAccountCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetClientSecret("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetPublicAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetPrivateAPIKey("").
 		Times(1)
 }
 

@@ -124,7 +124,7 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	opts.config.SetOrgID("")
 
 	if !opts.keepConfig {
-		return opts.config.Delete()
+		return opts.Delete(opts.config.Delete)
 	}
 
 	return opts.config.Save()

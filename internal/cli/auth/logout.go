@@ -100,12 +100,14 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		return nil
 	}
 
-	var err error
 	switch opts.config.AuthType() {
 	case config.UserAccount:
-		_, err = opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
+		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
+		if err != nil {
+			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
+		}
 	case config.ServiceAccount:
-		if err = opts.revokeServiceAccountToken(); err != nil {
+		if err := opts.revokeServiceAccountToken(); err != nil {
 			_, _ = log.Warningf("Warning: unable to revoke service account token: %v, proceeding with logout\n", err)
 		}
 	case config.APIKeys, config.NoAuth, "":

@@ -102,35 +102,24 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 
 	switch opts.config.AuthType() {
 	case config.UserAccount:
-		if _, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token"); err != nil {
-			return err
+		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
+		if err != nil {
+			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
 		}
-		opts.config.SetAccessToken("")
-		opts.config.SetRefreshToken("")
 	case config.ServiceAccount:
 		if err := opts.revokeServiceAccountToken(); err != nil {
-			// If the service account doesn't exist, log a warning and proceed.
-			// This happens if the user has already deleted the service account or is pointing to the wrong environment.
-			// To not block users who have already deleted their account, we proceed with logout.
-			if !strings.Contains(err.Error(), "The specified service account doesn't exist") {
-				return err
-			}
 			_, _ = log.Warningf("Warning: unable to revoke service account token: %v, proceeding with logout\n", err)
 		}
-		opts.config.SetClientID("")
-		opts.config.SetClientSecret("")
-	case config.APIKeys:
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-	case config.NoAuth, "": // Just clear any potential leftover credentials
-		opts.config.SetPublicAPIKey("")
-		opts.config.SetPrivateAPIKey("")
-		opts.config.SetAccessToken("")
-		opts.config.SetRefreshToken("")
-		opts.config.SetClientID("")
-		opts.config.SetClientSecret("")
+	case config.APIKeys, config.NoAuth, "":
 	}
 
+	// Clean up all the config
+	opts.config.SetPublicAPIKey("")
+	opts.config.SetPrivateAPIKey("")
+	opts.config.SetAccessToken("")
+	opts.config.SetRefreshToken("")
+	opts.config.SetClientID("")
+	opts.config.SetClientSecret("")
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 

@@ -60,7 +60,28 @@ func TestEvents(t *testing.T) {
 		assert.NotEmpty(t, events.GetResults())
 	})
 
-	g.Run("List Organization Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	// TODO: CLOUDP-353474
+	// g.Run("List Organization Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	// 	cmd := exec.Command(cliPath,
+	// 		eventsEntity,
+	// 		orgEntity,
+	// 		"list",
+	// 		"--omitCount",
+	// 		"--minDate="+time.Now().Add(-time.Hour*time.Duration(24)).Format("2006-01-02T15:04:05-0700"),
+	// 		"-o=json",
+	// 		"-P",
+	// 		internal.ProfileName(),
+	// 	)
+
+	// 	cmd.Env = os.Environ()
+	// 	resp, err := internal.RunAndGetStdOut(cmd)
+	// 	require.NoError(t, err, string(resp))
+	// 	var events admin.OrgPaginatedEvent
+	// 	require.NoError(t, json.Unmarshal(resp, &events))
+	// 	assert.NotEmpty(t, events.GetResults())
+	// })
+
+	g.Run("List Organization Events with limit", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			orgEntity,

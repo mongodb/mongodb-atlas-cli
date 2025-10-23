@@ -289,7 +289,7 @@ jobs:
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store
-        uses: docker/setup-docker-action@b60f85385d03ac8acfca6d9996982511d8620a19
+        uses: docker/setup-docker-action@3fb92d6d9c634363128c8cce4bc3b2826526370a
         with:
           version: v24.0.6
           daemon-config: |

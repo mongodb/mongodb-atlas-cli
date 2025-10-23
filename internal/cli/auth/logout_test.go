@@ -165,11 +165,6 @@ func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
 
 	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
-	mockConfig.
-		EXPECT().
-		Save().
-		Return(nil).
-		Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 }
@@ -199,11 +194,6 @@ func Test_logoutOpts_Run_Keep_APIKeys(t *testing.T) {
 
 	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
-	mockConfig.
-		EXPECT().
-		Save().
-		Return(nil).
-		Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 }
@@ -236,11 +226,6 @@ func Test_logoutOpts_Run_Keep_ServiceAccount(t *testing.T) {
 
 	mockConfigCleanUp(mockConfig)
 	mockProjectAndOrgCleanUp(mockConfig)
-	mockConfig.
-		EXPECT().
-		Save().
-		Return(nil).
-		Times(1)
 
 	require.NoError(t, opts.Run(ctx))
 }
@@ -304,6 +289,12 @@ func mockConfigCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetPrivateAPIKey("").
+		Times(1)
+
+	mockConfig.
+		EXPECT().
+		Save().
+		Return(nil).
 		Times(1)
 }
 

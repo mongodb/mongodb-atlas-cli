@@ -123,11 +123,15 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 
+	if err := opts.config.Save(); err != nil {
+		return err
+	}
+
 	if !opts.keepConfig {
 		return opts.Delete(opts.config.Delete)
 	}
 
-	return opts.config.Save()
+	return nil
 }
 
 func LogoutBuilder() *cobra.Command {

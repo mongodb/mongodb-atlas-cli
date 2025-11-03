@@ -1425,7 +1425,8 @@ task_groups:
             - vendor.tar.gz
       - func: "terraform destroy"
         vars:
-          certificate_path: ./id_rsa.pub
+          certificate_path: ./id_rsa.pub  
+          admin_password: ${azure_vm_admin_password}
     tasks:
       - .e2e .deployments .windows
 buildvariants:

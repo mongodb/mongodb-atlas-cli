@@ -428,6 +428,7 @@ functions:
           - -auto-approve
           - -var
           - "certificate_path=${certificate_path}"
+          - -var
           - "admin_password=${azure_vm_admin_password}"
   "ssh-ready":
     - command: shell.exec
@@ -1425,8 +1426,7 @@ task_groups:
             - vendor.tar.gz
       - func: "terraform destroy"
         vars:
-          certificate_path: ./id_rsa.pub  
-          admin_password: ${azure_vm_admin_password}
+          certificate_path: ./id_rsa.pub
     tasks:
       - .e2e .deployments .windows
 buildvariants:

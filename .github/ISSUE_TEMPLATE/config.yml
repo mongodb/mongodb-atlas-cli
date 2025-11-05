@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
-  - name: MongoDB CLI Feature Request
-    url: https://feedback.mongodb.com/forums/930808-mongodb-cli
+  - name: Atlas CLI Feature Request
+    url: https://feedback.mongodb.com/?category=7556329857711623227
     about: Request a feature or up-vote an existing suggestion!
   - name: MongoDB Support
     url: https://support.mongodb.com/

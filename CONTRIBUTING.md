@@ -13,7 +13,7 @@ Please don't use the GitHub issue tracker to ask questions.
 ## Feature Requests
 
 We welcome any feedback or feature request, to submit yours
-please head over to our [feedback page](https://feedback.mongodb.com/forums/930808-mongodb-cli).
+please head over to our [feedback page](https://feedback.mongodb.com/?category=7556329857711623227).
 
 ## Reporting Issues
 

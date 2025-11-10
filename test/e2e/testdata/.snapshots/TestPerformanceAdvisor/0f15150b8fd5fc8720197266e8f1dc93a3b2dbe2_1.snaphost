@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 10 Nov 2025 03:03:46 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 96
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=013468bcae982eb9c03378fc4d4633ba43e2c6a8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/691153f6cf25a033841dd5f5/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-11-10T03:02:58Z","groupId":"691153f6cf25a033841dd5f5","hostname":"atlas-qt3kcy-shard-00-00.zrxghd.mongodb-dev.net","id":"atlas-qt3kcy-shard-00-00.zrxghd.mongodb-dev.net:27017","lastPing":"2025-11-10T03:03:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/691153f6cf25a033841dd5f5/processes/atlas-qt3kcy-shard-00-00.zrxghd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qt3kcy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-365-shard-00-00.zrxghd.mongodb-dev.net","version":"8.0.16"},{"created":"2025-11-10T03:02:58Z","groupId":"691153f6cf25a033841dd5f5","hostname":"atlas-qt3kcy-shard-00-01.zrxghd.mongodb-dev.net","id":"atlas-qt3kcy-shard-00-01.zrxghd.mongodb-dev.net:27017","lastPing":"2025-11-10T03:03:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/691153f6cf25a033841dd5f5/processes/atlas-qt3kcy-shard-00-01.zrxghd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qt3kcy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-365-shard-00-01.zrxghd.mongodb-dev.net","version":"8.0.16"},{"created":"2025-11-10T03:02:58Z","groupId":"691153f6cf25a033841dd5f5","hostname":"atlas-qt3kcy-shard-00-02.zrxghd.mongodb-dev.net","id":"atlas-qt3kcy-shard-00-02.zrxghd.mongodb-dev.net:27017","lastPing":"2025-11-10T03:03:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/691153f6cf25a033841dd5f5/processes/atlas-qt3kcy-shard-00-02.zrxghd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qt3kcy-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-365-shard-00-02.zrxghd.mongodb-dev.net","version":"8.0.16"}],"totalCount":3}

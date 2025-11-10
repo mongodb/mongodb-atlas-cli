@@ -1,0 +1,17 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 187
+Content-Type: application/json
+Date: Mon, 10 Nov 2025 03:06:30 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 68
+X-Error-Code: CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getSnapshots
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=013468bcae982eb9c03378fc4d4633ba43e2c6a8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Cannot use non-flex cluster cluster-387 in the flex API.","error":400,"errorCode":"CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API","parameters":["cluster-387"],"reason":"Bad Request"}

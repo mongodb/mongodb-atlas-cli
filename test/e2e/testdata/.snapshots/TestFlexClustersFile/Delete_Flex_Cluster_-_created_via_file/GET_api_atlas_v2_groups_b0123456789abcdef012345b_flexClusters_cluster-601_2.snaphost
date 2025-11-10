@@ -1,0 +1,17 @@
+HTTP/2.0 404 Not Found
+Content-Length: 204
+Content-Type: application/json
+Date: Mon, 10 Nov 2025 02:56:40 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 76
+X-Error-Code: CLUSTER_NOT_FOUND
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getFlexCluster
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=013468bcae982eb9c03378fc4d4633ba43e2c6a8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No cluster named cluster-601 exists in group b0123456789abcdef012345b.","error":404,"errorCode":"CLUSTER_NOT_FOUND","parameters":["cluster-601","b0123456789abcdef012345b"],"reason":"Not Found"}

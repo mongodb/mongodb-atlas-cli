@@ -36,7 +36,7 @@ pkg:golang/github.com/bodgit/plumbing@v1.3.0
 pkg:golang/github.com/bodgit/sevenzip@v1.6.1
 pkg:golang/github.com/bodgit/windows@v1.0.1
 pkg:golang/github.com/briandowns/spinner@v1.23.2
-pkg:golang/github.com/cli/go-gh/v2@v2.12.2
+pkg:golang/github.com/cli/go-gh/v2@v2.13.0
 pkg:golang/github.com/cli/safeexec@v1.0.0
 pkg:golang/github.com/cloudflare/circl@v1.6.1
 pkg:golang/github.com/danieljoos/wincred@v1.2.2

@@ -12,10 +12,10 @@ require (
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ProtonMail/go-crypto v1.3.0
-	github.com/aws/aws-sdk-go-v2 v1.39.5
-	github.com/aws/aws-sdk-go-v2/config v1.31.16
-	github.com/aws/aws-sdk-go-v2/credentials v1.18.20
-	github.com/aws/aws-sdk-go-v2/service/kms v1.47.0
+	github.com/aws/aws-sdk-go-v2 v1.39.6
+	github.com/aws/aws-sdk-go-v2/config v1.31.18
+	github.com/aws/aws-sdk-go-v2/credentials v1.18.22
+	github.com/aws/aws-sdk-go-v2/service/kms v1.48.0
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
@@ -95,16 +95,16 @@ require (
 	github.com/PaesslerAG/gval v1.0.0 // indirect
 	github.com/STARRY-S/zip v0.2.3 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.12 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.12 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.12 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.13 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.13 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.13 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.12 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.30.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.39.0 // indirect
-	github.com/aws/smithy-go v1.23.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.30.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.40.0 // indirect
+	github.com/aws/smithy-go v1.23.2 // indirect
 	github.com/bodgit/plumbing v1.3.0 // indirect
 	github.com/bodgit/sevenzip v1.6.1 // indirect
 	github.com/bodgit/windows v1.0.1 // indirect

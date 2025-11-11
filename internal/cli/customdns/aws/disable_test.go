@@ -17,7 +17,7 @@ package aws
 import (
 	"testing"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
 	"go.uber.org/mock/gomock"
 )
 

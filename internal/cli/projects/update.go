@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
 )
 
 const updateTemplate = "Project '{{.Id}}' updated.\n"

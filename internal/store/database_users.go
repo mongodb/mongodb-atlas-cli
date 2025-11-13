@@ -16,7 +16,7 @@ package store
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
 )
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312008/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
 )
 
 var listTemplate = `ID  PROVIDER  REGION  VENDOR  STATE  INTERFACE_ENDPOINT_ID  SERVICE_ENDPOINT_ID  DNS_DOMAIN  DNS_SUBDOMAIN{{range valueOrEmptySlice .Results}}

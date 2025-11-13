@@ -21,7 +21,6 @@ Write-Output "Clone"
 cd $env:HOME
 git clone "http://github.com/mongodb/mongodb-atlas-cli.git"
 cd "mongodb-atlas-cli"
-git pull
 git checkout $REVISION
 Write-Output "Vendor dependencies"
 $env:GOPROXY=$GOPROXY

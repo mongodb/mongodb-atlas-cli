@@ -168,8 +168,6 @@ func repoPath() (string, error) {
 		return "", err
 	}
 
-	fmt.Fprintf(os.Stderr, "wd: %s, PathSeparator: %c", wd, os.PathSeparator)
-
 	parts := strings.Split(wd, fmt.Sprintf("%ctest%c", os.PathSeparator, os.PathSeparator))
 
 	return parts[0], nil

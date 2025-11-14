@@ -25,6 +25,8 @@ git checkout $REVISION
 Write-Output "Vendor dependencies"
 $env:GOPROXY=$GOPROXY
 tar -xzf ../vendor.tar.gz
+Write-Output "Docker pull"
+docker pull "mongodb/mongodb-atlas-local:latest"
 Write-Output "Run tests"
 $env:TEST_CMD="gotestsum --junitfile e2e-tests.xml --format standard-verbose --"
 $env:E2E_TEST_PACKAGES="./test/e2e/atlas/deployments/local/..."

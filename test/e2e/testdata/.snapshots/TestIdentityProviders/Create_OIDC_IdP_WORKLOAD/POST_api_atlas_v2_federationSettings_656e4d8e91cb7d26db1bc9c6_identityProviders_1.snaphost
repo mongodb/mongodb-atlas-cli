@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 352
 Content-Type: application/vnd.atlas.2023-11-15+json;charset=utf-8
-Date: Mon, 10 Nov 2025 02:58:23 GMT
+Date: Mon, 17 Nov 2025 02:57:33 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 91
+X-Envoy-Upstream-Service-Time: 127
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::createIdentityProvider
 X-Java-Version: 17.0.15+6
-X-Mongodb-Service-Version: gitHash=013468bcae982eb9c03378fc4d4633ba43e2c6a8; versionString=master
+X-Mongodb-Service-Version: gitHash=bf2e002399ba4ee67326f36a6bafa3542f581ac8; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"associatedOrgs":[],"audience":"idp-658","authorizationType":"GROUP","createdAt":"2025-11-10T02:58:23Z","description":"CLI TEST Provider","displayName":"idp-658","groupsClaim":"groups","id":"691154cfb3b9fc3bec1c4137","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"}
+{"associatedOrgs":[],"audience":"idp-298","authorizationType":"GROUP","createdAt":"2025-11-17T02:57:33Z","description":"CLI TEST Provider","displayName":"idp-298","groupsClaim":"groups","id":"691a8f1d8fae9165946730f2","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"}

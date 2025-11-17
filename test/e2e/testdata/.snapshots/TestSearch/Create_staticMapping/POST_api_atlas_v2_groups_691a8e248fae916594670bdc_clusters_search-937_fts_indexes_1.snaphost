@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 873
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 17 Nov 2025 03:05:01 GMT
+Deprecation: Thu, 30 May 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Mon, 30 Nov 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 1746
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFTSIndexConfigResource::createFTSIndex
+X-Java-Version: 17.0.15+6
+X-Mongodb-Service-Version: gitHash=bf2e002399ba4ee67326f36a6bafa3542f581ac8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"analyzer":"lucene.standard","analyzers":[{"charFilters":[],"name":"keywordLowerCase","tokenFilters":[{"type":"lowercase"}],"tokenizer":{"type":"keyword"}},{"charFilters":[],"name":"standardLowerCase","tokenFilters":[{"type":"lowercase"}],"tokenizer":{"type":"standard"}}],"collectionName":"posts","database":"sample_training","indexID":"691a90dd8fae916594674832","mappings":{"dynamic":false,"fields":{"body":{"analyzer":"lucene.whitespace","multi":{"mySecondaryAnalyzer":{"analyzer":"keywordLowerCase","type":"string"}},"type":"string"},"comments":{"fields":{"author":{"analyzer":"keywordLowerCase","type":"string"},"body":{"analyzer":"lucene.simple","ignoreAbove":255,"type":"string"}},"type":"document"},"tags":{"analyzer":"standardLowerCase","type":"string"}}},"name":"index-613","searchAnalyzer":"lucene.standard","status":"IN_PROGRESS","synonyms":[],"type":"search"}

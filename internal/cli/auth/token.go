@@ -40,7 +40,9 @@ func (opts *tokenOpts) Run() error {
 	if accessToken == "" {
 		return fmt.Errorf("no access token found for profile %s", opts.config.Name())
 	}
-	return opts.Print(accessToken)
+	// Use fmt.Fprintln directly to output the raw token regardless of output settings.
+	_, err := fmt.Fprintln(opts.ConfigWriter(), accessToken)
+	return err
 }
 
 func TokenBuilder() *cobra.Command {

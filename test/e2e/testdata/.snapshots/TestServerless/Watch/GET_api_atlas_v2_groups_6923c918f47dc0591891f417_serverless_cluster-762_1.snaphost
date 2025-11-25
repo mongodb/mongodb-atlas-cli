@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1127
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 24 Nov 2025 02:55:30 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 65
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyServerlessInstanceDescriptionResource::getServerlessInstance
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=bb676f36fda6c36e98d6effb901c2ce8bcd64d30; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"connectionStrings":{"standardSrv":"mongodb+srv://cluster-762.gm9zeho.mongodb-dev.net"},"createDate":"2025-11-24T02:55:26Z","groupId":"6923c918f47dc0591891f417","id":"6923c91ef47dc0591891f8a3","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923c918f47dc0591891f417/serverless/cluster-762","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c918f47dc0591891f417/serverless/cluster-762/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c918f47dc0591891f417/serverless/cluster-762/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBVersion":"8.0.16","name":"cluster-762","providerSettings":{"backingProviderName":"AWS","effectiveDiskSizeGBLimit":5,"effectiveInstanceSizeName":"FLEX","effectiveProviderName":"TENANT","nextBackupDate":"2025-11-25T02:55:26Z","providerName":"SERVERLESS","regionName":"US_EAST_1","tenantBackupEnabled":true},"serverlessBackupOptions":{"serverlessContinuousBackupEnabled":false},"stateName":"CREATING","tags":[{"key":"env","value":"test"}],"terminationProtectionEnabled":false}

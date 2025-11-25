@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1060
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 24 Nov 2025 03:22:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupRestoreJobsResource::getRestoreJob
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=bb676f36fda6c36e98d6effb901c2ce8bcd64d30; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cancelled":false,"deliveryType":"download","deliveryUrl":["https://restore-6923ceb921519f56cb87e912.mw9ril.mongodb-dev.net:27017/7PWVGOtY3RYln9qgRNijwVC1/restore-6923cd5521519f56cb87e601.tar.gz"],"desiredTimestamp":{"increment":null,"time":null,"date":null},"expired":false,"expiresAt":"2025-11-24T04:22:24Z","failed":false,"id":"6923ceb921519f56cb87e912","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923c91a21519f56cb8774cb/clusters/backupRestores-56/backup/restoreJobs/6923ceb921519f56cb87e912","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c91a21519f56cb8774cb/clusters/backupRestores-56/backup/snapshots/6923cd5521519f56cb87e601","rel":"https://cloud.mongodb.com/snapshot"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c91a21519f56cb8774cb/clusters/backupRestores-56","rel":"https://cloud.mongodb.com/cluster"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c91a21519f56cb8774cb","rel":"https://cloud.mongodb.com/group"}],"snapshotId":"6923cd5521519f56cb87e601","timestamp":"2025-11-24T03:14:18Z"}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1590
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Mon, 24 Nov 2025 02:56:25 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 90
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=bb676f36fda6c36e98d6effb901c2ce8bcd64d30; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-749.0ui3vn7.mongodb-dev.net"},"createDate":"2025-11-24T02:56:21Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"6923c948f47dc05918921910","id":"6923c955f47dc05918922b83","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923c948f47dc05918921910/clusters/cluster-749","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c948f47dc05918921910/clusters/cluster-749/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6923c948f47dc05918921910/clusters/cluster-749/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.16","name":"cluster-749","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"6923c955f47dc05918922b78","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6923c955f47dc05918922b77","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","tags":[{"key":"env","value":"e2etest"}],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

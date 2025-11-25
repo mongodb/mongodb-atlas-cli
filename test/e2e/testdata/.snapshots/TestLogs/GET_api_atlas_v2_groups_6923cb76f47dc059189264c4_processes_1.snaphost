@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1537
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 24 Nov 2025 03:14:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 63
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=bb676f36fda6c36e98d6effb901c2ce8bcd64d30; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923cb76f47dc059189264c4/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-11-24T03:13:44Z","groupId":"6923cb76f47dc059189264c4","hostname":"atlas-11gnwq-shard-00-00.pe7tak.mongodb-dev.net","id":"atlas-11gnwq-shard-00-00.pe7tak.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923cb76f47dc059189264c4/processes/atlas-11gnwq-shard-00-00.pe7tak.mongodb-dev.net:27017","rel":"self"}],"port":27017,"typeName":"NO_DATA","userAlias":"logs-278-shard-00-00.pe7tak.mongodb-dev.net"},{"created":"2025-11-24T03:13:44Z","groupId":"6923cb76f47dc059189264c4","hostname":"atlas-11gnwq-shard-00-01.pe7tak.mongodb-dev.net","id":"atlas-11gnwq-shard-00-01.pe7tak.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923cb76f47dc059189264c4/processes/atlas-11gnwq-shard-00-01.pe7tak.mongodb-dev.net:27017","rel":"self"}],"port":27017,"typeName":"NO_DATA","userAlias":"logs-278-shard-00-01.pe7tak.mongodb-dev.net"},{"created":"2025-11-24T03:13:44Z","groupId":"6923cb76f47dc059189264c4","hostname":"atlas-11gnwq-shard-00-02.pe7tak.mongodb-dev.net","id":"atlas-11gnwq-shard-00-02.pe7tak.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923cb76f47dc059189264c4/processes/atlas-11gnwq-shard-00-02.pe7tak.mongodb-dev.net:27017","rel":"self"}],"port":27017,"typeName":"NO_DATA","userAlias":"logs-278-shard-00-02.pe7tak.mongodb-dev.net"}],"totalCount":3}

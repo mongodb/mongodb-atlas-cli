@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 319
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 24 Nov 2025 02:56:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 46
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateNetworkSettingsResource::getEndpointIds
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=bb676f36fda6c36e98d6effb901c2ce8bcd64d30; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6923c93921519f56cb8794a7/privateNetworkSettings/endpointIds?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"comment":"comment","endpointId":"vpce-0fcd9d80bbafe2352","provider":"AWS","status":"OK","type":"DATA_LAKE"}],"totalCount":1}

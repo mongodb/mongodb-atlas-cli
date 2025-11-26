@@ -26,8 +26,6 @@ jobs:
              ./internal/**/*
              go.mod
              go.sum
-      - run:  make gen-purls
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'
@@ -103,7 +101,27 @@ jobs:
             _Jira ticket:_ ${{ env.JIRA_KEY }}
 
             Note: Jira ticket will be closed automatically when this PR is merged.
+      - name: Checkout PR branch
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          git fetch origin ${{ env.JIRA_KEY }}
+          git checkout ${{ env.JIRA_KEY }}
+      - name: Generate and commit purls.txt
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          make gen-purls
+          echo "Changes to purls.txt:"
+          if git diff --exit-code build/package/purls.txt; then
+            echo "No changes to purls.txt"
+          else 
+            git config --global user.name "${{ steps.app-token.outputs.user-name }}"
+            git config --global user.email "${{ steps.app-token.outputs.user-email }}"
+            git add build/package/purls.txt
+            git commit -m "chore: update purls.txt"
+            git push origin ${{ env.JIRA_KEY }}
+          fi
       - name: Set auto merge
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |

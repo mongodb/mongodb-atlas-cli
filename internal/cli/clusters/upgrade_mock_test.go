@@ -12,7 +12,7 @@ package clusters
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312010/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	gomock "go.uber.org/mock/gomock"
 )

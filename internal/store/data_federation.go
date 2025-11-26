@@ -19,7 +19,7 @@ package store
 import (
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 )
 
 // DataFederationList encapsulates the logic to manage different cloud providers.

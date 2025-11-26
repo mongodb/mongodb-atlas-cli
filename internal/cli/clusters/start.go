@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=clusters . ClusterStarter

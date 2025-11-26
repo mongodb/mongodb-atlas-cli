@@ -104,6 +104,7 @@ jobs:
 
             Note: Jira ticket will be closed automatically when this PR is merged.
       - name: Set auto merge
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |

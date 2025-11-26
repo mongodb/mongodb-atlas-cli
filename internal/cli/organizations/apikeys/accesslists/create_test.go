@@ -17,7 +17,7 @@ package accesslists
 import (
 	"testing"
 
-	"go.mongodb.org/atlas-sdk/v20250312009/admin"
+	"go.mongodb.org/atlas-sdk/v20250312010/admin"
 	"go.uber.org/mock/gomock"
 )
 

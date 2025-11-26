@@ -64,8 +64,8 @@ func (opts *AddOpts) Run() error {
 func (opts *AddOpts) newProjectTeam() []atlasv2.TeamRole {
 	return []atlasv2.TeamRole{
 		{
-			TeamId:    &opts.teamID,
-			RoleNames: &opts.roles,
+			TeamId:    opts.teamID,
+			RoleNames: opts.roles,
 		},
 	}
 }

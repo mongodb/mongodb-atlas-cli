@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=clusters . ClusterDeleter

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 887
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 01 Dec 2025 03:15:14 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 66
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupSnapshotsResource::getSnapshots
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=7a95cf9fc6c6b11e8a7a11f57c8567508c3a3a68; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/clusters/cluster-366/backup/snapshots?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cloudProvider":"AWS","copyRegions":[],"createdAt":"2025-12-01T03:13:51Z","description":"test-snapshot","expiresAt":"2025-12-02T03:15:05Z","frequencyType":"ondemand","id":"692d07457bda5c3a31572cb1","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/clusters/cluster-366/backup/snapshots/692d07457bda5c3a31572cb1","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/clusters/cluster-366","rel":"https://cloud.mongodb.com/cluster"}],"mongodVersion":"8.0.16","policyItems":[],"replicaSetName":"cluster-366","snapshotType":"onDemand","status":"completed","storageSizeBytes":1564659712,"type":"replicaSet"}],"totalCount":1}

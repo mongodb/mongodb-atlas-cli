@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 2112
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 01 Dec 2025 03:13:07 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 107
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=7a95cf9fc6c6b11e8a7a11f57c8567508c3a3a68; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"customOpensslCipherConfigTls13":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-co4mnxg-shard-00-00.qoinckr.mongodb-dev.net:27017,ac-co4mnxg-shard-00-01.qoinckr.mongodb-dev.net:27017,ac-co4mnxg-shard-00-02.qoinckr.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-d1mnsg-shard-0","standardSrv":"mongodb+srv://cluster-312.qoinckr.mongodb-dev.net"},"createDate":"2025-12-01T03:02:41Z","diskSizeGB":40.0,"encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"692d05357bda5c3a3156d4ad","id":"692d05517bda5c3a3156e892","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/692d05357bda5c3a3156d4ad/clusters/cluster-312","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/692d05357bda5c3a3156d4ad/clusters/cluster-312/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/692d05357bda5c3a3156d4ad/clusters/cluster-312/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.16","name":"cluster-312","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"692d053fe6c76421d181df78","numShards":1,"regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"}],"zoneId":"692d05517bda5c3a3156e890","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

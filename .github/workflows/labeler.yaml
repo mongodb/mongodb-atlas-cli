@@ -21,7 +21,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repo
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       - name: Add Labels
         uses: srvaroa/labeler@0a20eccb8c94a1ee0bed5f16859aece1c45c3e55
         env:

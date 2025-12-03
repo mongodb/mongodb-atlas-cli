@@ -28,7 +28,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
 
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.0
 
       - uses: actions/setup-go@v6
         with:

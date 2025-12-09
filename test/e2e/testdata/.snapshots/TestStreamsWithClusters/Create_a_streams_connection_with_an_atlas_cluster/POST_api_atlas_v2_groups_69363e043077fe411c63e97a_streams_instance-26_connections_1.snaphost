@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 125
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 08 Dec 2025 03:04:54 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 172
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::createConnection
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=03c9905294e07af7eb87ce47118d8aa582a688bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"clusterName":"cluster-967","dbRoleToExecute":{"role":"atlasAdmin","type":"BUILT_IN"},"name":"ClusterConn","type":"Cluster"}

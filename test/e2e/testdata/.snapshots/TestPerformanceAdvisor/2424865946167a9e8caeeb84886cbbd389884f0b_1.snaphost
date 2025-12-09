@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 08 Dec 2025 03:06:11 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 62
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=03c9905294e07af7eb87ce47118d8aa582a688bd; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69363e303077fe411c64155f/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-12-08T03:04:13Z","groupId":"69363e303077fe411c64155f","hostname":"atlas-9dg4ao-shard-00-00.tx4btt.mongodb-dev.net","id":"atlas-9dg4ao-shard-00-00.tx4btt.mongodb-dev.net:27017","lastPing":"2025-12-08T03:06:01Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69363e303077fe411c64155f/processes/atlas-9dg4ao-shard-00-00.tx4btt.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9dg4ao-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-273-shard-00-00.tx4btt.mongodb-dev.net","version":"8.0.16"},{"created":"2025-12-08T03:04:13Z","groupId":"69363e303077fe411c64155f","hostname":"atlas-9dg4ao-shard-00-01.tx4btt.mongodb-dev.net","id":"atlas-9dg4ao-shard-00-01.tx4btt.mongodb-dev.net:27017","lastPing":"2025-12-08T03:06:01Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69363e303077fe411c64155f/processes/atlas-9dg4ao-shard-00-01.tx4btt.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9dg4ao-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-273-shard-00-01.tx4btt.mongodb-dev.net","version":"8.0.16"},{"created":"2025-12-08T03:04:13Z","groupId":"69363e303077fe411c64155f","hostname":"atlas-9dg4ao-shard-00-02.tx4btt.mongodb-dev.net","id":"atlas-9dg4ao-shard-00-02.tx4btt.mongodb-dev.net:27017","lastPing":"2025-12-08T03:06:01Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69363e303077fe411c64155f/processes/atlas-9dg4ao-shard-00-02.tx4btt.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9dg4ao-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-273-shard-00-02.tx4btt.mongodb-dev.net","version":"8.0.16"}],"totalCount":3}

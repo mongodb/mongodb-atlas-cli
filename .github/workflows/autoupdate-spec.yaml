@@ -11,7 +11,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
       - uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'

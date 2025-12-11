@@ -1324,7 +1324,7 @@ tasks:
           host: ${public_ip_address}
           user: atlascli
           identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
-          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
+          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit} -docker_username ${dockerhub_username} -docker_pat ${dockerhub_password}"
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true

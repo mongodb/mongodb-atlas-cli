@@ -28,6 +28,8 @@ const (
 )
 
 func TestDeploymentsLocalSeedFail(t *testing.T) {
+	t.Skip("DISABLED: This test hangs on evergreen (not locally), ticket to fix this: https://jira.mongodb.org/browse/CLOUDP-365460")
+
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}

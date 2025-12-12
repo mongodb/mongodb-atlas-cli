@@ -77,7 +77,6 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 			"--username", dbUsername,
 			"--password", dbUserPassword,
 			"--initdb", "./testdata/db_seed_fail",
-			"--bindIpAll",
 			"--force",
 			"--debug",
 			"-P",

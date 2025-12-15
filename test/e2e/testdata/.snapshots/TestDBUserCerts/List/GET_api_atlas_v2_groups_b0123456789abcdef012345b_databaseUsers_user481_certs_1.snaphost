@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 359
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 15 Dec 2025 03:01:04 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 57
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getValidCertsByUsername
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=9c7be36f738e4804e22d9f7d70ec1d97d252543e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/user481/certs?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":6864221040749838076,"createdAt":"2025-12-15T02:00:59Z","groupId":"b0123456789abcdef012345b","notAfter":"2026-03-15T03:00:59Z","subject":"CN=user481"}],"totalCount":1}

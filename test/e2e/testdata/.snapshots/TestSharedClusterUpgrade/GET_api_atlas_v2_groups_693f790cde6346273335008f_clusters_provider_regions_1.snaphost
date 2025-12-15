@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 367
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 15 Dec 2025 02:57:23 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 131
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCloudProviderRegionsResource::availableRegions
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=9c7be36f738e4804e22d9f7d70ec1d97d252543e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/693f790cde6346273335008f/clusters/provider/regions?includeCount=true&providers=AWS&tier=M0&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"instanceSizes":[{"availableRegions":[{"default":false,"name":"US_EAST_2"},{"default":true,"name":"US_EAST_1"}],"name":"M0"}],"provider":"AWS"}],"totalCount":1}

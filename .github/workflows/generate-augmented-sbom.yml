@@ -108,7 +108,7 @@ jobs:
         run: ./build/package/gen-ssdlc-report.sh
 
       - name: Upload augmented SBOM as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: augmented_sbom_and_ssdlc_report
           path: |

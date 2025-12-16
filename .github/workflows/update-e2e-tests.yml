@@ -139,7 +139,7 @@ jobs:
           echo "NAME=snapshots_${{ matrix.package }}" | sed "s|/|_|g" >> "$GITHUB_OUTPUT"
       - name: upload artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.set-artifact-name.outputs.NAME }}
           path: test/e2e/testdata/.snapshots

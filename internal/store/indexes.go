@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 )
 
 // CreateIndex encapsulate the logic to manage different cloud providers.

@@ -13,14 +13,14 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
           cache: false # see https://github.com/golangci/golangci-lint-action/issues/807
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@0a35821d5c230e903fcfe077583637dea1b27b47
+        uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20
         with:
           version: v2.1.6
   unit-tests:
@@ -38,7 +38,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Install Go
@@ -69,7 +69,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -88,7 +88,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -102,7 +102,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -129,7 +129,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -156,7 +156,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
       - name: Download actionlint
         id: get_actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
@@ -173,7 +173,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -200,7 +200,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
       - name: Install ShellCheck
         run: |
           sudo apt-get update
@@ -227,7 +227,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -254,7 +254,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -267,7 +267,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -283,13 +283,13 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Check out the repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Linting
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store
-        uses: docker/setup-docker-action@efe9e3891a4f7307e689f2100b33a155b900a608
+        uses: docker/setup-docker-action@e61617a16c407a86262fb923c35a616ddbe070b3
         with:
           version: v24.0.6
           daemon-config: |
@@ -316,7 +316,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Install Go

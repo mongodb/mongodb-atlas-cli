@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 514
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Mon, 15 Dec 2025 02:58:26 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 372
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getFlexCluster
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=9c7be36f738e4804e22d9f7d70ec1d97d252543e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-814.nnspona.mongodb-dev.net"},"createDate":"2025-12-15T02:58:19Z","groupId":"b0123456789abcdef012345b","id":"693f794bde6346273335239c","mongoDBVersion":"8.0.16","name":"cluster-814","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"DELETING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

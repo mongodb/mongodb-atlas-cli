@@ -28,7 +28,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
 
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
 
       - uses: actions/setup-go@v6
         with:
@@ -108,7 +108,7 @@ jobs:
         run: ./build/package/gen-ssdlc-report.sh
 
       - name: Upload augmented SBOM as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: augmented_sbom_and_ssdlc_report
           path: |

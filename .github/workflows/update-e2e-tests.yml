@@ -66,7 +66,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Install Go
@@ -139,7 +139,7 @@ jobs:
           echo "NAME=snapshots_${{ matrix.package }}" | sed "s|/|_|g" >> "$GITHUB_OUTPUT"
       - name: upload artifact
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.set-artifact-name.outputs.NAME }}
           path: test/e2e/testdata/.snapshots
@@ -158,7 +158,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Install Go
@@ -242,13 +242,13 @@ jobs:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.pull_request.head.ref }}
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots
@@ -289,12 +289,12 @@ jobs:
     needs: update-tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots
@@ -349,7 +349,7 @@ jobs:
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
-      - uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
+      - uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725
         id: pr
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -379,7 +379,7 @@ jobs:
     needs: update-tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Find JIRA ticket

@@ -18,9 +18,8 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -31,7 +30,7 @@ func TestList_Run(t *testing.T) {
 	expected := atlasv2.PaginatedTeamRole{
 		Results: &[]atlasv2.TeamRole{
 			{
-				TeamId: pointer.Get("1"),
+				TeamId: "1",
 			},
 		},
 	}

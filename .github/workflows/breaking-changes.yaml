@@ -12,7 +12,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
       - name: Install Go
@@ -26,7 +26,7 @@ jobs:
           set -e
           go run ./tools/cmd/breakvalidator generate > main.json
       - name: Upload manifest
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: breaking-changes-manifest
           path: main.json
@@ -39,13 +39,13 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.1
       - name: Install Go
         uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: Download manifest
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: breaking-changes-manifest
       - name: Run breaking changes validator

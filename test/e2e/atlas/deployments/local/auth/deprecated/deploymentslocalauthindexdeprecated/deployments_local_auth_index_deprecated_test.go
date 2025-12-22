@@ -424,6 +424,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 
 		cmd.Env = os.Environ()
@@ -442,6 +444,8 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--type",
 			"local",
 			"--debug",
+			"-P",
+			internal.ProfileName(),
 		)
 		cmd.Env = os.Environ()
 		r, err := cmd.CombinedOutput()

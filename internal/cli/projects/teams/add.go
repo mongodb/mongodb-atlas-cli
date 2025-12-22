@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
 )
 
 const addTemplate = "Team added to the project.\n"
@@ -64,8 +64,8 @@ func (opts *AddOpts) Run() error {
 func (opts *AddOpts) newProjectTeam() []atlasv2.TeamRole {
 	return []atlasv2.TeamRole{
 		{
-			TeamId:    &opts.teamID,
-			RoleNames: &opts.roles,
+			TeamId:    opts.teamID,
+			RoleNames: opts.roles,
 		},
 	}
 }

@@ -70,7 +70,7 @@ while ($attempt -lt $maxAttempts) {
     
     Start-Sleep -Seconds 1
     $attempt++
-    Write-Output "." -NoNewline
+    Write-Output "Waiting for Docker daemon to start... $attempt/$maxAttempts"
 }
 
 if ($attempt -eq $maxAttempts) {

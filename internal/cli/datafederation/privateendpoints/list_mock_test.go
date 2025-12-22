@@ -12,7 +12,7 @@ package privateendpoints
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312009/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312010/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -150,8 +150,10 @@ func CreateBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [indexName]",
 		Short: "Create a rolling index for the specified cluster for your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
-		Args:  require.MaximumNArgs(1),
+		Long: `Warning: Building an index in a rolling fashion reduces the resiliency of your cluster and increases index build times. We only recommend using rolling index builds when regular index builds do not meet your needs.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
+		Args: require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"indexNameDesc": "Name of the index.",
 		},

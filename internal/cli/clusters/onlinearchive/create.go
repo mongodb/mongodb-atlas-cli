@@ -127,7 +127,7 @@ func CreateBuilder() *cobra.Command {
 		Short: "Create an online archive for a collection in the specified cluster.",
 		Long: `You can create an online archive for an M10 or larger cluster.
 		
-To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/manage-online-archive/.
+To learn more about online archives, see https://www.mongodb.com/docs/atlas/online-archive/overview/.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Data Access Admin"),
 		Args: require.NoArgs,

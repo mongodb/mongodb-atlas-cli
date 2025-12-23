@@ -17,7 +17,7 @@ package store
 import (
 	"strconv"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
 )
 
 type AccessLogOptions struct {

@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
 )
 
 const describeTemplate = `USERNAME	DATABASE

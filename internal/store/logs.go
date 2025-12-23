@@ -18,7 +18,7 @@ import (
 	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
 )
 
 // DownloadLog encapsulates the logic to manage different cloud providers.

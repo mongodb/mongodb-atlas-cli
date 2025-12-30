@@ -96,10 +96,11 @@ func DeleteBuilder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   "delete",
-		Short: "Delete a search node for a cluster.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner or Project Owner"),
-		Args:  require.NoArgs,
+		Use:        "delete",
+		Short:      "Delete a search node for a cluster.",
+		Long:       fmt.Sprintf(usage.RequiredRole, "Organization Owner or Project Owner"),
+		Args:       require.NoArgs,
+		Deprecated: "this command is deprecated.",
 		Example: `  # Delete a search node for the cluster named myCluster:
   atlas clusters search nodes delete --clusterName myCluster`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

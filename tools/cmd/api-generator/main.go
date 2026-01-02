@@ -132,7 +132,7 @@ func convertSpec[T any](ctx context.Context, now time.Time, r io.Reader, w io.Wr
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}
 
-	return writeCommands(w, templateContent, commands)
+	return writeCommands(now, w, templateContent, commands)
 }
 
 func loadSpec(r io.Reader) (*openapi3.T, error) {
@@ -159,10 +159,10 @@ func sortedKeys(v any) []string {
 	return keys
 }
 
-func writeCommands[T any](w io.Writer, templateContent string, data T) error {
+func writeCommands[T any](now time.Time, w io.Writer, templateContent string, data T) error {
 	tmpl, err := template.New("output").Funcs(template.FuncMap{
 		"currentYear": func() int {
-			return time.Now().UTC().Year()
+			return now.UTC().Year()
 		},
 		"replace": func(o, n, s string) string {
 			return strings.ReplaceAll(s, o, n)

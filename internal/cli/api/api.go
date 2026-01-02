@@ -150,6 +150,9 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// Print a warning if the version is a preview version
 			printPreviewWarning(command, &version)
 
+			// Print a warning if the version has a sunset date
+			printSunsetWarning(command, &version)
+
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
 			if err != nil {
@@ -510,6 +513,32 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 	} else {
 		fmt.Fprintf(os.Stderr, "warning: you've selected a private preview version of the endpoint, this version might not be available for your account and is subject to breaking changes.\n")
 	}
+}
+
+func printSunsetWarning(apiCommand shared_api.Command, versionString *string) {
+	version, err := shared_api.ParseVersion(*versionString)
+
+	// If the version is invalid return, this should never happen
+	if err != nil {
+		return
+	}
+
+	// Find the version in the command versions
+	var commandVersion *shared_api.CommandVersion
+	for i := range apiCommand.Versions {
+		if apiCommand.Versions[i].Version.Equal(version) {
+			commandVersion = &apiCommand.Versions[i]
+			break
+		}
+	}
+
+	// If the version is not found or has no sunset date, return
+	if commandVersion == nil || commandVersion.Sunset == nil {
+		return
+	}
+
+	sunsetDate := commandVersion.Sunset.Format("2006-01-02")
+	fmt.Fprintf(os.Stderr, "warning: version '%s' will be sunset on %s. Consider upgrading to a newer version.\n", *versionString, sunsetDate)
 }
 
 func needsFileFlag(apiCommand shared_api.Command) bool {

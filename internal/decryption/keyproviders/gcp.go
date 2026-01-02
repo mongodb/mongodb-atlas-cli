@@ -48,7 +48,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 	var err error
 
 	if ki.ServiceAccountKey != "" {
-		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(ki.ServiceAccountKey))
+		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithAuthCredentialsFile(option.ServiceAccount, ki.ServiceAccountKey))
 		if err == nil {
 			return nil
 		}
@@ -64,7 +64,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 		if err != nil {
 			return err
 		}
-		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithCredentialsFile(json))
+		ki.client, err = kmsv1.NewKeyManagementClient(context.Background(), option.WithAuthCredentialsFile(option.ServiceAccount, json))
 		if err == nil {
 			return nil
 		}

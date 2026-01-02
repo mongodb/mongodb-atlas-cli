@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 02 Jan 2026 17:05:10 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 108
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=c2e9c0719de22da49e72850b12d47650f118c37a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6957f862a08db8605b3f5b11/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-01-02T17:04:11Z","groupId":"6957f862a08db8605b3f5b11","hostname":"atlas-nnzdas-shard-00-00.7ei0lm.mongodb-dev.net","id":"atlas-nnzdas-shard-00-00.7ei0lm.mongodb-dev.net:27017","lastPing":"2026-01-02T17:05:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6957f862a08db8605b3f5b11/processes/atlas-nnzdas-shard-00-00.7ei0lm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nnzdas-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-380-shard-00-00.7ei0lm.mongodb-dev.net","version":"8.0.17"},{"created":"2026-01-02T17:04:11Z","groupId":"6957f862a08db8605b3f5b11","hostname":"atlas-nnzdas-shard-00-01.7ei0lm.mongodb-dev.net","id":"atlas-nnzdas-shard-00-01.7ei0lm.mongodb-dev.net:27017","lastPing":"2026-01-02T17:05:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6957f862a08db8605b3f5b11/processes/atlas-nnzdas-shard-00-01.7ei0lm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nnzdas-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-380-shard-00-01.7ei0lm.mongodb-dev.net","version":"8.0.17"},{"created":"2026-01-02T17:04:11Z","groupId":"6957f862a08db8605b3f5b11","hostname":"atlas-nnzdas-shard-00-02.7ei0lm.mongodb-dev.net","id":"atlas-nnzdas-shard-00-02.7ei0lm.mongodb-dev.net:27017","lastPing":"2026-01-02T17:05:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6957f862a08db8605b3f5b11/processes/atlas-nnzdas-shard-00-02.7ei0lm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nnzdas-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-380-shard-00-02.7ei0lm.mongodb-dev.net","version":"8.0.17"}],"totalCount":3}

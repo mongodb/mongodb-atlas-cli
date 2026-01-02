@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 1741
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 02 Jan 2026 17:05:35 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 217
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getSpecificDatabaseMeasurements
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=c2e9c0719de22da49e72850b12d47650f118c37a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"databaseName":"config","end":"2026-01-02T17:04:25Z","granularity":"PT30M","groupId":"6957f873a08db8605b3f77ba","hostId":"atlas-8hhauc-shard-00-00.bbfdvw.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6957f873a08db8605b3f77ba/processes/atlas-8hhauc-shard-00-00.bbfdvw.mongodb-dev.net:27017/databases/config/measurements?granularity=PT30M&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6957f873a08db8605b3f77ba/processes/atlas-8hhauc-shard-00-00.bbfdvw.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":146.0}],"name":"DATABASE_AVERAGE_OBJECT_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":8.0}],"name":"DATABASE_COLLECTION_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":146.0}],"name":"DATABASE_DATA_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":32768.0}],"name":"DATABASE_STORAGE_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":45056.0}],"name":"DATABASE_INDEX_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":11.0}],"name":"DATABASE_INDEX_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":0.0}],"name":"DATABASE_EXTENT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":1.0}],"name":"DATABASE_OBJECT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-02T17:04:25Z","value":0.0}],"name":"DATABASE_VIEW_COUNT","units":"SCALAR"}],"processId":"atlas-8hhauc-shard-00-00.bbfdvw.mongodb-dev.net:27017","start":"2026-01-02T17:04:25Z"}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2585
+Content-Type: application/json
+Date: Fri, 02 Jan 2026 19:34:23 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::getCluster
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=5a97e029f202aefce3f5611a1343a6b135f34bda; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-kyyowkh-shard-00-00.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-01.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-02.iezlrim.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-98lywx-shard-0","standardSrv":"mongodb+srv://cluster-730.iezlrim.mongodb-dev.net"},"createDate":"2026-01-02T19:34:12Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"69581daa068027e94ab78b98","id":"69581db470012d7b76508067","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/69581daa068027e94ab78b98/clusters/cluster-730","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/69581daa068027e94ab78b98/clusters/cluster-730/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/69581daa068027e94ab78b98/clusters/cluster-730/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.17","mongoURI":"mongodb://ac-kyyowkh-shard-00-00.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-01.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-02.iezlrim.mongodb-dev.net:27017","mongoURIUpdated":"2026-01-02T19:34:19Z","mongoURIWithOptions":"mongodb://ac-kyyowkh-shard-00-00.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-01.iezlrim.mongodb-dev.net:27017,ac-kyyowkh-shard-00-02.iezlrim.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-98lywx-shard-0","name":"cluster-730","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_2"},"replicationFactor":3,"replicationSpec":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"69581db470012d7b7650805b","numShards":1,"regionsConfig":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","srvAddress":"mongodb+srv://cluster-730.iezlrim.mongodb-dev.net","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

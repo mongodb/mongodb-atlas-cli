@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 323
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 02 Jan 2026 16:59:42 GMT
+Location: http://localhost:8080//api/atlas/v1.0
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 84
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasGroupsResource::getGroupSettings
+X-Java-Version: 17.0.16+8
+X-Mongodb-Service-Version: gitHash=c2e9c0719de22da49e72850b12d47650f118c37a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"isCollectDatabaseSpecificsStatisticsEnabled":true,"isDataExplorerEnabled":true,"isDataExplorerGenAIFeaturesEnabled":true,"isDataExplorerGenAISampleDocumentPassingEnabled":false,"isExtendedStorageSizesEnabled":false,"isPerformanceAdvisorEnabled":true,"isRealtimePerformancePanelEnabled":true,"isSchemaAdvisorEnabled":true}

@@ -20,6 +20,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
@@ -34,6 +35,7 @@ const (
 	dirPermissions          = 0700
 	filePermissions         = 0600
 	defaultMaxCacheFileSize = 500_000 // 500KB
+	telemetrySendTimeout    = 2 * time.Second
 )
 
 const (
@@ -64,8 +66,6 @@ type tracker struct {
 }
 
 func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracker, error) {
-	var err error
-
 	cacheDir, err := os.UserCacheDir()
 	if err != nil {
 		return nil, err
@@ -80,20 +80,14 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 		cmd:              cmd,
 		args:             args,
 		installer:        readInstaller(),
+		storeSet:         true,
 	}
 
-	t.storeSet = true
-	if t.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()); err != nil {
-		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
+	// Check if authenticated store can be created (determines auth availability).
+	// Stores are created fresh in trackCommand with timeout context.
+	if _, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()); err != nil {
+		_, _ = log.Debugf("telemetry: auth unavailable, will use unauthenticated: %v\n", err)
 		t.storeSet = false
-	}
-
-	if !t.storeSet {
-		o := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
-
-		if t.unauthStore, err = store.New(o...); err != nil {
-			_, _ = log.Debugf("telemetry: failed to set unauth store: %v\n", err)
-		}
 	}
 
 	return t, nil
@@ -139,11 +133,32 @@ func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
 	}
 	events = append(events, event)
 	_, _ = log.Debugf("telemetry: events: %v\n", events)
-	if !t.storeSet {
+
+	// Use injected stores if available (for testing).
+	if t.store != nil {
+		err = t.store.SendEvents(events)
+	} else if t.unauthStore != nil {
 		err = t.unauthStore.SendUnauthEvents(events)
 	} else {
-		err = t.store.SendEvents(events)
+		// Create store with timeout context to prevent slow endpoints from blocking CLI.
+		ctx, cancel := context.WithTimeout(context.Background(), telemetrySendTimeout)
+		defer cancel()
+
+		if t.storeSet {
+			if s, storeErr := store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()); storeErr == nil {
+				err = s.SendEvents(events)
+			} else {
+				err = storeErr
+			}
+		} else {
+			if s, storeErr := store.New(store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)); storeErr == nil {
+				err = s.SendUnauthEvents(events)
+			} else {
+				err = storeErr
+			}
+		}
 	}
+
 	if err != nil {
 		return t.save(event)
 	}

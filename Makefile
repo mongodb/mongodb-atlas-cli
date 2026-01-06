@@ -189,6 +189,12 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 update-atlas-sdk: ## Update the atlas-sdk dependency
 	./scripts/update-sdk.sh
 
+.PHONY: update-atlas-cli-core
+update-atlas-cli-core: ## Update the atlas-cli-core dependency to the latest SHA
+	@echo "==> Updating atlas-cli-core to latest SHA..."
+	go get github.com/mongodb/atlas-cli-core@master
+	go mod tidy
+
 .PHONY: update-openapi-spec
 update-openapi-spec: ## Update the openapi spec
 	./scripts/update-openapi-spec.sh

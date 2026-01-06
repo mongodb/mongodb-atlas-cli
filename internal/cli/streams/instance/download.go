@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312010/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
 )
 
 var downloadMessage = "Download of %s completed.\n"

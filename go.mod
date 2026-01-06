@@ -40,7 +40,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.11.1
 	github.com/tangzero/inflector v1.0.0
-	github.com/yuin/goldmark v1.7.13
+	github.com/yuin/goldmark v1.7.15
 	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0

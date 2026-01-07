@@ -88,7 +88,7 @@ func (opts *StartOpts) RunAtlas() error {
 	defer opts.StopSpinner()
 
 	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
-	if err != nil {
+	if err == nil {
 		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode(clusterAutoScalingConfig.GetAutoScalingMode()))
 	}
 

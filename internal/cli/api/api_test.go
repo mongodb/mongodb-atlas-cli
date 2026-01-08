@@ -379,7 +379,8 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			var output string
 			go func() {
 				var buf bytes.Buffer
-				io.Copy(&buf, r)
+				_, err = io.Copy(&buf, r)
+				require.NoError(t, err)
 				output = buf.String()
 				outputChan <- output
 			}()

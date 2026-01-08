@@ -15,6 +15,8 @@
 package api
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"testing"
 	"time"
@@ -243,11 +245,16 @@ func TestPrintSunsetWarning(t *testing.T) {
 						Version: api.NewStableVersion(2023, 1, 1),
 						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
 					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Sunset:     nil,
+						Deprecated: false,
+					},
 				},
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and will be sunset on 2026-01-15",
+			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and will be sunset on 2026-01-15. Consider upgrading to a newer version if available.",
 		},
 		{
 			name: "version with past sunset date",
@@ -257,11 +264,16 @@ func TestPrintSunsetWarning(t *testing.T) {
 						Version: api.NewStableVersion(2023, 1, 1),
 						Sunset:  pointer.Get(time.Date(2020, 1, 15, 0, 0, 0, 0, time.UTC)),
 					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Sunset:     nil,
+						Deprecated: false,
+					},
 				},
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and has already been sunset since 2020-01-15",
+			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and has already been sunset since 2020-01-15. Consider upgrading to a newer version if available.",
 		},
 		{
 			name: "version without sunset date",
@@ -314,10 +326,12 @@ func TestPrintSunsetWarning(t *testing.T) {
 
 			// Read output in a goroutine to avoid blocking
 			outputChan := make(chan string, 1)
+			var output string
 			go func() {
-				buf := make([]byte, 1024)
-				n, _ := r.Read(buf)
-				outputChan <- string(buf[:n])
+				var buf bytes.Buffer
+				io.Copy(&buf, r)
+				output = buf.String()
+				outputChan <- output
 			}()
 
 			printSunsetWarning(tt.apiCommand, &tt.version)
@@ -325,8 +339,8 @@ func TestPrintSunsetWarning(t *testing.T) {
 			w.Close()
 			os.Stderr = oldStderr
 
-			// Get captured output
-			output := <-outputChan
+			// Wait for goroutine to finish
+			<-outputChan
 
 			if tt.shouldPrint {
 				require.Contains(t, output, tt.expectedMsg, "Expected sunset warning to be printed")
@@ -423,8 +437,63 @@ func TestConvertAPIToCobraCommand(t *testing.T) {
 			validate: func(t *testing.T, cmd *cobra.Command) {
 				t.Helper()
 				require.NotNil(t, cmd.PreRunE)
-				// PreRunE should be set up to call warning functions
-				// We can't easily test the actual execution without mocking, but we can verify it's set
+				// Command should be marked as deprecated since all versions are deprecated
+				require.NotEmpty(t, cmd.Deprecated)
+				require.Contains(t, cmd.Deprecated, "all of the available endpoint versions have been deprecated")
+				require.Contains(t, cmd.Deprecated, "2023-01-01")
+				require.Contains(t, cmd.Deprecated, "2026-01-15")
+			},
+		},
+		{
+			name: "command with all versions deprecated (no sunset)",
+			command: api.Command{
+				OperationID: "getServerlessInstance",
+				Description: "Returns one serverless instance from the specified project.",
+				RequestParameters: api.RequestParameters{
+					URL:  "/api/atlas/v2/groups/{groupId}/serverless/{name}",
+					Verb: "http.MethodGet",
+				},
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+					},
+				},
+			},
+			expectError: false,
+			validate: func(t *testing.T, cmd *cobra.Command) {
+				t.Helper()
+				// Command should be marked as deprecated
+				require.NotEmpty(t, cmd.Deprecated)
+				require.Contains(t, cmd.Deprecated, "all of the available endpoint versions have been deprecated")
+			},
+		},
+		{
+			name: "command with mixed versions (not all deprecated)",
+			command: api.Command{
+				OperationID: "getServerlessInstance",
+				Description: "Returns one serverless instance from the specified project.",
+				RequestParameters: api.RequestParameters{
+					URL:  "/api/atlas/v2/groups/{groupId}/serverless/{name}",
+					Verb: "http.MethodGet",
+				},
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: false,
+					},
+				},
+			},
+			expectError: false,
+			validate: func(t *testing.T, cmd *cobra.Command) {
+				t.Helper()
+				// Command should NOT be marked as deprecated since not all versions are deprecated
+				require.Empty(t, cmd.Deprecated)
 			},
 		},
 		{
@@ -539,6 +608,200 @@ func TestConvertAPIToCobraCommand(t *testing.T) {
 				if tt.validate != nil {
 					tt.validate(t, cmd)
 				}
+			}
+		})
+	}
+}
+
+func TestAllVersionsDeprecated(t *testing.T) {
+	tests := []struct {
+		name     string
+		command  api.Command
+		expected bool
+	}{
+		{
+			name: "all versions have sunset dates",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewStableVersion(2023, 1, 1),
+						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+					{
+						Version: api.NewStableVersion(2024, 1, 1),
+						Sunset:  pointer.Get(time.Date(2027, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "all versions are deprecated",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: true,
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "mix of sunset and deprecated",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewStableVersion(2023, 1, 1),
+						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: true,
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "one version not deprecated",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: false,
+						Sunset:     nil,
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "no versions deprecated",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: false,
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: false,
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "empty versions",
+			command: api.Command{
+				Versions: []api.CommandVersion{},
+			},
+			expected: true, // Empty is considered all deprecated (edge case)
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := allVersionsDeprecated(tt.command)
+			require.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestAddDeprecationMessageIfNeeded(t *testing.T) {
+	tests := []struct {
+		name            string
+		command         api.Command
+		shouldDeprecate bool
+		expectedMsg     string
+	}{
+		{
+			name: "single version with sunset",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewStableVersion(2023, 1, 1),
+						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+				},
+			},
+			shouldDeprecate: true,
+			expectedMsg:     "all of the available endpoint versions have been deprecated. The API endpoint version 2023-01-01 will no longer be available after the sunset date of 2026-01-15.",
+		},
+		{
+			name: "multiple versions with sunset",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewStableVersion(2023, 1, 1),
+						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+					{
+						Version: api.NewStableVersion(2024, 1, 1),
+						Sunset:  pointer.Get(time.Date(2027, 1, 15, 0, 0, 0, 0, time.UTC)),
+					},
+				},
+			},
+			shouldDeprecate: true,
+			expectedMsg:     "all of the available endpoint versions have been deprecated. The API endpoint version 2023-01-01 will no longer be available after the sunset date of 2026-01-15.",
+		},
+		{
+			name: "all versions deprecated without sunset",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: true,
+					},
+				},
+			},
+			shouldDeprecate: true,
+			expectedMsg:     "all of the available endpoint versions have been deprecated.",
+		},
+		{
+			name: "not all versions deprecated",
+			command: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Deprecated: true,
+					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: false,
+					},
+				},
+			},
+			shouldDeprecate: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cmd := &cobra.Command{}
+			addDeprecationMessageIfNeeded(cmd, tt.command)
+
+			if tt.shouldDeprecate {
+				require.NotEmpty(t, cmd.Deprecated)
+				require.Contains(t, cmd.Deprecated, "all of the available endpoint versions have been deprecated")
+				if tt.expectedMsg != "" {
+					require.Equal(t, tt.expectedMsg, cmd.Deprecated)
+				}
+			} else {
+				require.Empty(t, cmd.Deprecated)
 			}
 		})
 	}

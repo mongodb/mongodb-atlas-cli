@@ -726,8 +726,6 @@ func addDeprecationMessageIfNeeded(cmd *cobra.Command, apiCommand shared_api.Com
 				break
 			}
 		}
-
-		cmd.Deprecated += "."
 	}
 }
 

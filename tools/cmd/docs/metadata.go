@@ -478,6 +478,25 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`createGroupBackupPrivateEndpoint`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloudProvider`: {
+				Usage: `Human-readable label that identifies the cloud provider for the private endpoint to create.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupCloudProviderAccess`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -496,6 +515,9 @@ var metadata = metadatatypes.Metadata{
 	},
 	`createGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Instance-Fields`: {
+				Usage: `Controls how hardware specification fields are returned in the response after cluster creation. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling compatibility.`,
+			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
@@ -1458,6 +1480,22 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupLogIntegration`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupPeer`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -1685,7 +1723,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: nil,
@@ -1720,7 +1758,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: nil,
@@ -2221,6 +2259,39 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`exportBucketId`: `32b6e34b3d91647abb20e7b8`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`deleteGroupBackupPrivateEndpoint`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloudProvider`: {
+				Usage: `Human-readable label that identifies the cloud provider of the private endpoint to delete.`,
+			},
+			`endpointId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the private endpoint to delete.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-11-13`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloudProvider`: `[cloudProvider]`,
+					`endpointId`:    `[endpointId]`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -2918,6 +2989,35 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteGroupLogIntegration`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`id`: {
+				Usage: `Unique identifier of the log integration configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`id`:      `[id]`,
+				},
+			},
+			},
+		},
+	},
 	`deleteGroupPeer`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -3287,7 +3387,7 @@ var metadata = metadatatypes.Metadata{
 	`deleteGroupStreamConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionName`: {
-				Usage: `Human-readable label that identifies the stream connection.`,
+				Usage: `Label that identifies the stream connection.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -3301,11 +3401,11 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-02-01`: {{
+			`preview`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -3360,10 +3460,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3419,7 +3519,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance to delete.`,
+				Usage: `Label that identifies the stream workspace to delete.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4000,7 +4100,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4522,6 +4622,39 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupBackupPrivateEndpoint`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloudProvider`: {
+				Usage: `Human-readable label that identifies the cloud provider of the private endpoint.`,
+			},
+			`endpointId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the private endpoint.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-11-13`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloudProvider`: `[cloudProvider]`,
+					`endpointId`:    `[endpointId]`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`getGroupByName`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -4567,6 +4700,9 @@ var metadata = metadatatypes.Metadata{
 	},
 	`getGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Instance-Fields`: {
+				Usage: `Controls how hardware specification fields are returned in the response. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling compatibility.`,
+			},
 			`clusterName`: {
 				Usage: `Human-readable label that identifies this cluster.`,
 			},
@@ -5041,6 +5177,39 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupClusterQueryShape`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`queryShapeHash`: {
+				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`:    `[clusterName]`,
+					`groupId`:        `32b6e34b3d91647abb20e7b8`,
+					`queryShapeHash`: `[queryShapeHash]`,
 				},
 			},
 			},
@@ -6001,6 +6170,35 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupLogIntegration`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`id`: {
+				Usage: `Unique identifier of the log integration configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`id`:      `[id]`,
+				},
+			},
+			},
+		},
+	},
 	`getGroupMaintenanceWindow`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -6941,7 +7139,7 @@ var metadata = metadatatypes.Metadata{
 	`getGroupStreamConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionName`: {
-				Usage: `Human-readable label that identifies the stream connection to return.`,
+				Usage: `Label that identifies the stream connection to return.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -6952,11 +7150,11 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance to return.`,
+				Usage: `Label that identifies the stream workspace to return.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-02-01`: {{
+			`preview`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7008,10 +7206,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7050,7 +7248,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7076,10 +7274,10 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeConnections`: {
-				Usage: `Flag to indicate whether connections information should be included in the stream instance.`,
+				Usage: `Flag to indicate whether connections information should be included in the stream workspace.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance to return.`,
+				Usage: `Label that identifies the stream workspace to return.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8112,6 +8310,44 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupBackupPrivateEndpoints`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloudProvider`: {
+				Usage: `Human-readable label that identifies the cloud provider for the private endpoints to return.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-11-13`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloudProvider`: `[cloudProvider]`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupCloudProviderAccess`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -8714,6 +8950,47 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupClusterQueryShapes`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`status`: {
+				Usage: `The status of query shapes to retrieve. Only REJECTED status is supported. If omitted, defaults to REJECTED.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupClusterRestoreJobs`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`batchId`: {
@@ -8864,6 +9141,9 @@ var metadata = metadatatypes.Metadata{
 	},
 	`listGroupClusters`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Instance-Fields`: {
+				Usage: `Controls how hardware specification fields are returned in the response. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling compatibility.`,
+			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
@@ -9553,6 +9833,43 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`listGroupLogIntegrations`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+			},
+			`integrationType`: {
+				Usage: `Optional filter by integration type (e.g., 'S3_LOG_EXPORT').`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -10296,7 +10613,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11686,10 +12003,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11719,10 +12036,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: nil,
@@ -11741,10 +12058,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12094,8 +12411,30 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`updateGroupBackupExportBucket`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`exportBucketId`: {
+				Usage: `Unique 24-hexadecimal character string that identifies the snapshot export bucket.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`updateGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Instance-Fields`: {
+				Usage: `Controls how hardware specification fields are returned in the response after cluster updates. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Note: When using this header with autoscaling enabled, MongoDB ignores replicationSpecs changes during updates. To intentionally override the replicationSpecs, disable this header.`,
+			},
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
 			},
@@ -12258,6 +12597,28 @@ var metadata = metadatatypes.Metadata{
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateGroupClusterQueryShape`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`queryShapeHash`: {
+				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.`,
 			},
 		},
 		Examples: nil,
@@ -12562,6 +12923,25 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`updateGroupLogIntegration`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`id`: {
+				Usage: `Unique identifier of the log integration configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`updateGroupMaintenanceWindow`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -12702,7 +13082,7 @@ var metadata = metadatatypes.Metadata{
 	`updateGroupStreamConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionName`: {
-				Usage: `Human-readable label that identifies the stream connection.`,
+				Usage: `Label that identifies the stream connection.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12716,7 +13096,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: nil,
@@ -12735,10 +13115,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
-				Usage: `Human-readable label that identifies the stream processor.`,
+				Usage: `Label that identifies the stream processor.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance.`,
+				Usage: `Label that identifies the stream workspace.`,
 			},
 		},
 		Examples: nil,
@@ -12757,7 +13137,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
-				Usage: `Human-readable label that identifies the stream instance to update.`,
+				Usage: `Label that identifies the stream workspace to update.`,
 			},
 		},
 		Examples: nil,

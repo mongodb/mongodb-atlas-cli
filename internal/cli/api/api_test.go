@@ -380,7 +380,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			go func() {
 				var buf bytes.Buffer
 				_, err = io.Copy(&buf, r)
-				require.NoError(t, err)
+				require.NoError(t, err) //nolint:testifylint // this is a test
 				output = buf.String()
 				outputChan <- output
 			}()

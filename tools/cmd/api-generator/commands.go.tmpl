@@ -79,6 +79,9 @@ var Commands = shared_api.GroupedAndSortedCommands{
 						{{- if .Sunset }}
 						Sunset: {{ createSunset .Sunset }},
 						{{- end}}
+						{{- if .Deprecated }}
+						Deprecated: true,
+						{{- end}}
 						{{- if .PublicPreview }}
 						PublicPreview: true,
 						{{- end}}

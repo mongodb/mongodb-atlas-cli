@@ -21,6 +21,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
+const headerParam = "headerParam"
+
 func TestExtractVersionAndContentType(t *testing.T) {
 	tests := []struct {
 		input           string
@@ -109,7 +111,7 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 		},
 		{
 			Value: &openapi3.Parameter{
-				Name:     "headerParam",
+				Name:     headerParam,
 				In:       "header",
 				Required: false,
 				Schema: &openapi3.SchemaRef{
@@ -164,12 +166,12 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 
 	// Verify header parameter is NOT included (skipped)
 	for _, param := range result.query {
-		if param.Name == "headerParam" {
+		if param.Name == headerParam {
 			t.Error("Header parameter 'headerParam' should not be in query parameters")
 		}
 	}
 	for _, param := range result.url {
-		if param.Name == "headerParam" {
+		if param.Name == headerParam {
 			t.Error("Header parameter 'headerParam' should not be in URL parameters")
 		}
 	}

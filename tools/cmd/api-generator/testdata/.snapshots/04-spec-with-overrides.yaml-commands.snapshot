@@ -19,11 +19,9 @@ package api
 
 import (
 	"net/http"
-	"time"
 
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
-
 
 var Commands = shared_api.GroupedAndSortedCommands{
 	{
@@ -81,6 +79,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						Sunset:             shared_api.NewSunset(2025, 6, 1),
+						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -89,6 +88,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						Sunset:             shared_api.NewSunset(2026, 3, 1),
+						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -97,6 +97,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						Sunset:             shared_api.NewSunset(2026, 3, 1),
+						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,

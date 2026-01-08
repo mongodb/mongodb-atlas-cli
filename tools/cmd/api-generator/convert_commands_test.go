@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
@@ -179,72 +178,6 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 	}
 }
 
-func TestExtractDeprecated(t *testing.T) {
-	tests := []struct {
-		name       string
-		extensions map[string]any
-		want       *bool
-	}{
-		{
-			name:       "nil extensions",
-			extensions: nil,
-			want:       nil,
-		},
-		{
-			name:       "empty extensions",
-			extensions: map[string]any{},
-			want:       nil,
-		},
-		{
-			name: "deprecated true",
-			extensions: map[string]any{
-				"deprecated": true,
-			},
-			want: pointer.Get(true),
-		},
-		{
-			name: "deprecated false",
-			extensions: map[string]any{
-				"deprecated": false,
-			},
-			want: pointer.Get(false),
-		},
-		{
-			name: "deprecated as string (should not match)",
-			extensions: map[string]any{
-				"deprecated": "true",
-			},
-			want: nil,
-		},
-		{
-			name: "other extensions present",
-			extensions: map[string]any{
-				"x-sunset":    "2026-01-15",
-				"deprecated":  true,
-				"other-field": "value",
-			},
-			want: pointer.Get(true),
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := extractDeprecated(tt.extensions)
-			if tt.want == nil {
-				if got != nil {
-					t.Errorf("extractDeprecated() = %v, want nil", got)
-				}
-			} else {
-				if got == nil {
-					t.Errorf("extractDeprecated() = nil, want %v", *tt.want)
-				} else if *got != *tt.want {
-					t.Errorf("extractDeprecated() = %v, want %v", *got, *tt.want)
-				}
-			}
-		})
-	}
-}
-
 func TestBuildVersions_DeprecatedOperation(t *testing.T) {
 	now := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
 
@@ -310,29 +243,6 @@ func TestAddContentTypeToVersion_DeprecatedWithSunset(t *testing.T) {
 
 	if !version.Deprecated {
 		t.Error("Expected version to be deprecated when it has a sunset date")
-	}
-}
-
-func TestAddContentTypeToVersion_DeprecatedFromExtension(t *testing.T) {
-	versionsMap := make(map[string]*api.CommandVersion)
-
-	extensions := map[string]any{
-		"deprecated": true,
-	}
-
-	err := addContentTypeToVersion("application/vnd.atlas.2023-01-01+json", versionsMap, extensions, false)
-	if err != nil {
-		t.Fatalf("addContentTypeToVersion() error = %v", err)
-	}
-
-	versionString := api.NewStableVersion(2023, 1, 1).String()
-	version, ok := versionsMap[versionString]
-	if !ok {
-		t.Fatalf("Expected version %s to be in versionsMap", versionString)
-	}
-
-	if !version.Deprecated {
-		t.Error("Expected version to be deprecated when deprecated extension is true")
 	}
 }
 

@@ -488,12 +488,6 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		versionsMap[versionString].PublicPreview = true
 	}
 
-	// Extract deprecated from extensions (if explicitly set at the content type level)
-	deprecated := extractDeprecated(extensions)
-	if deprecated != nil && *deprecated {
-		versionsMap[versionString].Deprecated = true
-	}
-
 	// If the versioned content type is a request, set the request content type.
 	// If the versioned content type is a response, add the content type to the response content types.
 	if isRequest {
@@ -526,23 +520,6 @@ func extractPublicPreview(extensions map[string]any) *bool {
 			publicPreview := public == "true"
 			return &publicPreview
 		}
-	}
-
-	return nil
-}
-
-// Extract deprecated from extensions.
-// Checks for a direct "deprecated" boolean field in the extensions.
-// If the extension is present, return true if the version is deprecated, false if it's not.
-// If the extension is not present, return nil.
-func extractDeprecated(extensions map[string]any) *bool {
-	if extensions == nil {
-		return nil
-	}
-
-	// Check for direct deprecated boolean field
-	if deprecated, ok := extensions["deprecated"].(bool); ok {
-		return &deprecated
 	}
 
 	return nil

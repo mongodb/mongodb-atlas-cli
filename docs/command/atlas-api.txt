@@ -210,7 +210,7 @@ Related Commands
 * :ref:`atlas-api-programmaticApiKeys` - Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
 * :ref:`atlas-api-projectIpAccessList` - Returns, adds, edits, and removes network access limits to database deployments in Atlas.
 * :ref:`atlas-api-projects` - Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
-* :ref:`atlas-api-pushBasedLogExport` - You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
+* :ref:`atlas-api-pushBasedLogExport` - You can continually export mongod, mongos, and audit logs to an AWS S3 bucket.
 * :ref:`atlas-api-queryShapeInsights` - 
 * :ref:`atlas-api-resourcePolicies` - Configure and manage Atlas Resource Policies within your organization.
 * :ref:`atlas-api-rollingIndex` - Creates one index to a database deployment in a rolling manner.
@@ -220,7 +220,7 @@ Related Commands
 * :ref:`atlas-api-serviceAccounts` - Endpoints for managing Service Accounts and secrets.
 * :ref:`atlas-api-sharedTierRestoreJobs` - Returns and adds restore jobs for shared-tier database deployments.
 * :ref:`atlas-api-sharedTierSnapshots` - Returns and requests to download shared-tier database deployment snapshots.
-* :ref:`atlas-api-streams` - Returns, adds, edits, and removes Streams Instances.
+* :ref:`atlas-api-streams` - Returns, adds, edits, and removes Streams Workspaces.
 * :ref:`atlas-api-teams` - Returns, adds, edits, or removes teams.
 * :ref:`atlas-api-thirdPartyIntegrations` - Returns, adds, edits, and removes third-party service integration configurations.
 * :ref:`atlas-api-x509Authentication` - Returns, edits, and removes user-managed X.509 configurations.

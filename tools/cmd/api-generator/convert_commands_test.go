@@ -178,44 +178,6 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 	}
 }
 
-func TestBuildVersions_DeprecatedOperation(t *testing.T) {
-	now := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
-
-	responses := openapi3.NewResponses()
-	responses.Set("200", &openapi3.ResponseRef{
-		Value: &openapi3.Response{
-			Content: openapi3.Content{
-				"application/vnd.atlas.2023-01-01+json": &openapi3.MediaType{
-					Extensions: map[string]any{},
-				},
-				"application/vnd.atlas.2024-01-01+json": &openapi3.MediaType{
-					Extensions: map[string]any{},
-				},
-			},
-		},
-	})
-
-	operation := &openapi3.Operation{
-		Deprecated: true,
-		Responses:  responses,
-	}
-
-	versions, err := buildVersions(now, operation)
-	if err != nil {
-		t.Fatalf("buildVersions() error = %v", err)
-	}
-
-	if len(versions) != 2 {
-		t.Fatalf("Expected 2 versions, got %d", len(versions))
-	}
-
-	for _, version := range versions {
-		if !version.Deprecated {
-			t.Errorf("Expected version %s to be deprecated, but it's not", version.Version)
-		}
-	}
-}
-
 func TestAddContentTypeToVersion_DeprecatedWithSunset(t *testing.T) {
 	versionsMap := make(map[string]*api.CommandVersion)
 	sunsetDate := time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)

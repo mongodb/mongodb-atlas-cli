@@ -49,8 +49,6 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-clusters-search-nodes-create` - Create a search node for a cluster.
-* :ref:`atlas-clusters-search-nodes-delete` - Delete a search node for a cluster.
 * :ref:`atlas-clusters-search-nodes-list` - List all Atlas Search nodes for a cluster.
 * :ref:`atlas-clusters-search-nodes-update` - Update a search node for a cluster.
 
@@ -58,8 +56,6 @@ Related Commands
 .. toctree::
    :titlesonly:
 
-   create </command/atlas-clusters-search-nodes-create>
-   delete </command/atlas-clusters-search-nodes-delete>
    list </command/atlas-clusters-search-nodes-list>
    update </command/atlas-clusters-search-nodes-update>
 

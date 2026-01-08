@@ -393,6 +393,13 @@ func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.CommandV
 		return nil, err
 	}
 
+	// If the operation is deprecated, mark all versions as deprecated
+	if operation.Deprecated {
+		for _, version := range versionsMap {
+			version.Deprecated = true
+		}
+	}
+
 	// filter sunsetted versions
 	for key, version := range versionsMap {
 		if version.Sunset != nil && now.After(*version.Sunset) {
@@ -471,9 +478,20 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		}
 	}
 
+	// If a version has a sunset date, it is deprecated
+	if versionsMap[versionString].Sunset != nil {
+		versionsMap[versionString].Deprecated = true
+	}
+
 	// The default for public preview is false, override it if the extension says we're in a public preview.
 	if publicPreview != nil && *publicPreview {
 		versionsMap[versionString].PublicPreview = true
+	}
+
+	// Extract deprecated from extensions (if explicitly set at the content type level)
+	deprecated := extractDeprecated(extensions)
+	if deprecated != nil && *deprecated {
+		versionsMap[versionString].Deprecated = true
 	}
 
 	// If the versioned content type is a request, set the request content type.
@@ -508,6 +526,23 @@ func extractPublicPreview(extensions map[string]any) *bool {
 			publicPreview := public == "true"
 			return &publicPreview
 		}
+	}
+
+	return nil
+}
+
+// Extract deprecated from extensions.
+// Checks for a direct "deprecated" boolean field in the extensions.
+// If the extension is present, return true if the version is deprecated, false if it's not.
+// If the extension is not present, return nil.
+func extractDeprecated(extensions map[string]any) *bool {
+	if extensions == nil {
+		return nil
+	}
+
+	// Check for direct deprecated boolean field
+	if deprecated, ok := extensions["deprecated"].(bool); ok {
+		return &deprecated
 	}
 
 	return nil

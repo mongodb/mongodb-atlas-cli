@@ -50,6 +50,7 @@ type CommandVersion struct {
 	Version              Version
 	Sunset               *time.Time
 	PublicPreview        bool
+	Deprecated           bool
 	RequestContentType   string
 	ResponseContentTypes []string
 }

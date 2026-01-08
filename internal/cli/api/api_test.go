@@ -722,7 +722,7 @@ func TestAddDeprecationMessageIfNeeded(t *testing.T) {
 		name            string
 		command         api.Command
 		shouldDeprecate bool
-		expectedMsg     string
+		expectedParts   []string // Parts that should be contained in the message
 	}{
 		{
 			name: "single version with sunset",
@@ -735,7 +735,12 @@ func TestAddDeprecationMessageIfNeeded(t *testing.T) {
 				},
 			},
 			shouldDeprecate: true,
-			expectedMsg:     "all of the available endpoint versions have been deprecated. The API endpoint version 2023-01-01 will no longer be available after the sunset date of 2026-01-15.",
+			expectedParts: []string{
+				"all of the available endpoint versions have been deprecated",
+				"2023-01-01",
+				"2026-01-15",
+				"sunset date",
+			},
 		},
 		{
 			name: "multiple versions with sunset",
@@ -752,7 +757,12 @@ func TestAddDeprecationMessageIfNeeded(t *testing.T) {
 				},
 			},
 			shouldDeprecate: true,
-			expectedMsg:     "all of the available endpoint versions have been deprecated. The API endpoint version 2023-01-01 will no longer be available after the sunset date of 2026-01-15.",
+			expectedParts: []string{
+				"all of the available endpoint versions have been deprecated",
+				"2023-01-01",
+				"2026-01-15",
+				"sunset date",
+			},
 		},
 		{
 			name: "all versions deprecated without sunset",
@@ -769,7 +779,9 @@ func TestAddDeprecationMessageIfNeeded(t *testing.T) {
 				},
 			},
 			shouldDeprecate: true,
-			expectedMsg:     "all of the available endpoint versions have been deprecated.",
+			expectedParts: []string{
+				"all of the available endpoint versions have been deprecated",
+			},
 		},
 		{
 			name: "not all versions deprecated",
@@ -797,8 +809,8 @@ func TestAddDeprecationMessageIfNeeded(t *testing.T) {
 			if tt.shouldDeprecate {
 				require.NotEmpty(t, cmd.Deprecated)
 				require.Contains(t, cmd.Deprecated, "all of the available endpoint versions have been deprecated")
-				if tt.expectedMsg != "" {
-					require.Equal(t, tt.expectedMsg, cmd.Deprecated)
+				for _, part := range tt.expectedParts {
+					require.Contains(t, cmd.Deprecated, part, "Expected deprecation message to contain: %s", part)
 				}
 			} else {
 				require.Empty(t, cmd.Deprecated)

@@ -114,7 +114,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		TrackAsk(gomock.Any(), gomock.Any()).
 		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
 			if o, ok := answer.(*LoginOpts); ok {
-				o.Output = "json"
+				o.Output = jsonOutputFormat
 			}
 			return nil
 		})

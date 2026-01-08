@@ -16,6 +16,8 @@ package auth
 
 import "github.com/spf13/cobra"
 
+const jsonOutputFormat = "json"
+
 func Builder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth",

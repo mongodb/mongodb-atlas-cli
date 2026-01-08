@@ -703,88 +703,27 @@ func getOutputWriteCloser(outputFile string) (io.WriteCloser, error) {
 	return os.Stdout, nil
 }
 
+// addDeprecationMessageIfNeeded adds a deprecation message to the command if the command is deprecated.
+// we classify the command as deprecated if all the versions have a sunset date or all the versions are deprecated.
 func addDeprecationMessageIfNeeded(cmd *cobra.Command, apiCommand shared_api.Command) {
+	allVersionsAreDeprecated := true
+	for _, version := range apiCommand.Versions {
+		if !allVersionsAreDeprecated {
+			break
+		}
 
-	// Check if all versions are sunset (command is deprecated)
-	allVersionsHaveSunset, anyVersionSunset := getVersionSunsetStatus(apiCommand)
-
-	// Append deprecation/sunset information to long description if any version is deprecated or has a sunset date
-	deprecationInfo := buildDeprecationInfo(apiCommand, allVersionsHaveSunset, anyVersionSunset)
-	if deprecationInfo != "" {
-		if cmd.Long != "" {
-			cmd.Long += "\n\n" + deprecationInfo
-		} else {
-			cmd.Long = deprecationInfo
+		if version.Sunset == nil && !version.Deprecated {
+			allVersionsAreDeprecated = false
+			break
 		}
 	}
 
-	// Build deprecation message if all versions are sunset
-	var deprecationMessage string
-	if allVersionsHaveSunset {
-		deprecationMessage = "This command is deprecated as all of the available endpoint versions have been sunset."
-	}
-
-	if deprecationMessage != "" {
-		cmd.Deprecated = deprecationMessage
-	}
-}
-
-// getVersionSunsetStatus checks if all versions of the command have sunset dates that are in the past.
-// Returns:
-// - allVersionsHaveSunset: true if all versions have a sunset date that is in the past
-// - anyVersionSunset: true if any version has a sunset date
-func getVersionSunsetStatus(command shared_api.Command) (bool, bool) {
-	var allVersionsHaveSunset bool
-	var anyVersionSunset bool
-
-	for _, version := range command.Versions {
-		if version.Sunset == nil {
-			allVersionsHaveSunset = false
-		} else if version.Sunset.Before(time.Now()) {
-			allVersionsHaveSunset = true
-			anyVersionSunset = true
-		}
-	}
-
-	return allVersionsHaveSunset, anyVersionSunset
-}
-
-// buildDeprecationInfo builds a string describing deprecated versions and sunset dates for the command.
-func buildDeprecationInfo(command shared_api.Command, allVersionsHaveSunset bool, anyVersionSunset bool) string {
-	var deprecatedVersions []string
-	var sunsetVersions []string
-	now := time.Now()
-
-	for _, version := range command.Versions {
-		versionStr := version.Version.String()
-		if anyVersionSunset {
-			if version.Sunset.Before(now) {
-				sunsetVersions = append(sunsetVersions, fmt.Sprintf("%s (sunset since %s)", versionStr, version.Sunset.Format("2006-01-02")))
-			} else {
-				sunsetVersions = append(sunsetVersions, fmt.Sprintf("%s (sunset on %s)", versionStr, version.Sunset.Format("2006-01-02")))
+	if allVersionsAreDeprecated {
+		cmd.Deprecated = "This command is deprecated as all of the available endpoint versions have been sunset. The data:"
+		for _, version := range apiCommand.Versions {
+			if version.Sunset != nil {
+				cmd.Deprecated += fmt.Sprintf("\n- %s (sunset on %s)", version.Version.String(), version.Sunset.Format("2006-01-02"))
 			}
-		} else if version.Deprecated {
-			deprecatedVersions = append(deprecatedVersions, versionStr)
 		}
 	}
-
-	var parts []string
-
-	// If all versions are sunset, add a note that the command is deprecated
-	if allVersionsHaveSunset {
-		parts = append(parts, "This command is deprecated as all versions have been sunset.")
-	}
-
-	if len(deprecatedVersions) > 0 {
-		parts = append(parts, fmt.Sprintf("Deprecated versions: %s", strings.Join(deprecatedVersions, ", ")))
-	}
-	if len(sunsetVersions) > 0 {
-		parts = append(parts, fmt.Sprintf("Sunset versions: %s", strings.Join(sunsetVersions, ", ")))
-	}
-
-	if len(parts) > 0 {
-		return strings.Join(parts, "\n")
-	}
-
-	return ""
 }

@@ -19,7 +19,6 @@ package api
 
 import (
 	"net/http"
-	"time"
 
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )

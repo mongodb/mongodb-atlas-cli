@@ -26,10 +26,6 @@ import (
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
-func toTimePointer(t time.Time) *time.Time {
-	return &t
-}
-
 var Commands = shared_api.GroupedAndSortedCommands{
 {{- range . }}
 	{
@@ -81,7 +77,7 @@ var Commands = shared_api.GroupedAndSortedCommands{
 					{
 						Version: {{ createVersion .Version }},
 						{{- if .Sunset }}
-						Sunset: {{ createTimePointer .Sunset }},
+						Sunset: {{ createSunset .Sunset }},
 						{{- end}}
 						{{- if .PublicPreview }}
 						PublicPreview: true,

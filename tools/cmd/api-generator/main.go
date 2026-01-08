@@ -180,11 +180,11 @@ func writeCommands[T any](now time.Time, w io.Writer, templateContent string, da
 
 			panic("unreachable")
 		},
-		"createTimePointer": func(t *time.Time) string {
+		"createSunset": func(t *time.Time) string {
 			if t == nil {
 				return "nil"
 			}
-			return fmt.Sprintf("toTimePointer(time.Date(%d, %d, %d, 0, 0, 0, 0, time.UTC))", t.Year(), int(t.Month()), t.Day())
+			return fmt.Sprintf("shared_api.NewSunset(%d, %d, %d)", t.Year(), int(t.Month()), t.Day())
 		},
 	}).Parse(templateContent)
 	if err != nil {

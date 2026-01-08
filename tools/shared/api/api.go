@@ -118,3 +118,10 @@ type WatcherMatchProperties struct {
 	Path   string
 	Values []string
 }
+
+// NewSunset creates a pointer to a time.Time representing a sunset date.
+// It takes year, month, and day parameters and returns a *time.Time set to UTC midnight.
+func NewSunset(year int, month int, day int) *time.Time {
+	t := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &t
+}

@@ -24,10 +24,6 @@ import (
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
-func toTimePointer(t time.Time) *time.Time {
-	return &t
-}
-
 var Commands = shared_api.GroupedAndSortedCommands{
 	{
 		Name:        `AWS Clusters DNS`,
@@ -1092,7 +1088,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1459,7 +1455,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1531,7 +1527,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1709,7 +1705,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1781,7 +1777,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2066,7 +2062,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2138,7 +2134,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2146,7 +2142,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
-						Sunset:             toTimePointer(time.Date(2026, 3, 12, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 12),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2427,7 +2423,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2671,7 +2667,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2743,7 +2739,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3227,7 +3223,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3536,7 +3532,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3740,7 +3736,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4064,7 +4060,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 10, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 10, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4133,7 +4129,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4445,7 +4441,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4699,7 +4695,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4774,7 +4770,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4866,7 +4862,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5453,7 +5449,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5558,7 +5554,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5724,7 +5720,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 10, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 10, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5891,7 +5887,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 5, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6076,7 +6072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6509,7 +6505,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7260,7 +7256,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7268,7 +7264,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7276,7 +7272,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7386,7 +7382,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7482,7 +7478,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7490,7 +7486,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7569,7 +7565,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8071,7 +8067,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8079,7 +8075,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8309,7 +8305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8530,7 +8526,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8538,7 +8534,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8546,7 +8542,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8643,7 +8639,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14494,7 +14490,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14502,7 +14498,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14581,7 +14577,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14589,7 +14585,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14668,7 +14664,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14676,7 +14672,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14775,7 +14771,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14783,7 +14779,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14862,7 +14858,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14870,7 +14866,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 3, 1, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 3, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17387,7 +17383,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17595,7 +17591,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17653,7 +17649,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17791,7 +17787,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17922,7 +17918,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18043,7 +18039,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18128,7 +18124,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18353,7 +18349,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18604,7 +18600,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 11, 30, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 11, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
@@ -21647,7 +21643,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21773,7 +21769,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22005,7 +22001,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22133,7 +22129,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22344,7 +22340,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22402,7 +22398,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22527,7 +22523,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22788,7 +22784,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23490,7 +23486,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25783,7 +25779,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25902,7 +25898,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26025,7 +26021,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26302,7 +26298,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26694,7 +26690,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27095,7 +27091,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27157,7 +27153,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27290,7 +27286,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29549,7 +29545,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29642,7 +29638,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29731,7 +29727,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29826,7 +29822,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29901,7 +29897,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29993,7 +29989,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30068,7 +30064,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30143,7 +30139,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30208,7 +30204,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30283,7 +30279,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32068,7 +32064,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32153,7 +32149,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32228,7 +32224,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32309,7 +32305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32394,7 +32390,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32469,7 +32465,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 1, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34891,7 +34887,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -35540,7 +35536,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             toTimePointer(time.Date(2026, 9, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:             shared_api.NewSunset(2026, 9, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

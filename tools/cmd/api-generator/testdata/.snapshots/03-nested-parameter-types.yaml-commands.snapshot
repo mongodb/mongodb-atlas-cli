@@ -24,9 +24,6 @@ import (
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
-func toTimePointer(t time.Time) *time.Time {
-	return &t
-}
 
 var Commands = shared_api.GroupedAndSortedCommands{
 	{

@@ -17,6 +17,7 @@ package main
 import (
 	"testing"
 
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
@@ -76,5 +77,100 @@ func TestExtractVersionAndContentType(t *testing.T) {
 				t.Errorf("Expected: %s Got: %s,", tt.wantContentType, gotContentType)
 			}
 		})
+	}
+}
+
+func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
+	// Create test parameters with different 'in' locations
+	parameters := openapi3.Parameters{
+		{
+			Value: &openapi3.Parameter{
+				Name:     "queryParam",
+				In:       "query",
+				Required: false,
+				Schema: &openapi3.SchemaRef{
+					Value: &openapi3.Schema{
+						Type: &openapi3.Types{"string"},
+					},
+				},
+			},
+		},
+		{
+			Value: &openapi3.Parameter{
+				Name:     "pathParam",
+				In:       "path",
+				Required: true,
+				Schema: &openapi3.SchemaRef{
+					Value: &openapi3.Schema{
+						Type: &openapi3.Types{"string"},
+					},
+				},
+			},
+		},
+		{
+			Value: &openapi3.Parameter{
+				Name:     "headerParam",
+				In:       "header",
+				Required: false,
+				Schema: &openapi3.SchemaRef{
+					Value: &openapi3.Schema{
+						Type: &openapi3.Types{"string"},
+					},
+				},
+			},
+		},
+		{
+			Value: &openapi3.Parameter{
+				Name:     "anotherQueryParam",
+				In:       "query",
+				Required: false,
+				Schema: &openapi3.SchemaRef{
+					Value: &openapi3.Schema{
+						Type: &openapi3.Types{"string"},
+					},
+				},
+			},
+		},
+	}
+
+	result, err := extractParameters(parameters)
+	if err != nil {
+		t.Fatalf("extractParameters failed: %v", err)
+	}
+
+	// Verify query parameters are included
+	if len(result.query) != 2 {
+		t.Errorf("Expected 2 query parameters, got %d", len(result.query))
+	}
+
+	queryParamNames := make(map[string]bool)
+	for _, param := range result.query {
+		queryParamNames[param.Name] = true
+	}
+	if !queryParamNames["queryParam"] {
+		t.Error("Expected 'queryParam' to be in query parameters")
+	}
+	if !queryParamNames["anotherQueryParam"] {
+		t.Error("Expected 'anotherQueryParam' to be in query parameters")
+	}
+
+	// Verify path parameters are included
+	if len(result.url) != 1 {
+		t.Errorf("Expected 1 path parameter, got %d", len(result.url))
+	}
+	if result.url[0].Name != "pathParam" {
+		t.Errorf("Expected path parameter name 'pathParam', got '%s'", result.url[0].Name)
+	}
+
+	// Verify header parameter is NOT included (skipped)
+	for _, param := range result.query {
+		if param.Name == "headerParam" {
+			t.Error("Header parameter 'headerParam' should not be in query parameters")
+		}
+	}
+	for _, param := range result.url {
+		if param.Name == "headerParam" {
+			t.Error("Header parameter 'headerParam' should not be in URL parameters")
+		}
 	}
 }

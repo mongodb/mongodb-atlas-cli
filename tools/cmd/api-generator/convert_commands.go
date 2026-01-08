@@ -17,6 +17,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 	"regexp"
 	"sort"
 	"strconv"
@@ -364,6 +365,11 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		case "path":
 			urlParameters = append(urlParameters, apiParameter)
 			parameterNames[parameterName] = struct{}{}
+		case "header":
+			// Header parameters are typically handled automatically by the HTTP client
+			// (e.g., authentication tokens, content-type headers) and are not exposed as CLI flags
+			fmt.Fprintf(os.Stderr, "found a header parameter: %s\n", parameterName)
+			continue
 		default:
 			return parameterSet{}, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
 		}

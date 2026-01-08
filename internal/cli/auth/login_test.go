@@ -284,7 +284,7 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 		TrackAsk(gomock.Any(), opts).
 		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
 			if o, ok := answer.(*LoginOpts); ok {
-				o.Output = "json" //nolint:goconst
+				o.Output = jsonOutputFormat
 			}
 			return nil
 		})

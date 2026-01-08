@@ -1,0 +1,91 @@
+openapi: 3.0.1
+info:
+  description: |-
+    The MongoDB Atlas Administration API allows developers to manage all components in MongoDB Atlas.
+  license:
+    name: CC BY-NC-SA 3.0 US
+    url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
+  termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
+  title: MongoDB Atlas Administration API
+  version: '2.0'
+  x-xgen-sha: e4e03e44a819d3c9846972a63cc6d6acf236fbd7
+servers:
+  - url: https://cloud.mongodb.com
+security:
+  - DigestAuth: []
+tags:
+  - description: Test tag for deprecated operations
+    name: Test
+paths:
+  /api/atlas/v2/groups/{groupId}/test:
+    get:
+      deprecated: true
+      description: This is a deprecated endpoint for testing purposes.
+      operationId: getDeprecatedTest
+      parameters:
+        - $ref: '#/components/parameters/envelope'
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/pretty'
+      responses:
+        '200':
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              x-xgen-version: '2023-01-01'
+            application/vnd.atlas.2024-01-01+json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              x-xgen-version: '2024-01-01'
+          description: OK
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+      summary: Get Deprecated Test
+      tags:
+        - Test
+components:
+  parameters:
+    envelope:
+      description: Flag that indicates whether the response body should be wrapped in an envelope.
+      in: query
+      name: envelope
+      schema:
+        default: false
+        type: boolean
+    groupId:
+      description: Unique 24-hexadecimal digit string that identifies your project.
+      in: path
+      name: groupId
+      required: true
+      schema:
+        pattern: ^([a-f0-9]{24})$
+        type: string
+    pretty:
+      description: Flag that indicates whether the response body should be in a prettyprint format.
+      in: query
+      name: pretty
+      schema:
+        default: false
+        type: boolean
+  responses:
+    unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+    internalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+

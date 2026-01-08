@@ -132,6 +132,11 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 						Deprecated: true,
 						Sunset:     nil,
 					},
+					{
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Deprecated: false,
+						Sunset:     nil,
+					},
 				},
 			},
 			version:     "2023-01-01",
@@ -194,6 +199,29 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 			version:     "invalid-version",
 			shouldPrint: false,
 		},
+		{
+			name: "version not deprecated and no sunset date",
+			apiCommand: api.Command{
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewStableVersion(2023, 1, 1),
+					},
+				},
+			},
+			version:     "2023-01-01",
+			shouldPrint: false,
+		},
+		{
+			name: "all versions deprecated should not print warning",
+			apiCommand: api.Command{
+				Versions: []api.CommandVersion{
+					{Version: api.NewStableVersion(2023, 1, 1), Deprecated: true, Sunset: nil},
+					{Version: api.NewStableVersion(2024, 1, 1), Deprecated: true, Sunset: nil},
+				},
+			},
+			version:     "2023-01-01",
+			shouldPrint: false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -229,7 +257,7 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 	}
 }
 
-func TestPrintSunsetWarning(t *testing.T) {
+func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 	tests := []struct {
 		name        string
 		apiCommand  api.Command
@@ -314,6 +342,28 @@ func TestPrintSunsetWarning(t *testing.T) {
 			version:     "invalid-version",
 			shouldPrint: false,
 		},
+		{
+			name: "all versions with sunset date should not print warning",
+			apiCommand: api.Command{
+				Versions: []api.CommandVersion{
+					{Version: api.NewStableVersion(2023, 1, 1), Deprecated: true, Sunset: nil},
+					{Version: api.NewStableVersion(2024, 1, 1), Deprecated: true, Sunset: nil},
+				},
+			},
+			version:     "2023-01-01",
+			shouldPrint: false,
+		},
+		{
+			name: "all versions with sunset date and deprecated should not print warning",
+			apiCommand: api.Command{
+				Versions: []api.CommandVersion{
+					{Version: api.NewStableVersion(2023, 1, 1), Deprecated: false, Sunset: pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC))},
+					{Version: api.NewStableVersion(2024, 1, 1), Deprecated: true, Sunset: nil},
+				},
+			},
+			version:     "2023-01-01",
+			shouldPrint: false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -334,7 +384,7 @@ func TestPrintSunsetWarning(t *testing.T) {
 				outputChan <- output
 			}()
 
-			printSunsetWarning(tt.apiCommand, &tt.version)
+			printDeprecatedWarning(tt.apiCommand, &tt.version)
 
 			w.Close()
 			os.Stderr = oldStderr

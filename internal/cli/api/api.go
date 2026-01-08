@@ -150,10 +150,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// Print a warning if the version is a preview version
 			printPreviewWarning(command, &version)
 
-			// Print a warning if the version has a sunset date
-			printSunsetWarning(command, &version)
-
-			// Print a warning if the version is deprecated
+			// Print a warning if the version has a sunset date or is deprecated
 			printDeprecatedWarning(command, &version)
 
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
@@ -521,9 +518,10 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 	}
 }
 
-func printSunsetWarning(apiCommand shared_api.Command, versionString *string) {
-	// only warn if the command is not fully deprecated, assume that if all versions are deprecated,
-	// then the command will be marked as deprecated in Cobra.
+// printDeprecatedWarning prints a warning if the version is deprecated or has a sunset date.
+// only warn if the command is not fully deprecated, assume that if all versions are deprecated,
+// then the command will be marked as deprecated in Cobra.
+func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string) {
 	if allVersionsDeprecated(apiCommand) {
 		return
 	}
@@ -542,48 +540,27 @@ func printSunsetWarning(apiCommand shared_api.Command, versionString *string) {
 		}
 	}
 
-	// If the version is not found or has no sunset date, return
-	if commandVersion == nil || commandVersion.Sunset == nil {
+	// If the version is not found or is not deprecated and has no sunset date, return
+	if commandVersion == nil {
+		return
+	}
+
+	if !commandVersion.Deprecated && commandVersion.Sunset == nil {
+		return
+	}
+
+	if commandVersion.Sunset == nil {
+		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. Consider upgrading to a newer version.\n", *versionString)
 		return
 	}
 
 	sunsetDate := commandVersion.Sunset.Format("2006-01-02")
-
 	// if date is in the past, warn the user that it will not work
 	if commandVersion.Sunset.Before(time.Now()) {
 		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
 		return
 	}
 	fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and will be sunset on %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
-}
-
-func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string) {
-	version, err := shared_api.ParseVersion(*versionString)
-	if err != nil {
-		return
-	}
-
-	// Find the version in the command versions
-	var commandVersion *shared_api.CommandVersion
-	for i := range apiCommand.Versions {
-		if apiCommand.Versions[i].Version.Equal(version) {
-			commandVersion = &apiCommand.Versions[i]
-			break
-		}
-	}
-
-	// If the version is not found or is not deprecated, return
-	if commandVersion == nil || !commandVersion.Deprecated {
-		return
-	}
-
-	// If the version has a sunset date, don't show a separate deprecation warning
-	// as the sunset warning already indicates deprecation
-	if commandVersion.Sunset != nil {
-		return
-	}
-
-	fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. Consider upgrading to a newer version.\n", *versionString)
 }
 
 func needsFileFlag(apiCommand shared_api.Command) bool {

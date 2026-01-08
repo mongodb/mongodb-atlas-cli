@@ -52,7 +52,8 @@ func compareFlags(cmdPath string, mainFlags, changedFlags map[string]flagData) [
 			changes = append(changes, fmt.Errorf("%w: %s --%s", errFlagTypeChanged, cmdPath, flagName))
 		}
 
-		if flagValue.Default != changedFlagValue.Default {
+		// Ignore default value changes for the --version flag as this is allowed
+		if flagValue.Default != changedFlagValue.Default && flagName != "version" {
 			changes = append(changes, fmt.Errorf("%w: %s --%s", errFlagDefaultChanged, cmdPath, flagName))
 		}
 

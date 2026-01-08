@@ -86,9 +86,6 @@ var Commands = shared_api.GroupedAndSortedCommands{
 						{{- if .PublicPreview }}
 						PublicPreview: true,
 						{{- end}}
-						{{- if .Deprecated }}
-						Deprecated: true,
-						{{- end}}
 						RequestContentType: `{{ .RequestContentType }}`,
 						ResponseContentTypes: []string{
 						{{- range .ResponseContentTypes }}

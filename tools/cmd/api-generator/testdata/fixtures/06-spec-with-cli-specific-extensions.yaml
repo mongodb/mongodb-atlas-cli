@@ -55,10 +55,12 @@ paths:
             application/vnd.atlas.2023-01-01+json:
               schema:
                 $ref: '#/components/schemas/PaginatedLegacyClusterView'
+              x-sunset: '2025-06-01'
               x-xgen-version: '2023-01-01'
             application/vnd.atlas.2023-02-01+json:
               schema:
                 $ref: '#/components/schemas/PaginatedAdvancedClusterDescriptionView'
+              x-sunset: '2026-03-01'
               x-xgen-version: '2023-02-01'
             application/vnd.atlas.2024-08-05+json:
               schema:
@@ -251,14 +253,17 @@ paths:
             application/vnd.atlas.2023-01-01+json:
               schema:
                 $ref: '#/components/schemas/LegacyAtlasCluster'
+              x-sunset: '2025-06-01'
               x-xgen-version: '2023-01-01'
             application/vnd.atlas.2023-02-01+json:
               schema:
                 $ref: '#/components/schemas/AdvancedClusterDescription'
+              x-sunset: '2026-03-01'
               x-xgen-version: '2023-02-01'
             application/vnd.atlas.2024-08-05+json:
               schema:
                 $ref: '#/components/schemas/ClusterDescription20240805'
+              x-sunset: '2026-03-01'
               x-xgen-version: '2024-08-05'
             application/vnd.atlas.2024-10-23+json:
               schema:

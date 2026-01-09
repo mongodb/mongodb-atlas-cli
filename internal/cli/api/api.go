@@ -545,12 +545,12 @@ func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string
 		return
 	}
 
-	if !commandVersion.Deprecated && commandVersion.Sunset == nil {
+	if commandVersion.Deprecated {
+		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. Consider upgrading to a newer version.\n", *versionString)
 		return
 	}
 
 	if commandVersion.Sunset == nil {
-		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. Consider upgrading to a newer version.\n", *versionString)
 		return
 	}
 
@@ -695,7 +695,7 @@ func addDeprecationMessageIfNeeded(cmd *cobra.Command, apiCommand shared_api.Com
 	if len(apiCommand.Versions) == 1 && apiCommand.Versions[0].Sunset != nil {
 		version := apiCommand.Versions[0]
 		sunsetDate := version.Sunset.Format("2006-01-02")
-		cmd.Deprecated += fmt.Sprintf(" The API endpoint version %s will no longer be available after the sunset date of %s.", version.Version.String(), sunsetDate)
+		cmd.Deprecated += fmt.Sprintf(" The API endpoint version %s will no longer be available after the sunset date of %s.\n", version.Version.String(), sunsetDate)
 		return
 	}
 

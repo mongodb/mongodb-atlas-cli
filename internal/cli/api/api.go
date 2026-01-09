@@ -557,7 +557,7 @@ func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string
 	sunsetDate := commandVersion.Sunset.Format("2006-01-02")
 	// if date is in the past, warn the user that it will not work
 	if commandVersion.Sunset.Before(time.Now()) {
-		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
+		fmt.Fprintf(os.Stderr, "error: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
 		return
 	}
 	fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and will be sunset on %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)

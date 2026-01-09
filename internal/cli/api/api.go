@@ -151,7 +151,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			printPreviewWarning(command, &version)
 
 			// Print a warning if the version has a sunset date or is deprecated
-			printDeprecatedWarning(command, &version)
+			printDeprecatedVersionWarning(command, &version)
 
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
@@ -518,10 +518,10 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 	}
 }
 
-// printDeprecatedWarning prints a warning if the version is deprecated or has a sunset date.
+// printDeprecatedVersionWarning prints a warning if the version is deprecated or has a sunset date.
 // only warn if the command is not fully deprecated, assume that if all versions are deprecated,
 // then the command will be marked as deprecated in Cobra.
-func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string) {
+func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString *string) {
 	if allVersionsDeprecated(apiCommand) {
 		return
 	}
@@ -533,9 +533,13 @@ func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string
 
 	// Find the version in the command versions
 	var commandVersion *shared_api.CommandVersion
+	var nextCommandVersion *shared_api.CommandVersion
 	for i := range apiCommand.Versions {
 		if apiCommand.Versions[i].Version.Equal(version) {
 			commandVersion = &apiCommand.Versions[i]
+			if i < len(apiCommand.Versions)-1 && commandVersion.Version.Less(apiCommand.Versions[i+1].Version) {
+				nextCommandVersion = &apiCommand.Versions[i+1]
+			}
 			break
 		}
 	}
@@ -546,7 +550,11 @@ func printDeprecatedWarning(apiCommand shared_api.Command, versionString *string
 	}
 
 	if commandVersion.Deprecated {
-		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. Consider upgrading to a newer version.\n", *versionString)
+		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. ", *versionString)
+		if nextCommandVersion != nil {
+			fmt.Fprintf(os.Stderr, "Consider upgrading to a newer version: %s.", nextCommandVersion.Version.String())
+		}
+		fmt.Fprintf(os.Stderr, "\n")
 		return
 	}
 

@@ -141,7 +141,7 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated. Consider upgrading to a newer version.\n",
+			expectedMsg: "warning: version '2023-01-01' is deprecated. Consider upgrading to a newer version: 2024-01-01.\n",
 		},
 		{
 			name: "deprecated version with sunset (should not print separate warning)",
@@ -240,7 +240,7 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 				outputChan <- string(buf[:n])
 			}()
 
-			printDeprecatedWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
 
 			w.Close()
 			os.Stderr = oldStderr
@@ -301,7 +301,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and has already been sunset since 2020-01-15. Consider upgrading to a newer version if available.",
+			expectedMsg: "error: version '2023-01-01' is deprecated for this command and has already been sunset since 2020-01-15. Consider upgrading to a newer version if available.",
 		},
 		{
 			name: "version without sunset date",
@@ -385,7 +385,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 				outputChan <- output
 			}()
 
-			printDeprecatedWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
 
 			w.Close()
 			os.Stderr = oldStderr

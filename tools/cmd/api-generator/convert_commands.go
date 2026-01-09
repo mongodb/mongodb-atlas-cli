@@ -393,6 +393,13 @@ func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.CommandV
 		return nil, err
 	}
 
+	// If the operation is deprecated, mark all versions as deprecated
+	if operation.Deprecated {
+		for _, version := range versionsMap {
+			version.Deprecated = true
+		}
+	}
+
 	// filter sunsetted versions
 	for key, version := range versionsMap {
 		if version.Sunset != nil && now.After(*version.Sunset) {
@@ -469,6 +476,11 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		if versionsMap[versionString].Sunset == nil || sunset.Before(*versionsMap[versionString].Sunset) {
 			versionsMap[versionString].Sunset = sunset
 		}
+	}
+
+	// If a version has a sunset date, it is deprecated
+	if versionsMap[versionString].Sunset != nil {
+		versionsMap[versionString].Deprecated = true
 	}
 
 	// The default for public preview is false, override it if the extension says we're in a public preview.

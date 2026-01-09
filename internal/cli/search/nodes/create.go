@@ -97,11 +97,10 @@ func CreateBuilder() *cobra.Command {
 	opts.fs = afero.NewOsFs()
 
 	cmd := &cobra.Command{
-		Use:        "create",
-		Short:      "Create a search node for a cluster.",
-		Long:       fmt.Sprintf(usage.RequiredRole, "Organization Owner or Project Owner"),
-		Args:       require.NoArgs,
-		Deprecated: "this command is deprecated.",
+		Use:   "create",
+		Short: "Create a search node for a cluster.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Organization Owner or Project Owner"),
+		Args:  require.NoArgs,
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},

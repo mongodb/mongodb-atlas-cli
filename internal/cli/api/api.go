@@ -533,14 +533,10 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 
 	// Find the version in the command versions
 	var commandVersion *shared_api.CommandVersion
-	var latestCommandVersion = &apiCommand.Versions[0]
 	for i := range apiCommand.Versions {
 		if apiCommand.Versions[i].Version.Equal(version) {
 			commandVersion = &apiCommand.Versions[i]
-		}
-
-		if latestCommandVersion.Version.Less(apiCommand.Versions[i].Version) && latestCommandVersion.Sunset == nil {
-			latestCommandVersion = &apiCommand.Versions[i]
+			break
 		}
 	}
 
@@ -549,10 +545,17 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 		return
 	}
 
+	// Find the latest command version
+	latestCommandVersion, err := defaultAPIVersion(apiCommand)
+	if err != nil || latestCommandVersion == commandVersion.Version.String() {
+		latestCommandVersion = ""
+	}
+
+	// Print a warning if the version is deprecated
 	if commandVersion.Deprecated {
 		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. ", *versionString)
-		if latestCommandVersion != nil {
-			fmt.Fprintf(os.Stderr, "Consider upgrading to a newer version: %s.", latestCommandVersion.Version.String())
+		if latestCommandVersion != "" {
+			fmt.Fprintf(os.Stderr, "Consider upgrading to a newer version: %s.", latestCommandVersion)
 		}
 		fmt.Fprintf(os.Stderr, "\n")
 		return

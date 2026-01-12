@@ -545,13 +545,25 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 		return
 	}
 
+	// Print a warning or error if the version has a sunset date
+	if commandVersion.Sunset != nil {
+		sunsetDate := commandVersion.Sunset.Format("2006-01-02")
+		// if date is in the past, warn the user that it will not work
+		if commandVersion.Sunset.Before(time.Now()) {
+			fmt.Fprintf(os.Stderr, "error: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
+			return
+		}
+		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and will be sunset on %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
+		return
+	}
+
 	// Find the latest command version
 	latestCommandVersion, err := defaultAPIVersion(apiCommand)
 	if err != nil || latestCommandVersion == commandVersion.Version.String() {
 		latestCommandVersion = ""
 	}
 
-	// Print a warning if the version is deprecated
+	// Print a warning if the version is deprecated but is not sunset
 	if commandVersion.Deprecated {
 		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. ", *versionString)
 		if latestCommandVersion != "" {
@@ -560,18 +572,6 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 		fmt.Fprintf(os.Stderr, "\n")
 		return
 	}
-
-	if commandVersion.Sunset == nil {
-		return
-	}
-
-	sunsetDate := commandVersion.Sunset.Format("2006-01-02")
-	// if date is in the past, warn the user that it will not work
-	if commandVersion.Sunset.Before(time.Now()) {
-		fmt.Fprintf(os.Stderr, "error: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
-		return
-	}
-	fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and will be sunset on %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
 }
 
 func needsFileFlag(apiCommand shared_api.Command) bool {

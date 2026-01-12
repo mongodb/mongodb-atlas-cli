@@ -270,8 +270,9 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			apiCommand: api.Command{
 				Versions: []api.CommandVersion{
 					{
-						Version: api.NewStableVersion(2023, 1, 1),
-						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Deprecated: true,
 					},
 					{
 						Version:    api.NewStableVersion(2024, 1, 1),
@@ -289,8 +290,9 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			apiCommand: api.Command{
 				Versions: []api.CommandVersion{
 					{
-						Version: api.NewStableVersion(2023, 1, 1),
-						Sunset:  pointer.Get(time.Date(2020, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Sunset:     pointer.Get(time.Date(2020, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Deprecated: true,
 					},
 					{
 						Version:    api.NewStableVersion(2024, 1, 1),
@@ -321,8 +323,9 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			apiCommand: api.Command{
 				Versions: []api.CommandVersion{
 					{
-						Version: api.NewStableVersion(2024, 1, 1),
-						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Version:    api.NewStableVersion(2024, 1, 1),
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Deprecated: true,
 					},
 				},
 			},
@@ -334,8 +337,9 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			apiCommand: api.Command{
 				Versions: []api.CommandVersion{
 					{
-						Version: api.NewStableVersion(2023, 1, 1),
-						Sunset:  pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Version:    api.NewStableVersion(2023, 1, 1),
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Deprecated: true,
 					},
 				},
 			},
@@ -357,7 +361,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			name: "all versions with sunset date and deprecated should not print warning",
 			apiCommand: api.Command{
 				Versions: []api.CommandVersion{
-					{Version: api.NewStableVersion(2023, 1, 1), Deprecated: false, Sunset: pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC))},
+					{Version: api.NewStableVersion(2023, 1, 1), Deprecated: true, Sunset: pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC))},
 					{Version: api.NewStableVersion(2024, 1, 1), Deprecated: true, Sunset: nil},
 				},
 			},

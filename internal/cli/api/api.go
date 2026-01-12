@@ -533,7 +533,7 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 
 	// Find the version in the command versions
 	var commandVersion *shared_api.CommandVersion
-	var latestCommandVersion *shared_api.CommandVersion = &apiCommand.Versions[0]
+	var latestCommandVersion = &apiCommand.Versions[0]
 	for i := range apiCommand.Versions {
 		if apiCommand.Versions[i].Version.Equal(version) {
 			commandVersion = &apiCommand.Versions[i]

@@ -150,6 +150,9 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// Print a warning if the version is a preview version
 			printPreviewWarning(command, &version)
 
+			// Print a warning if the version has a sunset date or is deprecated
+			printDeprecatedVersionWarning(command, &version)
+
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
 			if err != nil {
@@ -276,6 +279,9 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			return nil
 		},
 	}
+
+	// Add deprecation message if all versions are sunset
+	addDeprecationMessageIfNeeded(cmd, command)
 
 	// Common flags
 	addWatchFlagIfNeeded(cmd, command, &watch, &watchTimeout)
@@ -512,6 +518,62 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 	}
 }
 
+// printDeprecatedVersionWarning prints a warning if the version is deprecated or has a sunset date.
+// only warn if the command is not fully deprecated, assume that if all versions are deprecated,
+// then the command will be marked as deprecated in Cobra.
+func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString *string) {
+	if allVersionsDeprecated(apiCommand) {
+		return
+	}
+
+	version, err := shared_api.ParseVersion(*versionString)
+	if err != nil {
+		return
+	}
+
+	// Find the version in the command versions
+	var commandVersion *shared_api.CommandVersion
+	for i := range apiCommand.Versions {
+		if apiCommand.Versions[i].Version.Equal(version) {
+			commandVersion = &apiCommand.Versions[i]
+			break
+		}
+	}
+
+	// If the version is not found or is not deprecated and has no sunset date, return
+	if commandVersion == nil {
+		return
+	}
+
+	// Find the latest command version
+	latestCommandVersion, err := defaultAPIVersion(apiCommand)
+	if err != nil || latestCommandVersion == commandVersion.Version.String() {
+		latestCommandVersion = ""
+	}
+
+	// Print a warning if the version is deprecated
+	if commandVersion.Deprecated {
+		fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated. ", *versionString)
+		if latestCommandVersion != "" {
+			fmt.Fprintf(os.Stderr, "Consider upgrading to a newer version: %s.", latestCommandVersion)
+		}
+		fmt.Fprintf(os.Stderr, "\n")
+		return
+	}
+
+	if commandVersion.Sunset == nil {
+		return
+	}
+
+	sunsetDate := commandVersion.Sunset.Format("2006-01-02")
+	// if date is in the past, warn the user that it will not work
+	if commandVersion.Sunset.Before(time.Now()) {
+		fmt.Fprintf(os.Stderr, "error: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
+		return
+	}
+	fmt.Fprintf(os.Stderr, "warning: version '%s' is deprecated for this command and will be sunset on %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
+}
+
 func needsFileFlag(apiCommand shared_api.Command) bool {
 	for _, version := range apiCommand.Versions {
 		if version.RequestContentType != "" {
@@ -629,4 +691,44 @@ func getOutputWriteCloser(outputFile string) (io.WriteCloser, error) {
 
 	// Return stdout by default
 	return os.Stdout, nil
+}
+
+// addDeprecationMessageIfNeeded adds a deprecation message to the command if the command is deprecated.
+func addDeprecationMessageIfNeeded(cmd *cobra.Command, apiCommand shared_api.Command) {
+	allVersionsAreDeprecated := allVersionsDeprecated(apiCommand)
+	// if the command is not fully deprecated, then we don't need to add a deprecation message, there will be a warning for each version.
+	if !allVersionsAreDeprecated {
+		return
+	}
+
+	cmd.Deprecated = "all of the available endpoint versions have been deprecated."
+
+	if len(apiCommand.Versions) == 1 && apiCommand.Versions[0].Sunset != nil {
+		version := apiCommand.Versions[0]
+		sunsetDate := version.Sunset.Format("2006-01-02")
+		cmd.Deprecated += fmt.Sprintf(" The API endpoint version %s will no longer be available after the sunset date of %s.\n", version.Version.String(), sunsetDate)
+		return
+	}
+
+	for _, version := range apiCommand.Versions {
+		if version.Sunset != nil {
+			sunsetDate := version.Sunset.Format("2006-01-02")
+			cmd.Deprecated += fmt.Sprintf(" The API endpoint version %s will no longer be available after the sunset date of %s.", version.Version.String(), sunsetDate)
+			break
+		}
+	}
+
+	cmd.Deprecated += "\n"
+}
+
+// allVersionsDeprecated checks if all the versions are deprecated.
+// we classify the command as deprecated if all the versions have a sunset date or all the versions are deprecated.
+func allVersionsDeprecated(apiCommand shared_api.Command) bool {
+	for _, version := range apiCommand.Versions {
+		if version.Sunset == nil && !version.Deprecated {
+			return false
+		}
+	}
+
+	return true
 }

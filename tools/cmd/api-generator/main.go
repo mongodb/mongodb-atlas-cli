@@ -180,6 +180,12 @@ func writeCommands[T any](now time.Time, w io.Writer, templateContent string, da
 
 			panic("unreachable")
 		},
+		"createSunset": func(t *time.Time) string {
+			if t == nil {
+				return "nil"
+			}
+			return fmt.Sprintf("shared_api.NewSunset(%d, %d, %d)", t.Year(), int(t.Month()), t.Day())
+		},
 	}).Parse(templateContent)
 	if err != nil {
 		return err

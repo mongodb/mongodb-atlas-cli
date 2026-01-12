@@ -16,6 +16,7 @@ package main
 
 import (
 	"testing"
+	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
@@ -174,5 +175,56 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 		if param.Name == headerParam {
 			t.Error("Header parameter 'headerParam' should not be in URL parameters")
 		}
+	}
+}
+
+func TestAddContentTypeToVersion_DeprecatedWithSunset(t *testing.T) {
+	versionsMap := make(map[string]*api.CommandVersion)
+	sunsetDate := time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)
+
+	extensions := map[string]any{
+		"x-sunset": "2026-01-15",
+	}
+
+	err := addContentTypeToVersion("application/vnd.atlas.2023-01-01+json", versionsMap, extensions, false)
+	if err != nil {
+		t.Fatalf("addContentTypeToVersion() error = %v", err)
+	}
+
+	versionString := api.NewStableVersion(2023, 1, 1).String()
+	version, ok := versionsMap[versionString]
+	if !ok {
+		t.Fatalf("Expected version %s to be in versionsMap", versionString)
+	}
+
+	if version.Sunset == nil {
+		t.Error("Expected sunset date to be set")
+	} else if !version.Sunset.Equal(sunsetDate) {
+		t.Errorf("Expected sunset date %v, got %v", sunsetDate, version.Sunset)
+	}
+
+	if !version.Deprecated {
+		t.Error("Expected version to be deprecated when it has a sunset date")
+	}
+}
+
+func TestAddContentTypeToVersion_NotDeprecated(t *testing.T) {
+	versionsMap := make(map[string]*api.CommandVersion)
+
+	extensions := map[string]any{}
+
+	err := addContentTypeToVersion("application/vnd.atlas.2023-01-01+json", versionsMap, extensions, false)
+	if err != nil {
+		t.Fatalf("addContentTypeToVersion() error = %v", err)
+	}
+
+	versionString := api.NewStableVersion(2023, 1, 1).String()
+	version, ok := versionsMap[versionString]
+	if !ok {
+		t.Fatalf("Expected version %s to be in versionsMap", versionString)
+	}
+
+	if version.Deprecated {
+		t.Error("Expected version not to be deprecated when no deprecation indicators are present")
 	}
 }

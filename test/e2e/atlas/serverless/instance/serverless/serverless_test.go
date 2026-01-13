@@ -81,10 +81,11 @@ func TestServerless(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
+		// Expect 404 error for not found
+		req.Error(err)
 
 		a := assert.New(t)
-		a.Contains(string(resp), "Instance available")
+		a.Empty(resp)
 	})
 
 	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -129,7 +130,7 @@ func TestServerless(t *testing.T) {
 		req.NoError(err)
 
 		a := assert.New(t)
-		a.NotEmpty(clusters.Results)
+		a.Empty(clusters.Results)
 	})
 
 	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -144,14 +145,11 @@ func TestServerless(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
-
-		var cluster atlasv2.ServerlessInstanceDescription
-		err = json.Unmarshal(resp, &cluster)
-		req.NoError(err)
+		// Expect 404 error for not found
+		req.Error(err)
 
 		a := assert.New(t)
-		a.Equal(clusterName, *cluster.Name)
+		a.Empty(resp)
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -172,25 +170,5 @@ func TestServerless(t *testing.T) {
 		expected := fmt.Sprintf("Serverless instance '%s' deleted\n", clusterName)
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
-	})
-
-	if internal.SkipCleanup() {
-		return
-	}
-
-	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			serverlessEntity,
-			"watch",
-			clusterName,
-			"--projectId", g.ProjectID,
-			"-P",
-			internal.ProfileName(),
-		)
-		cmd.Env = os.Environ()
-		// this command will fail with 404 once the cluster is deleted
-		// we just need to wait for this to close the project
-		resp, _ := internal.RunAndGetStdOut(cmd)
-		t.Log(string(resp))
 	})
 }

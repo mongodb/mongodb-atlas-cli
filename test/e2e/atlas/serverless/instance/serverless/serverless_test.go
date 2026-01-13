@@ -83,9 +83,7 @@ func TestServerless(t *testing.T) {
 		resp, err := internal.RunAndGetStdOut(cmd)
 		// Expect 404 error for not found
 		req.Error(err)
-
-		a := assert.New(t)
-		a.Empty(resp)
+		assert.Empty(t, resp)
 	})
 
 	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -147,9 +145,7 @@ func TestServerless(t *testing.T) {
 		resp, err := internal.RunAndGetStdOut(cmd)
 		// Expect 404 error for not found
 		req.Error(err)
-
-		a := assert.New(t)
-		a.Empty(resp)
+		assert.Empty(t, resp)
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

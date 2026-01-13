@@ -12,7 +12,7 @@ package connection
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312012/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 	"go.uber.org/mock/gomock"
 )
 

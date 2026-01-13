@@ -18,7 +18,7 @@ import (
 	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamWorkspacesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {

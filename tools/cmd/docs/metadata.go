@@ -1709,6 +1709,33 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupStandbyLink`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether to wrap the response in an envelope.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project containing the clusters.`,
+			},
+		},
+		Examples: nil,
+	},
+	`createGroupStandbyLinkFailover`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether to wrap the response in an envelope.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`standbyLinkId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the standby link.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupStreamConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -3384,6 +3411,21 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteGroupStandbyLink`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether to wrap the response in an envelope.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`standbyLinkId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the standby link.`,
+			},
+		},
+		Examples: nil,
+	},
 	`deleteGroupStreamConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionName`: {
@@ -3405,7 +3447,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2023-02-01`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7106,6 +7148,39 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupStandbyLink`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether to wrap the response in an envelope.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`standbyLinkId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the standby link.`,
+			},
+		},
+		Examples: nil,
+	},
+	`getGroupStandbyLinkFailover`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether to wrap the response in an envelope.`,
+			},
+			`failoverId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the failover operation.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`standbyLinkId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the standby link.`,
+			},
+		},
+		Examples: nil,
+	},
 	`getGroupStreamAccountDetails`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`cloudProvider`: {
@@ -7154,7 +7229,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2023-02-01`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -10561,6 +10636,51 @@ var metadata = metadatatypes.Metadata{
 			},
 			},
 		},
+	},
+	`listGroupStandbyLinkFailovers`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`standbyLinkId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the standby link.`,
+			},
+		},
+		Examples: nil,
+	},
+	`listGroupStandbyLinks`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the project.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
 	},
 	`listGroupStreamActiveVpcPeeringConnections`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

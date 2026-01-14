@@ -53,7 +53,6 @@ jobs:
           - atlas/processes
           - atlas/search
           - atlas/search_nodes
-          - atlas/serverless/instance
           - atlas/streams
           - atlas/streams_with_cluster
           - atlas/clusters/iss

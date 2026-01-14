@@ -675,18 +675,6 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
-  - name: atlas_serverless_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/serverless/instance/...
   - name: atlas_service_account_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true

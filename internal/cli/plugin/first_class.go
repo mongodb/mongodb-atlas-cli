@@ -54,6 +54,19 @@ var FirstClassPlugins = []*FirstClassPlugin{
 			},
 		},
 	},
+	{
+		Name: "atlas-local-plugin",
+		Github: &Github{
+			Owner: "mongodb",
+			Name:  "atlas-local-cli",
+		},
+		Commands: []*Command{
+			{
+				Name:        "local",
+				Description: "Manage MongoDB Atlas local instances",
+			},
+		},
+	},
 }
 
 type Command struct {

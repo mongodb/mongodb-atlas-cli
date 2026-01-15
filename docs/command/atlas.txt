@@ -71,6 +71,7 @@ Related Commands
 * :ref:`atlas-integrations` - Configure third-party integrations for your Atlas project.
 * :ref:`atlas-kubernetes` - Manage Kubernetes resources.
 * :ref:`atlas-liveMigrations` - Manage a Live Migration to Atlas for your organization.
+* :ref:`atlas-local` - Manage MongoDB Atlas local instances
 * :ref:`atlas-logs` - Download host logs for your project.
 * :ref:`atlas-maintenanceWindows` - Manage Atlas maintenance windows.
 * :ref:`atlas-metrics` - Get metrics on the MongoDB process.
@@ -112,6 +113,7 @@ Related Commands
    integrations </command/atlas-integrations>
    kubernetes </command/atlas-kubernetes>
    liveMigrations </command/atlas-liveMigrations>
+   local </command/atlas-local>
    logs </command/atlas-logs>
    maintenanceWindows </command/atlas-maintenanceWindows>
    metrics </command/atlas-metrics>

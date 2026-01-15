@@ -41,8 +41,8 @@ func (s *Store) DeleteStream(projectID, name string) error {
 	return err
 }
 
-func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
+func (s *Store) UpdateStream(projectID, name string, streamsTenantUpdateRequest *atlasv2.StreamsTenantUpdateRequest) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsTenantUpdateRequest).Execute()
 	return result, err
 }
 

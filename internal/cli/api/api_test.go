@@ -115,7 +115,9 @@ func TestSetUnTouchedFlags(t *testing.T) {
 	require.True(t, testCmd.Flag("e").Changed)
 }
 
-func TestPrintDeprecatedWarning(t *testing.T) {
+func TestPrintDeprecatedWarningWithTime(t *testing.T) {
+	testTime := time.Date(2025, time.May, 1, 0, 0, 0, 0, time.UTC)
+
 	tests := []struct {
 		name        string
 		apiCommand  api.Command
@@ -243,7 +245,7 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 				outputChan <- output
 			}()
 
-			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarningWithTime(tt.apiCommand, &tt.version, testTime)
 
 			w.Close()
 			os.Stderr = oldStderr
@@ -260,7 +262,9 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 	}
 }
 
-func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
+func TestPrintDeprecatedWarningWithTimeWithSunset(t *testing.T) {
+	testTime := time.Date(2025, time.May, 1, 0, 0, 0, 0, time.UTC)
+
 	tests := []struct {
 		name        string
 		apiCommand  api.Command
@@ -274,7 +278,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 				Versions: []api.CommandVersion{
 					{
 						Version:    api.NewStableVersion(2023, 1, 1),
-						Sunset:     pointer.Get(time.Date(2045, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)), // Future relative to testTime
 						Deprecated: true,
 					},
 					{
@@ -286,7 +290,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and will be sunset on 2045-01-15. Consider upgrading to a newer version if available.",
+			expectedMsg: "warning: version '2023-01-01' is deprecated for this command and will be sunset on 2026-01-15. Consider upgrading to a newer version if available.",
 		},
 		{
 			name: "version with past sunset date",
@@ -392,7 +396,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 				outputChan <- output
 			}()
 
-			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarningWithTime(tt.apiCommand, &tt.version, testTime)
 
 			w.Close()
 			os.Stderr = oldStderr

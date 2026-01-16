@@ -17,7 +17,7 @@ package availableregions
 import (
 	"testing"
 
-	"go.mongodb.org/atlas-sdk/v20250312011/admin"
+	"go.mongodb.org/atlas-sdk/v20250312012/admin"
 	"go.uber.org/mock/gomock"
 )
 

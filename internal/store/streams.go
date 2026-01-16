@@ -18,7 +18,7 @@ import (
 	"errors"
 	"io"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamWorkspacesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
@@ -41,8 +41,8 @@ func (s *Store) DeleteStream(projectID, name string) error {
 	return err
 }
 
-func (s *Store) UpdateStream(projectID, name string, streamsDataProcessRegion *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsDataProcessRegion).Execute()
+func (s *Store) UpdateStream(projectID, name string, streamsTenantUpdateRequest *atlasv2.StreamsTenantUpdateRequest) (*atlasv2.StreamsTenant, error) {
+	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsTenantUpdateRequest).Execute()
 	return result, err
 }
 

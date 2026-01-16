@@ -518,10 +518,16 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 	}
 }
 
-// printDeprecatedVersionWarning prints a warning if the version is deprecated or has a sunset date.
+// printDeprecatedVersionWarning is a convenience wrapper that calls printDeprecatedVersionWarningWithTime with the current time.
+func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString *string) {
+	printDeprecatedVersionWarningWithTime(apiCommand, versionString, time.Now())
+}
+
+// printDeprecatedVersionWarningWithTime prints a warning if the version is deprecated or has a sunset date.
 // only warn if the command is not fully deprecated, assume that if all versions are deprecated,
 // then the command will be marked as deprecated in Cobra.
-func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString *string) {
+// The time parameter `now` allows injection of static date for deterministic testing.
+func printDeprecatedVersionWarningWithTime(apiCommand shared_api.Command, versionString *string, now time.Time) {
 	if allVersionsDeprecated(apiCommand) {
 		return
 	}
@@ -549,7 +555,7 @@ func printDeprecatedVersionWarning(apiCommand shared_api.Command, versionString 
 	if commandVersion.Sunset != nil {
 		sunsetDate := commandVersion.Sunset.Format("2006-01-02")
 		// if date is in the past, warn the user that it will not work
-		if commandVersion.Sunset.Before(time.Now()) {
+		if commandVersion.Sunset.Before(now) {
 			fmt.Fprintf(os.Stderr, "error: version '%s' is deprecated for this command and has already been sunset since %s. Consider upgrading to a newer version if available.\n", *versionString, sunsetDate)
 			return
 		}

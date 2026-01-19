@@ -222,6 +222,50 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 	}
 }
 
+func TestSetupOpts_LocalDev_UnhappyPath_DiskSpaceError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+	buf := new(bytes.Buffer)
+
+	opts := &SetupOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+		OutputOpts: cli.OutputOpts{
+			OutWriter: buf,
+		},
+		force: true,
+	}
+
+	// Container engine is fine
+	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
+	// Image gets pulled successfully
+	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)
+
+	// No local dev container exists yet
+	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{}, nil).Times(1)
+
+	// Image health check succeeds
+	deploymentTest.MockContainerEngine.EXPECT().ImageHealthCheck(ctx, dockerImageName).Return(&container.ImageHealthCheck{
+		Test: []string{"/bin/some-path"},
+	}, nil).Times(1)
+
+	// Container run fails with disk space error
+	deploymentTest.MockContainerEngine.EXPECT().ContainerRun(ctx, gomock.Any(), gomock.Any()).Return("", errors.New("docker: no space left on device")).Times(1)
+
+	// Container is removed on failure
+	deploymentTest.MockContainerEngine.EXPECT().ContainerRm(ctx, deploymentName).Return(nil).Times(1)
+
+	// Verify that the run fails with disk space error
+	err := opts.Run(ctx)
+	require.Error(t, err, "Expected error due to disk space issue during container run")
+	// The error should be wrapped but contain disk space information
+	assert.Contains(t, err.Error(), "insufficient disk space", "Error message should mention disk space")
+}
+
 // Happy path, image is already downloaded. Containers exist.
 func TestSetupOpts_LocalDev_HappyPathEverythingAlreadyExists(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -392,6 +436,7 @@ func TestSetupOpts_downloadImage_HappyPath(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
+	// Image gets pulled successfully
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(nil).
@@ -411,13 +456,13 @@ func TestSetupOpts_downloadImage_ErrorPulling_ImageExists(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
-	// Mock image pull failure with network error
+	// Image fails to pull
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(errors.New("network timeout")).
 		Times(1)
 
-	// Mock existing image found
+	// Image exists locally
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImageList(ctx, dockerImageName).
 		Return([]container.Image{{ID: dockerImageName}}, nil).
@@ -438,13 +483,13 @@ func TestSetupOpts_downloadImage_FailedToDownloadImageError(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
-	// Mock image pull failure with network error
+	// Image fails to pull
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(errors.New("network timeout")).
 		Times(1)
 
-	// Mock no existing image found
+	// Image does not exist locally
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImageList(ctx, dockerImageName).
 		Return([]container.Image{}, nil).
@@ -465,7 +510,7 @@ func TestSetupOpts_downloadImage_DiskSpaceError(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
-	// Mock image pull failure with disk space error
+	// Image pull fails with disk space error
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(errors.New("no space left on device")).
@@ -474,83 +519,4 @@ func TestSetupOpts_downloadImage_DiskSpaceError(t *testing.T) {
 	// Should return errInsufficientDiskSpace directly
 	err := opts.downloadImage(ctx, 1)
 	require.ErrorIs(t, err, errInsufficientDiskSpace, "Expected errInsufficientDiskSpace for disk space error")
-}
-
-func TestSetupOpts_LocalDev_DiskSpaceError_During_ImagePull(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	ctx := t.Context()
-	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	buf := new(bytes.Buffer)
-
-	opts := &SetupOpts{
-		DeploymentOpts: *deploymentTest.Opts,
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
-		},
-		force: true,
-	}
-
-	// Container engine is fine
-	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
-
-	// Verify version should always succeed
-	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
-
-	// No local dev container exists yet
-	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{}, nil).Times(1)
-
-	// Image pull fails with disk space error
-	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("write /var/lib/docker: no space left on device")).Times(1)
-
-	// Container is removed on failure
-	deploymentTest.MockContainerEngine.EXPECT().ContainerRm(ctx, deploymentName).Return(nil).Times(1)
-
-	// Verify that the run fails with disk space error
-	err := opts.Run(ctx)
-	require.Error(t, err, "Expected error due to disk space issue")
-	assert.ErrorIs(t, err, errInsufficientDiskSpace, "Expected errInsufficientDiskSpace")
-}
-
-func TestSetupOpts_LocalDev_DiskSpaceError_During_ContainerRun(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	ctx := t.Context()
-	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	buf := new(bytes.Buffer)
-
-	opts := &SetupOpts{
-		DeploymentOpts: *deploymentTest.Opts,
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
-		},
-		force: true,
-	}
-
-	// Container engine is fine
-	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
-
-	// Verify version should always succeed
-	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
-
-	// Image gets pulled successfully
-	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)
-
-	// No local dev container exists yet
-	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{}, nil).Times(1)
-
-	// Image health check succeeds
-	deploymentTest.MockContainerEngine.EXPECT().ImageHealthCheck(ctx, dockerImageName).Return(&container.ImageHealthCheck{
-		Test: []string{"/bin/some-path"},
-	}, nil).Times(1)
-
-	// Container run fails with disk space error
-	deploymentTest.MockContainerEngine.EXPECT().ContainerRun(ctx, gomock.Any(), gomock.Any()).Return("", errors.New("docker: no space left on device")).Times(1)
-
-	// Container is removed on failure
-	deploymentTest.MockContainerEngine.EXPECT().ContainerRm(ctx, deploymentName).Return(nil).Times(1)
-
-	// Verify that the run fails with disk space error
-	err := opts.Run(ctx)
-	require.Error(t, err, "Expected error due to disk space issue during container run")
-	// The error should be wrapped but contain disk space information
-	assert.Contains(t, err.Error(), "insufficient disk space", "Error message should mention disk space")
 }

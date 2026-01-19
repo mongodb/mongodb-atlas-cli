@@ -2,8 +2,12 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.24.2
 
-// Security fix for VULN-1046: Update yaml.v3 v3.0.0-20200313102051-9f266ea9e77c to v3.0.1
-replace gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c => gopkg.in/yaml.v3 v3.0.1
+replace (
+	// Security fix for VULN-1042: Update golang.org/x/text v0.3.0 to v0.33.0
+	golang.org/x/text v0.3.0 => golang.org/x/text v0.33.0
+	// Security fix for VULN-1046: Update yaml.v3 v3.0.0-20200313102051-9f266ea9e77c to v3.0.1
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c => gopkg.in/yaml.v3 v3.0.1
+)
 
 require (
 	cloud.google.com/go/kms v1.23.2

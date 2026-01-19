@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 929
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 19 Jan 2026 03:05:13 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1194
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 59
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupIntegrationsResource::getIntegrations
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=74057ef6f023469d6cfcad624b16002606d4dbac; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/696d9f50be62a6a451c8e97e/integrations?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"id":"696d9f5e3455e32b9c1dcf6d","region":"US","serviceKey":"****************************0088","type":"PAGER_DUTY"},{"apiKey":"****************************0000","customEndpoint":null,"id":"696d9f563455e32b9c1dcf28","region":"US","sendCollectionLatencyMetrics":false,"sendDatabaseMetrics":false,"sendQueryStatsMetrics":false,"sendUserProvidedResourceTags":false,"type":"DATADOG"},{"apiKey":"********************************3322","id":"696d9f5a3455e32b9c1dcf39","region":"US","type":"OPS_GENIE"},{"apiKey":"********************************1c77","id":"696d9f62be62a6a451c8eeba","routingKey":"test","type":"VICTOR_OPS"},{"id":"696d9f663455e32b9c1dd57d","secret":"**************************2125","url":"https://example.com/****","type":"WEBHOOK"}],"totalCount":5}

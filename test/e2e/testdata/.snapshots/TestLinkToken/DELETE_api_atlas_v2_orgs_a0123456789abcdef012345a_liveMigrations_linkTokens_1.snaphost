@@ -1,7 +1,9 @@
 HTTP/2.0 404 Not Found
 Content-Length: 137
 Content-Type: application/json
-Date: Wed, 14 Jan 2026 15:26:42 GMT
+Date: Mon, 19 Jan 2026 03:01:10 GMT
+Ratelimit-Limit: 500
+Ratelimit-Remaining: 499
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
@@ -10,7 +12,7 @@ X-Envoy-Upstream-Service-Time: 42
 X-Frame-Options: DENY
 X-Java-Method: ApiLiveMigrationsLinkTokensResource::deleteOrgLink
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=5343e3721ae93b0de81ff99efef83982d911b2f1; versionString=master
+X-Mongodb-Service-Version: gitHash=74057ef6f023469d6cfcad624b16002606d4dbac; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"detail":"Could not find the requested external organization link.","error":404,"errorCode":null,"parameters":null,"reason":"Not Found"}

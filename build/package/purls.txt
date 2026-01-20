@@ -103,7 +103,7 @@ pkg:golang/github.com/yusufpapurcu/wmi@v1.2.4
 pkg:golang/github.com/zalando/go-keyring@v0.2.6
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
-pkg:golang/go.mongodb.org/atlas-sdk/v20250312012@v20250312012.0.0
+pkg:golang/go.mongodb.org/atlas-sdk/v20250312012@v20250312012.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
 pkg:golang/go.mongodb.org/mongo-driver@v1.17.6
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1

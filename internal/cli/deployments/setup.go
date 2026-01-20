@@ -95,6 +95,7 @@ var (
 	errConfigContainer         = errors.New("container configuration failed")
 	errRunContainer            = errors.New("container run failed")
 	errListContainer           = errors.New("listing containers failed")
+	errInsufficientDiskSpace   = errors.New("insufficient disk space on docker")
 	settingOptions             = []string{defaultSettings, customSettings, cancelSettings}
 	settingsDescription        = map[string]string{
 		defaultSettings: "With default settings",
@@ -139,7 +140,7 @@ func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps in
 	opts.start()
 }
 
-func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int, steps int) error {
+func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int) error {
 	opts.logStepStarted("Downloading the latest MongoDB image to your local environment...", currentStep, steps)
 	defer opts.stop()
 
@@ -147,14 +148,31 @@ func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int, steps
 	if err == nil {
 		return nil
 	}
-
+	_, _ = log.Debugf("Error encountered while pulling image '%s': %s\n", opts.MongodDockerImageName(), err.Error())
+	if opts.isDiskSpaceError(err) {
+		return errInsufficientDiskSpace
+	}
+	_, _ = log.Debugf("Checking if image exists locally\n")
 	// In case we already have an image present and the download fails, we can continue with the existing image
 	images, _ := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
 	if len(images) != 0 {
+		_, _ = log.Debugf("Image '%s' exists locally, continuing with the existing image\n", opts.MongodDockerImageName())
 		return nil
 	}
+	_, _ = log.Debugf("Failed to find image '%s' locally\n", opts.MongodDockerImageName())
 
 	return errFailedToDownloadImage
+}
+
+// isDiskSpaceError detects if error is disk space related failure.
+func (*SetupOpts) isDiskSpaceError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errMsg := strings.ToLower(err.Error())
+
+	return strings.Contains(errMsg, "no space left on device")
 }
 
 func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, steps int) error {
@@ -186,7 +204,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	currentStep++
 
 	// always download the latest image
-	if err := opts.downloadImage(ctx, currentStep, steps); err != nil {
+	if err := opts.downloadImage(ctx, currentStep); err != nil {
 		return fmt.Errorf("%w: %w", errDownloadImage, err)
 	}
 	currentStep++
@@ -257,6 +275,10 @@ func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 
 	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 	if err != nil {
+		_, _ = log.Debugf("Error encountered while trying to run container '%s': %s\n", opts.LocalMongodHostname(), err.Error())
+		if opts.isDiskSpaceError(err) {
+			return fmt.Errorf("%w: %w", errRunContainer, errInsufficientDiskSpace)
+		}
 		return fmt.Errorf("%w: %w", errRunContainer, err)
 	}
 

@@ -148,7 +148,7 @@ func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int) error
 	if err == nil {
 		return nil
 	}
-	_, _ = log.Debugf("Error encouter while pulling image '%s': %s\n", opts.MongodDockerImageName(), err.Error())
+	_, _ = log.Debugf("Error encountered while pulling image '%s': %s\n", opts.MongodDockerImageName(), err.Error())
 	if opts.isDiskSpaceError(err) {
 		return errInsufficientDiskSpace
 	}

@@ -5,6 +5,8 @@ go 1.24.2
 replace (
 	// Security fix for VULN-1042: Update golang.org/x/text v0.3.0 to v0.33.0
 	golang.org/x/text v0.3.0 => golang.org/x/text v0.33.0
+	// Security fix for VULN-1044: Update protobuf v1.22.0 to v1.33.0
+	google.golang.org/protobuf v1.22.0 => google.golang.org/protobuf v1.33.0
 	// Security fix for VULN-1046: Update yaml.v3 v3.0.0-20200313102051-9f266ea9e77c to v3.0.1
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c => gopkg.in/yaml.v3 v3.0.1
 )
@@ -71,15 +73,16 @@ require (
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/addlicense v1.1.1 // indirect
-	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect
+	github.com/google/go-licenses/v2 v2.0.1 // indirect
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/mongodb-forks/digest v1.1.0 // indirect
-	github.com/otiai10/copy v1.10.0 // indirect
-	github.com/sergi/go-diff v1.3.1 // indirect
+	github.com/otiai10/copy v1.14.1 // indirect
+	github.com/otiai10/mint v1.6.3 // indirect
+	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/woodsbury/decimal128 v1.3.0 // indirect
 	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -87,7 +90,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	google.golang.org/grpc v1.78.0 // indirect
-	k8s.io/klog/v2 v2.90.1 // indirect
+	k8s.io/klog/v2 v2.130.1 // indirect
 )
 
 require (

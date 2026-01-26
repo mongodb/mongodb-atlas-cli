@@ -1,0 +1,19 @@
+HTTP/2.0 200 OK
+Content-Length: 1741
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 Jan 2026 03:15:45 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 295
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 160
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getSpecificDatabaseMeasurements
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"databaseName":"config","end":"2026-01-26T03:14:55Z","granularity":"PT30M","groupId":"6976da07674654a76205f604","hostId":"atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976da07674654a76205f604/processes/atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017/databases/config/measurements?granularity=PT30M&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6976da07674654a76205f604/processes/atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":113.5}],"name":"DATABASE_AVERAGE_OBJECT_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":9.0}],"name":"DATABASE_COLLECTION_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":227.0}],"name":"DATABASE_DATA_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":36864.0}],"name":"DATABASE_STORAGE_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":49152.0}],"name":"DATABASE_INDEX_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":12.0}],"name":"DATABASE_INDEX_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":0.0}],"name":"DATABASE_EXTENT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":2.0}],"name":"DATABASE_OBJECT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-01-26T03:14:55Z","value":0.0}],"name":"DATABASE_VIEW_COUNT","units":"SCALAR"}],"processId":"atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017","start":"2026-01-26T03:14:55Z"}

@@ -250,6 +250,12 @@ func LogsBuilder() *cobra.Command {
 		Use:     "logs",
 		Short:   "Get deployment logs.",
 		Aliases: []string{"log"},
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster logs'.
+- For Local (Docker) deployments, use 'atlas local logs'.
+`,
 		Args:    require.NoArgs,
 		GroupID: "all",
 		PreRunE: func(cmd *cobra.Command, _ []string) error {

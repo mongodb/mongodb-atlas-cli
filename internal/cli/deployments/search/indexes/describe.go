@@ -125,8 +125,14 @@ func (opts *DescribeOpts) PostRun() {
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
-		Use:     "describe [indexId]",
-		Short:   "Describe a search index for the specified deployment.",
+		Use:   "describe [indexId]",
+		Short: "Describe a search index for the specified deployment.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster search indexes describe'.
+- For Local (Docker) deployments, use 'atlas local search indexes describe'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

@@ -124,6 +124,12 @@ func DeleteBuilder() *cobra.Command {
 		Use:     "delete <indexId>",
 		Aliases: []string{"rm"},
 		Short:   "Delete the specified search index from the specified deployment.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster search indexes delete'.
+- For Local (Docker) deployments, use 'atlas local search indexes delete'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

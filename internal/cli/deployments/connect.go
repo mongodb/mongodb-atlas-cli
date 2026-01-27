@@ -60,8 +60,14 @@ func PostRun(opts *ConnectOpts) {
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
-		Use:     "connect [deploymentName]",
-		Short:   "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
+		Use:   "connect [deploymentName]",
+		Short: "Connect to a deployment that is running locally or in Atlas. If the deployment is paused, make sure to run atlas deployments start first.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster connect'.
+- For Local (Docker) deployments, use 'atlas local connect'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

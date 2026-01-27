@@ -65,7 +65,6 @@ Related Commands
 * :ref:`atlas-customDns` - Manage DNS configuration of Atlas project’s clusters deployed to AWS.
 * :ref:`atlas-dataFederation` - Data federation.
 * :ref:`atlas-dbusers` - Manage database users for your project.
-* :ref:`atlas-deployments` - Manage cloud and local deployments.
 * :ref:`atlas-events` - Manage events for your organization or project.
 * :ref:`atlas-federatedAuthentication` - Manage Atlas Federated Authentication.
 * :ref:`atlas-integrations` - Configure third-party integrations for your Atlas project.
@@ -107,7 +106,6 @@ Related Commands
    customDns </command/atlas-customDns>
    dataFederation </command/atlas-dataFederation>
    dbusers </command/atlas-dbusers>
-   deployments </command/atlas-deployments>
    events </command/atlas-events>
    federatedAuthentication </command/atlas-federatedAuthentication>
    integrations </command/atlas-integrations>

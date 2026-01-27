@@ -134,6 +134,12 @@ Deleting a Local deployment also deletes any local data volumes.
 Deleting a deployment will not remove saved connections from MongoDB for VS Code. This must be done manually. To learn more, see https://www.mongodb.com/docs/mongodb-vscode/connect/#remove-a-connection.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster delete'.
+- For Local (Docker) deployments, use 'atlas local delete'.
+`,
 		Example: `  # Remove an Atlas deployment named myDeployment after prompting for a confirmation:
   atlas deployments delete myDeployment --type ATLAS
   

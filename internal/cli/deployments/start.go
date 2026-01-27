@@ -120,9 +120,15 @@ func (opts *StartOpts) PostRun() error {
 func StartBuilder() *cobra.Command {
 	opts := &StartOpts{}
 	cmd := &cobra.Command{
-		Use:     "start <deploymentName>",
-		Short:   "Start a deployment.",
-		Long:    "After you stop a machine, it goes into sleep mode, or restarts.",
+		Use:   "start <deploymentName>",
+		Short: "Start a deployment.",
+		Long:  "After you stop a machine, it goes into sleep mode, or restarts.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster start'.
+- For Local (Docker) deployments, use 'atlas local start'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

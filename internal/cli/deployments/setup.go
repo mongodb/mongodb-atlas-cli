@@ -747,9 +747,15 @@ func SetupBuilder() *cobra.Command {
 		atlasSetup: &setup.Opts{},
 	}
 	cmd := &cobra.Command{
-		Use:     "setup [deploymentName]",
-		Short:   "Create a local deployment.",
-		Long:    "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
+		Use:   "setup [deploymentName]",
+		Short: "Create a local deployment.",
+		Long:  "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas setup'.
+- For Local (Docker) deployments, use 'atlas local setup'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

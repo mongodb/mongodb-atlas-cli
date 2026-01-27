@@ -22,8 +22,14 @@ import (
 func Builder() *cobra.Command {
 	const use = "indexes"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Manage cloud and local search indexes.",
+		Use:   use,
+		Short: "Manage cloud and local search indexes.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster search indexes'.
+- For Local (Docker) deployments, use 'atlas local search indexes'.
+`,
 		Aliases: cli.GenerateAliases(use),
 	}
 

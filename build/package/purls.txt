@@ -3,10 +3,10 @@ pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.18.0
 pkg:golang/cloud.google.com/go/compute/metadata@v0.9.0
 pkg:golang/cloud.google.com/go/iam@v1.5.3
-pkg:golang/cloud.google.com/go/kms@v1.23.2
+pkg:golang/cloud.google.com/go/kms@v1.24.0
 pkg:golang/cloud.google.com/go/longrunning@v0.7.0
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
-pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.20.0
+pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.21.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.13.1
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.11.2
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.4.0
@@ -58,13 +58,13 @@ pkg:golang/github.com/google/go-github/v61@v61.0.0
 pkg:golang/github.com/google/go-querystring@v1.1.0
 pkg:golang/github.com/google/s2a-go@v0.1.9
 pkg:golang/github.com/google/uuid@v1.6.0
-pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.7
+pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.9
 pkg:golang/github.com/googleapis/gax-go/v2@v2.16.0
 pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7
 pkg:golang/github.com/iancoleman/strcase@v0.3.0
 pkg:golang/github.com/inconshreveable/mousetrap@v1.1.0
 pkg:golang/github.com/kballard/go-shellquote@v0.0.0-20180428030007-95032a82bc51
-pkg:golang/github.com/klauspost/compress@v1.18.2
+pkg:golang/github.com/klauspost/compress@v1.18.3
 pkg:golang/github.com/klauspost/pgzip@v1.2.6
 pkg:golang/github.com/kylelemons/godebug@v1.1.0
 pkg:golang/github.com/mattn/go-colorable@v0.1.13
@@ -103,7 +103,7 @@ pkg:golang/github.com/yusufpapurcu/wmi@v1.2.4
 pkg:golang/github.com/zalando/go-keyring@v0.2.6
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
-pkg:golang/go.mongodb.org/atlas-sdk/v20250312011@v20250312011.0.0
+pkg:golang/go.mongodb.org/atlas-sdk/v20250312012@v20250312012.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
 pkg:golang/go.mongodb.org/mongo-driver@v1.17.6
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1
@@ -124,7 +124,7 @@ pkg:golang/golang.org/x/sys@v0.40.0
 pkg:golang/golang.org/x/term@v0.39.0
 pkg:golang/golang.org/x/text@v0.33.0
 pkg:golang/golang.org/x/time@v0.14.0
-pkg:golang/google.golang.org/api@v0.259.0
+pkg:golang/google.golang.org/api@v0.260.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20251202230838-ff82c1b0f217
 pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20251222181119-0a764e51fe1b
 pkg:golang/google.golang.org/genproto@v0.0.0-20251202230838-ff82c1b0f217

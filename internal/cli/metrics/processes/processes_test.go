@@ -17,7 +17,7 @@ package processes
 import (
 	"testing"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 	"go.uber.org/mock/gomock"
 )
 

@@ -12,7 +12,7 @@ package instance
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312012/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockStreamsUpdater) EXPECT() *MockStreamsUpdaterMockRecorder {
 }
 
 // UpdateStream mocks base method.
-func (m *MockStreamsUpdater) UpdateStream(arg0, arg1 string, arg2 *admin.StreamsDataProcessRegion) (*admin.StreamsTenant, error) {
+func (m *MockStreamsUpdater) UpdateStream(arg0, arg1 string, arg2 *admin.StreamsTenantUpdateRequest) (*admin.StreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateStream", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.StreamsTenant)
@@ -68,13 +68,13 @@ func (c *MockStreamsUpdaterUpdateStreamCall) Return(arg0 *admin.StreamsTenant, a
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockStreamsUpdaterUpdateStreamCall) Do(f func(string, string, *admin.StreamsDataProcessRegion) (*admin.StreamsTenant, error)) *MockStreamsUpdaterUpdateStreamCall {
+func (c *MockStreamsUpdaterUpdateStreamCall) Do(f func(string, string, *admin.StreamsTenantUpdateRequest) (*admin.StreamsTenant, error)) *MockStreamsUpdaterUpdateStreamCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockStreamsUpdaterUpdateStreamCall) DoAndReturn(f func(string, string, *admin.StreamsDataProcessRegion) (*admin.StreamsTenant, error)) *MockStreamsUpdaterUpdateStreamCall {
+func (c *MockStreamsUpdaterUpdateStreamCall) DoAndReturn(f func(string, string, *admin.StreamsTenantUpdateRequest) (*admin.StreamsTenant, error)) *MockStreamsUpdaterUpdateStreamCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

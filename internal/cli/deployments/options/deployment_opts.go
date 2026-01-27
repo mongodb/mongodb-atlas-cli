@@ -39,7 +39,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/mem"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=../test/fixture/deployment_opts_mocks.go -package=fixture . ClusterLister

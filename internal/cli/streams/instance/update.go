@@ -25,13 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312011/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=instance . StreamsUpdater
 
 type StreamsUpdater interface {
-	UpdateStream(string, string, *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error)
+	UpdateStream(string, string, *atlasv2.StreamsTenantUpdateRequest) (*atlasv2.StreamsTenant, error)
 }
 
 type UpdateOpts struct {
@@ -49,8 +49,8 @@ const (
 )
 
 func (opts *UpdateOpts) Run() error {
-	stream := opts.streams()
-	r, err := opts.store.UpdateStream(opts.ProjectID, opts.name, stream.DataProcessRegion)
+	updateRequest := opts.streamsUpdateRequest()
+	r, err := opts.store.UpdateStream(opts.ProjectID, opts.name, updateRequest)
 
 	if err != nil {
 		return err
@@ -59,22 +59,18 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) streams() *atlasv2.StreamsTenant {
-	processor := atlasv2.NewStreamsTenant()
-	processor.Name = &opts.name
-	processor.GroupId = &opts.ProjectID
-
-	processor.DataProcessRegion = atlasv2.NewStreamsDataProcessRegionWithDefaults()
+func (opts *UpdateOpts) streamsUpdateRequest() *atlasv2.StreamsTenantUpdateRequest {
+	request := atlasv2.NewStreamsTenantUpdateRequestWithDefaults()
 
 	if opts.provider != "" {
-		processor.DataProcessRegion.CloudProvider = opts.provider
+		request.CloudProvider = &opts.provider
 	}
 
 	if opts.region != "" {
-		processor.DataProcessRegion.Region = opts.region
+		request.Region = &opts.region
 	}
 
-	return processor
+	return request
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

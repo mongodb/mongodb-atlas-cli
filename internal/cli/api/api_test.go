@@ -115,7 +115,9 @@ func TestSetUnTouchedFlags(t *testing.T) {
 	require.True(t, testCmd.Flag("e").Changed)
 }
 
-func TestPrintDeprecatedWarning(t *testing.T) {
+func TestPrintDeprecatedWarningWithTime(t *testing.T) {
+	testTime := time.Date(2025, time.May, 1, 0, 0, 0, 0, time.UTC)
+
 	tests := []struct {
 		name        string
 		apiCommand  api.Command
@@ -141,7 +143,7 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 			},
 			version:     "2023-01-01",
 			shouldPrint: true,
-			expectedMsg: "warning: version '2023-01-01' is deprecated. Consider upgrading to a newer version: 2024-01-01.\n",
+			expectedMsg: "warning: version '2023-01-01' is deprecated. Consider upgrading to a newer version: 2024-01-01.",
 		},
 		{
 			name: "deprecated version with sunset (should not print separate warning)",
@@ -234,19 +236,22 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 
 			// Read output in a goroutine to avoid blocking
 			outputChan := make(chan string, 1)
+			var output string
 			go func() {
-				buf := make([]byte, 1024)
-				n, _ := r.Read(buf)
-				outputChan <- string(buf[:n])
+				var buf bytes.Buffer
+				_, err = io.Copy(&buf, r)
+				require.NoError(t, err) //nolint:testifylint // this is a test
+				output = buf.String()
+				outputChan <- output
 			}()
 
-			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarningWithTime(tt.apiCommand, &tt.version, testTime)
 
 			w.Close()
 			os.Stderr = oldStderr
 
-			// Get captured output
-			output := <-outputChan
+			// Wait for goroutine to finish
+			<-outputChan
 
 			if tt.shouldPrint {
 				require.Contains(t, output, tt.expectedMsg, "Expected deprecation warning to be printed")
@@ -257,7 +262,9 @@ func TestPrintDeprecatedWarning(t *testing.T) {
 	}
 }
 
-func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
+func TestPrintDeprecatedWarningWithTimeWithSunset(t *testing.T) {
+	testTime := time.Date(2025, time.May, 1, 0, 0, 0, 0, time.UTC)
+
 	tests := []struct {
 		name        string
 		apiCommand  api.Command
@@ -271,7 +278,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 				Versions: []api.CommandVersion{
 					{
 						Version:    api.NewStableVersion(2023, 1, 1),
-						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)),
+						Sunset:     pointer.Get(time.Date(2026, 1, 15, 0, 0, 0, 0, time.UTC)), // Future relative to testTime
 						Deprecated: true,
 					},
 					{
@@ -389,7 +396,7 @@ func TestPrintDeprecatedWarningWithSunset(t *testing.T) {
 				outputChan <- output
 			}()
 
-			printDeprecatedVersionWarning(tt.apiCommand, &tt.version)
+			printDeprecatedVersionWarningWithTime(tt.apiCommand, &tt.version, testTime)
 
 			w.Close()
 			os.Stderr = oldStderr

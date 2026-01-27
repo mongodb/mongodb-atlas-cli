@@ -384,8 +384,14 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:     "create [indexName]",
-		Short:   "Create a search index for the specified deployment.",
+		Use:   "create [indexName]",
+		Short: "Create a search index for the specified deployment.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster search indexes create'.
+- For Local (Docker) deployments, use 'atlas local search indexes create'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

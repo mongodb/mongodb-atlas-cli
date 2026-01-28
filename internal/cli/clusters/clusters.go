@@ -60,6 +60,7 @@ func Builder() *cobra.Command {
 		DescribeBuilder(),
 		advancedsettings.Builder(),
 		CreateBuilder(),
+		ConnectBuilder(),
 		WatchBuilder(),
 		UpdateBuilder(),
 		PauseBuilder(),

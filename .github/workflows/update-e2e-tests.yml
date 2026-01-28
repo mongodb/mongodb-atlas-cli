@@ -65,7 +65,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - name: Install Go
@@ -157,7 +157,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - name: Install Go
@@ -241,7 +241,7 @@ jobs:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -288,7 +288,7 @@ jobs:
     needs: update-tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
@@ -378,7 +378,7 @@ jobs:
     needs: update-tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - name: Find JIRA ticket

@@ -4474,42 +4474,6 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getGroupActivityFeed`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`clusterName`: {
-				Usage: `Human-readable label that identifies the cluster.`,
-			},
-			`eventType`: {
-				Usage: `Category of incident recorded at this moment in time.
-
-**IMPORTANT**: The complete list of event type values changes frequently.`,
-			},
-			`groupId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
-
-**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
-			},
-			`maxDate`: {
-				Usage: `End date and time for events to include in the activity feed link. ISO 8601 timestamp format in UTC.`,
-			},
-			`minDate`: {
-				Usage: `Start date and time for events to include in the activity feed link. ISO 8601 timestamp format in UTC.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2025-03-12`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`groupId`: `32b6e34b3d91647abb20e7b8`,
-				},
-			},
-			},
-		},
-	},
 	`getGroupAiModelApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
@@ -7641,37 +7605,6 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getOrgActivityFeed`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`eventType`: {
-				Usage: `Category of incident recorded at this moment in time.
-
-**IMPORTANT**: The complete list of event type values changes frequently.`,
-			},
-			`maxDate`: {
-				Usage: `End date and time for events to include in the activity feed link. ISO 8601 timestamp format in UTC.`,
-			},
-			`minDate`: {
-				Usage: `Start date and time for events to include in the activity feed link. ISO 8601 timestamp format in UTC.`,
-			},
-			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2025-03-12`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`orgId`: `4888442a3354817a7320eb61`,
-				},
-			},
-			},
-		},
-	},
 	`getOrgAiModelApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
@@ -8211,29 +8144,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`orgId`:  `4888442a3354817a7320eb61`,
 					`userId`: `[userId]`,
-				},
-			},
-			},
-		},
-	},
-	`getSku`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-			`skuId`: {
-				Usage: `Unique identifier of the SKU to retrieve.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2025-03-12`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`skuId`: `ATLAS_AWS_INSTANCE_M10`,
 				},
 			},
 			},
@@ -11804,26 +11714,6 @@ var metadata = metadatatypes.Metadata{
 			},
 			`name`: {
 				Usage: `Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.`,
-			},
-			`pageNum`: {
-				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
-			},
-		},
-		Examples: nil,
-	},
-	`listSkus`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
-			},
-			`itemsPerPage`: {
-				Usage: `Number of items that the response returns per page.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,

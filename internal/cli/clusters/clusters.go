@@ -75,6 +75,7 @@ func Builder() *cobra.Command {
 		availableregions.Builder(),
 		sampledata.Builder(),
 		GetAutoscalingConfigBuilder(),
+		LogsBuilder(),
 	)
 
 	return cmd

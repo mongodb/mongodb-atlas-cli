@@ -60,6 +60,7 @@ Related Commands
 * :ref:`atlas-clusters-failover` - Starts a failover test for the specified cluster in the specified project.
 * :ref:`atlas-clusters-indexes` - Manage cluster rolling indexes for your project.
 * :ref:`atlas-clusters-list` - Return all clusters for your project.
+* :ref:`atlas-clusters-logs` - Download a compressed file that contains the MongoDB logs for the specified host.
 * :ref:`atlas-clusters-onlineArchives` - Manage online archives for your cluster.
 * :ref:`atlas-clusters-pause` - Pause the specified running MongoDB cluster.
 * :ref:`atlas-clusters-sampleData` - Manage sample data for your cluster.
@@ -82,6 +83,7 @@ Related Commands
    failover </command/atlas-clusters-failover>
    indexes </command/atlas-clusters-indexes>
    list </command/atlas-clusters-list>
+   logs </command/atlas-clusters-logs>
    onlineArchives </command/atlas-clusters-onlineArchives>
    pause </command/atlas-clusters-pause>
    sampleData </command/atlas-clusters-sampleData>

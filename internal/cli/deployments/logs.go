@@ -253,7 +253,7 @@ func LogsBuilder() *cobra.Command {
 		Deprecated: `This command has been deprecated and will be removed in a future release.
 
 Please switch to the new command structure based on your target environment:
-- For Atlas (cloud) deployments, use 'atlas cluster logs'.
+- For Atlas (cloud) deployments, use 'atlas logs download'.
 - For Local (Docker) deployments, use 'atlas local logs'.
 `,
 		Args:    require.NoArgs,

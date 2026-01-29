@@ -41,7 +41,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
-		clusterName:          expectedAtlasCluster,
+		name:                 expectedAtlasCluster,
 		ConnectWith:          "connectionString",
 		ConnectionStringType: "standard",
 		store:                mockStore,

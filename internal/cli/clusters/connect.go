@@ -23,7 +23,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -39,22 +38,35 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
+const (
+	connectWithConnectionString = "connectionString"
+	connectWithMongosh          = "mongosh"
+	connectWithCompass          = "compass"
+	connectWithVsCode           = "vscode"
+	pausedState                 = "PAUSED"
+	stoppedState                = "STOPPED"
+	maxItemsPerPage             = 500
+	atlasDeploymentType         = "atlas"
+)
+
 var (
+	connectWithOptions                       = []string{connectWithMongosh, connectWithCompass, connectWithVsCode, connectWithConnectionString}
 	connectionStringTypeStandard             = "standard"
 	connectionStringTypePrivate              = "private"
 	connectionStringTypeOptions              = []string{connectionStringTypeStandard, connectionStringTypePrivate}
 	errConnectionStringTypeNotImplemented    = errors.New("connection string type not implemented")
-	errNetworkPeeringConnectionNotConfigured = errors.New("network peering connection is not configured for this deployment")
+	errInvalidConnectWith                    = errors.New("invalid --connectWith option")
+	errNetworkPeeringConnectionNotConfigured = errors.New("network peering connection is not configured for this cluster")
 	errConnectionError                       = errors.New("could not connect")
 	errClusterNotStarted                     = errors.New("cluster not started")
 	errNoClusters                            = errors.New("currently there are no clusters in your project")
 	errClusterRequiredOnPipe                 = errors.New("cluster name is required when piping the output of the command")
 	promptConnectionStringType               = "What type of connection string type would you like to use?"
-)
-
-const (
-	atlasDeploymentType = "atlas"
-	maxItemsPerPage     = 500
+	promptSelectCluster                      = "Select a cluster"
+	promptStartClusterConfirm                = "Cluster seems stopped, would you like to start it?"
+	promptConnectWithFormat                  = "How would you like to connect to %s?"
+	promptDBUsername                         = "Username for authenticating to MongoDB cluster"
+	promptDBUserPassword                     = "Password for authenticating to MongoDB cluster"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=clusters . ConnectClusterStore
@@ -73,22 +85,21 @@ func Run(ctx context.Context, opts *ConnectOpts) error {
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{}
 	cmd := &cobra.Command{
-		Use:     "connect [clusterName]",
-		Short:   "Connect to an Atlas cluster. If the cluster is paused, run atlas cluster start first.",
-		Args:    require.MaximumNArgs(1),
-		GroupID: "all",
+		Use:   "connect [clusterName]",
+		Short: "Connect to an Atlas cluster. If the cluster is paused, run atlas cluster start first.",
+		Args:  require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Name of the cluster that you want to connect to.",
 		},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {
-				opts.clusterName = args[0]
+				opts.name = args[0]
 			}
 			return opts.PreRunE(
-				opts.InitOutput(cmd.OutOrStdout(), ""),
-				opts.InitInput(cmd.InOrStdin()),
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
+				opts.InitOutput(cmd.OutOrStdout(), ""),
+				opts.InitInput(cmd.InOrStdin()),
 				opts.resolveClusterName(cmd.Context()),
 			)
 		},
@@ -104,8 +115,10 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, connectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return options.ConnectWithOptions, cobra.ShellCompDirectiveDefault
+		return connectWithOptions, cobra.ShellCompDirectiveDefault
 	})
+
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }
@@ -114,7 +127,7 @@ type ConnectOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	cli.InputOpts
-	clusterName          string
+	name                 string
 	ConnectWith          string
 	DBUsername           string
 	DBUserPassword       string
@@ -133,10 +146,10 @@ func (opts *ConnectOpts) initStore(ctx context.Context) func() error {
 func (opts *ConnectOpts) resolveClusterName(ctx context.Context) func() error {
 	return func() error {
 		stat, _ := os.Stdout.Stat()
-		if (stat.Mode()&os.ModeCharDevice) == 0 && opts.clusterName == "" {
+		if (stat.Mode()&os.ModeCharDevice) == 0 && opts.name == "" {
 			return errClusterRequiredOnPipe
 		}
-		if opts.clusterName != "" {
+		if opts.name != "" {
 			return nil
 		}
 		return opts.selectCluster(ctx)
@@ -157,7 +170,7 @@ func (opts *ConnectOpts) selectCluster(_ context.Context) error {
 		return errNoClusters
 	}
 	if len(results) == 1 {
-		opts.clusterName = results[0].GetName()
+		opts.name = results[0].GetName()
 		return nil
 	}
 	names := make([]string, len(results))
@@ -165,10 +178,10 @@ func (opts *ConnectOpts) selectCluster(_ context.Context) error {
 		names[i] = c.GetName()
 	}
 	return telemetry.TrackAskOne(&survey.Select{
-		Message: "Select a cluster",
+		Message: promptSelectCluster,
 		Options: names,
 		Help:    usage.ClusterName,
-	}, &opts.clusterName, survey.WithValidator(survey.Required))
+	}, &opts.name, survey.WithValidator(survey.Required))
 }
 
 func (opts *ConnectOpts) startCluster(_ context.Context) error {
@@ -179,14 +192,14 @@ func (opts *ConnectOpts) startCluster(_ context.Context) error {
 	if !ok {
 		return errClusterNotStarted
 	}
-	_, err = opts.store.StartCluster(opts.ConfigProjectID(), opts.clusterName)
+	_, err = opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	return err
 }
 
 func (*ConnectOpts) promptStartCluster() (bool, error) {
 	var result bool
 	p := &survey.Confirm{
-		Message: "Cluster seems stopped, would you like to start it?",
+		Message: promptStartClusterConfirm,
 		Default: true,
 	}
 	err := telemetry.TrackAskOne(p, &result)
@@ -194,16 +207,16 @@ func (*ConnectOpts) promptStartCluster() (bool, error) {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
+	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
 	}
 
 	stateName := r.GetStateName()
 	if r.GetPaused() {
-		stateName = options.PausedState
+		stateName = pausedState
 	}
-	if stateName == options.StoppedState || stateName == options.PausedState {
+	if stateName == stoppedState || stateName == pausedState {
 		if err := opts.startCluster(ctx); err != nil {
 			return err
 		}
@@ -225,14 +238,21 @@ func (opts *ConnectOpts) askConnectWith() error {
 			return err
 		}
 	}
-	return options.ValidateConnectWith(opts.ConnectWith)
+	return validateConnectWith(opts.ConnectWith)
+}
+
+func validateConnectWith(s string) error {
+	if !search.StringInSliceFold(connectWithOptions, s) {
+		return fmt.Errorf("%w: %s", errInvalidConnectWith, s)
+	}
+	return nil
 }
 
 func (opts *ConnectOpts) connectToCluster(connectionString string) error {
 	switch opts.ConnectWith {
-	case options.ConnectWithConnectionString:
+	case connectWithConnectionString:
 		return opts.Print(connectionString)
-	case options.CompassConnect:
+	case connectWithCompass:
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
@@ -240,32 +260,33 @@ func (opts *ConnectOpts) connectToCluster(connectionString string) error {
 			return err
 		}
 		return compass.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
-	case options.MongoshConnect:
+	case connectWithMongosh:
 		if !mongosh.Detect() {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
-	case options.VsCodeConnect:
+	case connectWithVsCode:
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}
 		if _, err := log.Warningln("Launching VsCode..."); err != nil {
 			return err
 		}
-		return vscode.SaveConnection(connectionString, opts.clusterName, atlasDeploymentType)
+		return vscode.SaveConnection(connectionString, opts.name, atlasDeploymentType)
 	}
 	return nil
 }
+
 func (opts *ConnectOpts) promptConnectWith() (string, error) {
 	p := &survey.Select{
-		Message: fmt.Sprintf("How would you like to connect to %s?", opts.clusterName),
-		Options: options.ConnectWithOptions,
+		Message: fmt.Sprintf(promptConnectWithFormat, opts.name),
+		Options: connectWithOptions,
 		Description: func(value string, _ int) string {
 			return map[string]string{
-				options.ConnectWithConnectionString: "Connection String",
-				options.ConnectWithMongosh:          "MongoDB Shell",
-				options.ConnectWithCompass:          "MongoDB Compass",
-				options.ConnectWithVsCode:           "MongoDB for VsCode",
+				connectWithConnectionString: "Connection String",
+				connectWithMongosh:          "MongoDB Shell",
+				connectWithCompass:          "MongoDB Compass",
+				connectWithVsCode:           "MongoDB for VsCode",
 			}[value]
 		},
 	}
@@ -275,7 +296,7 @@ func (opts *ConnectOpts) promptConnectWith() (string, error) {
 }
 
 func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
-	requiresAuth := opts.ConnectWith == options.MongoshConnect || opts.ConnectWith == options.CompassConnect
+	requiresAuth := opts.ConnectWith == connectWithMongosh || opts.ConnectWith == connectWithCompass
 	if requiresAuth && opts.DBUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {
 			return err
@@ -291,7 +312,7 @@ func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
 
 func (opts *ConnectOpts) promptDBUsername() error {
 	p := &survey.Input{
-		Message: "Username for authenticating to MongoDB deployment",
+		Message: promptDBUsername,
 	}
 	return telemetry.TrackAskOne(p, &opts.DBUsername)
 }
@@ -303,7 +324,7 @@ func (opts *ConnectOpts) promptDBUserPassword() error {
 	}
 
 	p := &survey.Password{
-		Message: "Password for authenticating to MongoDB deployment",
+		Message: promptDBUserPassword,
 	}
 	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
 }

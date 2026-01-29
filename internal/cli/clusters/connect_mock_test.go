@@ -81,45 +81,6 @@ func (c *MockConnectClusterStoreAtlasClusterCall) DoAndReturn(f func(string, str
 	return c
 }
 
-// StartCluster mocks base method.
-func (m *MockConnectClusterStore) StartCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartCluster", arg0, arg1)
-	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// StartCluster indicates an expected call of StartCluster.
-func (mr *MockConnectClusterStoreMockRecorder) StartCluster(arg0, arg1 any) *MockConnectClusterStoreStartClusterCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartCluster", reflect.TypeOf((*MockConnectClusterStore)(nil).StartCluster), arg0, arg1)
-	return &MockConnectClusterStoreStartClusterCall{Call: call}
-}
-
-// MockConnectClusterStoreStartClusterCall wrap *gomock.Call
-type MockConnectClusterStoreStartClusterCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockConnectClusterStoreStartClusterCall) Return(arg0 *admin.AdvancedClusterDescription, arg1 error) *MockConnectClusterStoreStartClusterCall {
-	c.Call = c.Call.Return(arg0, arg1)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockConnectClusterStoreStartClusterCall) Do(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockConnectClusterStoreStartClusterCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockConnectClusterStoreStartClusterCall) DoAndReturn(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockConnectClusterStoreStartClusterCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // LatestProjectClusters mocks base method.
 func (m *MockConnectClusterStore) LatestProjectClusters(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error) {
 	m.ctrl.T.Helper()
@@ -155,6 +116,45 @@ func (c *MockConnectClusterStoreLatestProjectClustersCall) Do(f func(string, *st
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockConnectClusterStoreLatestProjectClustersCall) DoAndReturn(f func(string, *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error)) *MockConnectClusterStoreLatestProjectClustersCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// StartCluster mocks base method.
+func (m *MockConnectClusterStore) StartCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StartCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StartCluster indicates an expected call of StartCluster.
+func (mr *MockConnectClusterStoreMockRecorder) StartCluster(arg0, arg1 any) *MockConnectClusterStoreStartClusterCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartCluster", reflect.TypeOf((*MockConnectClusterStore)(nil).StartCluster), arg0, arg1)
+	return &MockConnectClusterStoreStartClusterCall{Call: call}
+}
+
+// MockConnectClusterStoreStartClusterCall wrap *gomock.Call
+type MockConnectClusterStoreStartClusterCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConnectClusterStoreStartClusterCall) Return(arg0 *admin.AdvancedClusterDescription, arg1 error) *MockConnectClusterStoreStartClusterCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConnectClusterStoreStartClusterCall) Do(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockConnectClusterStoreStartClusterCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConnectClusterStoreStartClusterCall) DoAndReturn(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockConnectClusterStoreStartClusterCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

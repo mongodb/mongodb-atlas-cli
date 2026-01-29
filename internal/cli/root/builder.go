@@ -57,7 +57,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/security"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/serverless"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/teams"
@@ -201,7 +200,6 @@ Use the --help flag with any command for more info on that command.`,
 		maintenance.Builder(),
 		customdns.Builder(),
 		cloudproviders.Builder(),
-		serverless.Builder(),
 		streams.Builder(),
 		livemigrations.Builder(),
 		accesslogs.Builder(),

@@ -1,6 +1,6 @@
 pkg:golang/al.essio.dev/pkg/shellescape@v1.5.1
 pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
-pkg:golang/cloud.google.com/go/auth@v0.18.0
+pkg:golang/cloud.google.com/go/auth@v0.18.1
 pkg:golang/cloud.google.com/go/compute/metadata@v0.9.0
 pkg:golang/cloud.google.com/go/iam@v1.5.3
 pkg:golang/cloud.google.com/go/kms@v1.24.0
@@ -37,6 +37,7 @@ pkg:golang/github.com/bodgit/plumbing@v1.3.0
 pkg:golang/github.com/bodgit/sevenzip@v1.6.1
 pkg:golang/github.com/bodgit/windows@v1.0.1
 pkg:golang/github.com/briandowns/spinner@v1.23.2
+pkg:golang/github.com/cespare/xxhash/v2@v2.3.0
 pkg:golang/github.com/cli/go-gh/v2@v2.12.2
 pkg:golang/github.com/cli/safeexec@v1.0.0
 pkg:golang/github.com/cloudflare/circl@v1.6.1
@@ -58,7 +59,7 @@ pkg:golang/github.com/google/go-github/v61@v61.0.0
 pkg:golang/github.com/google/go-querystring@v1.1.0
 pkg:golang/github.com/google/s2a-go@v0.1.9
 pkg:golang/github.com/google/uuid@v1.6.0
-pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.9
+pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.11
 pkg:golang/github.com/googleapis/gax-go/v2@v2.16.0
 pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7
 pkg:golang/github.com/iancoleman/strcase@v0.3.0
@@ -109,9 +110,9 @@ pkg:golang/go.mongodb.org/mongo-driver@v1.17.6
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc@v0.61.0
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.61.0
-pkg:golang/go.opentelemetry.io/otel/metric@v1.38.0
-pkg:golang/go.opentelemetry.io/otel/trace@v1.38.0
-pkg:golang/go.opentelemetry.io/otel@v1.38.0
+pkg:golang/go.opentelemetry.io/otel/metric@v1.39.0
+pkg:golang/go.opentelemetry.io/otel/trace@v1.39.0
+pkg:golang/go.opentelemetry.io/otel@v1.39.0
 pkg:golang/go.uber.org/mock@v0.6.0
 pkg:golang/go.yaml.in/yaml/v3@v3.0.4
 pkg:golang/go4.org@v0.0.0-20230225012048-214862532bf5
@@ -124,9 +125,9 @@ pkg:golang/golang.org/x/sys@v0.40.0
 pkg:golang/golang.org/x/term@v0.39.0
 pkg:golang/golang.org/x/text@v0.33.0
 pkg:golang/golang.org/x/time@v0.14.0
-pkg:golang/google.golang.org/api@v0.260.0
+pkg:golang/google.golang.org/api@v0.263.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20251202230838-ff82c1b0f217
-pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20251222181119-0a764e51fe1b
+pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260122232226-8e98ce8d340d
 pkg:golang/google.golang.org/genproto@v0.0.0-20251202230838-ff82c1b0f217
 pkg:golang/google.golang.org/grpc@v1.78.0
 pkg:golang/google.golang.org/protobuf@v1.36.11

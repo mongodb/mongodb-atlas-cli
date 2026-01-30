@@ -19,16 +19,20 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
 	clustersEntity = "clusters"
+	dbusersEntity  = "dbusers"
 	tierM0         = "M0"
 
 	// Cluster settings.
@@ -48,6 +52,11 @@ func TestClustersM0Flags(t *testing.T) {
 	req.NoError(err)
 
 	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	dbUserPassword := dbUserUsername + "~PwD"
+
+	var client *mongo.Client
+	ctx := t.Context()
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -71,6 +80,19 @@ func TestClustersM0Flags(t *testing.T) {
 		req.NoError(err)
 
 		internal.EnsureCluster(t, cluster, clusterName, "8.0", 0.5, false)
+
+		cmd = exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--username", dbUserUsername,
+			"--password", dbUserPassword,
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName())
+		cmd.Env = os.Environ()
+		resp, err = internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 	})
 
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -110,6 +132,43 @@ func TestClustersM0Flags(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(clusterName, cluster.GetName())
+	})
+
+	g.Run("Connect to cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"connect",
+			clusterName,
+			"--connectWith", "connectionString",
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
+		cmd.Env = os.Environ()
+		r, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(r))
+
+		connectionString := strings.TrimSpace(string(r))
+		req.NotEmpty(connectionString, "connection string should not be empty")
+		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
+
+		client, err = mongo.Connect(
+			ctx,
+			options.Client().
+				ApplyURI(connectionString).
+				SetAuth(options.Credential{
+					AuthMechanism: "PLAIN",
+					Username:      dbUserUsername,
+					Password:      dbUserPassword,
+				}),
+		)
+		require.NoError(t, err)
+	})
+
+	t.Cleanup(func() {
+		if client != nil {
+			_ = client.Disconnect(ctx)
+		}
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

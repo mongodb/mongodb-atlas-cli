@@ -19,12 +19,15 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312012/admin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -50,6 +53,13 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 	g.GenerateProject("clustersIss")
 
 	issClusterName := g.Memory("issClusterName", internal.Must(internal.RandClusterName())).(string)
+
+	issDbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+
+	issDbUserPassword := issDbUserUsername + "~PwD"
+
+	var client *mongo.Client
+	ctx := t.Context()
 
 	tier := internal.E2eTier()
 	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)
@@ -210,6 +220,41 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 
 		assert.Positive(t, clusters.GetTotalCount())
 		assert.NotEmpty(t, clusters.Results)
+	})
+
+	g.Run("Connect to ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"connect",
+			issClusterName,
+			"--connectWith", "connectionString",
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		connectionString := strings.TrimSpace(string(resp))
+		req.NotEmpty(connectionString, "connection string should not be empty")
+		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
+
+		client, err = mongo.Connect(
+			ctx,
+			options.Client().
+				ApplyURI(connectionString).
+				SetAuth(options.Credential{
+					AuthMechanism: "PLAIN",
+					Username:      issDbUserUsername,
+					Password:      issDbUserPassword,
+				}),
+		)
+		require.NoError(t, err)
+		t.Cleanup(func() {
+			_ = client.Disconnect(ctx)
+		})
 	})
 
 	g.Run("Delete ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -90,7 +91,7 @@ func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployme
 }
 
 func (opts *PauseOpts) stopContainer(ctx context.Context, deployment options.Deployment) error {
-	if deployment.StateName == options.PausedState || deployment.StateName == options.StoppedState {
+	if deployment.StateName == connect.PausedState || deployment.StateName == connect.StoppedState {
 		return nil
 	}
 

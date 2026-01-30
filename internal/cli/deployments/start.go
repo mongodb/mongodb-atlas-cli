@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -56,7 +57,7 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *StartOpts) Run(ctx context.Context) error {
-	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.StoppedState, options.PausedState)
+	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), connect.StoppedState, connect.PausedState)
 	if err != nil {
 		return err
 	}

@@ -35,7 +35,6 @@ const (
 	dbusersEntity               = "dbusers"
 	diskSizeGB30                = "30"
 	independentShardScalingFlag = "independentShardScaling"
-	clusterWideScalingFlag      = "clusterWideScaling"
 
 	// Cluster settings.
 	e2eClusterProvider = "AWS"

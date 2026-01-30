@@ -23,13 +23,13 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -40,30 +40,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
-const (
-	connectWithConnectionString = "connectionString"
-	connectWithMongosh          = "mongosh"
-	connectWithCompass          = "compass"
-	connectWithVsCode           = "vscode"
-	pausedState                 = "PAUSED"
-	stoppedState                = "STOPPED"
-	maxItemsPerPage             = 500
-	atlasDeploymentType         = "atlas"
-)
-
 var (
-	connectWithOptions                       = []string{connectWithMongosh, connectWithCompass, connectWithVsCode, connectWithConnectionString}
-	connectionStringTypeStandard             = "standard"
-	connectionStringTypePrivate              = "private"
-	connectionStringTypeOptions              = []string{connectionStringTypeStandard, connectionStringTypePrivate}
-	errConnectionStringTypeNotImplemented    = errors.New("connection string type not implemented")
-	errInvalidConnectWith                    = errors.New("invalid --connectWith option")
 	errNetworkPeeringConnectionNotConfigured = errors.New("network peering connection is not configured for this cluster")
 	errConnectionError                       = errors.New("could not connect")
 	errClusterNotStarted                     = errors.New("cluster not started")
 	errNoClusters                            = errors.New("currently there are no clusters in your project")
 	errClusterRequiredOnPipe                 = errors.New("cluster name is required when piping the output of the command")
-	promptConnectionStringType               = "What type of connection string type would you like to use?"
 	promptSelectCluster                      = "Select a cluster"
 	promptStartClusterConfirm                = "Cluster seems stopped, would you like to start it?"
 	promptConnectWithFormat                  = "How would you like to connect to %s?"
@@ -121,10 +103,10 @@ func ConnectBuilder() *cobra.Command {
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
-	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, connectionStringTypeStandard, usage.ConnectionStringType)
+	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, connect.ConnectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return connectWithOptions, cobra.ShellCompDirectiveDefault
+		return connect.ConnectWithOptions, cobra.ShellCompDirectiveDefault
 	})
 
 	opts.AddOutputOptFlags(cmd)
@@ -169,7 +151,7 @@ func (opts *ConnectOpts) resolveClusterName(ctx context.Context) func() error {
 func (opts *ConnectOpts) selectCluster(_ context.Context) error {
 	listOpts := &store.ListOptions{
 		PageNum:      cli.DefaultPage,
-		ItemsPerPage: maxItemsPerPage,
+		ItemsPerPage: connect.MaxItemsPerPage,
 	}
 	clusters, err := opts.store.LatestProjectClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
@@ -228,9 +210,9 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 
 	stateName := r.GetStateName()
 	if r.GetPaused() {
-		stateName = pausedState
+		stateName = connect.PausedState
 	}
-	if stateName == stoppedState || stateName == pausedState {
+	if stateName == connect.StoppedState || stateName == connect.PausedState {
 		if err := opts.startCluster(ctx); err != nil {
 			return err
 		}
@@ -253,9 +235,9 @@ func (opts *ConnectOpts) connectLatest(_ context.Context) error {
 
 	stateName := r.GetStateName()
 	if r.GetPaused() {
-		stateName = pausedState
+		stateName = connect.PausedState
 	}
-	if stateName == stoppedState || stateName == pausedState {
+	if stateName == connect.StoppedState || stateName == connect.PausedState {
 		if _, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.name); err != nil {
 			return err
 		}
@@ -277,21 +259,14 @@ func (opts *ConnectOpts) askConnectWith() error {
 			return err
 		}
 	}
-	return validateConnectWith(opts.ConnectWith)
-}
-
-func validateConnectWith(s string) error {
-	if !search.StringInSliceFold(connectWithOptions, s) {
-		return fmt.Errorf("%w: %s", errInvalidConnectWith, s)
-	}
-	return nil
+	return connect.ValidateConnectWith(opts.ConnectWith)
 }
 
 func (opts *ConnectOpts) connectToCluster(connectionString string) error {
 	switch opts.ConnectWith {
-	case connectWithConnectionString:
+	case connect.ConnectWithConnectionString:
 		return opts.Print(connectionString)
-	case connectWithCompass:
+	case connect.ConnectWithCompass:
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
@@ -299,19 +274,19 @@ func (opts *ConnectOpts) connectToCluster(connectionString string) error {
 			return err
 		}
 		return compass.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
-	case connectWithMongosh:
+	case connect.ConnectWithMongosh:
 		if !mongosh.Detect() {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
-	case connectWithVsCode:
+	case connect.ConnectWithVsCode:
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}
 		if _, err := log.Warningln("Launching VsCode..."); err != nil {
 			return err
 		}
-		return vscode.SaveConnection(connectionString, opts.name, atlasDeploymentType)
+		return vscode.SaveConnection(connectionString, opts.name, connect.AtlasCluster)
 	}
 	return nil
 }
@@ -319,13 +294,13 @@ func (opts *ConnectOpts) connectToCluster(connectionString string) error {
 func (opts *ConnectOpts) promptConnectWith() (string, error) {
 	p := &survey.Select{
 		Message: fmt.Sprintf(promptConnectWithFormat, opts.name),
-		Options: connectWithOptions,
+		Options: connect.ConnectWithOptions,
 		Description: func(value string, _ int) string {
 			return map[string]string{
-				connectWithConnectionString: "Connection String",
-				connectWithMongosh:          "MongoDB Shell",
-				connectWithCompass:          "MongoDB Compass",
-				connectWithVsCode:           "MongoDB for VsCode",
+				connect.ConnectWithConnectionString: "Connection String",
+				connect.ConnectWithMongosh:          "MongoDB Shell",
+				connect.ConnectWithCompass:          "MongoDB Compass",
+				connect.ConnectWithVsCode:           "MongoDB for VsCode",
 			}[value]
 		},
 	}
@@ -335,7 +310,7 @@ func (opts *ConnectOpts) promptConnectWith() (string, error) {
 }
 
 func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
-	requiresAuth := opts.ConnectWith == connectWithMongosh || opts.ConnectWith == connectWithCompass
+	requiresAuth := opts.ConnectWith == connect.ConnectWithMongosh || opts.ConnectWith == connect.ConnectWithCompass
 	if requiresAuth && opts.DBUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {
 			return err
@@ -371,8 +346,8 @@ func (opts *ConnectOpts) promptDBUserPassword() error {
 func (opts *ConnectOpts) validateAndPromptConnectionStringType() error {
 	if opts.ConnectionStringType == "" {
 		p := &survey.Select{
-			Message: promptConnectionStringType,
-			Options: connectionStringTypeOptions,
+			Message: connect.PromptConnectionStringType,
+			Options: connect.ConnectionStringTypeOptions,
 			Help:    usage.ConnectionStringType,
 		}
 
@@ -380,10 +355,7 @@ func (opts *ConnectOpts) validateAndPromptConnectionStringType() error {
 			return err
 		}
 	}
-	if !search.StringInSliceFold(connectionStringTypeOptions, opts.ConnectionStringType) {
-		return fmt.Errorf("%w: %s", errConnectionStringTypeNotImplemented, opts.ConnectionStringType)
-	}
-	return nil
+	return connect.ValidateConnectionStringType(opts.ConnectionStringType)
 }
 
 func (opts *ConnectOpts) connectToAtlas(r *atlasClustersPinned.AdvancedClusterDescription) error {
@@ -395,7 +367,7 @@ func (opts *ConnectOpts) connectToAtlas(r *atlasClustersPinned.AdvancedClusterDe
 		return fmt.Errorf("%w: server did not return connectionstrings", errConnectionError)
 	}
 
-	if opts.ConnectionStringType == connectionStringTypePrivate {
+	if opts.ConnectionStringType == connect.ConnectionStringTypePrivate {
 		if r.GetConnectionStrings().PrivateSrv == nil {
 			return errNetworkPeeringConnectionNotConfigured
 		}
@@ -417,7 +389,7 @@ func (opts *ConnectOpts) connectToAtlasLatest(r *atlasv2.ClusterDescription20240
 		return fmt.Errorf("%w: server did not return connectionstrings", errConnectionError)
 	}
 
-	if opts.ConnectionStringType == connectionStringTypePrivate {
+	if opts.ConnectionStringType == connect.ConnectionStringTypePrivate {
 		if r.GetConnectionStrings().PrivateSrv == nil {
 			return errNetworkPeeringConnectionNotConfigured
 		}

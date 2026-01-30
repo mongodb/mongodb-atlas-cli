@@ -51,6 +51,10 @@ Options
      - Type
      - Required
      - Description
+   * - --autoScalingMode
+     - string
+     - false
+     - Mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling.
    * - --connectWith
      - string
      - false

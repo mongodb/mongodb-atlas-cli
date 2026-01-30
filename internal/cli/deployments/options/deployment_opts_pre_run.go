@@ -22,6 +22,7 @@ import (
 	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
@@ -151,7 +152,7 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 
 	listOpts := &store.ListOptions{
 		PageNum:      cli.DefaultPage,
-		ItemsPerPage: MaxItemsPerPage,
+		ItemsPerPage: connect.MaxItemsPerPage,
 	}
 
 	atlasClusters, err := opts.AtlasClusterListStore.LatestProjectClusters(projectID, listOpts)
@@ -164,7 +165,7 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 		stateName := c.GetStateName()
 		if c.GetPaused() {
 			// for paused clusters, Atlas returns stateName IDLE and Paused=true
-			stateName = PausedState
+			stateName = connect.PausedState
 		}
 		deployments[i] = Deployment{
 			Type:           "ATLAS",

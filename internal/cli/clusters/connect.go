@@ -28,10 +28,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -73,7 +75,9 @@ var (
 
 type ConnectClusterStore interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	StartClusterLatest(string, string) (*atlasv2.ClusterDescription20240805, error)
 	LatestProjectClusters(string, *store.ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error)
 }
 
@@ -95,13 +99,17 @@ func ConnectBuilder() *cobra.Command {
 			if len(args) == 1 {
 				opts.name = args[0]
 			}
-			return opts.PreRunE(
+			preRunE := []prerun.CmdOpt{
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.resolveClusterName(cmd.Context()),
-			)
+			}
+			if opts.autoScalingMode != "" {
+				preRunE = append(preRunE, validate.AutoScalingMode(opts.autoScalingMode))
+			}
+			return opts.PreRunE(preRunE...)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(cmd.Context(), opts)
@@ -109,6 +117,7 @@ func ConnectBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWithConnect)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "", usage.AutoScalingMode)
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
@@ -128,6 +137,7 @@ type ConnectOpts struct {
 	cli.ProjectOpts
 	cli.InputOpts
 	name                 string
+	autoScalingMode      string
 	ConnectWith          string
 	DBUsername           string
 	DBUserPassword       string
@@ -207,6 +217,10 @@ func (*ConnectOpts) promptStartCluster() (bool, error) {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
+	if opts.autoScalingMode != "" && isIndependentShardScaling(opts.autoScalingMode) {
+		return opts.connectLatest(ctx)
+	}
+
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return err
@@ -229,6 +243,31 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 		return err
 	}
 	return opts.connectToAtlas(r)
+}
+
+func (opts *ConnectOpts) connectLatest(_ context.Context) error {
+	r, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return err
+	}
+
+	stateName := r.GetStateName()
+	if r.GetPaused() {
+		stateName = pausedState
+	}
+	if stateName == stoppedState || stateName == pausedState {
+		if _, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.name); err != nil {
+			return err
+		}
+	}
+
+	if err := opts.askConnectWith(); err != nil {
+		return err
+	}
+	if err := opts.validateAndPromptAtlasOpts(); err != nil {
+		return err
+	}
+	return opts.connectToAtlasLatest(r)
 }
 
 func (opts *ConnectOpts) askConnectWith() error {
@@ -348,7 +387,29 @@ func (opts *ConnectOpts) validateAndPromptConnectionStringType() error {
 }
 
 func (opts *ConnectOpts) connectToAtlas(r *atlasClustersPinned.AdvancedClusterDescription) error {
-	if r.GetStateName() != "IDLE" {
+	if r.GetStateName() != idle {
+		return fmt.Errorf("%w: cluster is not in an idle state yet, try again in a few moments", errConnectionError)
+	}
+
+	if r.ConnectionStrings == nil {
+		return fmt.Errorf("%w: server did not return connectionstrings", errConnectionError)
+	}
+
+	if opts.ConnectionStringType == connectionStringTypePrivate {
+		if r.GetConnectionStrings().PrivateSrv == nil {
+			return errNetworkPeeringConnectionNotConfigured
+		}
+		return opts.connectToCluster(*r.GetConnectionStrings().PrivateSrv)
+	}
+
+	if r.ConnectionStrings.StandardSrv == nil {
+		return fmt.Errorf("%w: server did not return connectionstring", errConnectionError)
+	}
+	return opts.connectToCluster(*r.ConnectionStrings.StandardSrv)
+}
+
+func (opts *ConnectOpts) connectToAtlasLatest(r *atlasv2.ClusterDescription20240805) error {
+	if r.GetStateName() != idle {
 		return fmt.Errorf("%w: cluster is not in an idle state yet, try again in a few moments", errConnectionError)
 	}
 

@@ -81,6 +81,45 @@ func (c *MockConnectClusterStoreAtlasClusterCall) DoAndReturn(f func(string, str
 	return c
 }
 
+// LatestAtlasCluster mocks base method.
+func (m *MockConnectClusterStore) LatestAtlasCluster(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestAtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestAtlasCluster indicates an expected call of LatestAtlasCluster.
+func (mr *MockConnectClusterStoreMockRecorder) LatestAtlasCluster(arg0, arg1 any) *MockConnectClusterStoreLatestAtlasClusterCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestAtlasCluster", reflect.TypeOf((*MockConnectClusterStore)(nil).LatestAtlasCluster), arg0, arg1)
+	return &MockConnectClusterStoreLatestAtlasClusterCall{Call: call}
+}
+
+// MockConnectClusterStoreLatestAtlasClusterCall wrap *gomock.Call
+type MockConnectClusterStoreLatestAtlasClusterCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConnectClusterStoreLatestAtlasClusterCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockConnectClusterStoreLatestAtlasClusterCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConnectClusterStoreLatestAtlasClusterCall) Do(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockConnectClusterStoreLatestAtlasClusterCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConnectClusterStoreLatestAtlasClusterCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockConnectClusterStoreLatestAtlasClusterCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // LatestProjectClusters mocks base method.
 func (m *MockConnectClusterStore) LatestProjectClusters(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error) {
 	m.ctrl.T.Helper()
@@ -127,6 +166,45 @@ func (m *MockConnectClusterStore) StartCluster(arg0, arg1 string) (*admin.Advanc
 	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
+}
+
+// StartClusterLatest mocks base method.
+func (m *MockConnectClusterStore) StartClusterLatest(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StartClusterLatest", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StartClusterLatest indicates an expected call of StartClusterLatest.
+func (mr *MockConnectClusterStoreMockRecorder) StartClusterLatest(arg0, arg1 any) *MockConnectClusterStoreStartClusterLatestCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartClusterLatest", reflect.TypeOf((*MockConnectClusterStore)(nil).StartClusterLatest), arg0, arg1)
+	return &MockConnectClusterStoreStartClusterLatestCall{Call: call}
+}
+
+// MockConnectClusterStoreStartClusterLatestCall wrap *gomock.Call
+type MockConnectClusterStoreStartClusterLatestCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConnectClusterStoreStartClusterLatestCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockConnectClusterStoreStartClusterLatestCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConnectClusterStoreStartClusterLatestCall) Do(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockConnectClusterStoreStartClusterLatestCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConnectClusterStoreStartClusterLatestCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockConnectClusterStoreStartClusterLatestCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
 }
 
 // StartCluster indicates an expected call of StartCluster.

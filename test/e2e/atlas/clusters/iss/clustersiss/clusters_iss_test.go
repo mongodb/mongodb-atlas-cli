@@ -32,6 +32,7 @@ import (
 
 const (
 	clustersEntity              = "clusters"
+	dbusersEntity               = "dbusers"
 	diskSizeGB30                = "30"
 	independentShardScalingFlag = "independentShardScaling"
 	clusterWideScalingFlag      = "clusterWideScaling"
@@ -83,6 +84,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			"--diskSizeGB", diskSizeGB30,
 			"--autoScalingMode", independentShardScalingFlag,
 			"--watch",
+			"--projectId", g.ProjectID,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -98,6 +100,20 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		internal.EnsureClusterLatest(t, &cluster, issClusterName, mdbVersion, 30, false)
 		assert.Len(t, cluster.GetReplicationSpecs(), 2)
 		assert.Equal(t, "SHARDED", cluster.GetClusterType())
+
+		cmd = exec.Command(cliPath,
+			dbusersEntity,
+			"create",
+			"atlasAdmin",
+			"--username", issDbUserUsername,
+			"--password", issDbUserPassword,
+			"--projectId", g.ProjectID,
+			"-P",
+			internal.ProfileName(),
+		)
+		cmd.Env = os.Environ()
+		resp, err = internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 	})
 
 	g.Run("Get ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -107,6 +123,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			issClusterName,
 			"--autoScalingMode",
 			independentShardScalingFlag,
+			"--projectId", g.ProjectID,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -129,6 +146,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			issClusterName,
 			"--autoScalingMode",
 			"clusterWideScaling",
+			"--projectId", g.ProjectID,
 			"--output",
 			"json",
 			"-P",
@@ -148,6 +166,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"autoScalingConfig",
 			issClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -169,6 +188,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			issClusterName,
 			"--autoScalingMode",
 			"independentShardScaling",
+			"--projectId", g.ProjectID,
 			"--output",
 			"json",
 			"-P",
@@ -188,6 +208,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"autoScalingConfig",
 			issClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -207,6 +228,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"list",
 			"--autoScalingMode", independentShardScalingFlag,
+			"--projectId", g.ProjectID,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -223,11 +245,14 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 	})
 
 	g.Run("Connect to ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		require.NoError(t, internal.WatchCluster(g.ProjectID, issClusterName), "cluster must be IDLE before connect")
+
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"connect",
 			issClusterName,
 			"--connectWith", "connectionString",
+			"--autoScalingMode", independentShardScalingFlag,
 			"--projectId", g.ProjectID,
 			"-P",
 			internal.ProfileName(),
@@ -264,6 +289,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			issClusterName,
 			"--force",
 			"--watch",
+			"--projectId", g.ProjectID,
 			"-P",
 			internal.ProfileName(),
 		)

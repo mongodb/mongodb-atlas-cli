@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"go.mongodb.org/mongo-driver/bson"
@@ -95,7 +96,7 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	if opts.IsLocalDeploymentType() {
 		deploymentType = LocalCluster
 	} else if opts.IsAtlasDeploymentType() {
-		deploymentType = AtlasCluster
+		deploymentType = connect.AtlasCluster
 	}
 	if deploymentType != "" {
 		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))

@@ -15,43 +15,24 @@
 package options
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
-const (
-	ConnectWithConnectionString = "connectionString"
-	ConnectWithMongosh          = "mongosh"
-	ConnectWithCompass          = "compass"
-	ConnectWithVsCode           = "vscode"
-)
-
-var (
-	ErrInvalidConnectWith  = errors.New("invalid --connectWith option")
-	ConnectWithOptions     = []string{ConnectWithMongosh, ConnectWithCompass, ConnectWithVsCode, ConnectWithConnectionString}
-	connectWithDescription = map[string]string{
-		ConnectWithConnectionString: "Connection String",
-		ConnectWithMongosh:          "MongoDB Shell",
-		ConnectWithCompass:          "MongoDB Compass",
-		ConnectWithVsCode:           "MongoDB for VsCode",
-	}
-)
-
-func ValidateConnectWith(s string) error {
-	if !search.StringInSliceFold(ConnectWithOptions, s) {
-		return fmt.Errorf("%w: %s", ErrInvalidConnectWith, s)
-	}
-	return nil
+var connectWithDescription = map[string]string{
+	connect.ConnectWithConnectionString: "Connection String",
+	connect.ConnectWithMongosh:          "MongoDB Shell",
+	connect.ConnectWithCompass:          "MongoDB Compass",
+	connect.ConnectWithVsCode:           "MongoDB for VsCode",
 }
 
 func (opts *DeploymentOpts) PromptConnectWith() (string, error) {
 	p := &survey.Select{
 		Message: fmt.Sprintf("How would you like to connect to %s?", opts.DeploymentName),
-		Options: ConnectWithOptions,
+		Options: connect.ConnectWithOptions,
 		Description: func(value string, _ int) string {
 			return connectWithDescription[value]
 		},

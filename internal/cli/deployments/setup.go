@@ -31,6 +31,7 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
@@ -102,12 +103,12 @@ var (
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
 	}
-	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, options.VsCodeConnect, skipConnect}
+	connectWithOptions     = []string{connect.ConnectWithMongosh, connect.ConnectWithCompass, connect.ConnectWithVsCode, skipConnect}
 	connectWithDescription = map[string]string{
-		options.MongoshConnect: "MongoDB Shell",
-		options.CompassConnect: "MongoDB Compass",
-		options.VsCodeConnect:  "MongoDB for VsCode",
-		skipConnect:            "Skip Connection",
+		connect.ConnectWithMongosh: "MongoDB Shell",
+		connect.ConnectWithCompass: "MongoDB Compass",
+		connect.ConnectWithVsCode:  "MongoDB for VsCode",
+		skipConnect:                "Skip Connection",
 	}
 	mdbVersions      = []string{mdb70, mdb80, mdb8, mdb7}
 	mdbMajorVersions = []string{mdb7, mdb8}
@@ -443,7 +444,7 @@ func (opts *SetupOpts) validateDeploymentTypeFlag() error {
 		return errIncompatibleDeploymentType
 	}
 
-	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, options.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
+	if opts.DeploymentType != "" && !strings.EqualFold(opts.DeploymentType, connect.AtlasCluster) && !strings.EqualFold(opts.DeploymentType, options.LocalCluster) {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentType, opts.DeploymentType)
 	}
 
@@ -583,7 +584,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 	switch opts.connectWith {
 	case skipConnect:
 		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
-	case options.CompassConnect:
+	case connect.ConnectWithCompass:
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
@@ -591,12 +592,12 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 			return err
 		}
 		return compass.Run("", "", cs)
-	case options.MongoshConnect:
+	case connect.ConnectWithMongosh:
 		if !mongosh.Detect() {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
-	case options.VsCodeConnect:
+	case connect.ConnectWithVsCode:
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}

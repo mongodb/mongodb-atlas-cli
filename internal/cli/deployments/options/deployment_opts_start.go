@@ -17,6 +17,8 @@ package options
 import (
 	"context"
 	"errors"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 )
 
 var ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
@@ -26,11 +28,11 @@ func (opts *DeploymentOpts) StartLocal(ctx context.Context, deployment Deploymen
 		return nil
 	}
 
-	if deployment.StateName == StoppedState {
+	if deployment.StateName == connect.StoppedState {
 		return opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname())
 	}
 
-	if deployment.StateName == PausedState {
+	if deployment.StateName == connect.PausedState {
 		return opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname())
 	}
 

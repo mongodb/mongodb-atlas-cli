@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
@@ -97,7 +98,7 @@ func TestList_Run(t *testing.T) {
 		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
-				ItemsPerPage: options.MaxItemsPerPage,
+				ItemsPerPage: connect.MaxItemsPerPage,
 			},
 		).
 		Return(expectedAtlasClusters, nil).
@@ -190,7 +191,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
-				ItemsPerPage: options.MaxItemsPerPage,
+				ItemsPerPage: connect.MaxItemsPerPage,
 			},
 		).
 		Return(expectedAtlasClusters, nil).
@@ -280,7 +281,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
-				ItemsPerPage: options.MaxItemsPerPage,
+				ItemsPerPage: connect.MaxItemsPerPage,
 			},
 		).
 		Return(expectedAtlasClusters, nil).

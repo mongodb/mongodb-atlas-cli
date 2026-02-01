@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 662
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 Jan 2026 03:15:42 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 296
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 94
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getDatabaseMeasurementLinks
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976da07674654a76205f604/processes/atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017/databases?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"databaseName":"config","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976da07674654a76205f604/processes/atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017/databases/config","rel":"self"}]},{"databaseName":"local","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976da07674654a76205f604/processes/atlas-opfd1j-shard-00-00.pnh2oh.mongodb-dev.net:27017/databases/local","rel":"self"}]}],"totalCount":2}

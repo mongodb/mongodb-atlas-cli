@@ -4288,6 +4288,18 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`generateOrgInvoiceAndDownloadReport`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`invoiceId`: {
+				Usage: `Unique string that identifies the invoice for which to generate the report.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+		},
+		Examples: nil,
+	},
 	`getFederationSettingConnectedOrgConfig`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -7779,6 +7791,33 @@ var metadata = metadatatypes.Metadata{
 					`apiUserId`: `[apiUserId]`,
 					`ipAddress`: `192.0.2.0%2F24`,
 					`orgId`:     `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgAssociatedInvoices`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`includeLinkedOrgs`: {
+				Usage: `Whether to include invoices from linked organizations. Defaults to false.`,
+			},
+			`month`: {
+				Usage: `The month for which to retrieve invoices (1-12). Defaults to current month.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`year`: {
+				Usage: `The year for which to retrieve invoices. Defaults to current year.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},

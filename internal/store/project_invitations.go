@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312013/admin"
 )
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.

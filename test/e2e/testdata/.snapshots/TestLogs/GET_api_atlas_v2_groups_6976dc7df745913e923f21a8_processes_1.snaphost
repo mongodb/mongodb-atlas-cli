@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 Jan 2026 03:25:27 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 65
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976dc7df745913e923f21a8/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-01-26T03:24:35Z","groupId":"6976dc7df745913e923f21a8","hostname":"atlas-bcqseh-shard-00-00.vgyjih.mongodb-dev.net","id":"atlas-bcqseh-shard-00-00.vgyjih.mongodb-dev.net:27017","lastPing":"2026-01-26T03:25:23Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976dc7df745913e923f21a8/processes/atlas-bcqseh-shard-00-00.vgyjih.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bcqseh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-819-shard-00-00.vgyjih.mongodb-dev.net","version":"8.0.18"},{"created":"2026-01-26T03:24:35Z","groupId":"6976dc7df745913e923f21a8","hostname":"atlas-bcqseh-shard-00-01.vgyjih.mongodb-dev.net","id":"atlas-bcqseh-shard-00-01.vgyjih.mongodb-dev.net:27017","lastPing":"2026-01-26T03:25:23Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976dc7df745913e923f21a8/processes/atlas-bcqseh-shard-00-01.vgyjih.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bcqseh-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-819-shard-00-01.vgyjih.mongodb-dev.net","version":"8.0.18"},{"created":"2026-01-26T03:24:35Z","groupId":"6976dc7df745913e923f21a8","hostname":"atlas-bcqseh-shard-00-02.vgyjih.mongodb-dev.net","id":"atlas-bcqseh-shard-00-02.vgyjih.mongodb-dev.net:27017","lastPing":"2026-01-26T03:25:23Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6976dc7df745913e923f21a8/processes/atlas-bcqseh-shard-00-02.vgyjih.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bcqseh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-819-shard-00-02.vgyjih.mongodb-dev.net","version":"8.0.18"}],"totalCount":3}

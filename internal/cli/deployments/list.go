@@ -113,6 +113,12 @@ func ListBuilder() *cobra.Command {
 		Use:     "list",
 		Short:   "Return all deployments.",
 		Aliases: []string{"ls"},
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster list'.
+- For Local (Docker) deployments, use 'atlas local list'.
+`,
 		Args:    require.NoArgs,
 		GroupID: "all",
 		Annotations: map[string]string{

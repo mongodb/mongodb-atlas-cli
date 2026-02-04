@@ -139,6 +139,12 @@ func PauseBuilder() *cobra.Command {
 		Use:     "pause <deploymentName>",
 		Aliases: []string{"stop"},
 		Short:   "Pause a deployment.",
+		Deprecated: `This command has been deprecated and will be removed in a future release.
+
+Please switch to the new command structure based on your target environment:
+- For Atlas (cloud) deployments, use 'atlas cluster pause'.
+- For Local (Docker) deployments, use 'atlas local pause'.
+`,
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

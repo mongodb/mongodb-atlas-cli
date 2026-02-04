@@ -21,7 +21,7 @@ import (
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312013/admin"
 )
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {

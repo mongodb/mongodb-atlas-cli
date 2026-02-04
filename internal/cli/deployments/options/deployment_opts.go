@@ -30,6 +30,7 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
@@ -48,19 +49,12 @@ const (
 	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createcluster
 	clusterNamePattern              = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	PausedState                     = "PAUSED"
-	StoppedState                    = "STOPPED"
 	IdleState                       = "IDLE"
 	UpdatingState                   = "UPDATING"
 	DeletingState                   = "DELETING"
 	RestartingState                 = "RESTARTING"
 	LocalCluster                    = "local"
-	AtlasCluster                    = "atlas"
-	CompassConnect                  = "compass"
-	MongoshConnect                  = "mongosh"
-	VsCodeConnect                   = "vscode"
 	PromptTypeMessage               = "What type of deployment would you like to work with?"
-	MaxItemsPerPage                 = 500
 	ContainerFilter                 = "mongodb-atlas-local=container"
 	ClusterWideScalingResponse      = "CLUSTER_WIDE_SCALING"
 	IndependentShardScalingResponse = "INDEPENDENT_SHARD_SCALING"
@@ -73,10 +67,10 @@ var (
 	errInvalidDeploymentName        = errors.New("invalid cluster name")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
 	ErrNotAuthenticated             = errors.New("you are not authenticated. Please, run atlas auth login")
-	DeploymentTypeOptions           = []string{LocalCluster, AtlasCluster}
+	DeploymentTypeOptions           = []string{LocalCluster, connect.AtlasCluster}
 	deploymentTypeDescription       = map[string]string{
-		LocalCluster: "Local Database",
-		AtlasCluster: "Atlas Database",
+		LocalCluster:         "Local Database",
+		connect.AtlasCluster: "Atlas Database",
 	}
 )
 
@@ -84,11 +78,11 @@ var localStateMap = map[string]string{
 	"running":  IdleState,
 	"removing": DeletingState,
 	// a "created" container is ready to be started but is currently stopped
-	"created":    StoppedState,
-	"paused":     PausedState,
+	"created":    connect.StoppedState,
+	"paused":     connect.PausedState,
 	"restarting": RestartingState,
-	"exited":     StoppedState,
-	"dead":       StoppedState,
+	"exited":     connect.StoppedState,
+	"dead":       connect.StoppedState,
 }
 
 type ProfileReader interface {
@@ -301,7 +295,7 @@ func (opts *DeploymentOpts) ValidateAndPromptDeploymentType() error {
 }
 
 func (opts *DeploymentOpts) IsAtlasDeploymentType() bool {
-	return strings.EqualFold(opts.DeploymentType, AtlasCluster)
+	return strings.EqualFold(opts.DeploymentType, connect.AtlasCluster)
 }
 
 func (opts *DeploymentOpts) IsLocalDeploymentType() bool {

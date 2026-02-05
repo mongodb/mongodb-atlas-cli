@@ -111,18 +111,20 @@ if grep -q "go.mongodb.org/atlas-sdk/${CURRENT_SDK_RELEASE} =>" go.mod; then
 fi
 
 # Append replace directive at the end of the file
-echo "" >> go.mod
-echo "replace (" >> go.mod
-echo "	// Local SDK for testing (dev-latest branch)" >> go.mod
-echo "	go.mongodb.org/atlas-sdk/${CURRENT_SDK_RELEASE} => ${SDK_TEMP_DIR}" >> go.mod
-echo ")" >> go.mod
+{
+    echo ""
+    echo "replace ("
+    echo "	// Local SDK for testing (dev-latest branch)"
+    echo "	go.mongodb.org/atlas-sdk/${CURRENT_SDK_RELEASE} => ${SDK_TEMP_DIR}"
+    echo ")"
+} >> go.mod
 echo "  Added replace directive"
 
 echo "==> Running go mod tidy..."
 go mod tidy
 
 echo "==> Building CLI with dev-latest SDK..."
-echo "==> Current SDK commit: $(cd ${SDK_TEMP_DIR} && git rev-parse --short HEAD)"
+echo "==> Current SDK commit: $(cd "${SDK_TEMP_DIR}" && git rev-parse --short HEAD)"
 BUILD_SUCCESS=false
 if make build; then
     BUILD_SUCCESS=true

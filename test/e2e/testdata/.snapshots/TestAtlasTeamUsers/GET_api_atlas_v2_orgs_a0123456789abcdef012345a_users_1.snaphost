@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 713
 Content-Type: application/vnd.atlas.2025-02-19+json;charset=utf-8
-Date: Mon, 19 Jan 2026 03:04:54 GMT
+Date: Mon, 26 Jan 2026 03:08:50 GMT
 Ratelimit-Limit: 500
 Ratelimit-Remaining: 499
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 64
+X-Envoy-Upstream-Service-Time: 71
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationUsersResource::getOrganizationUsers
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=74057ef6f023469d6cfcad624b16002606d4dbac; versionString=master
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/users?includeCount=true&pageNum=1&itemsPerPage=1","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/users?includeCount=true&itemsPerPage=1&pageNum=2","rel":"next"}],"results":[{"country":"IE","createdAt":"2020-02-18T10:58:47Z","firstName":"Andrea","id":"5e4bc367c6b0f41bb9bbb178","lastAuth":"2025-12-19T11:57:03Z","lastName":"Angiolillo","mobileNumber":null,"orgMembershipStatus":"ACTIVE","roles":{"groupRoleAssignments":[{"groupId":"b0123456789abcdef012345b","groupRoles":["GROUP_OWNER"]}],"orgRoles":["ORG_OWNER"]},"teamIds":[],"username":"andrea.angiolillo@mongodb.com"}],"totalCount":16}

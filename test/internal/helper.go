@@ -78,7 +78,6 @@ const (
 	accessRolesEntity             = "accessRoles"
 	customDBRoleEntity            = "customDbRoles"
 	regionalModeEntity            = "regionalModes"
-	serverlessEntity              = "serverless"
 	liveMigrationsEntity          = "liveMigrations"
 	auditingEntity                = "auditing"
 	accessLogsEntity              = "accessLogs"
@@ -206,52 +205,6 @@ func SplitOutput(cmd *exec.Cmd) (string, string, error) {
 	cmd.Stderr = &e
 	err := cmd.Run()
 	return o.String(), e.String(), err
-}
-
-func watchServerlessInstanceForProject(projectID, clusterName string) error {
-	cliPath, err := AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-
-	watchArgs := []string{
-		serverlessEntity,
-		"watch",
-		clusterName,
-		"-P",
-		ProfileName(),
-	}
-	if projectID != "" {
-		watchArgs = append(watchArgs, "--projectId", projectID)
-	}
-	watchCmd := exec.Command(cliPath, watchArgs...)
-	watchCmd.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(watchCmd); err != nil {
-		return fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
-	}
-	return nil
-}
-
-func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, clusterName string) {
-	t.Helper()
-
-	args := []string{
-		serverlessEntity,
-		"delete",
-		clusterName,
-		"--force",
-		"-P",
-		ProfileName(),
-	}
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(deleteCmd)
-	require.NoError(t, err, string(resp))
-
-	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
 
 func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, enableBackup bool) (string, error) {
@@ -973,28 +926,6 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 	return dataFederations
 }
 
-func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedServerlessInstanceDescription {
-	t.Helper()
-
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
-		serverlessEntity,
-		"list",
-		"--projectId", projectID,
-		"-o=json",
-		"-P",
-		ProfileName(),
-	)
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
-
-	var serverlessInstances *atlasv2.PaginatedServerlessInstanceDescription
-	err = json.Unmarshal(resp, &serverlessInstances)
-	require.NoError(t, err)
-
-	return serverlessInstances
-}
-
 func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
@@ -1003,26 +934,6 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 		deleteDataFederationForProject(t, cliPath, projectID, federation.GetName())
 	}
 	t.Log("all datafederations successfully deleted")
-}
-
-func deleteAllServerlessInstances(t *testing.T, cliPath, projectID string) {
-	t.Helper()
-
-	serverlessInstances := listServerlessByProject(t, cliPath, projectID)
-	for _, serverless := range serverlessInstances.GetResults() {
-		func(serverlessInstance, state string) {
-			t.Run(fmt.Sprintf("delete serverless instance %s\n", serverlessInstance), func(t *testing.T) {
-				t.Parallel()
-				if state == deletingState {
-					_ = watchServerlessInstanceForProject(projectID, serverlessInstance)
-					return
-				}
-				deleteServerlessInstanceForProject(t, cliPath, projectID, serverlessInstance)
-			})
-		}(serverless.GetName(), serverless.GetStateName())
-	}
-
-	t.Log("all serverless instances successfully deleted")
 }
 
 func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {

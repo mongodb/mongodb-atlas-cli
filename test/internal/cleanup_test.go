@@ -131,13 +131,6 @@ func TestCleanup(t *testing.T) {
 				t.Parallel()
 				deleteAllDataFederations(t, cliPath, projectID)
 			})
-			t.Run("delete all serverless instances", func(t *testing.T) {
-				if IsGov() {
-					t.Skip("serverless is not available on gov")
-				}
-				t.Parallel()
-				deleteAllServerlessInstances(t, cliPath, projectID)
-			})
 		})
 	}
 }

@@ -651,6 +651,14 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/kubernetes/...
+  - name: atlas_local_plugin
+    tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
+    must_have_test_results: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/local/...
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -1466,6 +1474,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .plugin .kubernetes"
+  - name: e2e_atlas_local_plugin
+    display_name: "E2E Atlas Local Plugin Tests"
+    run_on:
+      - ubuntu2204-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .plugin .local"
   - name: e2e_decryption
     display_name: "E2E Decryption Tests"
     run_on:

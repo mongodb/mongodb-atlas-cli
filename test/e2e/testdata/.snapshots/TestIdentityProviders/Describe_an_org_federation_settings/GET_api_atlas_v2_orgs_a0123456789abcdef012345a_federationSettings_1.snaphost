@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 141
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 19 Jan 2026 03:05:36 GMT
+Date: Mon, 26 Jan 2026 03:09:28 GMT
 Ratelimit-Limit: 500
 Ratelimit-Remaining: 499
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 41
+X-Envoy-Upstream-Service-Time: 42
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationsResource::getFederationSettings
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=74057ef6f023469d6cfcad624b16002606d4dbac; versionString=master
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"federatedDomains":[],"hasRoleMappings":false,"id":"656e4d8e91cb7d26db1bc9c6","identityProviderId":null,"identityProviderStatus":"INACTIVE"}

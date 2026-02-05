@@ -3980,6 +3980,16 @@ components:
             required:
                 - metricName
             type: object
+        AssociatedInvoice:
+            description: An invoice associated with an organization.
+            properties:
+                invoiceId:
+                    description: Unique 24-hexadecimal digit identifier for an invoice.
+                    type: string
+                orgId:
+                    description: Unique 24-hexadecimal digit identifier for an organization.
+                    type: string
+            type: object
         AtlasClusterOutageSimulationOutageFilter:
             properties:
                 cloudProvider:
@@ -22320,6 +22330,8 @@ components:
                     QUERY_TARGETING_SCANNED_PER_RETURNED: '#/components/schemas/RawMetricAlertView'
                     RESTARTS_IN_LAST_HOUR: '#/components/schemas/RawMetricAlertView'
                     SEARCH_INDEX_SIZE: '#/components/schemas/DataMetricAlertView'
+                    SEARCH_MAX_FIELDS_INDEXED: '#/components/schemas/RawMetricAlertView'
+                    SEARCH_MAX_NGRAM_FIELDS_INDEXED: '#/components/schemas/RawMetricAlertView'
                     SEARCH_MAX_NUMBER_OF_LUCENE_DOCS: '#/components/schemas/NumberMetricAlertView'
                     SEARCH_NUMBER_OF_FIELDS_IN_INDEX: '#/components/schemas/RawMetricAlertView'
                     SEARCH_NUMBER_OF_QUERIES_ERROR: '#/components/schemas/RawMetricAlertView'
@@ -22691,6 +22703,8 @@ components:
                     QUERY_TARGETING_SCANNED_PER_RETURNED: '#/components/schemas/RawMetricEventView'
                     RESTARTS_IN_LAST_HOUR: '#/components/schemas/RawMetricEventView'
                     SEARCH_INDEX_SIZE: '#/components/schemas/DataMetricEventView'
+                    SEARCH_MAX_FIELDS_INDEXED: '#/components/schemas/RawMetricEventView'
+                    SEARCH_MAX_NGRAM_FIELDS_INDEXED: '#/components/schemas/RawMetricEventView'
                     SEARCH_MAX_NUMBER_OF_LUCENE_DOCS: '#/components/schemas/NumberMetricEventView'
                     SEARCH_NUMBER_OF_FIELDS_IN_INDEX: '#/components/schemas/RawMetricEventView'
                     SEARCH_NUMBER_OF_QUERIES_ERROR: '#/components/schemas/RawMetricEventView'
@@ -22983,6 +22997,8 @@ components:
                     QUERY_TARGETING_SCANNED_PER_RETURNED: '#/components/schemas/QueryTargetingScannedPerReturnedRawMetricThresholdView'
                     RESTARTS_IN_LAST_HOUR: '#/components/schemas/RestartsInLastHourRawMetricThresholdView'
                     SEARCH_INDEX_SIZE: '#/components/schemas/SearchIndexSizeDataMetricThresholdView'
+                    SEARCH_MAX_FIELDS_INDEXED: '#/components/schemas/SearchMaxFieldsIndexedRawMetricThresholdView'
+                    SEARCH_MAX_NGRAM_FIELDS_INDEXED: '#/components/schemas/SearchMaxNgramFieldsIndexedRawMetricThresholdView'
                     SEARCH_MAX_NUMBER_OF_LUCENE_DOCS: '#/components/schemas/NumberMetricThresholdView'
                     SEARCH_NUMBER_OF_FIELDS_IN_INDEX: '#/components/schemas/SearchNumberOfFieldsInIndexRawMetricThresholdView'
                     SEARCH_NUMBER_OF_QUERIES_ERROR: '#/components/schemas/SearchNumberOfQueriesErrorRawMetricThresholdView'
@@ -23149,7 +23165,9 @@ components:
                 - $ref: '#/components/schemas/MaxSystemNetworkInDataMetricThresholdView'
                 - $ref: '#/components/schemas/MaxSystemNetworkOutDataMetricThresholdView'
                 - $ref: '#/components/schemas/SearchIndexSizeDataMetricThresholdView'
+                - $ref: '#/components/schemas/SearchMaxFieldsIndexedRawMetricThresholdView'
                 - $ref: '#/components/schemas/SearchNumberOfFieldsInIndexRawMetricThresholdView'
+                - $ref: '#/components/schemas/SearchMaxNgramFieldsIndexedRawMetricThresholdView'
                 - $ref: '#/components/schemas/SearchReplicationLagTimeMetricThresholdView'
                 - $ref: '#/components/schemas/NumberMetricThresholdView'
                 - $ref: '#/components/schemas/SearchOpCounterInsertRawMetricThresholdView'
@@ -28911,6 +28929,23 @@ components:
                 - roles
                 - username
             type: object
+        OrgAssociatedInvoiceResponse:
+            description: Response containing associated invoices for an organization.
+            properties:
+                associatedInvoices:
+                    description: List of invoices associated with the organization for the specified period.
+                    items:
+                        $ref: '#/components/schemas/AssociatedInvoice'
+                    type: array
+                month:
+                    description: Two-digit number that represents the month of the associated invoices.
+                    example: "01"
+                    type: string
+                year:
+                    description: Four-digit number that represents the year of the associated invoices.
+                    example: "2024"
+                    type: string
+            type: object
         OrgEventTypeViewForOrg:
             description: Unique identifier of event type.
             enum:
@@ -33307,6 +33342,22 @@ components:
                     type: string
             title: Replication Specifications
             type: object
+        ReportGenerationRequest:
+            properties:
+                reportFormat:
+                    description: Format of the report.
+                    enum:
+                        - CSV
+                    type: string
+                reportType:
+                    description: Type of report to generate.
+                    enum:
+                        - FOCUS
+                    type: string
+                version:
+                    description: Version of the report format specification.
+                    type: string
+            type: object
         RequestAccepted:
             description: Accepted.
             type: object
@@ -34381,6 +34432,56 @@ components:
                     type: object
                     x-additionalPropertiesName: Field Name
             title: Mappings
+            type: object
+        SearchMaxFieldsIndexedRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
+            type: object
+        SearchMaxNgramFieldsIndexedRawMetricThresholdView:
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    $ref: '#/components/schemas/RawMetricUnits'
+            required:
+                - metricName
             type: object
         SearchNumberOfFieldsInIndexRawMetricThresholdView:
             properties:
@@ -40945,7 +41046,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: b9839e5190b70bc520e4cd2e7da2cc03823fbc46
+    x-xgen-sha: c27e29251b9850d2a3e553e01bc4cf2b974faf74
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -54036,7 +54137,7 @@ paths:
             x-xgen-operation-id-override: getMigrationValidateStatus
     /api/atlas/v2/groups/{groupId}/logIntegrations:
         get:
-            description: Returns all log integration configurations for the project. Optionally filter by integration type. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role. This is currently in preview. Please contact your Customer Success Manager (CSM) for access.
+            description: Returns all log integration configurations for the project. Optionally filter by integration type. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
             operationId: listGroupLogIntegrations
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -54073,7 +54174,7 @@ paths:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/listGroupLogIntegrations
         post:
-            description: Creates a new log integration configuration identified by a unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role. This is currently in preview. Please contact your Customer Success Manager (CSM) for access.
+            description: Creates a new log integration configuration identified by a unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
             operationId: createGroupLogIntegration
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -54110,7 +54211,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/createGroupLogIntegration
     /api/atlas/v2/groups/{groupId}/logIntegrations/{id}:
         delete:
-            description: Removes the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role. This is currently in preview. Please contact your Customer Success Manager (CSM) for access.
+            description: Removes the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
             operationId: deleteGroupLogIntegration
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -54143,7 +54244,7 @@ paths:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/deleteGroupLogIntegration
         get:
-            description: Returns the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role. This is currently in preview. Please contact your Customer Success Manager (CSM) for access.
+            description: Returns the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
             operationId: getGroupLogIntegration
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -54178,7 +54279,7 @@ paths:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/getGroupLogIntegration
         put:
-            description: Updates the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role. This is currently in preview. Please contact your Customer Success Manager (CSM) for access.
+            description: Updates the configuration for one log integration identified by its unique ID. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
             operationId: updateGroupLogIntegration
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -57297,6 +57398,7 @@ paths:
             x-xgen-operation-id-override: listSuggestedIndexes
     /api/atlas/v2/groups/{groupId}/pushBasedLogExport:
         delete:
+            deprecated: true
             description: Disables the push-based log export feature by resetting the project level settings to its default configuration.
             operationId: deleteGroupPushBasedLogExport
             parameters:
@@ -57307,6 +57409,7 @@ paths:
                 "200":
                     content:
                         application/vnd.atlas.2023-01-01+json:
+                            x-sunset: "2027-02-04"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -57325,6 +57428,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/deleteGroupPushBasedLogExport
             x-xgen-operation-id-override: deleteLogExport
         get:
+            deprecated: true
             description: Fetches the current project level settings for the push-based log export feature.
             operationId: getGroupPushBasedLogExport
             parameters:
@@ -57337,6 +57441,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/PushBasedLogExportProject'
+                            x-sunset: "2027-02-04"
                             x-xgen-IPA-exception:
                                 xgen-IPA-110-collections-response-define-results-array: Singleton method, mistakenly identified as a List method.
                                 xgen-IPA-110-collections-use-paginated-prefix: Singleton method, mistakenly identified as a List method.
@@ -57359,6 +57464,7 @@ paths:
                 verb: get
             x-xgen-operation-id-override: getLogExport
         patch:
+            deprecated: true
             description: Updates the project level settings for the push-based log export feature.
             operationId: updateGroupPushBasedLogExport
             parameters:
@@ -57377,6 +57483,7 @@ paths:
                 "200":
                     content:
                         application/vnd.atlas.2023-01-01+json:
+                            x-sunset: "2027-02-04"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -57395,6 +57502,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/updateGroupPushBasedLogExport
             x-xgen-operation-id-override: updateLogExport
         post:
+            deprecated: true
             description: Configures the project level settings for the push-based log export feature.
             operationId: createGroupPushBasedLogExport
             parameters:
@@ -57413,6 +57521,7 @@ paths:
                 "200":
                     content:
                         application/vnd.atlas.2023-01-01+json:
+                            x-sunset: "2027-02-04"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -61939,6 +62048,56 @@ paths:
                 customMethod: false
                 verb: getEntry
             x-xgen-operation-id-override: getOrgAccessEntry
+    /api/atlas/v2/orgs/{orgId}/associatedInvoices:
+        get:
+            description: Returns a list of invoice IDs for the specified organization and month/year. Optionally includes invoices from linked organizations.
+            operationId: getOrgAssociatedInvoices
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - description: The month for which to retrieve invoices (1-12). Defaults to current month.
+                  in: query
+                  name: month
+                  schema:
+                    format: int64
+                    maximum: 12
+                    minimum: 1
+                    type: integer
+                - description: The year for which to retrieve invoices. Defaults to current year.
+                  in: query
+                  name: year
+                  schema:
+                    format: int64
+                    minimum: 2000
+                    type: integer
+                - description: Whether to include invoices from linked organizations. Defaults to false.
+                  in: query
+                  name: includeLinkedOrgs
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/OrgAssociatedInvoiceResponse'
+                            x-xgen-preview:
+                                name: invoicereporting
+                            x-xgen-version: preview
+                    description: Associated invoices retrieved successfully
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Associated Invoices
+            tags:
+                - Invoices
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/getOrgAssociatedInvoices
     /api/atlas/v2/orgs/{orgId}/billing/costExplorer/usage:
         post:
             description: Creates a query process within the Cost Explorer for the given parameters. A token is returned that can be used to poll the status of the query and eventually retrieve the results.
@@ -62760,6 +62919,55 @@ paths:
                 - Invoices
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/searchOrgInvoiceLineItems
             x-xgen-operation-id-override: searchInvoiceLineItems
+    /api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}:generateAndDownloadReport:
+        post:
+            description: Generates and downloads a report for the specified invoice.
+            operationId: generateOrgInvoiceAndDownloadReport
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique string that identifies the invoice for which to generate the report.
+                  in: path
+                  name: invoiceId
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/ReportGenerationRequest'
+                        x-xgen-preview:
+                            name: invoicereporting
+                        x-xgen-version: preview
+                description: Generate and Download Invoice Report request body.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+gzip:
+                            example: |
+                                invoice_abc123_focus.csv.gz
+                            schema:
+                                type: string
+                            x-xgen-preview:
+                                name: invoicereporting
+                            x-xgen-version: preview
+                    description: Report generated successfully
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Generate and Download Invoice Report
+            tags:
+                - Invoices
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/generateOrgInvoiceAndDownloadReport
+            x-xgen-operation-id-override: generateInvoiceReport
     /api/atlas/v2/orgs/{orgId}/invoices/pending:
         get:
             description: Returns all invoices accruing charges for the current billing cycle for the specified organization. To use this resource, the requesting Service Account or API Key must have the Organization Billing Viewer, Organization Billing Admin, or Organization Owner role. If you have a cross-organization setup, you can view linked invoices if you have the Organization Billing Admin or Organization Owner Role.

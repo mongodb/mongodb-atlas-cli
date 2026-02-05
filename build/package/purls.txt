@@ -3,7 +3,7 @@ pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.18.1
 pkg:golang/cloud.google.com/go/compute/metadata@v0.9.0
 pkg:golang/cloud.google.com/go/iam@v1.5.3
-pkg:golang/cloud.google.com/go/kms@v1.24.0
+pkg:golang/cloud.google.com/go/kms@v1.25.0
 pkg:golang/cloud.google.com/go/longrunning@v0.7.0
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.21.0
@@ -106,7 +106,7 @@ pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312012@v20250312012.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
-pkg:golang/go.mongodb.org/mongo-driver@v1.17.6
+pkg:golang/go.mongodb.org/mongo-driver@v1.17.7
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc@v0.61.0
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.61.0

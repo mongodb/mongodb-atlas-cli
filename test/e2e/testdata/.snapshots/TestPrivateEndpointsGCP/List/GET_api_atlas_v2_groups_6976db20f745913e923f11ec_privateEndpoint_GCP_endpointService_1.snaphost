@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 944
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 Jan 2026 03:15:20 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3991
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 73
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6976db25674654a762066c0b","portMappingEnabled":false,"regionName":"EUROPE_NORTH_1","serviceAttachmentNames":["projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-0","projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-1","projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-2","projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-3","projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-4","projects/p-7tft3nwfo9ewssaubwrjv1cn/regions/europe-north1/serviceAttachments/sa-europe-north1-6976db20f745913e923f11ec-5"],"status":"AVAILABLE"}]

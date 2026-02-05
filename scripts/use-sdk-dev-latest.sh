@@ -23,7 +23,7 @@ SDK_MODULE_PATH="go.mongodb.org/atlas-sdk/${CURRENT_SDK_RELEASE}"
 GO_MOD_BACKUP="${CLI_ROOT}/go.mod.backup"
 GO_SUM_BACKUP="${CLI_ROOT}/go.sum.backup"
 SDK_REPO_URL="https://github.com/mongodb/atlas-sdk-go.git"
-SDK_TEMP_DIR=$(mktemp -d -t atlas-sdk-go-XXXXXX)
+SDK_TEMP_DIR=$(mktemp -d)
 
 # Cleanup function to restore go.mod and go.sum, and remove temp SDK directory
 cleanup() {

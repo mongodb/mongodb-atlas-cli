@@ -189,6 +189,10 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 update-atlas-sdk: ## Update the atlas-sdk dependency
 	./scripts/update-sdk.sh
 
+.PHONY: build-with-sdk-dev-latest
+build-with-sdk-dev-latest: ## Switch to use the dev-latest branch of the local SDK and build the atlascli
+	./scripts/use-sdk-dev-latest.sh
+
 .PHONY: update-atlas-cli-core
 update-atlas-cli-core: ## Update the atlas-cli-core dependency to the latest SHA
 	@echo "==> Updating atlas-cli-core to latest SHA..."

@@ -37,8 +37,9 @@ type PrivateEndpointCreator interface {
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store  PrivateEndpointCreator
-	region string
+	store              PrivateEndpointCreator
+	region             string
+	portMappingEnabled bool
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -64,13 +65,14 @@ func (opts *CreateOpts) Run() error {
 
 func (opts *CreateOpts) newPrivateEndpointConnection() *atlasv2.CloudProviderEndpointServiceRequest {
 	createRequest := &atlasv2.CloudProviderEndpointServiceRequest{
-		Region:       opts.region,
-		ProviderName: provider,
+		Region:             opts.region,
+		ProviderName:       provider,
+		PortMappingEnabled: &opts.portMappingEnabled,
 	}
 	return createRequest
 }
 
-// atlas privateEndpoints gcp create --region region [--projectId projectId].
+// atlas privateEndpoints gcp create --region region [--portMappingEnabled] [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{}
 	cmd := &cobra.Command{
@@ -81,7 +83,7 @@ func CreateBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},
-		Example: `  atlas privateEndpoints gcp create --region CENTRAL_US`,
+		Example: `  atlas privateEndpoints gcp create --region CENTRAL_US --portMappingEnabled`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
@@ -94,6 +96,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
+	cmd.Flags().BoolVar(&opts.portMappingEnabled, flag.PortMappingEnabled, false, usage.PortMappingEnabled)
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

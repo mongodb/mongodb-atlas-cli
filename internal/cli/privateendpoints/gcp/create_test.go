@@ -44,3 +44,44 @@ func TestCreate_Run(t *testing.T) {
 
 	test.VerifyOutputTemplate(t, createTemplate, expected)
 }
+
+func TestCreate_Run_WithPortMappingEnabled(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockPrivateEndpointCreator(ctrl)
+
+	createOpts := &CreateOpts{
+		store:              mockStore,
+		region:             "region",
+		portMappingEnabled: true,
+	}
+
+	expected := &atlasv2.EndpointService{}
+	mockStore.
+		EXPECT().
+		CreatePrivateEndpoint(createOpts.ProjectID, createOpts.newPrivateEndpointConnection()).
+		Return(expected, nil).
+		Times(1)
+
+	err := createOpts.Run()
+	require.NoError(t, err)
+
+	// Verify that portMappingEnabled is set correctly in the request
+	req := createOpts.newPrivateEndpointConnection()
+	require.NotNil(t, req.PortMappingEnabled)
+	require.True(t, *req.PortMappingEnabled)
+
+	test.VerifyOutputTemplate(t, createTemplate, expected)
+}
+
+func TestCreate_Run_PortMappingEnabledDefaultFalse(t *testing.T) {
+	createOpts := &CreateOpts{
+		region: "region",
+	}
+
+	// Verify that portMappingEnabled defaults to false when not specified
+	require.False(t, createOpts.portMappingEnabled)
+
+	req := createOpts.newPrivateEndpointConnection()
+	require.NotNil(t, req.PortMappingEnabled)
+	require.False(t, *req.PortMappingEnabled)
+}

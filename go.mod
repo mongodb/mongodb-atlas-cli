@@ -3,6 +3,8 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 go 1.24.2
 
 replace (
+	// TODO(CLOUDP-378545): Remove this replace directive once SDK is released with PortMappingEnabled field
+	go.mongodb.org/atlas-sdk/v20250312012 => /Users/celina.tala/atlas-sdk-go-dev
 	// Security fix for VULN-1042: Update golang.org/x/text v0.3.0 to v0.33.0
 	golang.org/x/text v0.3.0 => golang.org/x/text v0.33.0
 	// Security fix for VULN-1044: Update protobuf v1.22.0 to v1.33.0

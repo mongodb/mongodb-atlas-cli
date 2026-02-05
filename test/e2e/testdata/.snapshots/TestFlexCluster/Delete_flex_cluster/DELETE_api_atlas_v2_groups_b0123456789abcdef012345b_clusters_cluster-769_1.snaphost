@@ -1,0 +1,19 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 189
+Content-Type: application/json
+Date: Wed, 04 Feb 2026 14:22:26 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9988
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 95
+X-Error-Code: CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=c24ba081569fa6715176b0d2ca750a75f1ed857c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Flex cluster cluster-769 cannot be used in the Cluster API.","error":400,"errorCode":"CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API","parameters":["cluster-769"],"reason":"Bad Request"}

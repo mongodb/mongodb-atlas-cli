@@ -1,0 +1,16 @@
+HTTP/2.0 204 No Content
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 04 Feb 2026 14:25:50 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9987
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 156
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::deleteUser
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=c24ba081569fa6715176b0d2ca750a75f1ed857c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+

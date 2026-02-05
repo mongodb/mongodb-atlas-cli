@@ -1,0 +1,19 @@
+HTTP/2.0 404 Not Found
+Content-Length: 273
+Content-Type: application/json
+Date: Wed, 04 Feb 2026 14:22:29 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1186
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 57
+X-Error-Code: DATA_FEDERATION_TENANT_NOT_FOUND_FOR_NAME
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::deleteTenant
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=c24ba081569fa6715176b0d2ca750a75f1ed857c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Data Federation tenant for project b0123456789abcdef012345b and name e2e-data-federation-949 not found.","error":404,"errorCode":"DATA_FEDERATION_TENANT_NOT_FOUND_FOR_NAME","parameters":["b0123456789abcdef012345b","e2e-data-federation-949"],"reason":"Not Found"}

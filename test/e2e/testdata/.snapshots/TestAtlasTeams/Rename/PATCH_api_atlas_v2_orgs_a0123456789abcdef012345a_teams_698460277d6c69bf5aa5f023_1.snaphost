@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 189
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 05 Feb 2026 09:17:36 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1194
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 201
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationTeamsResource::patchTeam
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=e502db9439f26835aafd8b755f7d6f6ac56583ac; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"id":"698460277d6c69bf5aa5f023","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/698460277d6c69bf5aa5f023","rel":"self"}],"name":"teams151_renamed"}

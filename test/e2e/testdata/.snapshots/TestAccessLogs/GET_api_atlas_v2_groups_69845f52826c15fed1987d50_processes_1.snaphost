@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 05 Feb 2026 09:27:11 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 299
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=e502db9439f26835aafd8b755f7d6f6ac56583ac; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69845f52826c15fed1987d50/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-02-05T09:24:14Z","groupId":"69845f52826c15fed1987d50","hostname":"atlas-4qoxov-shard-00-00.pcxkkm.mongodb-dev.net","id":"atlas-4qoxov-shard-00-00.pcxkkm.mongodb-dev.net:27017","lastPing":"2026-02-05T09:27:02Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69845f52826c15fed1987d50/processes/atlas-4qoxov-shard-00-00.pcxkkm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-4qoxov-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-359-shard-00-00.pcxkkm.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-05T09:24:14Z","groupId":"69845f52826c15fed1987d50","hostname":"atlas-4qoxov-shard-00-01.pcxkkm.mongodb-dev.net","id":"atlas-4qoxov-shard-00-01.pcxkkm.mongodb-dev.net:27017","lastPing":"2026-02-05T09:27:02Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69845f52826c15fed1987d50/processes/atlas-4qoxov-shard-00-01.pcxkkm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-4qoxov-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-359-shard-00-01.pcxkkm.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-05T09:24:14Z","groupId":"69845f52826c15fed1987d50","hostname":"atlas-4qoxov-shard-00-02.pcxkkm.mongodb-dev.net","id":"atlas-4qoxov-shard-00-02.pcxkkm.mongodb-dev.net:27017","lastPing":"2026-02-05T09:27:02Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69845f52826c15fed1987d50/processes/atlas-4qoxov-shard-00-02.pcxkkm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-4qoxov-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-359-shard-00-02.pcxkkm.mongodb-dev.net","version":"8.0.19"}],"totalCount":3}

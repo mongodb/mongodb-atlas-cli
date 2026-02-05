@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 1667
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Wed, 04 Feb 2026 14:22:25 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9998
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 98
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=c24ba081569fa6715176b0d2ca750a75f1ed857c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-8jud8l2-shard-00-00.h5ov3rx.mongodb-dev.net:27017,ac-8jud8l2-shard-00-01.h5ov3rx.mongodb-dev.net:27017,ac-8jud8l2-shard-00-02.h5ov3rx.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-12ua1s-shard-0","standardSrv":"mongodb+srv://cluster-393.h5ov3rx.mongodb-dev.net"},"createDate":"2026-02-04T14:22:17Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"69835613959709a8a2dc21a0","id":"69835619959709a8a2dc2cb7","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69835613959709a8a2dc21a0/clusters/cluster-393","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/69835613959709a8a2dc21a0/clusters/cluster-393/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/69835613959709a8a2dc21a0/clusters/cluster-393/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.18","name":"cluster-393","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"69835619959709a8a2dc2ca8","numShards":1,"regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0"},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"69835619959709a8a2dc2caf","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"UPDATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

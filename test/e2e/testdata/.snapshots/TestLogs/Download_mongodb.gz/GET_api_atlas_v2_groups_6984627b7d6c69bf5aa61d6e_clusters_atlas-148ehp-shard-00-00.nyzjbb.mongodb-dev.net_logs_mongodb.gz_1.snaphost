@@ -1,0 +1,19 @@
+HTTP/2.0 200 OK
+Content-Disposition: attachment; filename="atlas-148ehp-shard-00-00.nyzjbb.mongodb-dev.net_2026-02-04T09:41:22.000000008_2026-02-05T09:41:22.000000008_MONGODB.log.gz"
+Content-Type: application/vnd.atlas.2023-02-01+gzip
+Date: Thu, 05 Feb 2026 09:41:21 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 316
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::logsForHost
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=e502db9439f26835aafd8b755f7d6f6ac56583ac; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Uncompressed-Content-Length: 0
+Content-Length: 0
+

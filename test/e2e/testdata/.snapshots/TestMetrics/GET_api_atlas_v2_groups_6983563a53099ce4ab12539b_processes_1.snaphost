@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 04 Feb 2026 14:35:51 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 75
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=cbbe6b71d1a947efba200b1270e22b997d11ff73; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6983563a53099ce4ab12539b/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-02-04T14:32:58Z","groupId":"6983563a53099ce4ab12539b","hostname":"atlas-z7hn10-shard-00-00.5trmgn.mongodb-dev.net","id":"atlas-z7hn10-shard-00-00.5trmgn.mongodb-dev.net:27017","lastPing":"2026-02-04T14:35:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6983563a53099ce4ab12539b/processes/atlas-z7hn10-shard-00-00.5trmgn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z7hn10-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-945-shard-00-00.5trmgn.mongodb-dev.net","version":"8.0.18"},{"created":"2026-02-04T14:32:58Z","groupId":"6983563a53099ce4ab12539b","hostname":"atlas-z7hn10-shard-00-01.5trmgn.mongodb-dev.net","id":"atlas-z7hn10-shard-00-01.5trmgn.mongodb-dev.net:27017","lastPing":"2026-02-04T14:35:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6983563a53099ce4ab12539b/processes/atlas-z7hn10-shard-00-01.5trmgn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z7hn10-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-945-shard-00-01.5trmgn.mongodb-dev.net","version":"8.0.18"},{"created":"2026-02-04T14:32:58Z","groupId":"6983563a53099ce4ab12539b","hostname":"atlas-z7hn10-shard-00-02.5trmgn.mongodb-dev.net","id":"atlas-z7hn10-shard-00-02.5trmgn.mongodb-dev.net:27017","lastPing":"2026-02-04T14:35:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6983563a53099ce4ab12539b/processes/atlas-z7hn10-shard-00-02.5trmgn.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z7hn10-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-945-shard-00-02.5trmgn.mongodb-dev.net","version":"8.0.18"}],"totalCount":3}

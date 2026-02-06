@@ -15,6 +15,8 @@
 package cli
 
 import (
+	"bytes"
+	"errors"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -136,5 +138,156 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		_, err := opts.orgs("")
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())
+	})
+}
+
+// TestDefaultOpts_CreateOrganizationStore tests the store interaction for organization creation.
+// Full interactive prompt testing requires e2e tests.
+func TestDefaultOpts_CreateOrganizationStore(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	t.Run("creation request format", func(t *testing.T) {
+		orgName := "TestOrg"
+		orgID := "507f1f77bcf86cd799439011"
+		response := &atlasv2.CreateOrganizationResponse{
+			Organization: &atlasv2.AtlasOrganization{
+				Id:   pointer.Get(orgID),
+				Name: orgName,
+			},
+		}
+
+		mockStore.EXPECT().CreateAtlasOrganization(gomock.Any()).DoAndReturn(func(req *atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error) {
+			assert.Equal(t, orgName, req.Name)
+			return response, nil
+		}).Times(1)
+
+		createReq := &atlasv2.CreateOrganizationRequest{
+			Name: orgName,
+		}
+		resp, err := mockStore.CreateAtlasOrganization(createReq)
+		require.NoError(t, err)
+		assert.Equal(t, orgID, resp.Organization.GetId())
+		assert.Equal(t, orgName, resp.Organization.Name)
+	})
+
+	t.Run("creation error handling", func(t *testing.T) {
+		orgName := "TestOrg"
+		createErr := errors.New("creation failed")
+
+		mockStore.EXPECT().CreateAtlasOrganization(gomock.Any()).Return(nil, createErr).Times(1)
+
+		createReq := &atlasv2.CreateOrganizationRequest{
+			Name: orgName,
+		}
+		_, err := mockStore.CreateAtlasOrganization(createReq)
+		require.Error(t, err)
+		assert.Equal(t, createErr, err)
+	})
+}
+
+// TestDefaultOpts_CreateProjectStore tests the store interaction for project creation.
+func TestDefaultOpts_CreateProjectStore(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	t.Run("creation request format", func(t *testing.T) {
+		projectName := "TestProject"
+		projectID := "507f1f77bcf86cd799439012"
+		orgID := "507f1f77bcf86cd799439011"
+		project := &atlasv2.Group{
+			Id:    pointer.Get(projectID),
+			Name:  projectName,
+			OrgId: orgID,
+		}
+
+		mockStore.EXPECT().CreateProject(gomock.Any()).DoAndReturn(func(params *atlasv2.CreateGroupApiParams) (*atlasv2.Group, error) {
+			assert.Equal(t, projectName, params.Group.Name)
+			assert.Equal(t, orgID, params.Group.OrgId)
+			return project, nil
+		}).Times(1)
+
+		group := &atlasv2.Group{
+			Name:  projectName,
+			OrgId: orgID,
+		}
+		createParams := &atlasv2.CreateGroupApiParams{
+			Group: group,
+		}
+		resp, err := mockStore.CreateProject(createParams)
+		require.NoError(t, err)
+		assert.Equal(t, projectID, resp.GetId())
+		assert.Equal(t, projectName, resp.Name)
+		assert.Equal(t, orgID, resp.OrgId)
+	})
+
+	t.Run("creation error handling", func(t *testing.T) {
+		projectName := "TestProject"
+		orgID := "507f1f77bcf86cd799439011"
+		createErr := errors.New("creation failed")
+
+		mockStore.EXPECT().CreateProject(gomock.Any()).Return(nil, createErr).Times(1)
+
+		group := &atlasv2.Group{
+			Name:  projectName,
+			OrgId: orgID,
+		}
+		createParams := &atlasv2.CreateGroupApiParams{
+			Group: group,
+		}
+		_, err := mockStore.CreateProject(createParams)
+		require.Error(t, err)
+		assert.Equal(t, createErr, err)
+	})
+}
+
+// TestDefaultOpts_AskOrg_NoOrgs tests the flow when no organizations are found.
+// This tests the business logic without interactive prompts.
+func TestDefaultOpts_AskOrg_NoOrgs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	opts := &DefaultSetterOpts{
+		Service:   "cloud",
+		Store:     mockStore,
+		OutWriter: &bytes.Buffer{},
+	}
+
+	t.Run("no orgs triggers errNoResults", func(t *testing.T) {
+		mockStore.EXPECT().Organizations(gomock.Any()).Return(&atlasv2.PaginatedOrganization{
+			Results:     &[]atlasv2.AtlasOrganization{},
+			TotalCount:  pointer.Get(0),
+		}, nil).Times(1)
+
+		orgs, err := opts.orgs("")
+		require.Error(t, err)
+		require.EqualError(t, err, errNoResults.Error())
+		assert.Empty(t, orgs)
+	})
+}
+
+// TestDefaultOpts_AskProject_NoProjects tests the flow when no projects are found.
+func TestDefaultOpts_AskProject_NoProjects(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+
+	opts := &DefaultSetterOpts{
+		Service:   "cloud",
+		Store:     mockStore,
+		OrgID:     "507f1f77bcf86cd799439011",
+		OutWriter: &bytes.Buffer{},
+	}
+
+	t.Run("no projects triggers errNoResults", func(t *testing.T) {
+		mockStore.EXPECT().GetOrgProjects(opts.OrgID, gomock.Any()).Return(&atlasv2.PaginatedAtlasGroup{
+			Results:     &[]atlasv2.Group{},
+			TotalCount:  pointer.Get(0),
+		}, nil).Times(1)
+
+		ids, names, err := opts.projects()
+		require.Error(t, err)
+		require.EqualError(t, err, errNoResults.Error())
+		assert.Empty(t, ids)
+		assert.Empty(t, names)
 	})
 }

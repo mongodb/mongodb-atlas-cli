@@ -40,6 +40,8 @@ type ProjectOrgsLister interface {
 	Organization(id string) (*atlasv2.AtlasOrganization, error)
 	Organizations(*atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error)
 	GetOrgProjects(string, *store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
+	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)
+	CreateProject(*atlasv2.CreateGroupApiParams) (*atlasv2.Group, error)
 }
 
 type DefaultSetterOpts struct {
@@ -151,6 +153,27 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		switch {
 		case errors.Is(err, errNoResults):
 			_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any project")
+			// Offer to create a project
+			createPrompt := &survey.Confirm{
+				Message: "Do you want to create a Project?",
+				Default: true,
+			}
+			var createProj bool
+			if createErr := telemetry.TrackAskOne(createPrompt, &createProj); createErr != nil {
+				return createErr
+			}
+			opts.AskedOrgsOrProjects = true
+			if createProj {
+				if createErr := opts.createProject(); createErr != nil {
+					return createErr
+				}
+				if opts.ProjectID != "" {
+					return nil
+				}
+			} else {
+				_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Project\n")
+				// Continue to manual entry prompt below
+			}
 		case errors.Is(err, errTooManyResults):
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d projects\n", resultsLimit)
 		case errors.As(err, &target):
@@ -158,19 +181,23 @@ func (opts *DefaultSetterOpts) AskProject() error {
 		default:
 			_, _ = fmt.Fprintf(opts.OutWriter, "There was an error fetching your projects: %s\n", err)
 		}
+		// Only ask about manual entry if we haven't already asked (i.e., not in errNoResults case where we already handled it)
+		if !errors.Is(err, errNoResults) {
+			opts.AskedOrgsOrProjects = true
+		}
 		p := &survey.Confirm{
 			Message: "Do you want to enter the Project ID manually?",
+			Default: true,
 		}
 		manually := true
 		if err2 := telemetry.TrackAskOne(p, &manually); err2 != nil {
 			return err2
 		}
-		opts.AskedOrgsOrProjects = true
 		if manually {
 			p := prompt.NewProjectIDInput()
 			return telemetry.TrackAskOne(p, &opts.ProjectID, survey.WithValidator(validate.OptionalObjectID))
 		}
-		_, _ = fmt.Fprint(opts.OutWriter, "Skipping default project setting\n")
+		_, _ = fmt.Fprint(opts.OutWriter, "Skipping setting default project\n")
 		return nil
 	}
 
@@ -214,6 +241,28 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 		case errors.Is(err, errNoResults):
 			if filter == "" {
 				_, _ = fmt.Fprintln(opts.OutWriter, "You don't seem to have access to any organization")
+				// Offer to create an organization
+				createPrompt := &survey.Confirm{
+					Message: "Do you want to create an Organization?",
+					Default: true,
+				}
+				var createOrg bool
+				if createErr := telemetry.TrackAskOne(createPrompt, &createOrg); createErr != nil {
+					return createErr
+				}
+				opts.AskedOrgsOrProjects = true
+				if createOrg {
+					if createErr := opts.createOrganization(); createErr != nil {
+						return createErr
+					}
+					if opts.OrgID != "" {
+						return nil
+					}
+				} else {
+					_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Organization\n")
+					// Continue to manual entry prompt
+					return opts.manualOrgIDEntry()
+				}
 			} else {
 				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization ID or the organization name to filter.")
 				applyFilter = true
@@ -254,19 +303,111 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 }
 
 func (opts *DefaultSetterOpts) manualOrgID() error {
+	// First ask if user wants to create an organization
+	p := &survey.Confirm{
+		Message: "Do you want to create an Organization?",
+		Default: true,
+	}
+	createOrg := true
+	if err := telemetry.TrackAskOne(p, &createOrg); err != nil {
+		return err
+	}
+	opts.AskedOrgsOrProjects = true
+
+	if createOrg {
+		if err := opts.createOrganization(); err != nil {
+			return err
+		}
+		// After creating, the org ID is set, so we're done
+		return nil
+	}
+
+	_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Organization\n")
+
+	// Then ask if user wants to enter manually
+	return opts.manualOrgIDEntry()
+}
+
+func (opts *DefaultSetterOpts) manualOrgIDEntry() error {
 	p := &survey.Confirm{
 		Message: "Do you want to enter the Organization ID manually?",
+		Default: true,
 	}
 	manually := true
 	if err := telemetry.TrackAskOne(p, &manually); err != nil {
 		return err
 	}
-	opts.AskedOrgsOrProjects = true
 	if manually {
 		p := prompt.NewOrgIDInput()
 		return telemetry.TrackAskOne(p, &opts.OrgID, survey.WithValidator(validate.OptionalObjectID))
 	}
-	_, _ = fmt.Fprint(opts.OutWriter, "Skipping default organization setting\n")
+	_, _ = fmt.Fprint(opts.OutWriter, "Skipping setting default organization\n")
+	return nil
+}
+
+func (opts *DefaultSetterOpts) createOrganization() error {
+	namePrompt := &survey.Input{
+		Message: "Organization name:",
+		Help:    "Enter a name for the new organization.",
+	}
+	var orgName string
+	if err := telemetry.TrackAskOne(namePrompt, &orgName); err != nil {
+		return err
+	}
+	if orgName == "" {
+		_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Organization\n")
+		return nil
+	}
+
+	createReq := &atlasv2.CreateOrganizationRequest{
+		Name: orgName,
+	}
+	spin := newSpinner()
+	spin.Start()
+	response, err := opts.Store.CreateAtlasOrganization(createReq)
+	spin.Stop()
+	if err != nil {
+		return fmt.Errorf("failed to create organization: %w", err)
+	}
+
+	opts.OrgID = response.Organization.GetId()
+	_, _ = fmt.Fprintf(opts.OutWriter, "Organization '%s' created.\n", opts.OrgID)
+	opts.AskedOrgsOrProjects = true
+	return nil
+}
+
+func (opts *DefaultSetterOpts) createProject() error {
+	namePrompt := &survey.Input{
+		Message: "Project name:",
+		Help:    "Enter a name for the new project.",
+	}
+	var projectName string
+	if err := telemetry.TrackAskOne(namePrompt, &projectName); err != nil {
+		return err
+	}
+	if projectName == "" {
+		_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Project\n")
+		return nil
+	}
+
+	group := &atlasv2.Group{
+		Name:  projectName,
+		OrgId: opts.OrgID,
+	}
+	createParams := &atlasv2.CreateGroupApiParams{
+		Group: group,
+	}
+	spin := newSpinner()
+	spin.Start()
+	project, err := opts.Store.CreateProject(createParams)
+	spin.Stop()
+	if err != nil {
+		return fmt.Errorf("failed to create project: %w", err)
+	}
+
+	opts.ProjectID = project.GetId()
+	_, _ = fmt.Fprintf(opts.OutWriter, "Project '%s' created.\n", opts.ProjectID)
+	opts.AskedOrgsOrProjects = true
 	return nil
 }
 

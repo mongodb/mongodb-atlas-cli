@@ -170,6 +170,7 @@ const (
 	PrivateEndpointID                             = "privateEndpointId"                             // PrivateEndpointID flag
 	EndpointServiceID                             = "endpointServiceId"                             // EndpointServiceId flag
 	PrivateEndpointIPAddress                      = "privateEndpointIpAddress"                      // PrivateEndpointIPAddress flag
+	PortMappingEnabled                            = "portMappingEnabled"                            // PortMappingEnabled flag
 	Endpoint                                      = "endpoint"                                      // Endpoint flag
 	Retention                                     = "retention"                                     // Retention flag
 	AtlasCIDRBlock                                = "atlasCidrBlock"                                // AtlasCIDRBlock flag

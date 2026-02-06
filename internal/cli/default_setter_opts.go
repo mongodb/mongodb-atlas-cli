@@ -163,16 +163,13 @@ func (opts *DefaultSetterOpts) AskProject() error {
 				return createErr
 			}
 			opts.AskedOrgsOrProjects = true
-			if createProj {
-				if createErr := opts.createProject(); createErr != nil {
-					return createErr
-				}
-				if opts.ProjectID != "" {
-					return nil
-				}
-			} else {
+			if !createProj {
 				_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Project\n")
 				// Continue to manual entry prompt below
+			} else if createErr := opts.createProject(); createErr != nil {
+				return createErr
+			} else if opts.ProjectID != "" {
+				return nil
 			}
 		case errors.Is(err, errTooManyResults):
 			_, _ = fmt.Fprintf(opts.OutWriter, "You have access to more than %d projects\n", resultsLimit)

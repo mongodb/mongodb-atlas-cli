@@ -125,7 +125,7 @@ pkg:golang/golang.org/x/sys@v0.40.0
 pkg:golang/golang.org/x/term@v0.39.0
 pkg:golang/golang.org/x/text@v0.33.0
 pkg:golang/golang.org/x/time@v0.14.0
-pkg:golang/google.golang.org/api@v0.263.0
+pkg:golang/google.golang.org/api@v0.264.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20251202230838-ff82c1b0f217
 pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260122232226-8e98ce8d340d
 pkg:golang/google.golang.org/genproto@v0.0.0-20251202230838-ff82c1b0f217

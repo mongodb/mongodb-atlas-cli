@@ -18,7 +18,7 @@ jobs:
       with:
         config: ${{ vars.PERMISSIONS_CONFIG }}
     - name: Checkout code
-      uses: actions/checkout@v6.0.1
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 2
     - name: set Apix Bot token

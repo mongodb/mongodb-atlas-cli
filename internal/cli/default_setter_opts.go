@@ -251,17 +251,16 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 					return createErr
 				}
 				opts.AskedOrgsOrProjects = true
-				if createOrg {
-					if createErr := opts.createOrganization(); createErr != nil {
-						return createErr
-					}
-					if opts.OrgID != "" {
-						return nil
-					}
-				} else {
+				if !createOrg {
 					_, _ = fmt.Fprint(opts.OutWriter, "Skipping create Organization\n")
 					// Continue to manual entry prompt
 					return opts.manualOrgIDEntry()
+				}
+				if createErr := opts.createOrganization(); createErr != nil {
+					return createErr
+				}
+				if opts.OrgID != "" {
+					return nil
 				}
 			} else {
 				_, _ = fmt.Fprintln(opts.OutWriter, "No results match, please type the organization ID or the organization name to filter.")

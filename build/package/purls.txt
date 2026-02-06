@@ -106,7 +106,7 @@ pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312012@v20250312012.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
-pkg:golang/go.mongodb.org/mongo-driver@v1.17.7
+pkg:golang/go.mongodb.org/mongo-driver@v1.17.8
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc@v0.61.0
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.61.0

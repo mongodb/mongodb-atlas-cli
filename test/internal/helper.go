@@ -214,7 +214,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 	}
 	region, err := NewAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get available region for project %s, tier %s, provider %s: %w", projectID, tier, e2eClusterProvider, err)
 	}
 	args := []string{
 		clustersEntity,
@@ -237,7 +237,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(create); err != nil {
-		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
+		return "", fmt.Errorf("error creating cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -253,7 +253,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(watch); err != nil {
-		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+		return "", fmt.Errorf("error watching cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 	return region, nil
 }
@@ -286,12 +286,49 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
 	if resp, err := RunAndGetStdOutAndErr(deleteCmd); err != nil {
-		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
+		return fmt.Errorf("error deleting cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 	return nil
 }
 
 func WatchCluster(projectID, clusterName string) error {
+	return WatchClusterWithTimeout(projectID, clusterName, 30*time.Minute)
+}
+
+func getClusterState(projectID, clusterName string) (string, string, error) {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return "", "", err
+	}
+	args := []string{
+		clustersEntity,
+		"describe",
+		clusterName,
+		"-o=json",
+		"-P",
+		ProfileName(),
+	}
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	resp, err := RunAndGetStdOut(cmd)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to get cluster state: %w: %s", err, string(resp))
+	}
+
+	var cluster atlasClustersPinned.AdvancedClusterDescription
+	if err := json.Unmarshal(resp, &cluster); err != nil {
+		return "", "", fmt.Errorf("failed to unmarshal cluster response: %w: %s", err, string(resp))
+	}
+
+	stateName := cluster.GetStateName()
+	clusterID := cluster.GetId()
+	return stateName, clusterID, nil
+}
+
+func WatchClusterWithTimeout(projectID, clusterName string, timeout time.Duration) error {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return err
@@ -306,10 +343,27 @@ func WatchCluster(projectID, clusterName string) error {
 	if projectID != "" {
 		watchArgs = append(watchArgs, "--projectId", projectID)
 	}
-	watchCmd := exec.Command(cliPath, watchArgs...)
+
+	// Create a context with timeout to prevent indefinite hanging
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	watchCmd := exec.CommandContext(ctx, cliPath, watchArgs...)
 	watchCmd.Env = os.Environ()
+
 	if resp, err := RunAndGetStdOut(watchCmd); err != nil {
-		return fmt.Errorf("error waiting for cluster %w: %s", err, string(resp))
+		if ctx.Err() == context.DeadlineExceeded {
+			// Get the actual cluster state to provide better debugging info
+			stateName, clusterID, stateErr := getClusterState(projectID, clusterName)
+			stateInfo := ""
+			if stateErr == nil {
+				stateInfo = fmt.Sprintf("current state: %s, cluster ID: %s", stateName, clusterID)
+			} else {
+				stateInfo = fmt.Sprintf("failed to get cluster state: %v", stateErr)
+			}
+			return fmt.Errorf("timeout waiting for cluster %s in project %s after %v. %s. Cluster may be stuck in DELETING state or deletion is taking longer than expected", clusterName, projectID, timeout, stateInfo)
+		}
+		return fmt.Errorf("error waiting for cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 	return nil
 }
@@ -333,7 +387,7 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 	updateCmd := exec.Command(cliPath, args...)
 	updateCmd.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(updateCmd); err != nil {
-		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
+		return fmt.Errorf("error removing termination protection from cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 
 	return WatchCluster(projectID, clusterName)
@@ -342,13 +396,16 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 func DeleteClusterForProject(projectID, clusterName string) error {
 	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
-			return err
+			return fmt.Errorf("failed to delete cluster %s in project %s: %w", clusterName, projectID, err)
 		}
 
+		// Try to remove termination protection and retry
 		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
-			return err
+			return fmt.Errorf("failed to remove termination protection from cluster %s in project %s: %w", clusterName, projectID, err)
 		}
-		return internalDeleteClusterForProject(projectID, clusterName)
+		if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
+			return fmt.Errorf("failed to delete cluster %s in project %s after removing termination protection: %w", clusterName, projectID, err)
+		}
 	}
 
 	return nil
@@ -377,17 +434,17 @@ func NewAvailableRegion(projectID, tier, provider string) (string, error) {
 	resp, err := RunAndGetStdOut(cmd)
 
 	if err != nil {
-		return "", fmt.Errorf("error getting regions %w: %s", err, string(resp))
+		return "", fmt.Errorf("error getting regions for project %s, tier %s, provider %s: %w: %s", projectID, tier, provider, err, string(resp))
 	}
 
 	var cloudProviders atlasv2.PaginatedApiAtlasProviderRegions
 	err = json.Unmarshal(resp, &cloudProviders)
 	if err != nil {
-		return "", fmt.Errorf("error unmarshaling response %w: %s", err, string(resp))
+		return "", fmt.Errorf("error unmarshaling regions response for project %s, tier %s, provider %s: %w: %s", projectID, tier, provider, err, string(resp))
 	}
 
 	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
-		return "", errNoRegions
+		return "", fmt.Errorf("%w: no regions available for project %s, tier %s, provider %s", errNoRegions, projectID, tier, provider)
 	}
 
 	return cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
@@ -673,17 +730,53 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasCluste
 func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 	clusters := listClustersForProject(t, cliPath, projectID)
+	if len(clusters.GetResults()) == 0 {
+		t.Logf("no clusters found in project %s", projectID)
+		return
+	}
+
+	t.Logf("found %d clusters to delete in project %s", len(clusters.GetResults()), projectID)
+	var failedClusters []string
 	for _, cluster := range clusters.GetResults() {
 		func(clusterName, state string) {
 			t.Run("delete cluster "+clusterName, func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
-					_ = WatchCluster(projectID, clusterName)
+					t.Logf("cluster %s is already in DELETING state, waiting for deletion to complete in project %s (timeout: 30 minutes)", clusterName, projectID)
+					err := WatchClusterWithTimeout(projectID, clusterName, 30*time.Minute)
+					if err != nil {
+						// Try to get current state for better debugging
+						currentState, clusterID, stateErr := getClusterState(projectID, clusterName)
+						if stateErr == nil {
+							t.Errorf("failed to watch cluster %s (ID: %s) deletion in project %s: %v. Current state: %s", clusterName, clusterID, projectID, err, currentState)
+						} else {
+							t.Errorf("failed to watch cluster %s deletion in project %s: %v. Could not get current state: %v", clusterName, projectID, err, stateErr)
+						}
+						failedClusters = append(failedClusters, clusterName)
+					} else {
+						t.Logf("cluster %s successfully deleted in project %s", clusterName, projectID)
+					}
 					return
 				}
-				assert.NoError(t, DeleteClusterForProject(projectID, clusterName))
+				t.Logf("deleting cluster %s (state: %s) in project %s", clusterName, state, projectID)
+				err := DeleteClusterForProject(projectID, clusterName)
+				if err != nil {
+					// Try to get current state for better debugging
+					currentState, clusterID, stateErr := getClusterState(projectID, clusterName)
+					if stateErr == nil {
+						t.Errorf("failed to delete cluster %s (ID: %s) in project %s: %v. Current state: %s", clusterName, clusterID, projectID, err, currentState)
+					} else {
+						t.Errorf("failed to delete cluster %s in project %s: %v. Could not get current state: %v", clusterName, projectID, err, stateErr)
+					}
+					failedClusters = append(failedClusters, clusterName)
+				} else {
+					t.Logf("cluster %s successfully deleted in project %s", clusterName, projectID)
+				}
 			})
 		}(cluster.GetName(), cluster.GetStateName())
+	}
+	if len(failedClusters) > 0 {
+		t.Errorf("failed to delete %d clusters in project %s: %v", len(failedClusters), projectID, failedClusters)
 	}
 }
 
@@ -703,13 +796,26 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
-	t.Log("available network peers", string(resp))
+	t.Logf("available network peers for provider %s in project %s: %s", provider, projectID, string(resp))
 	require.NoError(t, err, string(resp))
 	var networkPeers []atlasv2.BaseNetworkPeeringConnectionSettings
 	err = json.Unmarshal(resp, &networkPeers)
 	require.NoError(t, err)
+
+	if len(networkPeers) == 0 {
+		t.Logf("no network peers found for provider %s in project %s", provider, projectID)
+		return
+	}
+
+	t.Logf("found %d network peers to delete for provider %s in project %s", len(networkPeers), provider, projectID)
+	var failedDeletions []string
 	for _, peer := range networkPeers {
 		peerID := peer.GetId()
+		containerID := peer.GetContainerId()
+		if containerID == "" {
+			containerID = "unknown"
+		}
+		t.Logf("deleting network peer %s (container: %s) for provider %s in project %s", peerID, containerID, provider, projectID)
 		cmd = exec.Command(cliPath,
 			networkingEntity,
 			networkPeeringEntity,
@@ -723,7 +829,15 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		)
 		cmd.Env = os.Environ()
 		resp, err = RunAndGetStdOut(cmd)
-		assert.NoError(t, err, string(resp))
+		if err != nil {
+			t.Errorf("failed to delete network peer %s (container: %s) for provider %s in project %s: %v, output: %s", peerID, containerID, provider, projectID, err, string(resp))
+			failedDeletions = append(failedDeletions, peerID)
+		} else {
+			t.Logf("successfully deleted network peer %s for provider %s in project %s", peerID, provider, projectID)
+		}
+	}
+	if len(failedDeletions) > 0 {
+		t.Errorf("failed to delete %d network peers for provider %s in project %s: %v", len(failedDeletions), provider, projectID, failedDeletions)
 	}
 }
 
@@ -733,22 +847,39 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	t.Helper()
 
 	privateEndpoints := listPrivateEndpointsByProject(t, cliPath, projectID, provider)
-	for _, endpoint := range privateEndpoints {
-		deletePrivateEndpoint(t, cliPath, projectID, provider, endpoint.GetId())
+	if len(privateEndpoints) == 0 {
+		t.Logf("no private endpoints found for provider %s in project %s", provider, projectID)
+		return
+	}
+
+	t.Logf("found %d private endpoints to delete for provider %s in project %s", len(privateEndpoints), provider, projectID)
+	for i, endpoint := range privateEndpoints {
+		endpointID := endpoint.GetId()
+		endpointName := endpoint.GetEndpointServiceName()
+		t.Logf("deleting private endpoint %d/%d: ID=%s, Name=%s for provider %s in project %s", i+1, len(privateEndpoints), endpointID, endpointName, provider, projectID)
+		deletePrivateEndpoint(t, cliPath, projectID, provider, endpointID)
 	}
 
 	done := false
-	for range 10 {
+	var remainingEndpoints []string
+	for attempt := range 10 {
 		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 		if len(privateEndpoints) == 0 {
-			t.Logf("all %s private endpoints successfully deleted", provider)
+			t.Logf("all %s private endpoints successfully deleted after %d attempts", provider, attempt+1)
 			done = true
 			break
 		}
+		remainingEndpoints = make([]string, 0, len(privateEndpoints))
+		for _, ep := range privateEndpoints {
+			remainingEndpoints = append(remainingEndpoints, fmt.Sprintf("ID=%s, Name=%s, Status=%s", ep.GetId(), ep.GetEndpointServiceName(), ep.GetStatus()))
+		}
+		t.Logf("attempt %d/10: %d %s private endpoints still remaining in project %s: %v", attempt+1, len(privateEndpoints), provider, projectID, remainingEndpoints)
 		time.Sleep(sleep)
 	}
 
-	require.True(t, done, "failed to clean all private endpoints")
+	if !done {
+		t.Errorf("failed to clean all %s private endpoints in project %s after 10 attempts. Remaining endpoints: %v", provider, projectID, remainingEndpoints)
+	}
 }
 
 func deleteAllStreams(t *testing.T, cliPath, projectID string) {
@@ -756,25 +887,39 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 
 	streams := listStreamsByProject(t, cliPath, projectID)
 	if streams.GetTotalCount() == 0 {
+		t.Logf("no streams found in project %s", projectID)
 		return
 	}
 
-	for _, stream := range streams.GetResults() {
-		deleteStream(t, cliPath, projectID, *stream.Name)
+	t.Logf("found %d streams to delete in project %s", streams.GetTotalCount(), projectID)
+	var streamNames []string
+	for i, stream := range streams.GetResults() {
+		streamName := *stream.Name
+		streamNames = append(streamNames, streamName)
+		t.Logf("deleting stream %d/%d: %s in project %s", i+1, streams.GetTotalCount(), streamName, projectID)
+		deleteStream(t, cliPath, projectID, streamName)
 	}
 
 	done := false
-	for range 10 {
+	var remainingStreams []string
+	for attempt := range 10 {
 		streams = listStreamsByProject(t, cliPath, projectID)
 		if streams.GetTotalCount() == 0 {
-			t.Logf("all streams successfully deleted")
+			t.Logf("all streams successfully deleted after %d attempts in project %s", attempt+1, projectID)
 			done = true
 			break
 		}
+		remainingStreams = make([]string, 0, streams.GetTotalCount())
+		for _, stream := range streams.GetResults() {
+			remainingStreams = append(remainingStreams, *stream.Name)
+		}
+		t.Logf("attempt %d/10: %d streams still remaining in project %s: %v", attempt+1, streams.GetTotalCount(), projectID, remainingStreams)
 		time.Sleep(sleep)
 	}
 
-	require.True(t, done, "failed to clean all streams")
+	if !done {
+		t.Errorf("failed to clean all streams in project %s after 10 attempts. Attempted to delete: %v. Remaining streams: %v", projectID, streamNames, remainingStreams)
+	}
 }
 
 func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedApiStreamsTenant {
@@ -817,7 +962,10 @@ func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
+	if err != nil {
+		t.Logf("error deleting stream %s in project %s: %v, output: %s", streamID, projectID, err, string(resp))
+	}
+	require.NoError(t, err, "failed to delete stream %s in project %s: %s", streamID, projectID, string(resp))
 }
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
@@ -858,7 +1006,10 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 	)
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
+	if err != nil {
+		t.Logf("error deleting private endpoint %s for provider %s in project %s: %v, output: %s", endpointID, provider, projectID, err, string(resp))
+	}
+	require.NoError(t, err, "failed to delete private endpoint %s for provider %s in project %s: %s", endpointID, provider, projectID, string(resp))
 }
 
 func DeleteTeam(teamID string) error {
@@ -930,10 +1081,31 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	dataFederations := listDataFederationsByProject(t, cliPath, projectID)
-	for _, federation := range dataFederations {
-		deleteDataFederationForProject(t, cliPath, projectID, federation.GetName())
+	if len(dataFederations) == 0 {
+		t.Logf("no data federations found in project %s", projectID)
+		return
 	}
-	t.Log("all datafederations successfully deleted")
+
+	t.Logf("found %d data federations to delete in project %s", len(dataFederations), projectID)
+	var federationNames []string
+	for i, federation := range dataFederations {
+		fedName := federation.GetName()
+		federationNames = append(federationNames, fedName)
+		t.Logf("deleting data federation %d/%d: %s in project %s", i+1, len(dataFederations), fedName, projectID)
+		deleteDataFederationForProject(t, cliPath, projectID, fedName)
+	}
+
+	// Re-check to see if any remain after deletion attempts
+	remainingFederations := listDataFederationsByProject(t, cliPath, projectID)
+	if len(remainingFederations) > 0 {
+		var remainingNames []string
+		for _, fed := range remainingFederations {
+			remainingNames = append(remainingNames, fed.GetName())
+		}
+		t.Errorf("failed to delete %d data federations in project %s. Attempted to delete: %v. Remaining: %v", len(remainingFederations), projectID, federationNames, remainingNames)
+	} else {
+		t.Logf("all data federations successfully deleted in project %s", projectID)
+	}
 }
 
 func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {

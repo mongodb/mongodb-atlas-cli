@@ -37643,6 +37643,9 @@ components:
                         $ref: '#/components/schemas/Link'
                     readOnly: true
                     type: array
+                resumeFromCheckpoint:
+                    description: When true or not specified, the stream processor resumes from its last checkpoint. When false, the stream processor starts fresh.
+                    type: boolean
                 startAtOperationTime:
                     description: The operation time after which the change stream source should begin reporting. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -41046,7 +41049,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: c27e29251b9850d2a3e553e01bc4cf2b974faf74
+    x-xgen-sha: cd809c73a6f384efd6cc2475d351635ba87e6597
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

@@ -893,7 +893,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 	}
 
 	t.Logf("found %d streams to delete in project %s", streams.GetTotalCount(), projectID)
-	var streamNames []string
+	streamNames := make([]string, 0, streams.GetTotalCount())
 	for i, stream := range streams.GetResults() {
 		streamName := *stream.Name
 		streamNames = append(streamNames, streamName)
@@ -1088,7 +1088,7 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 	}
 
 	t.Logf("found %d data federations to delete in project %s", len(dataFederations), projectID)
-	var federationNames []string
+	federationNames := make([]string, 0, len(dataFederations))
 	for i, federation := range dataFederations {
 		fedName := federation.GetName()
 		federationNames = append(federationNames, fedName)

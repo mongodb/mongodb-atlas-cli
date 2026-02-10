@@ -1,0 +1,19 @@
+HTTP/2.0 404 Not Found
+Content-Length: 204
+Content-Type: application/json
+Date: Tue, 10 Feb 2026 09:46:59 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9996
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 71
+X-Error-Code: CLUSTER_NOT_FOUND
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=1ee9d89e6a25d10e2bf2c4c8d1350d2b2db23c09; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No cluster named cluster-372 exists in group 698afb2892862989a5d62b88.","error":404,"errorCode":"CLUSTER_NOT_FOUND","parameters":["cluster-372","698afb2892862989a5d62b88"],"reason":"Not Found"}

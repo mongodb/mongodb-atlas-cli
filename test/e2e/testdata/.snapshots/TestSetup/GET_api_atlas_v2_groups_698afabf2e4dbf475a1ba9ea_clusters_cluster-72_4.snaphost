@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 2159
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Tue, 10 Feb 2026 09:31:09 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9995
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 88
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=1ee9d89e6a25d10e2bf2c4c8d1350d2b2db23c09; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-q2hkl9r-shard-00-00.do4noue.mongodb-dev.net:27017,ac-q2hkl9r-shard-00-01.do4noue.mongodb-dev.net:27017,ac-q2hkl9r-shard-00-02.do4noue.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-8rvtay-shard-0","standardSrv":"mongodb+srv://cluster-72.do4noue.mongodb-dev.net"},"createDate":"2026-02-10T09:30:53Z","diskWarmingMode":"FULLY_WARMED","effectiveReplicationSpecs":[{"id":"698afacc2e4dbf475a1bbd30","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"698afacc2e4dbf475a1bbd2f","zoneName":"Zone 1"}],"encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"698afabf2e4dbf475a1ba9ea","id":"698afacd2e4dbf475a1bbd35","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698afabf2e4dbf475a1ba9ea/clusters/cluster-72","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/698afabf2e4dbf475a1ba9ea/clusters/cluster-72/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/698afabf2e4dbf475a1ba9ea/clusters/cluster-72/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.19","name":"cluster-72","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"698afacc2e4dbf475a1bbd30","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"698afacc2e4dbf475a1bbd2f","zoneName":"Zone 1"}],"retainBackups":false,"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[{"key":"env","value":"e2etest"}],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

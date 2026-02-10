@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 954
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 26 Jan 2026 03:10:18 GMT
+Date: Tue, 10 Feb 2026 09:36:15 GMT
 Ratelimit-Limit: 300
 Ratelimit-Remaining: 294
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 35
+X-Envoy-Upstream-Service-Time: 26
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=f5be8e7d6c3c46210b83c674ddebca506529d98b; versionString=master
+X-Mongodb-Service-Version: gitHash=1ee9d89e6a25d10e2bf2c4c8d1350d2b2db23c09; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=SAML&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"acsUrl":"https://auth-qa.mongodb.com/sso/saml2/0oa17ziag59V93JYS358","associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audienceUri":"https://www.okta.com/saml2/service-provider/spkcaajgznyowoyqsiqn","createdAt":"2024-07-30T15:11:58Z","description":"","displayName":"FedTest","id":"66a902c08811d46a1db437ca","idpType":"WORKFORCE","issuerUri":"urn:idp:default","oktaIdpId":"0oa17ziag59V93JYS358","pemFileInfo":{"certificates":[{"notAfter":"2051-12-16T14:28:59Z","notBefore":"2024-07-30T14:28:59Z"}],"fileName":null},"protocol":"SAML","requestBinding":"HTTP-POST","responseSignatureAlgorithm":"SHA-256","slug":"","ssoDebugEnabled":true,"ssoUrl":"http://localhost","status":"ACTIVE","updatedAt":"2024-07-30T15:12:50Z"}],"totalCount":1}

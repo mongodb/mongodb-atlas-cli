@@ -83,6 +83,21 @@ func Test_createPluginFromManifest(t *testing.T) {
 	assert.Equal(t, plugin.Commands[0].Aliases, manifest.Commands["testCommand"].Aliases)
 }
 
+func Test_createPluginFromManifest_sanitizesGithubValues(t *testing.T) {
+	manifest := getTestManifest()
+	manifest.Github = &ManifestGithubValues{
+		Owner: "mongodb/",         // trailing slash should be removed
+		Name:  "atlas-local-cli/", // trailing slash should be removed
+	}
+
+	plugin, err := createPluginFromManifest(manifest)
+	require.NoError(t, err)
+
+	require.NotNil(t, plugin.Github)
+	assert.Equal(t, "mongodb", plugin.Github.Owner)
+	assert.Equal(t, "atlas-local-cli", plugin.Github.Name)
+}
+
 func TestPluginVersion(t *testing.T) {
 	tests := []struct {
 		name    string

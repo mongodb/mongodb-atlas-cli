@@ -53,7 +53,7 @@ func TestShardedCluster(t *testing.T) {
 
 	shardedClusterName := g.Memory("shardedClusterName", internal.Must(internal.RandClusterName())).(string)
 	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
-	dbUserPassword := dbUserUsername + "~PwD"
+	dbUserPassword := dbUserUsername + "~PassWord"
 
 	var client *mongo.Client
 	ctx := t.Context()

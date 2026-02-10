@@ -116,8 +116,9 @@ const (
 
 	deletingState = "DELETING"
 
-	maxRetryAttempts   = 10
-	sleepTimeInSeconds = 30
+	maxRetryAttempts    = 10
+	sleepTimeInSeconds  = 30
+	clusterWatchTimeout = 30 * time.Minute // 30 minutes timeout for cluster watch operations
 
 	// CLI Plugins System constants.
 	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
@@ -292,7 +293,7 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 }
 
 func WatchCluster(projectID, clusterName string) error {
-	return WatchClusterWithTimeout(projectID, clusterName, 30*time.Minute)
+	return WatchClusterWithTimeout(projectID, clusterName, clusterWatchTimeout)
 }
 
 func getClusterState(projectID, clusterName string) (string, string, error) {
@@ -355,7 +356,7 @@ func WatchClusterWithTimeout(projectID, clusterName string, timeout time.Duratio
 		if ctx.Err() == context.DeadlineExceeded {
 			// Get the actual cluster state to provide better debugging info
 			stateName, clusterID, stateErr := getClusterState(projectID, clusterName)
-			stateInfo := ""
+			var stateInfo string
 			if stateErr == nil {
 				stateInfo = fmt.Sprintf("current state: %s, cluster ID: %s", stateName, clusterID)
 			} else {
@@ -742,8 +743,8 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 			t.Run("delete cluster "+clusterName, func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
-					t.Logf("cluster %s is already in DELETING state, waiting for deletion to complete in project %s (timeout: 30 minutes)", clusterName, projectID)
-					err := WatchClusterWithTimeout(projectID, clusterName, 30*time.Minute)
+					t.Logf("cluster %s is already in DELETING state, waiting for deletion to complete in project %s (timeout: %v)", clusterName, projectID, clusterWatchTimeout)
+					err := WatchClusterWithTimeout(projectID, clusterName, clusterWatchTimeout)
 					if err != nil {
 						// Try to get current state for better debugging
 						currentState, clusterID, stateErr := getClusterState(projectID, clusterName)

@@ -130,7 +130,15 @@ func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
 func RegisterCommands(rootCmd *cobra.Command) {
 	plugins := plugin.GetAllPluginsValidated(createExistingCommandsSet(rootCmd.Commands()))
 
+	// Get set of first-class plugins that need updating
+	firstClassPluginsNeedingUpdate := getFirstClassPluginsNeedingUpdate(plugins)
+
 	for _, p := range plugins.GetValidPlugins() {
+		// Skip installed plugins that are first-class plugins needing update
+		// Their commands will be handled by the first-class plugin mechanism
+		if _, needsUpdate := firstClassPluginsNeedingUpdate[p.Name]; needsUpdate {
+			continue
+		}
 		rootCmd.AddCommand(p.GetCobraCommands()...)
 	}
 

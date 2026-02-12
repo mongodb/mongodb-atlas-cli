@@ -20,6 +20,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/atlas-cli-core/config"
@@ -265,8 +266,8 @@ func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {
 
 	if manifest.Github != nil {
 		plugin.Github = &Github{
-			Owner: manifest.Github.Owner,
-			Name:  manifest.Github.Name,
+			Owner: strings.TrimSuffix(manifest.Github.Owner, "/"),
+			Name:  strings.TrimSuffix(manifest.Github.Name, "/"),
 		}
 	}
 

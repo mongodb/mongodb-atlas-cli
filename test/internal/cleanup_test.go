@@ -75,6 +75,9 @@ func TestCleanup(t *testing.T) {
 	}
 	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)
+		t.Logf("listing projects for org ID: %s", orgID)
+	} else {
+		t.Logf("listing all projects (no org ID filter)")
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
@@ -82,7 +85,7 @@ func TestCleanup(t *testing.T) {
 	req.NoError(err, string(resp))
 	var projects admin.PaginatedAtlasGroup
 	req.NoError(json.Unmarshal(resp, &projects), string(resp))
-	t.Logf("projects:\n%s\n", resp)
+	t.Logf("found %d projects to process:\n%s\n", len(projects.GetResults()), resp)
 	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
 		if projectID == ProfileProjectID() || projectID == os.Getenv("MONGODB_ATLAS_PROJECT_ID") {

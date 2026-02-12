@@ -41,6 +41,36 @@ func (m *MockProjectOrgsLister) EXPECT() *MockProjectOrgsListerMockRecorder {
 	return m.recorder
 }
 
+// CreateAtlasOrganization mocks base method.
+func (m *MockProjectOrgsLister) CreateAtlasOrganization(arg0 *admin.CreateOrganizationRequest) (*admin.CreateOrganizationResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAtlasOrganization", arg0)
+	ret0, _ := ret[0].(*admin.CreateOrganizationResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateAtlasOrganization indicates an expected call of CreateAtlasOrganization.
+func (mr *MockProjectOrgsListerMockRecorder) CreateAtlasOrganization(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAtlasOrganization", reflect.TypeOf((*MockProjectOrgsLister)(nil).CreateAtlasOrganization), arg0)
+}
+
+// CreateProject mocks base method.
+func (m *MockProjectOrgsLister) CreateProject(arg0 *admin.CreateGroupApiParams) (*admin.Group, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateProject", arg0)
+	ret0, _ := ret[0].(*admin.Group)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateProject indicates an expected call of CreateProject.
+func (mr *MockProjectOrgsListerMockRecorder) CreateProject(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockProjectOrgsLister)(nil).CreateProject), arg0)
+}
+
 // GetOrgProjects mocks base method.
 func (m *MockProjectOrgsLister) GetOrgProjects(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()

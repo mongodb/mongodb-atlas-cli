@@ -289,7 +289,6 @@ func (g *GithubAsset) verifyAssetSignature(ghClient *github.Client, asset []byte
 		return fmt.Errorf("signature verification unsuccessful: %w", err)
 	}
 
-	fmt.Println("PGP signature verification successful!")
 	return nil
 }
 

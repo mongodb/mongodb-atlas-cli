@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312012/auth/clientcredentials"
+	"go.mongodb.org/atlas-sdk/v20250312013/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

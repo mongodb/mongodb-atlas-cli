@@ -13,7 +13,7 @@ import (
 	reflect "reflect"
 
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312013/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

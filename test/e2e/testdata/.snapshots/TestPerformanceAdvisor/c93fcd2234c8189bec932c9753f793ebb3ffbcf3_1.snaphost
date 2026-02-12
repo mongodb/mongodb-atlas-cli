@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 11 Feb 2026 09:21:38 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 84
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=edaf1e5120589d01d6af3496d72ea12b77c5bf9b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698c46cae3bbe1ace0f32b53/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-02-11T09:18:35Z","groupId":"698c46cae3bbe1ace0f32b53","hostname":"atlas-10wp96-shard-00-00.pufrjc.mongodb-dev.net","id":"atlas-10wp96-shard-00-00.pufrjc.mongodb-dev.net:27017","lastPing":"2026-02-11T09:21:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698c46cae3bbe1ace0f32b53/processes/atlas-10wp96-shard-00-00.pufrjc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10wp96-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-288-shard-00-00.pufrjc.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-11T09:18:35Z","groupId":"698c46cae3bbe1ace0f32b53","hostname":"atlas-10wp96-shard-00-01.pufrjc.mongodb-dev.net","id":"atlas-10wp96-shard-00-01.pufrjc.mongodb-dev.net:27017","lastPing":"2026-02-11T09:21:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698c46cae3bbe1ace0f32b53/processes/atlas-10wp96-shard-00-01.pufrjc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10wp96-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-288-shard-00-01.pufrjc.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-11T09:18:35Z","groupId":"698c46cae3bbe1ace0f32b53","hostname":"atlas-10wp96-shard-00-02.pufrjc.mongodb-dev.net","id":"atlas-10wp96-shard-00-02.pufrjc.mongodb-dev.net:27017","lastPing":"2026-02-11T09:21:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698c46cae3bbe1ace0f32b53/processes/atlas-10wp96-shard-00-02.pufrjc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10wp96-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-288-shard-00-02.pufrjc.mongodb-dev.net","version":"8.0.19"}],"totalCount":3}

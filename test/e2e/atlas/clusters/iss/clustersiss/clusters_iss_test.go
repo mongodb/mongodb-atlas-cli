@@ -265,6 +265,13 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
 
+		mode, err := internal.TestRunMode()
+		req.NoError(err)
+
+		if mode != internal.TestModeLive {
+			t.Skip("skipping actual MongoDB connection in snapshot mode")
+		}
+
 		client, err = mongo.Connect(
 			ctx,
 			options.Client().

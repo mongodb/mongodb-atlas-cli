@@ -1,0 +1,19 @@
+HTTP/2.0 404 Not Found
+Content-Length: 204
+Content-Type: application/json
+Date: Wed, 11 Feb 2026 09:20:44 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9995
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 59
+X-Error-Code: CLUSTER_NOT_FOUND
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=edaf1e5120589d01d6af3496d72ea12b77c5bf9b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No cluster named cluster-943 exists in group 698c46b9e3bbe1ace0f30dcf.","error":404,"errorCode":"CLUSTER_NOT_FOUND","parameters":["cluster-943","698c46b9e3bbe1ace0f30dcf"],"reason":"Not Found"}

@@ -1,0 +1,20 @@
+HTTP/2.0 201 Created
+Content-Length: 1416
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Wed, 11 Feb 2026 09:07:14 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9998
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 898
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::createCluster
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=edaf1e5120589d01d6af3496d72ea12b77c5bf9b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-727.yur9hbm.mongodb-dev.net"},"createDate":"2026-02-11T09:07:14Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"698c46b9e3bbe1ace0f30e26","id":"698c46c2e3bbe1ace0f31fc0","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/698c46b9e3bbe1ace0f30e26/clusters/cluster-727","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/698c46b9e3bbe1ace0f30e26/clusters/cluster-727/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/698c46b9e3bbe1ace0f30e26/clusters/cluster-727/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.19","name":"cluster-727","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"698c46c2e3bbe1ace0f31fa1","numShards":1,"regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0"},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_2"}],"zoneId":"698c46c2e3bbe1ace0f31fb4","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

@@ -19,7 +19,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 )
 
 func TestBuildAtlasRoles(t *testing.T) {

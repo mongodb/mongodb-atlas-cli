@@ -17,6 +17,7 @@ package plugin
 import (
 	"fmt"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
@@ -42,7 +43,8 @@ var FirstClassPlugins = []*FirstClassPlugin{
 	// 	},
 	// },
 	{
-		Name: "atlas-cli-plugin-kubernetes",
+		Name:       "atlas-cli-plugin-kubernetes",
+		MinVersion: "1.2.4",
 		Github: &Github{
 			Owner: "mongodb",
 			Name:  "atlas-cli-plugin-kubernetes",
@@ -55,7 +57,8 @@ var FirstClassPlugins = []*FirstClassPlugin{
 		},
 	},
 	{
-		Name: "atlas-local-plugin",
+		Name:       "atlas-local-plugin",
+		MinVersion: "0.0.10",
 		Github: &Github{
 			Owner: "mongodb",
 			Name:  "atlas-local-cli",
@@ -80,9 +83,10 @@ type Github struct {
 }
 
 type FirstClassPlugin struct {
-	Name     string
-	Github   *Github
-	Commands []*Command
+	Name       string
+	MinVersion string
+	Github     *Github
+	Commands   []*Command
 }
 
 func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
@@ -92,17 +96,30 @@ func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
 	return false
 }
 
-func (fcp *FirstClassPlugin) isAlreadyInstalled(plugins *plugin.ValidatedPlugins) bool {
+func (fcp *FirstClassPlugin) getInstalledPlugin(plugins *plugin.ValidatedPlugins) *plugin.Plugin {
 	for _, p := range plugins.GetValidPlugins() {
 		if p.Name == fcp.Name {
-			return true
+			return p
 		}
 	}
 
-	return false
+	return nil
 }
 
-func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, plugins *plugin.ValidatedPlugins) error {
+func (fcp *FirstClassPlugin) needsUpdate(installedPlugin *plugin.Plugin) bool {
+	if fcp.MinVersion == "" {
+		return false
+	}
+
+	minVersion, err := semver.NewVersion(fcp.MinVersion)
+	if err != nil {
+		return false
+	}
+
+	return installedPlugin.Version.LessThan(minVersion)
+}
+
+func (fcp *FirstClassPlugin) installPlugin(cmd *cobra.Command, plugins *plugin.ValidatedPlugins) error {
 	installOpts := &InstallOpts{
 		Opts: Opts{
 			plugins: plugins,
@@ -121,6 +138,47 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	}
 	if err := installOpts.Run(cmd.Context()); err != nil {
 		return fmt.Errorf("failed to install first class plugin %s: %w", fcp.Name, err)
+	}
+
+	return nil
+}
+
+func (fcp *FirstClassPlugin) updatePlugin(cmd *cobra.Command, plugins *plugin.ValidatedPlugins, existingPlugin *plugin.Plugin) error {
+	updateOpts := &UpdateOpts{
+		Opts: Opts{
+			plugins: plugins,
+		},
+		ghClient: NewAuthenticatedGithubClient(),
+	}
+
+	githubAsset := &GithubAsset{
+		owner: fcp.Github.Owner,
+		name:  fcp.Github.Name,
+	}
+
+	updateOpts.Print(fmt.Sprintf("Updating first class plugin %s to minimum required version %s", fcp.Name, fcp.MinVersion))
+
+	if err := updateOpts.updatePlugin(cmd.Context(), githubAsset, existingPlugin); err != nil {
+		return fmt.Errorf("failed to update first class plugin %s: %w", fcp.Name, err)
+	}
+
+	return nil
+}
+
+func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, plugins *plugin.ValidatedPlugins) error {
+	// Check if plugin is already installed
+	installedPlugin := fcp.getInstalledPlugin(plugins)
+
+	if installedPlugin == nil {
+		// Plugin not installed, install it
+		if err := fcp.installPlugin(cmd, plugins); err != nil {
+			return err
+		}
+	} else if fcp.needsUpdate(installedPlugin) {
+		// Plugin installed but below minimum version, update it
+		if err := fcp.updatePlugin(cmd, plugins, installedPlugin); err != nil {
+			return err
+		}
 	}
 
 	// find and run installed plugin
@@ -161,9 +219,12 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 
 func getFirstClassPluginCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {
 	var commands []*cobra.Command
-	// create cobra commands to install first class plugins when their commands are run
+	// create cobra commands to install/update first class plugins when their commands are run
 	for _, firstClassPlugin := range FirstClassPlugins {
-		if firstClassPlugin.isAlreadyInstalled(plugins) {
+		installedPlugin := firstClassPlugin.getInstalledPlugin(plugins)
+
+		// Skip if plugin is already installed and doesn't need updating
+		if installedPlugin != nil && !firstClassPlugin.needsUpdate(installedPlugin) {
 			continue
 		}
 
@@ -171,4 +232,19 @@ func getFirstClassPluginCommands(plugins *plugin.ValidatedPlugins) []*cobra.Comm
 	}
 
 	return commands
+}
+
+// getFirstClassPluginsNeedingUpdate returns a set of plugin names that are first-class plugins
+// which are installed but need updating to meet the minimum version requirement.
+func getFirstClassPluginsNeedingUpdate(plugins *plugin.ValidatedPlugins) map[string]bool {
+	result := make(map[string]bool)
+
+	for _, firstClassPlugin := range FirstClassPlugins {
+		installedPlugin := firstClassPlugin.getInstalledPlugin(plugins)
+		if installedPlugin != nil && firstClassPlugin.needsUpdate(installedPlugin) {
+			result[installedPlugin.Name] = true
+		}
+	}
+
+	return result
 }

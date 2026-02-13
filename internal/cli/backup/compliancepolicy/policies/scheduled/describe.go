@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=scheduled . Describer

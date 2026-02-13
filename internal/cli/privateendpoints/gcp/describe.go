@@ -24,12 +24,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 )
 
-var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupNames}}{{range valueOrEmptySlice .EndpointGroupNames}}
-{{$.Id}}	{{.}}	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}{{else}}
-{{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}
+var describeTemplate = `ID	GROUP NAME	REGION	STATUS	PORT MAPPING ENABLED	ERROR{{if .EndpointGroupNames}}{{range valueOrEmptySlice .EndpointGroupNames}}
+{{$.Id}}	{{.}}	{{$.RegionName}}	{{$.Status}}	{{$.PortMappingEnabled}}	{{$.ErrorMessage}}{{end}}{{else}}
+{{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.PortMappingEnabled}}	{{$.ErrorMessage}}{{end}}
 `
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber

@@ -276,6 +276,8 @@ jobs:
   verify_image:
     name: Build docker image
     runs-on: ubuntu-latest
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:

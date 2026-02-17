@@ -278,7 +278,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
-      DOCKER_API_VERSION: 1.43
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -292,7 +291,6 @@ jobs:
       - name: Enable containerd image store
         uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4
         with:
-          version: v24.0.6
           daemon-config: |
             {
               "features": {

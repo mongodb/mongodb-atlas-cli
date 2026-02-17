@@ -39,7 +39,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 )
 
 const redactedToken = "redactedToken"

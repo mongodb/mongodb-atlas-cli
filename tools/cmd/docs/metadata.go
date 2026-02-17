@@ -120,7 +120,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: nil,
@@ -147,7 +147,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -164,7 +164,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -181,13 +181,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: nil,
@@ -282,7 +282,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies your federation.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: nil,
@@ -340,7 +340,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -531,6 +531,9 @@ var metadata = metadatatypes.Metadata{
 	},
 	`createGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Fields-Replication-Specs`: {
+				Usage: `Controls how ` + "`" + `replicationSpecs` + "`" + ` fields are returned in the response. When set to ` + "`" + `true` + "`" + `, stores the client's view of ` + "`" + `replicationSpecs` + "`" + ` and returns it in ` + "`" + `replicationSpecs` + "`" + `, while the actual cluster state (including auto-scaled hardware and auto-added shards) is returned in ` + "`" + `effectiveReplicationSpecs` + "`" + `. When ` + "`" + `false` + "`" + ` (default), ` + "`" + `replicationSpecs` + "`" + ` contains the actual cluster state.`,
+			},
 			`Use-Effective-Instance-Fields`: {
 				Usage: `Controls how hardware specification fields are returned in the response after cluster creation. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling compatibility.`,
 			},
@@ -1447,7 +1450,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`integrationType`: {
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
@@ -1692,7 +1695,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -1839,7 +1842,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1856,13 +1859,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -1879,7 +1882,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: nil,
@@ -1890,7 +1893,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1904,7 +1907,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1918,7 +1921,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1933,7 +1936,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1947,7 +1950,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -1964,13 +1967,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -1990,7 +1993,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -2004,7 +2007,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -2018,7 +2021,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -2150,7 +2153,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2863,10 +2866,10 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default |
 | --- | --- | --- |
-| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
-| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
-| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
-| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+| ` + "`" + `bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single data federation query | N/A |
+| ` + "`" + `bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| ` + "`" + `bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| ` + "`" + `bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `,
 			},
 			`tenantName`: {
@@ -2907,15 +2910,15 @@ var metadata = metadatatypes.Metadata{
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
 |---|---|---|---|
-| AWS IAM | awsIAMType | ROLE | <abbr title="Amazon Resource Name">ARN</abbr> |
-| AWS IAM | awsIAMType | USER | <abbr title="Amazon Resource Name">ARN</abbr> |
-| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
-| SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `ROLE` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `USER` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `CUSTOMER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
 		},
@@ -3031,18 +3034,18 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
-| atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
-| atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
-| atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
-| atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
-| atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
-| dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
-| dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
-| dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
-| dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
-| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Service Connections per Region Group | 50 | 100|
-| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
+| ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
+| ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
+| ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsPerRegionGroup` + "`" + ` | Number of Private Service Connections per Region Group | 50 | 100|
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsSubnetMask` + "`" + ` | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `,
 			},
 			`pretty`: {
@@ -3217,7 +3220,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Cloud service provider that manages this private endpoint.`,
 			},
 			`endpointId`: {
-				Usage: `Unique string that identifies the private endpoint you want to delete. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`,
+				Usage: `Unique string that identifies the private endpoint you want to delete. The format of the ` + "`" + `endpointId` + "`" + ` parameter differs for AWS and Azure. You must URL encode the ` + "`" + `endpointId` + "`" + ` for Azure private endpoints.`,
 			},
 			`endpointServiceId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.`,
@@ -3652,7 +3655,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3675,7 +3678,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3705,7 +3708,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `One IP address or multiple IP addresses represented as one CIDR block to limit requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3733,7 +3736,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3757,7 +3760,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3777,7 +3780,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3802,7 +3805,7 @@ var metadata = metadatatypes.Metadata{
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`sandboxConfigId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the sandbox configuration.`,
@@ -3829,7 +3832,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3859,7 +3862,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3887,7 +3890,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -3915,7 +3918,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -4295,7 +4298,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique string that identifies the invoice for which to generate the report.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: nil,
@@ -4336,7 +4339,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4623,7 +4626,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -4690,7 +4693,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -4893,6 +4896,9 @@ var metadata = metadatatypes.Metadata{
 	},
 	`getGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Fields-Replication-Specs`: {
+				Usage: `Controls how ` + "`" + `replicationSpecs` + "`" + ` are returned in the response. When set to ` + "`" + `true` + "`" + `, returns the client-specified view in ` + "`" + `replicationSpecs` + "`" + ` and the actual cluster state in ` + "`" + `effectiveReplicationSpecs` + "`" + `. When ` + "`" + `false` + "`" + ` (default), ` + "`" + `replicationSpecs` + "`" + ` contains the actual cluster state.`,
+			},
 			`Use-Effective-Instance-Fields`: {
 				Usage: `Controls how hardware specification fields are returned in the response. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling compatibility.`,
 			},
@@ -5392,7 +5398,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`queryShapeHash`: {
-				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.`,
+				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like ` + "`" + `$queryStats` + "`" + ` and ` + "`" + `$explain` + "`" + ` or slow query logs.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5425,10 +5431,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processIds`: {
-				Usage: `ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each processId.`,
+				Usage: `Process IDs from which to retrieve query shape statistics. A ` + "`" + `processId` + "`" + ` is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple ` + "`" + `processIds` + "`" + `, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each ` + "`" + `processId` + "`" + `.`,
 			},
 			`queryShapeHash`: {
-				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.`,
+				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like ` + "`" + `$queryStats` + "`" + ` and ` + "`" + `$explain` + "`" + ` or slow query logs.`,
 			},
 			`since`: {
 				Usage: `Date and time from which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
@@ -5782,10 +5788,10 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default |
 | --- | --- | --- |
-| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
-| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
-| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
-| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+| ` + "`" + `bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single data federation query | N/A |
+| ` + "`" + `bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| ` + "`" + `bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| ` + "`" + `bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `,
 			},
 			`pretty`: {
@@ -5829,15 +5835,15 @@ var metadata = metadatatypes.Metadata{
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
 |---|---|---|---|
-| AWS IAM | awsIAMType | ROLE | <abbr title="Amazon Resource Name">ARN</abbr> |
-| AWS IAM | awsIAMType | USER | <abbr title="Amazon Resource Name">ARN</abbr> |
-| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
-| SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `ROLE` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `USER` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `CUSTOMER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
 		},
@@ -6278,18 +6284,18 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
-| atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
-| atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
-| atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
-| atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
-| atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
-| dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
-| dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
-| dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
-| dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
-| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Service Connections per Region Group | 50 | 100|
-| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
+| ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
+| ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
+| ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsPerRegionGroup` + "`" + ` | Number of Private Service Connections per Region Group | 50 | 100|
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsSubnetMask` + "`" + ` | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `,
 			},
 			`pretty`: {
@@ -6585,7 +6591,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -6684,7 +6690,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Cloud service provider that manages this private endpoint.`,
 			},
 			`endpointId`: {
-				Usage: `Unique string that identifies the private endpoint you want to return. The format of the **endpointId** parameter differs for AWS and Azure. You must URL encode the **endpointId** for Azure private endpoints.`,
+				Usage: `Unique string that identifies the private endpoint you want to return. The format of the ` + "`" + `endpointId` + "`" + ` parameter differs for AWS and Azure. You must URL encode the ` + "`" + `endpointId` + "`" + ` for Azure private endpoints.`,
 			},
 			`endpointServiceId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.`,
@@ -7462,7 +7468,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -7561,7 +7567,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7636,7 +7642,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7667,7 +7673,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Start date and time for events to include in the activity feed link. ISO 8601 timestamp format in UTC.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7693,7 +7699,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7720,7 +7726,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `The name of the model group to be retrieved.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7747,7 +7753,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7777,7 +7783,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7806,7 +7812,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `The month for which to retrieve invoices (1-12). Defaults to current month.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`year`: {
 				Usage: `The year for which to retrieve invoices. Defaults to current year.`,
@@ -7829,7 +7835,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`token`: {
 				Usage: `Unique 64 digit string that identifies the Cost Explorer query.`,
@@ -7859,7 +7865,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7883,7 +7889,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7906,7 +7912,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -7915,7 +7921,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -7944,7 +7950,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7968,7 +7974,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -7995,7 +8001,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8019,7 +8025,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8042,7 +8048,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8070,7 +8076,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8100,7 +8106,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8130,7 +8136,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -8157,7 +8163,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8180,7 +8186,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8207,7 +8213,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -8234,13 +8240,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8372,7 +8378,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8400,7 +8406,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8423,7 +8429,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies your federation.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8507,7 +8513,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8605,7 +8611,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8639,7 +8645,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8676,7 +8682,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8710,7 +8716,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8747,7 +8753,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8810,7 +8816,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8848,7 +8854,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8886,7 +8892,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -8953,7 +8959,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9163,7 +9169,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9247,7 +9253,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as ` + "`" + `.` + "`" + `: ` + "`" + `<database>.<collection>` + "`" + `. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each namespace. Omit this parameter to return results for all namespaces.`,
 			},
 			`processIds`: {
-				Usage: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each processId.`,
+				Usage: `Process IDs from which to retrieve suggested indexes. A ` + "`" + `processId` + "`" + ` is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple ` + "`" + `processIds` + "`" + `, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each ` + "`" + `processId` + "`" + `.`,
 			},
 			`since`: {
 				Usage: `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
@@ -9285,7 +9291,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9340,10 +9346,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processIds`: {
-				Usage: `ProcessIds from which to retrieve query shape statistics. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each processId.`,
+				Usage: `Process IDs from which to retrieve query shape statistics. A ` + "`" + `processId` + "`" + ` is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple ` + "`" + `processId` + "`" + `, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each ` + "`" + `processId` + "`" + `.`,
 			},
 			`queryShapeHashes`: {
-				Usage: `A list of SHA256 hashes of desired query shapes, output by MongoDB commands like $queryStats and $explain or slow query logs. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series.`,
+				Usage: `A list of SHA256 hashes of desired query shapes, output by MongoDB commands like ` + "`" + `$queryStats` + "`" + ` and $explain or slow query logs. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series.`,
 			},
 			`series`: {
 				Usage: `Query shape statistics data series to retrieve. A series represents a specific metric about query execution. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series.`,
@@ -9387,7 +9393,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9431,7 +9437,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9538,7 +9544,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9576,7 +9582,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`includeDeletedWithRetainedBackups`: {
 				Usage: `Flag that indicates whether to return Clusters with retain backups.`,
@@ -9637,7 +9643,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9671,7 +9677,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9791,7 +9797,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9829,7 +9835,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9866,7 +9872,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9904,7 +9910,7 @@ var metadata = metadatatypes.Metadata{
 **IMPORTANT**: The complete list of event type values changes frequently.`,
 			},
 			`excludedEventType`: {
-				Usage: `Category of event that you would like to exclude from query results, such as CLUSTER_CREATED
+				Usage: `Category of event that you would like to exclude from query results, such as ` + "`" + `CLUSTER_CREATED` + "`" + `.
 
 **IMPORTANT**: Event type names change frequently. Verify that you specify the event type correctly by checking the complete list of event types.`,
 			},
@@ -9914,7 +9920,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`includeRaw`: {
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
@@ -9957,7 +9963,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9995,7 +10001,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10033,7 +10039,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10189,7 +10195,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10276,10 +10282,10 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`integrationType`: {
-				Usage: `Optional filter by integration type (e.g., 'S3_LOG_EXPORT').`,
+				Usage: `Optional filter by integration type (e.g., ` + "`" + `S3_LOG_EXPORT` + "`" + `).`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10313,7 +10319,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10353,7 +10359,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10468,7 +10474,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10549,7 +10555,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10587,7 +10593,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10728,7 +10734,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10781,7 +10787,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10820,7 +10826,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10858,7 +10864,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10893,7 +10899,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10930,7 +10936,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11204,7 +11210,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11241,7 +11247,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`includeOrgUsers`: {
 				Usage: `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If ` + "`" + `"includeOrgUsers": false` + "`" + `, this resource returns only users with a role in the project. If ` + "`" + `"includeOrgUsers": true` + "`" + `, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`,
@@ -11280,7 +11286,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11310,7 +11316,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11339,7 +11345,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11368,13 +11374,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11401,13 +11407,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11438,7 +11444,7 @@ var metadata = metadatatypes.Metadata{
 **IMPORTANT**: The complete list of event type values changes frequently.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`includeRaw`: {
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
@@ -11453,7 +11459,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Date and time from when MongoDB Cloud starts returning events. This parameter uses the ISO 8601 timestamp format in UTC.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11479,7 +11485,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -11505,7 +11511,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -11528,19 +11534,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`fromDate`: {
-				Usage: `Retrieve the invoices the startDates of which are greater than or equal to the fromDate. If omit, the invoices return will go back to earliest startDate.`,
+				Usage: `Retrieve the invoices the ` + "`" + `startDates` + "`" + ` of which are greater than or equal to the ` + "`" + `fromDate` + "`" + `. If omit, the invoices return will go back to earliest ` + "`" + `startDate` + "`" + `.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orderBy`: {
-				Usage: `Field used to order the returned invoices by. Use in combination of sortBy parameter to control the order of the result.`,
+				Usage: `Field used to order the returned invoices by. Use in combination of ` + "`" + `sortBy` + "`" + ` parameter to control the order of the result.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11549,16 +11555,16 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`sortBy`: {
-				Usage: `Field used to sort the returned invoices by. Use in combination with orderBy parameter to control the order of the result.`,
+				Usage: `Field used to sort the returned invoices by. Use in combination with ` + "`" + `orderBy` + "`" + ` parameter to control the order of the result.`,
 			},
 			`statusNames`: {
 				Usage: `Statuses of the invoice to be retrieved. Omit to return invoices of all statuses.`,
 			},
 			`toDate`: {
-				Usage: `Retrieve the invoices the endDates of which are smaller than or equal to the toDate. If omit, the invoices return will go further to latest endDate.`,
+				Usage: `Retrieve the invoices the ` + "`" + `endDates` + "`" + ` of which are smaller than or equal to the ` + "`" + `toDate` + "`" + `. If omit, the invoices return will go further to latest ` + "`" + `endDate` + "`" + `.`,
 			},
 			`viewLinkedInvoices`: {
-				Usage: `Flag that indicates whether to return linked invoices in the linkedInvoices field.`,
+				Usage: `Flag that indicates whether to return linked invoices in the ` + "`" + `linkedInvoices` + "`" + ` field.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11581,7 +11587,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -11604,7 +11610,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -11631,7 +11637,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11660,13 +11666,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11696,7 +11702,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11725,7 +11731,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`orgMembershipStatus`: {
 				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
@@ -11765,13 +11771,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -11797,13 +11803,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`orgMembershipStatus`: {
 				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
@@ -11836,7 +11842,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11859,7 +11865,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12069,7 +12075,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Project](#tag/MongoDB-Cloud-Users/operation/listProjectUsers) resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Project](#tag/MongoDB-Cloud-Users/operation/listProjectUsers) resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12098,7 +12104,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: nil,
@@ -12109,7 +12115,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -12126,7 +12132,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -12157,13 +12163,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Organization](#tag/MongoDB-Cloud-Users/operation/listOrganizationUsers) resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Organization](#tag/MongoDB-Cloud-Users/operation/listOrganizationUsers) resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12184,13 +12190,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: nil,
@@ -12201,7 +12207,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -12441,7 +12447,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -12464,10 +12470,10 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default |
 | --- | --- | --- |
-| bytesProcessed.query | Limit on the number of bytes processed during a single data federation query | N/A |
-| bytesProcessed.daily | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
-| bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
-| bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
+| ` + "`" + `bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single data federation query | N/A |
+| ` + "`" + `bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current day | N/A |
+| ` + "`" + `bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
+| ` + "`" + `bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed for the data federation instance for the current month | N/A |
 `,
 			},
 			`tenantName`: {
@@ -12491,18 +12497,18 @@ var metadata = metadatatypes.Metadata{
 
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
-| atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
-| atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
-| atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
-| atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
-| atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
-| dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
-| dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
-| dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
-| dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
-| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Service Connections per Region Group | 50 | 100|
-| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
+| ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
+| ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
+| ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.daily` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.weekly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
+| ` + "`" + `dataFederation.bytesProcessed.monthly` + "`" + ` | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsPerRegionGroup` + "`" + ` | Number of Private Service Connections per Region Group | 50 | 100|
+| ` + "`" + `atlas.project.deployment.privateServiceConnectionsSubnetMask` + "`" + ` | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 `,
 			},
 			`pretty`: {
@@ -12846,7 +12852,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: nil,
@@ -12971,7 +12977,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -13041,8 +13047,11 @@ var metadata = metadatatypes.Metadata{
 	},
 	`updateGroupCluster`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Fields-Replication-Specs`: {
+				Usage: `Controls how ` + "`" + `replicationSpecs` + "`" + ` fields are returned in the response. When set to ` + "`" + `true` + "`" + `, stores the client's view of ` + "`" + `replicationSpecs` + "`" + ` and returns it in ` + "`" + `replicationSpecs` + "`" + `, while the actual cluster state (including auto-scaled hardware and auto-added shards) is returned in ` + "`" + `effectiveReplicationSpecs` + "`" + `. When ` + "`" + `false` + "`" + ` (default), ` + "`" + `replicationSpecs` + "`" + ` contains the actual cluster state.`,
+			},
 			`Use-Effective-Instance-Fields`: {
-				Usage: `Controls how hardware specification fields are returned in the response after cluster updates. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Note: When using this header with autoscaling enabled, MongoDB ignores replicationSpecs changes during updates. To intentionally override the replicationSpecs, disable this header.`,
+				Usage: `Controls how hardware specification fields are returned in the response after cluster updates. When set to true, returns the original client-specified values and provides separate effective fields showing current operational values. When false (default), hardware specification fields show current operational values directly. Note: When using this header with autoscaling enabled, MongoDB ignores ` + "`" + `replicationSpecs` + "`" + ` changes during updates. To intentionally override the ` + "`" + `replicationSpecs` + "`" + `, disable this header.`,
 			},
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -13227,7 +13236,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`queryShapeHash`: {
-				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like $queryStats and $explain or slow query logs.`,
+				Usage: `A SHA256 hash of a query shape, output by MongoDB commands like ` + "`" + `$queryStats` + "`" + ` and ` + "`" + `$explain` + "`" + ` or slow query logs.`,
 			},
 		},
 		Examples: nil,
@@ -13375,7 +13384,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleName`: {
-				Usage: `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`,
+				Usage: `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`,
 			},
 		},
 		Examples: nil,
@@ -13423,15 +13432,15 @@ var metadata = metadatatypes.Metadata{
 
 | Authentication Method | Parameter Needed | Parameter Value | username Format |
 |---|---|---|---|
-| AWS IAM | awsIAMType | ROLE | <abbr title="Amazon Resource Name">ARN</abbr> |
-| AWS IAM | awsIAMType | USER | <abbr title="Amazon Resource Name">ARN</abbr> |
-| x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| x.509 | x509Type | MANAGED | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | USER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| LDAP | ldapAuthType | GROUP | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
-| SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `ROLE` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| AWS IAM | ` + "`" + `awsIAMType` + "`" + ` | ` + "`" + `USER` + "`" + ` | <abbr title="Amazon Resource Name">ARN</abbr> |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `CUSTOMER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
+| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
 		},
@@ -13483,7 +13492,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.`,
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
 			},
 			`integrationType`: {
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
@@ -13811,7 +13820,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13828,7 +13837,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13845,7 +13854,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13859,7 +13868,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13873,7 +13882,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13891,7 +13900,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13911,7 +13920,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13925,7 +13934,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -13939,13 +13948,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's ` + "`" + `userId` + "`" + ` or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by ` + "`" + `username` + "`" + `.`,
 			},
 		},
 		Examples: nil,
@@ -13956,7 +13965,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -14021,7 +14030,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`orgId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,

@@ -278,7 +278,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
-      DOCKER_API_VERSION: 1.44
+      DOCKER_API_VERSION: 1.43
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:

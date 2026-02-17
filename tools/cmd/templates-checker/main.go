@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/cmd/templates-checker/astparsing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/cmd/templates-checker/templateparsing"
@@ -46,11 +45,9 @@ func main() {
 		errorMessage := "Template and struct don't match:\n"
 
 		errorMessage += "Error messages:\n"
-		var errorMessageSb48 strings.Builder
 		for _, message := range validationResult.ErrorMessages() {
-			errorMessageSb48.WriteString(fmt.Sprintf("- %v\n", message))
+			errorMessage += fmt.Sprintf("- %v\n", message)
 		}
-		errorMessage += errorMessageSb48.String()
 
 		errorMessage += "\nStruct:\n"
 		errorMessage += fmt.Sprintf("- location: %v\n", builderFunc.Pkg.Fset.Position(builderFunc.TemplateType.NamedStruct.Obj().Pos()))

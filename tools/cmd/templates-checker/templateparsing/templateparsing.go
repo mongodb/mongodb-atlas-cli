@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"text/template"
 	"text/template/parse"
 )
@@ -136,19 +137,21 @@ func (c *TemplateCallTreeEntry) IsValid() bool {
 func (c *TemplateCallTreeEntry) Fprint(depth int) string {
 	out := ""
 
+	var outSb139 strings.Builder
 	for key, value := range c.fields {
 		if value.listType != nil {
-			out += ident(fmt.Sprintf("- []%v:\n", key), depth)
-			out += value.listType.Fprint(depth + 1)
+			outSb139.WriteString(ident(fmt.Sprintf("- []%v:\n", key), depth))
+			outSb139.WriteString(value.listType.Fprint(depth + 1))
 		}
 		if value.structType != nil {
-			out += ident(fmt.Sprintf("- %v:\n", key), depth)
-			out += value.structType.Fprint(depth + 1)
+			outSb139.WriteString(ident(fmt.Sprintf("- %v:\n", key), depth))
+			outSb139.WriteString(value.structType.Fprint(depth + 1))
 		}
 		if value.listType == nil && value.structType == nil {
-			out += ident(fmt.Sprintf("- %v\n", key), depth)
+			outSb139.WriteString(ident(fmt.Sprintf("- %v\n", key), depth))
 		}
 	}
+	out += outSb139.String()
 
 	return out
 }

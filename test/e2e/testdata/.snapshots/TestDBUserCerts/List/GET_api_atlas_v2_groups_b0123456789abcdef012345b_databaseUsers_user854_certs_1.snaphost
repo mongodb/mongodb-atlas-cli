@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 359
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 11 Feb 2026 09:10:04 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 43
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getValidCertsByUsername
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=edaf1e5120589d01d6af3496d72ea12b77c5bf9b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/user854/certs?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":3545898168483918099,"createdAt":"2026-02-11T08:09:59Z","groupId":"b0123456789abcdef012345b","notAfter":"2026-05-11T09:09:59Z","subject":"CN=user854"}],"totalCount":1}

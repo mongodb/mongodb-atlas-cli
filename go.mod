@@ -24,7 +24,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.41.1
 	github.com/aws/aws-sdk-go-v2/config v1.32.7
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.7
-	github.com/aws/aws-sdk-go-v2/service/kms v1.49.5
+	github.com/aws/aws-sdk-go-v2/service/kms v1.50.0
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
@@ -34,14 +34,14 @@ require (
 	github.com/go-test/deep v1.1.1
 	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
-	github.com/klauspost/compress v1.18.3
+	github.com/klauspost/compress v1.18.4
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
 	github.com/mongodb/atlas-cli-core v0.0.0-20260106091842-5285ae36b0b7
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
-	github.com/shirou/gopsutil/v4 v4.25.12
+	github.com/shirou/gopsutil/v4 v4.26.1
 	github.com/speakeasy-api/openapi-overlay v0.10.3
 	github.com/spf13/afero v1.15.0
 	github.com/spf13/cobra v1.10.2
@@ -53,14 +53,14 @@ require (
 	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312012 v20250312012.1.0
-	go.mongodb.org/mongo-driver v1.17.7
+	go.mongodb.org/atlas-sdk/v20250312014 v20250312014.0.0
+	go.mongodb.org/mongo-driver v1.17.9
 	go.uber.org/mock v0.6.0
-	golang.org/x/mod v0.32.0
-	golang.org/x/net v0.49.0
-	golang.org/x/sys v0.40.0
-	golang.org/x/tools v0.41.0
-	google.golang.org/api v0.263.0
+	golang.org/x/mod v0.33.0
+	golang.org/x/net v0.50.0
+	golang.org/x/sys v0.41.0
+	golang.org/x/tools v0.42.0
+	google.golang.org/api v0.266.0
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -95,12 +95,12 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.121.6 // indirect
+	cloud.google.com/go v0.123.0 // indirect
 	cloud.google.com/go/auth v0.18.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	cloud.google.com/go/iam v1.5.3 // indirect
-	cloud.google.com/go/longrunning v0.7.0 // indirect
+	cloud.google.com/go/longrunning v0.8.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.11.2 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal v1.2.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.6.0 // indirect
@@ -141,7 +141,7 @@ require (
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.11 // indirect
-	github.com/googleapis/gax-go/v2 v2.16.0 // indirect
+	github.com/googleapis/gax-go/v2 v2.17.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/iancoleman/strcase v0.3.0
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -184,15 +184,15 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0 // indirect
 	go.opentelemetry.io/otel/metric v1.39.0 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
-	golang.org/x/crypto v0.47.0 // indirect
-	golang.org/x/oauth2 v0.34.0
+	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/oauth2 v0.35.0
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/term v0.39.0 // indirect
-	golang.org/x/text v0.33.0 // indirect
+	golang.org/x/term v0.40.0 // indirect
+	golang.org/x/text v0.34.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
-	google.golang.org/genproto v0.0.0-20251202230838-ff82c1b0f217 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20251202230838-ff82c1b0f217 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260122232226-8e98ce8d340d // indirect
+	google.golang.org/genproto v0.0.0-20260128011058-8636f8732409 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260128011058-8636f8732409 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260203192932-546029d2fa20 // indirect
 )
 
 tool (

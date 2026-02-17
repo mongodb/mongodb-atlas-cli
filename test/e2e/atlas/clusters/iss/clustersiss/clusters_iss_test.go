@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312012/admin"
+	"go.mongodb.org/atlas-sdk/v20250312014/admin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -264,6 +264,13 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		connectionString := strings.TrimSpace(string(resp))
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
+
+		mode, err := internal.TestRunMode()
+		req.NoError(err)
+
+		if mode != internal.TestModeLive {
+			t.Skip("skipping actual MongoDB connection in snapshot mode")
+		}
 
 		client, err = mongo.Connect(
 			ctx,

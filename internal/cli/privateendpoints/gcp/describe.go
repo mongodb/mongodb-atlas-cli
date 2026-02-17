@@ -27,9 +27,9 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
 )
 
-var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupNames}}{{range valueOrEmptySlice .EndpointGroupNames}}
-{{$.Id}}	{{.}}	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}{{else}}
-{{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}
+var describeTemplate = `ID	GROUP NAME	REGION	STATUS	PORT MAPPING ENABLED	ERROR{{if .EndpointGroupNames}}{{range valueOrEmptySlice .EndpointGroupNames}}
+{{$.Id}}	{{.}}	{{$.RegionName}}	{{$.Status}}	{{$.PortMappingEnabled}}	{{$.ErrorMessage}}{{end}}{{else}}
+{{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.PortMappingEnabled}}	{{$.ErrorMessage}}{{end}}
 `
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber

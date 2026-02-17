@@ -84,6 +84,7 @@ dbName and collection are required only for built-in roles.`
 	DataLakeTestBucket                            = "Name of an Amazon S3 data bucket that Atlas Data Federation uses to validate the provided role."
 	PrivateEndpointRegion                         = "Cloud provider region in which you want to create the private endpoint connection. For a complete list of supported AWS regions, see: https://dochub.mongodb.org/core/aws-atlas. For a complete list of supported Azure regions, see: https://dochub.mongodb.org/core/azure-atlas. For a complete list of supported GCP regions, see: https://dochub.mongodb.org/core/gcp-atlas."
 	PrivateEndpointProvider                       = "Name of the cloud provider you want to create the private endpoint connection for."
+	PortMappingEnabled                            = "Flag that indicates whether this endpoint service uses PSC port-mapping. This is only applicable for GCP Private Endpoint Services."
 	Comment                                       = "Optional description or comment for the entry."
 	AccessListsDeleteAfter                        = "ISO-8601-formatted UTC date after which Atlas removes the entry from the access list."
 	BDUsersDeleteAfter                            = "Timestamp in ISO 8601 in UTC after which Atlas deletes the user."

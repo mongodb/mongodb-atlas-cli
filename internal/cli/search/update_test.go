@@ -19,7 +19,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 	"go.uber.org/mock/gomock"
 )
 

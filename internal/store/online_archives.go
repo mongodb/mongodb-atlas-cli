@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312012/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312014/admin"
 )
 
 // OnlineArchives encapsulate the logic to manage different cloud providers.

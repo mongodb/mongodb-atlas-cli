@@ -24,7 +24,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.41.1
 	github.com/aws/aws-sdk-go-v2/config v1.32.7
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.7
-	github.com/aws/aws-sdk-go-v2/service/kms v1.49.5
+	github.com/aws/aws-sdk-go-v2/service/kms v1.50.0
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24

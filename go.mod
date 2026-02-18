@@ -22,9 +22,9 @@ require (
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ProtonMail/go-crypto v1.3.0
 	github.com/aws/aws-sdk-go-v2 v1.41.1
-	github.com/aws/aws-sdk-go-v2/config v1.32.7
-	github.com/aws/aws-sdk-go-v2/credentials v1.19.7
-	github.com/aws/aws-sdk-go-v2/service/kms v1.49.5
+	github.com/aws/aws-sdk-go-v2/config v1.32.8
+	github.com/aws/aws-sdk-go-v2/credentials v1.19.8
+	github.com/aws/aws-sdk-go-v2/service/kms v1.50.0
 	github.com/bradleyjkemp/cupaloy/v2 v2.8.0
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
@@ -38,7 +38,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20260106091842-5285ae36b0b7
+	github.com/mongodb/atlas-cli-core v0.0.0-20260217164509-6f4f756f8870
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.1
@@ -53,14 +53,14 @@ require (
 	github.com/zalando/go-keyring v0.2.6
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312012 v20250312012.1.0
+	go.mongodb.org/atlas-sdk/v20250312014 v20250312014.0.0
 	go.mongodb.org/mongo-driver v1.17.9
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.33.0
 	golang.org/x/net v0.50.0
 	golang.org/x/sys v0.41.0
 	golang.org/x/tools v0.42.0
-	google.golang.org/api v0.266.0
+	google.golang.org/api v0.267.0
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -73,7 +73,7 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
-	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.1 // indirect
@@ -114,7 +114,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.30.9 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.14 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.41.6 // indirect
 	github.com/aws/smithy-go v1.24.0 // indirect
 	github.com/bodgit/plumbing v1.3.0 // indirect

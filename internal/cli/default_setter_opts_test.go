@@ -27,6 +27,13 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const (
+	orgID       = "507f1f77bcf86cd799439011"
+	projectName = "TestProject"
+	projectID   = "507f1f77bcf86cd799439012"
+	orgName     = "TestOrg"
+)
+
 func TestDefaultOpts_DefaultQuestions(t *testing.T) {
 	type fields struct {
 		Service string
@@ -148,8 +155,6 @@ func TestDefaultOpts_CreateOrganizationStore(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	t.Run("creation request format", func(t *testing.T) {
-		orgName := "TestOrg"
-		orgID := "507f1f77bcf86cd799439011"
 		response := &atlasv2.CreateOrganizationResponse{
 			Organization: &atlasv2.AtlasOrganization{
 				Id:   pointer.Get(orgID),
@@ -172,7 +177,6 @@ func TestDefaultOpts_CreateOrganizationStore(t *testing.T) {
 	})
 
 	t.Run("creation error handling", func(t *testing.T) {
-		orgName := "TestOrg"
 		createErr := errors.New("creation failed")
 
 		mockStore.EXPECT().CreateAtlasOrganization(gomock.Any()).Return(nil, createErr).Times(1)
@@ -192,9 +196,6 @@ func TestDefaultOpts_CreateProjectStore(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	t.Run("creation request format", func(t *testing.T) {
-		projectName := "TestProject"
-		projectID := "507f1f77bcf86cd799439012"
-		orgID := "507f1f77bcf86cd799439011"
 		project := &atlasv2.Group{
 			Id:    pointer.Get(projectID),
 			Name:  projectName,
@@ -222,8 +223,6 @@ func TestDefaultOpts_CreateProjectStore(t *testing.T) {
 	})
 
 	t.Run("creation error handling", func(t *testing.T) {
-		projectName := "TestProject"
-		orgID := "507f1f77bcf86cd799439011"
 		createErr := errors.New("creation failed")
 
 		mockStore.EXPECT().CreateProject(gomock.Any()).Return(nil, createErr).Times(1)
@@ -255,8 +254,8 @@ func TestDefaultOpts_AskOrg_NoOrgs(t *testing.T) {
 
 	t.Run("no orgs triggers errNoResults", func(t *testing.T) {
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(&atlasv2.PaginatedOrganization{
-			Results:     &[]atlasv2.AtlasOrganization{},
-			TotalCount:  pointer.Get(0),
+			Results:    &[]atlasv2.AtlasOrganization{},
+			TotalCount: pointer.Get(0),
 		}, nil).Times(1)
 
 		orgs, err := opts.orgs("")
@@ -274,14 +273,14 @@ func TestDefaultOpts_AskProject_NoProjects(t *testing.T) {
 	opts := &DefaultSetterOpts{
 		Service:   "cloud",
 		Store:     mockStore,
-		OrgID:     "507f1f77bcf86cd799439011",
+		OrgID:     orgID,
 		OutWriter: &bytes.Buffer{},
 	}
 
 	t.Run("no projects triggers errNoResults", func(t *testing.T) {
 		mockStore.EXPECT().GetOrgProjects(opts.OrgID, gomock.Any()).Return(&atlasv2.PaginatedAtlasGroup{
-			Results:     &[]atlasv2.Group{},
-			TotalCount:  pointer.Get(0),
+			Results:    &[]atlasv2.Group{},
+			TotalCount: pointer.Get(0),
 		}, nil).Times(1)
 
 		ids, names, err := opts.projects()

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1859
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 16 Feb 2026 03:33:54 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 298
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 88
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=41b293f778fdc3599ab2a003f3b086a14f543f3a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69928cf4fca6e0756f2e517e/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-02-16T03:30:57Z","groupId":"69928cf4fca6e0756f2e517e","hostname":"atlas-ziywcs-shard-00-00.x7axbe.mongodb-dev.net","id":"atlas-ziywcs-shard-00-00.x7axbe.mongodb-dev.net:27017","lastPing":"2026-02-16T03:33:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69928cf4fca6e0756f2e517e/processes/atlas-ziywcs-shard-00-00.x7axbe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ziywcs-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-887-shard-00-00.x7axbe.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-16T03:30:57Z","groupId":"69928cf4fca6e0756f2e517e","hostname":"atlas-ziywcs-shard-00-01.x7axbe.mongodb-dev.net","id":"atlas-ziywcs-shard-00-01.x7axbe.mongodb-dev.net:27017","lastPing":"2026-02-16T03:33:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69928cf4fca6e0756f2e517e/processes/atlas-ziywcs-shard-00-01.x7axbe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ziywcs-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-887-shard-00-01.x7axbe.mongodb-dev.net","version":"8.0.19"},{"created":"2026-02-16T03:30:57Z","groupId":"69928cf4fca6e0756f2e517e","hostname":"atlas-ziywcs-shard-00-02.x7axbe.mongodb-dev.net","id":"atlas-ziywcs-shard-00-02.x7axbe.mongodb-dev.net:27017","lastPing":"2026-02-16T03:33:46Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69928cf4fca6e0756f2e517e/processes/atlas-ziywcs-shard-00-02.x7axbe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ziywcs-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-887-shard-00-02.x7axbe.mongodb-dev.net","version":"8.0.19"}],"totalCount":3}

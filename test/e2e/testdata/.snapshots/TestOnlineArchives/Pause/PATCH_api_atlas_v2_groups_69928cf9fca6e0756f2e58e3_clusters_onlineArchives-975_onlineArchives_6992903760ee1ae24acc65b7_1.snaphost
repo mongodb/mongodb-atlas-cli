@@ -1,0 +1,19 @@
+HTTP/2.0 409 Conflict
+Content-Length: 174
+Content-Type: application/json
+Date: Mon, 16 Feb 2026 03:34:25 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1196
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 53
+X-Error-Code: ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasOnlineArchiveResource::updateOnlineArchive
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=41b293f778fdc3599ab2a003f3b086a14f543f3a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"An archive must be in an active state in order to be paused.","error":409,"errorCode":"ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE","parameters":[],"reason":"Conflict"}

@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 378
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 16 Feb 2026 03:20:54 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 661
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::addUser
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=41b293f778fdc3599ab2a003f3b086a14f543f3a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"awsIAMType":"NONE","databaseName":"admin","groupId":"69928d0960ee1ae24acc14f3","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69928d0960ee1ae24acc14f3/databaseUsers/admin/user-389","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"user-389","x509Type":"NONE"}

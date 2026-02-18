@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 551
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 16 Feb 2026 03:51:38 GMT
+Deprecation: Thu, 30 May 2024 00:00:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1194
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 1057
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFTSIndexConfigResource::createFTSIndex
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=41b293f778fdc3599ab2a003f3b086a14f543f3a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"analyzer":"lucene.standard","collectionName":"planets","database":"sample_guides","indexID":"6992944afca6e0756f2ee79f","mappings":{"dynamic":false,"fields":{"mainAtmosphere":{"analyzer":"lucene.standard","type":"string"},"name":{"analyzer":"lucene.whitespace","multi":{"mySecondaryAnalyzer":{"analyzer":"lucene.french","type":"string"}},"type":"string"},"surfaceTemperatureC":{"analyzer":"lucene.standard","dynamic":true,"type":"document"}}},"name":"index-993","searchAnalyzer":"lucene.standard","status":"IN_PROGRESS","synonyms":[],"type":"search"}

@@ -38,7 +38,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20260106091842-5285ae36b0b7
+	github.com/mongodb/atlas-cli-core v0.0.0-20260217164509-6f4f756f8870
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.1
@@ -73,7 +73,7 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
-	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.1 // indirect

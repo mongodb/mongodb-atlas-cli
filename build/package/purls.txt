@@ -53,7 +53,7 @@ pkg:golang/github.com/go-logr/stdr@v1.2.2
 pkg:golang/github.com/go-ole/go-ole@v1.2.6
 pkg:golang/github.com/go-viper/mapstructure/v2@v2.4.0
 pkg:golang/github.com/godbus/dbus/v5@v5.1.0
-pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.0
+pkg:golang/github.com/golang-jwt/jwt/v5@v5.3.1
 pkg:golang/github.com/golang/snappy@v0.0.4
 pkg:golang/github.com/google/go-github/v61@v61.0.0
 pkg:golang/github.com/google/go-querystring@v1.1.0
@@ -75,7 +75,7 @@ pkg:golang/github.com/mholt/archives@v0.1.5
 pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.1
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0
-pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20260106091842-5285ae36b0b7
+pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20260217164509-6f4f756f8870
 pkg:golang/github.com/montanaflynn/stats@v0.7.1
 pkg:golang/github.com/nwaples/rardecode/v2@v2.2.0
 pkg:golang/github.com/pelletier/go-toml/v2@v2.2.4

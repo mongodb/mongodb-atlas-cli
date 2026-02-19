@@ -78,7 +78,7 @@ var (
 		cancelSettings:  "Cancel setup",
 	}
 	connectWithOptions     = []string{mongoshConnect, compassConnect, vsCodeConnect, skipConnect}
-	connectWithDescription = map[string]string{
+	connectWithDescription = map[string]string{ //nolint:gosec // G101: false positive, these are UI display labels, not credentials
 		mongoshConnect: "MongoDB Shell",
 		compassConnect: "MongoDB Compass",
 		vsCodeConnect:  "MongoDB for VsCode",

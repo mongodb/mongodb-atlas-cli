@@ -335,40 +335,35 @@ func (e *dockerImpl) ContainerList(ctx context.Context, labels ...string) ([]Con
 }
 
 func (e *dockerImpl) ContainerRm(ctx context.Context, names ...string) error {
-	args := []string{"container", "rm", "-v", "-f"}
-	args = append(args, names...)
+	args := append([]string{"container", "rm", "-v", "-f"}, names...)
 
 	_, err := e.run(ctx, args...)
 	return err
 }
 
 func (e *dockerImpl) ContainerStart(ctx context.Context, names ...string) error {
-	args := []string{"container", "start"}
-	args = append(args, names...)
+	args := append([]string{"container", "start"}, names...)
 
 	_, err := e.run(ctx, args...)
 	return err
 }
 
 func (e *dockerImpl) ContainerStop(ctx context.Context, names ...string) error {
-	args := []string{"container", "stop"}
-	args = append(args, names...)
+	args := append([]string{"container", "stop"}, names...)
 
 	_, err := e.run(ctx, args...)
 	return err
 }
 
 func (e *dockerImpl) ContainerUnpause(ctx context.Context, names ...string) error {
-	args := []string{"container", "unpause"}
-	args = append(args, names...)
+	args := append([]string{"container", "unpause"}, names...)
 
 	_, err := e.run(ctx, args...)
 	return err
 }
 
 func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*InspectData, error) {
-	args := []string{"container", "inspect", "--format", "json"}
-	args = append(args, names...)
+	args := append([]string{"container", "inspect", "--format", "json"}, names...)
 
 	buf, err := e.run(ctx, args...)
 	if err != nil {

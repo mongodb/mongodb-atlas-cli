@@ -15,6 +15,7 @@
 package mongosh
 
 import (
+	"context"
 	"errors"
 	"os"
 	"os/exec"
@@ -39,7 +40,7 @@ func binPath() string {
 }
 
 func execCommand(args ...string) error {
-	cmd := exec.Command(mongoshBin, args...)
+	cmd := exec.CommandContext(context.Background(), mongoshBin, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

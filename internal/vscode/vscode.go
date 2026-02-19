@@ -15,6 +15,7 @@
 package vscode
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/url"
@@ -74,7 +75,7 @@ func buildDeeplink(mongoURI, deploymentName, deploymentType string, telemetryEna
 }
 
 func execCommand(args ...string) error {
-	cmd := exec.Command(vsCodeCliBin, args...)
+	cmd := exec.CommandContext(context.Background(), vsCodeCliBin, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

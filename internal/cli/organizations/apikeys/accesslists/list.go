@@ -80,7 +80,7 @@ func ListBuilder() *cobra.Command {
 		Long: `To view possible values for the apiKeyID argument, run atlas organizations apiKeys list.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Organization Member"),
-		Annotations: map[string]string{
+		Annotations: map[string]string{ //nolint:gosec // G101: false positive, annotation keys are cobra metadata, not credentials
 			"apiKeyIDDesc": "Unique 24-digit string that identifies your API key.",
 		},
 		Example: `  # Return a JSON-formatted list of access list entries for the API key with the ID 5f24084d8dbffa3ad3f21234 in the organization with the ID 5a1b39eec902201990f12345:

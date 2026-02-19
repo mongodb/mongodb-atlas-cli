@@ -91,7 +91,7 @@ func (opts *DownloadOpts) Download(url *string) error {
 		return err
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req) //nolint:gosec // G704: URL comes from the Atlas API response (pre-signed snapshot download URL), not from user input
 	if err != nil {
 		return err
 	}

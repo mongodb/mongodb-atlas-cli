@@ -159,7 +159,7 @@ func selectVersion(selectedVersion shared_api.Version, versions []shared_api.Com
 // try to find the content type in the list of response content types, if not found set the type to json.
 func acceptHeader(version *shared_api.CommandVersion, requestedContentType string) (string, error) {
 	contentType := ""
-	supportedTypes := make([]string, 0)
+	supportedTypes := make([]string, 0, len(version.ResponseContentTypes))
 
 	for _, responseContentType := range version.ResponseContentTypes {
 		if responseContentType == requestedContentType {

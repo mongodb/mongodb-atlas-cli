@@ -245,7 +245,7 @@ func TestLDAPWithStdin(t *testing.T) {
 func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		securityEntity,
 		ldapEntity,
 		"delete",

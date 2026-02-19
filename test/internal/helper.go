@@ -711,7 +711,7 @@ func createProject(projectName string) (string, error) {
 
 func listClustersForProject(t *testing.T, cliPath, projectID string) atlasClustersPinned.PaginatedAdvancedClusterDescription {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		clustersEntity,
 		"list",
 		"--projectId", projectID,
@@ -783,7 +783,7 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		networkingEntity,
 		networkPeeringEntity,
 		"list",
@@ -925,7 +925,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 
 func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedApiStreamsTenant {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		streamsEntity,
 		"instance",
 		"list",
@@ -949,7 +949,7 @@ func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.Pagi
 func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		streamsEntity,
 		"instance",
 		"delete",
@@ -971,7 +971,7 @@ func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
 		"list",
@@ -994,7 +994,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointID string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		privateEndpointsEntity,
 		provider,
 		"delete",
@@ -1058,7 +1058,7 @@ func deleteProject(projectID string) error {
 func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		datafederationEntity,
 		"list",
 		"--projectId", projectID,
@@ -1112,7 +1112,7 @@ func deleteAllDataFederations(t *testing.T, cliPath, projectID string) {
 func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedName string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		datafederationEntity,
 		"delete",
 		dataFedName,
@@ -1305,7 +1305,7 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 
 func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.PaginatedFederationIdentityProvider {
 	t.Helper()
-	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json", "-P", ProfileName()) //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json", "-P", ProfileName())
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1316,7 +1316,7 @@ func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.Pagin
 
 func deleteIDP(t *testing.T, cliPath string, id string, fedSettingsID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force", "-P", ProfileName()) //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force", "-P", ProfileName())
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -1404,7 +1404,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		orgEntity,
 		"apiKeys",
 		"ls",
@@ -1456,7 +1456,7 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 
 func deleteOrgInvitations(t *testing.T, cliPath string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
 		"ls",
@@ -1478,7 +1478,7 @@ func deleteOrgInvitations(t *testing.T, cliPath string) {
 func deleteOrgTeams(t *testing.T, cliPath string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		teamsEntity,
 		"ls",
 		"-o=json",
@@ -1498,7 +1498,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 
 func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		orgEntity,
 		invitationsEntity,
 		"delete",

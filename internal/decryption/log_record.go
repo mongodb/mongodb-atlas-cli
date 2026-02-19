@@ -106,7 +106,6 @@ func (logLine *AuditLogLine) logAdditionalAuthData() []byte {
 	const AADByteSize = 8
 
 	additionalAuthData := make([]byte, AADByteSize)
-	//nolint:gosec
 	binary.LittleEndian.PutUint64(additionalAuthData, uint64(logLine.TS.UnixMilli()))
 	return additionalAuthData
 }

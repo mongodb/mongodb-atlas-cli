@@ -71,7 +71,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 
 func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasClustersPinned.AdvancedClusterDescription {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		clustersEntity,
 		"get",
 		clusterName,

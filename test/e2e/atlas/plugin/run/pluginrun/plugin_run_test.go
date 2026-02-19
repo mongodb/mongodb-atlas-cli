@@ -80,7 +80,7 @@ func TestPluginRun(t *testing.T) {
 		var sb strings.Builder
 
 		for _, env := range os.Environ() {
-			sb.WriteString(fmt.Sprintf("\t- %s\n", env))
+			fmt.Fprintf(&sb, "\t- %s\n", env)
 		}
 
 		cmd := exec.Command(cliPath,

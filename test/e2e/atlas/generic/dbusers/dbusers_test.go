@@ -268,7 +268,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDescribeUser(t *testing.T, cliPath, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		dbusersEntity,
 		"describe",
 		username,
@@ -312,7 +312,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 	t.Helper()
 
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		dbusersEntity,
 		"delete",
 		username,

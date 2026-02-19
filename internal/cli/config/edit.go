@@ -15,6 +15,7 @@
 package config
 
 import (
+	"context"
 	"os"
 	"os/exec"
 
@@ -41,7 +42,7 @@ func (*editOpts) Run() error {
 	}
 	filename := config.ViperConfigStoreFilename(configDir)
 
-	cmd := exec.Command(editor, filename)
+	cmd := exec.CommandContext(context.Background(), editor, filename) //nolint:gosec // G702: intentional, this command exists to open the config file in the user's chosen editor ($EDITOR)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

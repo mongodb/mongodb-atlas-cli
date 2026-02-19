@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"text/template"
 	"text/template/parse"
 )
@@ -134,23 +135,23 @@ func (c *TemplateCallTreeEntry) IsValid() bool {
 }
 
 func (c *TemplateCallTreeEntry) Fprint(depth int) string {
-	out := ""
+	var out strings.Builder
 
 	for key, value := range c.fields {
 		if value.listType != nil {
-			out += ident(fmt.Sprintf("- []%v:\n", key), depth)
-			out += value.listType.Fprint(depth + 1)
+			out.WriteString(ident(fmt.Sprintf("- []%v:\n", key), depth))
+			out.WriteString(value.listType.Fprint(depth + 1))
 		}
 		if value.structType != nil {
-			out += ident(fmt.Sprintf("- %v:\n", key), depth)
-			out += value.structType.Fprint(depth + 1)
+			out.WriteString(ident(fmt.Sprintf("- %v:\n", key), depth))
+			out.WriteString(value.structType.Fprint(depth + 1))
 		}
 		if value.listType == nil && value.structType == nil {
-			out += ident(fmt.Sprintf("- %v\n", key), depth)
+			out.WriteString(ident(fmt.Sprintf("- %v\n", key), depth))
 		}
 	}
 
-	return out
+	return out.String()
 }
 
 const spacesPerDepth = 4

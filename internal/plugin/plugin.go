@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -95,11 +96,10 @@ func (v *ValidatedPlugins) GetValidAndInvalidPlugins() []*Plugin {
 func GetAllPluginsValidated(existingCommandsSet set.Set[string]) *ValidatedPlugins {
 	// Load manifests from plugin directories
 	manifests := loadManifestsFromPluginDirectories()
-	duplicateManifests := make([]*Manifest, 0)
-	duplicateCommands := make([]*Manifest, 0)
 
 	// Remove manifests with duplicate names
 	manifests, duplicateManifestNames := removeManifestsWithDuplicateNames(manifests)
+	duplicateManifests := make([]*Manifest, 0, len(duplicateManifestNames))
 	for _, duplicate := range duplicateManifestNames {
 		duplicateManifests = append(duplicateManifests, duplicate.Manifest)
 		logPluginWarning(`could not load plugin "%s" because there are multiple plugins with that name`, duplicate.DuplicateName)
@@ -107,6 +107,7 @@ func GetAllPluginsValidated(existingCommandsSet set.Set[string]) *ValidatedPlugi
 
 	// Remove manifests that contain already existing commands
 	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsSet)
+	duplicateCommands := make([]*Manifest, 0, len(duplicateManifest))
 	for _, manifest := range duplicateManifest {
 		duplicateCommands = append(duplicateCommands, manifest)
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
@@ -174,10 +175,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	p.setTelemetry()
 
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
-	// suppressing lint error flagging potential tainted input or cmd arguments
-	// we are this can happen, it is by design
-	// #nosec G204
-	execCmd := exec.Command(binaryPath, append([]string{cmd.Use}, args...)...)
+	execCmd := exec.CommandContext(context.Background(), binaryPath, append([]string{cmd.Use}, args...)...)
 	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()

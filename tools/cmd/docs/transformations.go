@@ -205,7 +205,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString(fmt.Sprintf("   .. literalinclude:: %s/%s\n", includesImportPath, includePayloadFileName))
+				fmt.Fprintf(&sb, "   .. literalinclude:: %s/%s\n", includesImportPath, includePayloadFileName)
 				if tabs {
 					sb.WriteString("      ")
 				}
@@ -237,7 +237,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 			if tabs {
 				sb.WriteString("      ")
 			}
-			sb.WriteString(fmt.Sprintf(".. literalinclude:: %s/%s\n", includesImportPath, includeCommandFileName))
+			fmt.Fprintf(&sb, ".. literalinclude:: %s/%s\n", includesImportPath, includeCommandFileName)
 			if tabs {
 				sb.WriteString("      ")
 			}

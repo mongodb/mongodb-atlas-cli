@@ -15,12 +15,13 @@
 package compass
 
 import (
+	"context"
 	"os/exec"
 )
 
 func compassCmd(binPath, username, password, mongoURI string) *exec.Cmd {
 	if username != "" && password != "" {
-		return exec.Command(binPath, "--username", username, "--password", password, mongoURI)
+		return exec.CommandContext(context.Background(), binPath, "--username", username, "--password", password, mongoURI)
 	}
-	return exec.Command(binPath, mongoURI)
+	return exec.CommandContext(context.Background(), binPath, mongoURI)
 }

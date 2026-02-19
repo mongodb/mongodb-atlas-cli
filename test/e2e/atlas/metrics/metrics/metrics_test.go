@@ -63,7 +63,7 @@ func TestMetrics(t *testing.T) {
 
 func process(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		metricsEntity,
 		"processes",
 		hostname,
@@ -85,7 +85,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 
 func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+	cmd := exec.Command(cliPath,
 		metricsEntity,
 		"processes",
 		hostname,
@@ -108,7 +108,7 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 
 func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"databases",
 			"list",
@@ -128,7 +128,7 @@ func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID s
 	})
 
 	g.Run("databases describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"databases",
 			"describe",
@@ -153,7 +153,7 @@ func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID s
 
 func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("disks list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"disks",
 			"list",
@@ -173,7 +173,7 @@ func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID strin
 	})
 
 	g.Run("disks describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, //nolint:gosec // needed for e2e tests
+		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"disks",
 			"describe",

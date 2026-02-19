@@ -150,9 +150,9 @@ func RegisterCommands(rootCmd *cobra.Command) {
 func validateManifest(manifest *plugin.Manifest) error {
 	if valid, errorList := manifest.IsValid(); !valid {
 		var manifestErrorLog strings.Builder
-		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", manifest.PluginDirectoryPath))
+		fmt.Fprintf(&manifestErrorLog, "plugin in directory %q could not be loaded due to the following error(s) in the manifest.yaml:\n", manifest.PluginDirectoryPath)
 		for _, err := range errorList {
-			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+			fmt.Fprintf(&manifestErrorLog, "\t- %s\n", err.Error())
 		}
 
 		return errors.New(manifestErrorLog.String())

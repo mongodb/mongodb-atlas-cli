@@ -53,12 +53,12 @@ $env:GOPROXY=$GOPROXY
 tar -xzf ../vendor.tar.gz
 
 Write-Output "Waiting for Docker daemon to start..."
-$maxAttempts = 60  # Wait up to 60 seconds
+$maxAttempts = 120  # Wait up to 120 seconds
 $attempt = 0
 
 while ($attempt -lt $maxAttempts) {
     try {
-        docker version | Out-Null
+        docker ps | Out-Null
         if ($LASTEXITCODE -eq 0) {
             Write-Output "Docker daemon is ready!"
             break

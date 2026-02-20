@@ -82,7 +82,7 @@ func UpdateBuilder() *cobra.Command {
 To view possible values for the apiKeyId argument, run atlas organizations apiKeys list.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
-		Annotations: map[string]string{
+		Annotations: map[string]string{ //nolint:gosec // G101: false positive, annotation keys are cobra metadata, not credentials
 			"apiKeyIdDesc": "Unique 24-digit string that identifies your API key.",
 			"output":       updateTemplate,
 		},

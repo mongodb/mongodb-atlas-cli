@@ -162,9 +162,9 @@ func GetManifestFromPluginDirectory(pluginDirectoryPath string) (*Manifest, erro
 
 	if valid, errorList := manifest.IsValid(); !valid {
 		var manifestErrorLog strings.Builder
-		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath))
+		fmt.Fprintf(&manifestErrorLog, "plugin in directory %q could not be loaded due to the following error(s) in the manifest.yaml:\n", pluginDirectoryPath)
 		for _, err := range errorList {
-			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+			fmt.Fprintf(&manifestErrorLog, "\t- %s\n", err.Error())
 		}
 		return nil, errors.New(manifestErrorLog.String())
 	}
@@ -195,12 +195,12 @@ func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
 	for _, filename := range validManifestFilenames {
 		manifestFilePath := filepath.Join(pluginDirectoryPath, filename)
 
-		info, err := os.Stat(manifestFilePath)
+		info, err := os.Stat(manifestFilePath) //nolint:gosec // G703: path is constructed from a trusted plugin directory joined with a fixed filename, not from user input
 		if os.IsNotExist(err) || info.IsDir() {
 			continue
 		}
 
-		manifestFileData, err := os.ReadFile(manifestFilePath)
+		manifestFileData, err := os.ReadFile(manifestFilePath) //nolint:gosec // G703: path is constructed from a trusted plugin directory joined with a fixed filename
 
 		if err != nil {
 			continue
@@ -283,7 +283,7 @@ func (m *Manifest) HasDuplicateCommand(existingCommandsSet set.Set[string]) bool
 func getPathToExecutableBinary(manifest *Manifest) (string, error) {
 	binaryPath := path.Join(manifest.PluginDirectoryPath, manifest.Binary)
 
-	binaryFileInfo, err := os.Stat(binaryPath)
+	binaryFileInfo, err := os.Stat(binaryPath) //nolint:gosec // G703: path is constructed from a trusted plugin directory joined with the manifest's declared binary name
 
 	if err != nil {
 		return "", fmt.Errorf(`binary "%s" does not exists`, binaryPath)
@@ -297,7 +297,7 @@ func getPathToExecutableBinary(manifest *Manifest) (string, error) {
 		return binaryPath, nil
 	}
 
-	if err := os.Chmod(binaryPath, binaryFileMode|executablePermissions); err != nil {
+	if err := os.Chmod(binaryPath, binaryFileMode|executablePermissions); err != nil { //nolint:gosec // G703: path is constructed from a trusted plugin directory joined with the manifest's declared binary name
 		return "", err
 	}
 

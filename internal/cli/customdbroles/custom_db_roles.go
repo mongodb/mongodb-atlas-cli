@@ -62,7 +62,6 @@ func appendActions(existingActions, newActions []atlasv2.DatabasePrivilegeAction
 
 // joinActions will merge the resources for a same action given actions must be unique.
 func joinActions(newActions []atlasv2.DatabasePrivilegeAction) []atlasv2.DatabasePrivilegeAction {
-	out := make([]atlasv2.DatabasePrivilegeAction, 0)
 	actionMap := make(map[string]atlasv2.DatabasePrivilegeAction)
 	for _, action := range newActions {
 		if a, ok := actionMap[action.Action]; ok {
@@ -70,6 +69,7 @@ func joinActions(newActions []atlasv2.DatabasePrivilegeAction) []atlasv2.Databas
 		}
 		actionMap[action.Action] = action
 	}
+	out := make([]atlasv2.DatabasePrivilegeAction, 0, len(actionMap))
 	for _, action := range actionMap {
 		out = append(out, action)
 	}

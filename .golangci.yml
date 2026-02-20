@@ -148,6 +148,9 @@ linters:
         - pkg: github.com/mongodb/atlas-cli-core/mocks
           alias: coreMocks
       no-extra-aliases: true
+    gosec:
+      excludes:
+        - G117 # exported struct field name matches secret pattern: names like AccessToken, Password etc. are correct field names, not hardcoded secrets
     misspell:
       locale: US
       ignore-rules:
@@ -171,7 +174,6 @@ linters:
         - name: indent-error-flow
         - name: if-return
         - name: increment-decrement
-        - name: var-naming
         - name: var-declaration
         - name: package-comments
         - name: range
@@ -206,6 +208,10 @@ linters:
       - linters:
           - gocyclo
         path: e2e
+      - linters:
+          - gosec
+          - noctx
+        path: ^test/ # test code routinely uses literal test values, mock credentials and exec.Command — gosec/noctx findings there are almost always false positives
     paths:
       - third_party$
       - builtin$

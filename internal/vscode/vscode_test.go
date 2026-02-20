@@ -45,7 +45,7 @@ func TestVscode_BuildDeeplink(t *testing.T) {
 			telemetry:      false,
 			expected:       "vscode://mongodb.mongodb-vscode/connectWithURI?connectionString=mongodb%253A%252F%252Flocalhost%253A11111%252F%253FdirectConnection%253Dtrue&name=testDeployment+%2528Local%2529&reuseExisting=true",
 		},
-		{
+		{ //nolint:gosec // G101: false positive, this is a test URI with a literal password to verify special character encoding
 			name:           "special characters present in password",
 			uri:            "mongodb://user:123%%%@localhost:11111/?directConnection=true",
 			deploymentName: "testDeployment",

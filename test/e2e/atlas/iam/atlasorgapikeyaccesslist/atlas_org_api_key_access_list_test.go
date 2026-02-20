@@ -126,7 +126,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 
 func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 	t.Helper()
-	cmd := exec.Command(cliPath, //nolint:gosec // needed e2e tests
+	cmd := exec.Command(cliPath,
 		orgEntity,
 		apiKeysEntity,
 		apiKeyAccessListEntity,

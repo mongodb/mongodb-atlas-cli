@@ -322,7 +322,7 @@ func TestPath(t *testing.T) {
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		require.NoError(t, f.Close())
-		require.NoError(t, os.Remove(f.Name()))
+		require.NoError(t, os.Remove(f.Name())) //nolint:gosec // G703: path comes from os.CreateTemp, which returns a safe temp file path
 	})
 	tests := []struct {
 		name    string
@@ -365,7 +365,7 @@ func TestOptionalPath(t *testing.T) {
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		require.NoError(t, f.Close())
-		require.NoError(t, os.Remove(f.Name()))
+		require.NoError(t, os.Remove(f.Name())) //nolint:gosec // G703: path comes from os.CreateTemp, which returns a safe temp file path
 	})
 	tests := []struct {
 		name    string

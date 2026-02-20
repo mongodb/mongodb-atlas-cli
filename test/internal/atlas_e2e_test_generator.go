@@ -19,7 +19,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
-	"crypto/sha1" //nolint:gosec // no need to be secure just replacing long filenames for windows
+	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -536,7 +536,7 @@ func defaultSnapshotBaseName(r *http.Request) string {
 
 func SnapshotHashedName(r *http.Request) string {
 	defaultSnapshotBaseName := defaultSnapshotBaseName(r)
-	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName))) //nolint:gosec // no need to be secure just replacing long filenames for windows
+	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName)))
 	return hash
 }
 

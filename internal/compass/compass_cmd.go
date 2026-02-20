@@ -17,6 +17,7 @@
 package compass
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 )
@@ -24,10 +25,10 @@ import (
 func compassCmd(binPath, username, password, mongoURI string) *exec.Cmd {
 	if username != "" && password != "" {
 		c := fmt.Sprintf(`"%s" --username "%s" --password "$DBPWD" %s`, binPath, username, mongoURI)
-		cmd := exec.Command("sh", "-c", c)
+		cmd := exec.CommandContext(context.Background(), "sh", "-c", c)
 		cmd.Env = append(cmd.Env, "DBPWD="+password)
 		return cmd
 	}
 
-	return exec.Command(binPath, mongoURI)
+	return exec.CommandContext(context.Background(), binPath, mongoURI)
 }

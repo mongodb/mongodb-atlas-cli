@@ -527,7 +527,7 @@ func extractPublicPreview(extensions map[string]any) *bool {
 
 // Sort versions and their content types.
 func sortVersions(versionsMap map[string]*api.CommandVersion) []api.CommandVersion {
-	versions := make([]api.CommandVersion, 0)
+	versions := make([]api.CommandVersion, 0, len(versionsMap))
 
 	for _, version := range versionsMap {
 		sort.Slice(version.ResponseContentTypes, func(i, j int) bool {

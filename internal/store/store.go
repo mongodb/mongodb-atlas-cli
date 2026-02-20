@@ -160,9 +160,9 @@ func (s *Store) setAtlasClient() error {
 	}
 
 	c.OnResponseProcessed(func(resp *atlas.Response) {
-		respHeaders := ""
+		var respHeaders strings.Builder
 		for key, value := range resp.Header {
-			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
+			fmt.Fprintf(&respHeaders, "%v: %v\n", key, strings.Join(value, " "))
 		}
 
 		_, _ = log.Debugf(`request:
@@ -171,7 +171,7 @@ response:
 %v %v
 %v
 %v
-`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders, string(resp.Raw))
+`, resp.Request.Method, resp.Request.URL.String(), resp.Proto, resp.Status, respHeaders.String(), string(resp.Raw))
 	})
 	s.client = c
 	return nil

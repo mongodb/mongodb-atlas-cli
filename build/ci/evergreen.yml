@@ -1296,7 +1296,7 @@ tasks:
           identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}

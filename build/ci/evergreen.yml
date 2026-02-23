@@ -1273,13 +1273,6 @@ tasks:
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/local/auth/deprecated/...
           E2E_TIMEOUT: 3h
-  - name: build_win11_image
-    tags: ["packer", "windows", "win11"]
-    commands:
-      - func: "install packer"
-      - func: "run packer"
-        vars:
-          file: "windows-11-azure.pkr.hcl"
   - name: build_win10_image
     tags: ["packer", "windows", "win10"]
     commands:
@@ -1287,40 +1280,6 @@ tasks:
       - func: "run packer"
         vars:
           file: "windows-10-azure.pkr.hcl"
-  - name: atlas_deployments_windows_11
-    tags: ["e2e","deployments","windows"]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    commands:
-      - func: "terraform apply"
-        vars:
-          image: atlascli-win11-image
-          certificate_path: ./id_rsa.pub
-      - func: "ssh-ready"
-        vars:
-          host: ${public_ip_address}
-          user: atlascli
-          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
-      - func: "copy to remote"
-        vars:
-          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
-          remote_dir: C:\\Users\\atlascli\\win_test.ps1
-          user: atlascli
-          host: ${public_ip_address}
-          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
-      - func: "copy to remote"
-        vars:
-          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
-          remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
-          user: atlascli
-          host: ${public_ip_address}
-          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
-      - func: "ssh"
-        vars:
-          host: ${public_ip_address}
-          user: atlascli
-          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
-          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit} -docker_username ${dockerhub_username} -docker_pat ${dockerhub_password}"
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1898
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 23 Feb 2026 18:28:31 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 157
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=7e19834e66b1953a012b53e4cb745c43891ec9b4; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/699c98ff7094d4b7f52098a3/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-02-23T18:25:18Z","groupId":"699c98ff7094d4b7f52098a3","hostname":"atlas-nmeair-shard-00-00.s6xn8t.mongodb-dev.net","id":"atlas-nmeair-shard-00-00.s6xn8t.mongodb-dev.net:27017","lastPing":"2026-02-23T18:28:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/699c98ff7094d4b7f52098a3/processes/atlas-nmeair-shard-00-00.s6xn8t.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nmeair-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-260-shard-00-00.s6xn8t.mongodb-dev.net","version":"8.0.20-rc0"},{"created":"2026-02-23T18:25:18Z","groupId":"699c98ff7094d4b7f52098a3","hostname":"atlas-nmeair-shard-00-01.s6xn8t.mongodb-dev.net","id":"atlas-nmeair-shard-00-01.s6xn8t.mongodb-dev.net:27017","lastPing":"2026-02-23T18:28:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/699c98ff7094d4b7f52098a3/processes/atlas-nmeair-shard-00-01.s6xn8t.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nmeair-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-260-shard-00-01.s6xn8t.mongodb-dev.net","version":"8.0.20-rc0"},{"created":"2026-02-23T18:25:18Z","groupId":"699c98ff7094d4b7f52098a3","hostname":"atlas-nmeair-shard-00-02.s6xn8t.mongodb-dev.net","id":"atlas-nmeair-shard-00-02.s6xn8t.mongodb-dev.net:27017","lastPing":"2026-02-23T18:28:27Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/699c98ff7094d4b7f52098a3/processes/atlas-nmeair-shard-00-02.s6xn8t.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-nmeair-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-260-shard-00-02.s6xn8t.mongodb-dev.net","version":"8.0.20-rc0"}],"totalCount":3}

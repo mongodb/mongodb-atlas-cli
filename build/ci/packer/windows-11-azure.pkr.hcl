@@ -66,7 +66,7 @@ build {
   provisioner "windows-restart" {}
 
   provisioner "powershell" {
-    script = "setup1.ps1"
+    script = "setup1-win11.ps1"
   }
 
   provisioner "windows-restart" {}

@@ -58,7 +58,7 @@ $attempt = 0
 
 while ($attempt -lt $maxAttempts) {
     try {
-        docker ps | Out-Null
+        docker container ls --all | Out-Null
         if ($LASTEXITCODE -eq 0) {
             Write-Output "Docker daemon is ready!"
             break

@@ -12,7 +12,7 @@ atlas api streams downloadAuditLogs
    :depth: 1
    :class: singlecol
 
-Downloads the audit logs for the specified Atlas Streams Processing workspace.
+Downloads the audit logs for the specified Atlas Streams Processing workspace or stream processor.
 
 The atlas api sub-command is automatically generated from the MongoDB Atlas Admin API and offers full coverage of the Admin API.
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.
@@ -70,6 +70,10 @@ Options
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)
+   * - --spName
+     - string
+     - false
+     - Name of the stream processor to download logs for. An empty string will download logs for all stream processors in the workspace.
    * - --startDate
      - int
      - false

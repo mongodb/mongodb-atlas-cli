@@ -4186,6 +4186,9 @@ var metadata = metadatatypes.Metadata{
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
+			`spName`: {
+				Usage: `Name of the stream processor to download logs for. An empty string will download logs for all stream processors in the workspace.`,
+			},
 			`startDate`: {
 				Usage: `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 			},
@@ -4195,6 +4198,43 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`endDate`:    `1.636481348e+09`,
+					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`startDate`:  `1.636466948e+09`,
+					`tenantName`: `[tenantName]`,
+				},
+			},
+			},
+		},
+	},
+	`downloadGroupStreamOperationalLogs`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`endDate`: {
+				Usage: `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`spName`: {
+				Usage: `Name of the stream processor to download logs for. An empty string will download logs for all stream processors in the workspace.`,
+			},
+			`startDate`: {
+				Usage: `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
+			},
+			`tenantName`: {
+				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -8261,6 +8301,45 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getRateLimit`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`endpointSetId`: {
+				Usage: `The ID of the rate limit endpoint set.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Project to request rate limits for. When this parameter is provided, the limits returned are applicable to the specified project. The requesting user must have the Project Read Only role for the specified project.`,
+			},
+			`ipAddress`: {
+				Usage: `An IP address to request rate limits for. When this parameter is provided, the limits returned are applicable to the specified IP address. The requesting user must have the same IP address as the one provided in the request.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Organization to request rate limits for. When this parameter is provided, the limits returned are applicable to the specified organization. The requesting user must have the Organization Read Only role for the specified organization.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`userId`: {
+				Usage: `A string that identifies the Atlas user to request rate limits for. The ID can for example be the Service Account Client ID or the API Public Key. When this parameter is provided, the limits returned are applicable to the specified  user. The requesting user must be the same as the specified user.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`endpointSetId`: `rateLimitsInspection_group`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
+					`ipAddress`:     `127.0.0.1`,
+					`orgId`:         `32b6e34b3d91647abb20e7b8`,
+					`userId`:        `mdb_sa_id_1234567890abcdef12345678`,
+				},
+			},
+			},
+		},
+	},
 	`getSku`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -11858,6 +11937,55 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: nil,
+	},
+	`listRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`endpointPath`: {
+				Usage: `Filters the returned endpoint sets by the provided endpoint path. Multiple paths may be provided, for example ` + "`" + `/rateLimits?endpointPath=%2Fapi%2Fatlas%2Fv2%2Fclusters&endpointPath=%2Fapi%2Fatlas%2Fv2%2Fgroups%2F%7BgroupId%7D%2F` + "`" + `. Replace ` + "`" + `/` + "`" + `, ` + "`" + `{` + "`" + ` and ` + "`" + `}` + "`" + ` with their URL-encoded values (` + "`" + `%2F` + "`" + `, ` + "`" + `%7B` + "`" + ` and ` + "`" + `%7D` + "`" + ` respectively).`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Project to request rate limits for. When this parameter is provided, only group scoped endpoint sets are returned and the limits returned are applicable to the specified project. The requesting user must have the Project Read Only role for the specified project.`,
+			},
+			`ipAddress`: {
+				Usage: `An IP address to request rate limits for. When this parameter is provided, only IP scoped endpoint sets are returned and the limits returned are applicable to the specified IP address. The requesting user must have the same IP address as the one provided in the request.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`name`: {
+				Usage: `Filters the returned endpoint sets by the provided endpoint set name. Multiple names may be provided, for example ` + "`" + `/rateLimits?name=Name1&name=Name2` + "`" + `. For names that use spaces, replace the space with its URL-encoded value (` + "`" + `%20` + "`" + `).`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Organization to request rate limits for. When this parameter is provided, only organization scoped endpoint sets are returned and the limits returned are applicable to the specified organization. The requesting user must have the Organization Read Only role for the specified organization.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`userId`: {
+				Usage: `A string that identifies the Atlas user to request rate limits for. The ID can for example be the Service Account Client ID or the API Public Key. When this parameter is provided, only user scoped endpoint sets are returned and the limits returned are applicable to the specified user. The requesting user must be the same as the specified user.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`endpointPath`: `/api/atlas/v2/clusters`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`ipAddress`:    `127.0.0.1`,
+					`name`:         `Rate Limits Inspection`,
+					`orgId`:        `32b6e34b3d91647abb20e7b8`,
+					`userId`:       `mdb_sa_id_1234567890abcdef12345678`,
+				},
+			},
+			},
+		},
 	},
 	`listSkus`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

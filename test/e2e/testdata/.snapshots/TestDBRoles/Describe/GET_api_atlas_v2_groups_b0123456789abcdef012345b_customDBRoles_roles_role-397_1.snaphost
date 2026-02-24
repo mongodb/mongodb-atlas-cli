@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 236
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 23 Feb 2026 03:23:01 GMT
+Ratelimit-Limit: 2000
+Ratelimit-Remaining: 1997
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 69
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCustomDBRoleResource::getCustomDBRole
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=268e57de5a76752ba4e4f21182634ccd63faf18f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"actions":[{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]},{"action":"UPDATE","resources":[{"collection":"collection","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"}],"roleName":"role-397"}

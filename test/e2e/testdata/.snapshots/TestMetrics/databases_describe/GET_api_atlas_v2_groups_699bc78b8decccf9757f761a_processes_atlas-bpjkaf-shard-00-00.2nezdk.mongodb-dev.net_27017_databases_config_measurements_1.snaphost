@@ -1,0 +1,19 @@
+HTTP/2.0 200 OK
+Content-Length: 1741
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 23 Feb 2026 03:33:31 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 295
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 110
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getSpecificDatabaseMeasurements
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=268e57de5a76752ba4e4f21182634ccd63faf18f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"databaseName":"config","end":"2026-02-23T03:33:05Z","granularity":"PT30M","groupId":"699bc78b8decccf9757f761a","hostId":"atlas-bpjkaf-shard-00-00.2nezdk.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/699bc78b8decccf9757f761a/processes/atlas-bpjkaf-shard-00-00.2nezdk.mongodb-dev.net:27017/databases/config/measurements?granularity=PT30M&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/699bc78b8decccf9757f761a/processes/atlas-bpjkaf-shard-00-00.2nezdk.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":113.5}],"name":"DATABASE_AVERAGE_OBJECT_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":9.0}],"name":"DATABASE_COLLECTION_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":227.0}],"name":"DATABASE_DATA_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":61440.0}],"name":"DATABASE_STORAGE_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":65536.0}],"name":"DATABASE_INDEX_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":12.0}],"name":"DATABASE_INDEX_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":0.0}],"name":"DATABASE_EXTENT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":2.0}],"name":"DATABASE_OBJECT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2026-02-23T03:33:05Z","value":0.0}],"name":"DATABASE_VIEW_COUNT","units":"SCALAR"}],"processId":"atlas-bpjkaf-shard-00-00.2nezdk.mongodb-dev.net:27017","start":"2026-02-23T03:33:05Z"}

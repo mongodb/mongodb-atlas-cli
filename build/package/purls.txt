@@ -3,7 +3,7 @@ pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.18.1
 pkg:golang/cloud.google.com/go/compute/metadata@v0.9.0
 pkg:golang/cloud.google.com/go/iam@v1.5.3
-pkg:golang/cloud.google.com/go/kms@v1.25.0
+pkg:golang/cloud.google.com/go/kms@v1.26.0
 pkg:golang/cloud.google.com/go/longrunning@v0.8.0
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.21.0
@@ -126,7 +126,7 @@ pkg:golang/golang.org/x/term@v0.40.0
 pkg:golang/golang.org/x/text@v0.34.0
 pkg:golang/golang.org/x/time@v0.14.0
 pkg:golang/google.golang.org/api@v0.267.0
-pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260128011058-8636f8732409
+pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260203192932-546029d2fa20
 pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260203192932-546029d2fa20
 pkg:golang/google.golang.org/genproto@v0.0.0-20260128011058-8636f8732409
 pkg:golang/google.golang.org/grpc@v1.78.0

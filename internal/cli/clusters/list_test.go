@@ -17,6 +17,7 @@ package clusters
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -127,4 +128,107 @@ func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
 
 func TestListTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, atlasClustersPinned.PaginatedAdvancedClusterDescription{})
+}
+
+func TestList_RunDedicatedCluster_PausedState(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterLister(ctrl)
+
+	idleState := "IDLE"
+	expected := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
+			{
+				Name:      pointer.Get("test"),
+				Id:        pointer.Get("123"),
+				StateName: &idleState,
+				Paused:    pointer.Get(true), // Paused cluster with IDLE state
+			},
+		},
+	}
+
+	listOpts := &ListOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		ProjectClusters(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
+	// Verify that StateName was updated to PAUSED
+	require.Equal(t, connect.PausedState, *expected.GetResults()[0].StateName)
+}
+
+func TestList_RunDedicatedCluster_IndependentShardScaling_PausedState(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterLister(ctrl)
+
+	idleState := "IDLE"
+	expected := &atlasv2.PaginatedClusterDescription20240805{
+		Results: &[]atlasv2.ClusterDescription20240805{
+			{
+				Name:      pointer.Get("test"),
+				Id:        pointer.Get("123"),
+				StateName: &idleState,
+				Paused:    pointer.Get(true), // Paused cluster with IDLE state
+			},
+		},
+	}
+
+	listOpts := &ListOpts{
+		store:           mockStore,
+		autoScalingMode: independentShardScalingFlag,
+	}
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(listOpts.ProjectID, *expected.GetResults()[0].Name).
+		Return(&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+			AutoScalingMode: pointer.Get(independentShardScalingFlag),
+		}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		LatestProjectClusters(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
+	// Verify that StateName was updated to PAUSED
+	require.Equal(t, connect.PausedState, *expected.GetResults()[0].StateName)
+}
+
+func TestList_RunFlexCluster_PausedState(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterLister(ctrl)
+
+	idleState := "IDLE"
+	expected := &atlasv2.PaginatedFlexClusters20241113{
+		Results: &[]atlasv2.FlexClusterDescription20241113{
+			{
+				Name:      pointer.Get("test"),
+				Id:        pointer.Get("123"),
+				StateName: &idleState,
+				Paused:    pointer.Get(true), // Paused cluster with IDLE state
+			},
+		},
+	}
+
+	listOpts := &ListOpts{
+		store: mockStore,
+		tier:  atlasFlex,
+	}
+
+	mockStore.
+		EXPECT().
+		ListFlexClusters(listOpts.newListFlexClustersAPIParams()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
+	// Verify that StateName was updated to PAUSED
+	require.Equal(t, connect.PausedState, *expected.GetResults()[0].StateName)
 }

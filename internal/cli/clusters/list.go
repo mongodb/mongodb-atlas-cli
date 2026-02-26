@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/connect"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -79,6 +80,7 @@ func (opts *ListOpts) RunDedicatedCluster() error {
 		if err != nil {
 			return err
 		}
+		opts.fixPausedStateForLatestClusters(r)
 		return opts.Print(r)
 	}
 
@@ -86,6 +88,7 @@ func (opts *ListOpts) RunDedicatedCluster() error {
 	if err != nil {
 		return err
 	}
+	opts.fixPausedStateForAdvancedClusters(r)
 
 	return opts.Print(r)
 }
@@ -111,6 +114,7 @@ func (opts *ListOpts) RunFlexCluster() error {
 	if err != nil {
 		return err
 	}
+	opts.fixPausedStateForFlexClusters(r)
 
 	return opts.Print(r)
 }
@@ -122,6 +126,54 @@ func (opts *ListOpts) newListFlexClustersAPIParams() *atlasv2.ListFlexClustersAp
 		IncludeCount: &includeCount,
 		ItemsPerPage: &opts.ItemsPerPage,
 		PageNum:      &opts.PageNum,
+	}
+}
+
+// fixPausedStateForAdvancedClusters updates StateName to "PAUSED" for paused clusters.
+// For paused clusters, Atlas returns stateName="IDLE" with Paused=true.
+func (opts *ListOpts) fixPausedStateForAdvancedClusters(clusters *atlasClustersPinned.PaginatedAdvancedClusterDescription) {
+	if clusters == nil || clusters.Results == nil {
+		return
+	}
+	for i := range *clusters.Results {
+		cluster := &(*clusters.Results)[i]
+		if cluster.GetPaused() {
+			// for paused clusters, Atlas returns stateName IDLE and Paused=true
+			stateName := connect.PausedState
+			cluster.StateName = &stateName
+		}
+	}
+}
+
+// fixPausedStateForLatestClusters updates StateName to "PAUSED" for paused clusters.
+// For paused clusters, Atlas returns stateName="IDLE" with Paused=true.
+func (opts *ListOpts) fixPausedStateForLatestClusters(clusters *atlasv2.PaginatedClusterDescription20240805) {
+	if clusters == nil || clusters.Results == nil {
+		return
+	}
+	for i := range *clusters.Results {
+		cluster := &(*clusters.Results)[i]
+		if cluster.GetPaused() {
+			// for paused clusters, Atlas returns stateName IDLE and Paused=true
+			stateName := connect.PausedState
+			cluster.StateName = &stateName
+		}
+	}
+}
+
+// fixPausedStateForFlexClusters updates StateName to "PAUSED" for paused clusters.
+// For paused clusters, Atlas returns stateName="IDLE" with Paused=true.
+func (opts *ListOpts) fixPausedStateForFlexClusters(clusters *atlasv2.PaginatedFlexClusters20241113) {
+	if clusters == nil || clusters.Results == nil {
+		return
+	}
+	for i := range *clusters.Results {
+		cluster := &(*clusters.Results)[i]
+		if cluster.GetPaused() {
+			// for paused clusters, Atlas returns stateName IDLE and Paused=true
+			stateName := connect.PausedState
+			cluster.StateName = &stateName
+		}
 	}
 }
 

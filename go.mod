@@ -3,6 +3,8 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 go 1.26
 
 replace (
+	// Security fix for VULN-1041 (GO-2022-0493): force vulnerable golang.org/x/sys to fixed version
+	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 => golang.org/x/sys v0.41.0
 	// Security fix for VULN-1042: Update golang.org/x/text v0.3.0 to v0.33.0
 	golang.org/x/text v0.3.0 => golang.org/x/text v0.33.0
 	// Security fix for VULN-1044: Update protobuf v1.22.0 to v1.33.0

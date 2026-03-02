@@ -45451,7 +45451,7 @@ paths:
             x-xgen-atlascli:
                 watcher:
                     get:
-                        version: "2024-08-05"
+                        version: "2024-10-23"
                         operation-id: updateGroupCluster
                         params:
                             clusterName: input:clusterName

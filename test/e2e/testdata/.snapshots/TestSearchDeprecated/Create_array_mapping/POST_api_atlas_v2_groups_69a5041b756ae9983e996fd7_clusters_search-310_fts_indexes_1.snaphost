@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 340
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 02 Mar 2026 03:43:17 GMT
+Deprecation: Thu, 30 May 2024 00:00:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1192
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 1382
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFTSIndexConfigResource::createFTSIndex
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=050fc97ae4d478026201e2bfddb9dfe56d88b314; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"analyzer":"lucene.standard","collectionName":"posts","database":"sample_training","indexID":"69a50755756ae9983e997f4d","mappings":{"dynamic":false,"fields":{"comments":[{"dynamic":true,"type":"document"},{"type":"string"}]}},"name":"index-array-382","searchAnalyzer":"lucene.standard","status":"IN_PROGRESS","synonyms":[],"type":"search"}

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 02 Mar 2026 03:28:29 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 64
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=050fc97ae4d478026201e2bfddb9dfe56d88b314; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69a500fb756ae9983e991e85/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-02T03:25:32Z","groupId":"69a500fb756ae9983e991e85","hostname":"atlas-8fgank-shard-00-00.zhmkue.mongodb-dev.net","id":"atlas-8fgank-shard-00-00.zhmkue.mongodb-dev.net:27017","lastPing":"2026-03-02T03:28:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69a500fb756ae9983e991e85/processes/atlas-8fgank-shard-00-00.zhmkue.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8fgank-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-288-shard-00-00.zhmkue.mongodb-dev.net","version":"8.0.20"},{"created":"2026-03-02T03:25:32Z","groupId":"69a500fb756ae9983e991e85","hostname":"atlas-8fgank-shard-00-01.zhmkue.mongodb-dev.net","id":"atlas-8fgank-shard-00-01.zhmkue.mongodb-dev.net:27017","lastPing":"2026-03-02T03:28:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69a500fb756ae9983e991e85/processes/atlas-8fgank-shard-00-01.zhmkue.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8fgank-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-288-shard-00-01.zhmkue.mongodb-dev.net","version":"8.0.20"},{"created":"2026-03-02T03:25:32Z","groupId":"69a500fb756ae9983e991e85","hostname":"atlas-8fgank-shard-00-02.zhmkue.mongodb-dev.net","id":"atlas-8fgank-shard-00-02.zhmkue.mongodb-dev.net:27017","lastPing":"2026-03-02T03:28:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69a500fb756ae9983e991e85/processes/atlas-8fgank-shard-00-02.zhmkue.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-8fgank-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-288-shard-00-02.zhmkue.mongodb-dev.net","version":"8.0.20"}],"totalCount":3}

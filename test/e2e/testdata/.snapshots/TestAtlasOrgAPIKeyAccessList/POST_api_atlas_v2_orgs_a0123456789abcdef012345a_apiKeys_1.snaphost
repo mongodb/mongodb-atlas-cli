@@ -1,7 +1,7 @@
 HTTP/2.0 200 OK
 Content-Length: 339
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 23 Feb 2026 03:20:31 GMT
+Date: Mon, 02 Mar 2026 03:15:42 GMT
 Ratelimit-Limit: 500
 Ratelimit-Remaining: 499
 Referrer-Policy: strict-origin-when-cross-origin
@@ -12,7 +12,7 @@ X-Envoy-Upstream-Service-Time: 116
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationApiUsersResource::createApiUser
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=268e57de5a76752ba4e4f21182634ccd63faf18f; versionString=master
+X-Mongodb-Service-Version: gitHash=050fc97ae4d478026201e2bfddb9dfe56d88b314; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"desc":"e2e-test-helper","id":"699bc77f9c9b77e72d282f93","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/699bc77f9c9b77e72d282f93","rel":"self"}],"privateKey":"4b940659-412b-4209-a70f-e00b9ce28507","publicKey":"vfpmgvuj","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}
+{"desc":"e2e-test-helper","id":"69a500ded073a224c6fa7a77","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/69a500ded073a224c6fa7a77","rel":"self"}],"privateKey":"1f034dae-0ff6-4113-b78d-45ffb88119fd","publicKey":"jefpbxah","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}

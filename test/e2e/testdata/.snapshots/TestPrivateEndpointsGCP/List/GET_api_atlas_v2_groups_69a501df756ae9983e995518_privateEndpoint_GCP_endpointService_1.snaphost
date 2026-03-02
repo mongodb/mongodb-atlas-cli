@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1075
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 02 Mar 2026 03:24:04 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3990
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 56
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=050fc97ae4d478026201e2bfddb9dfe56d88b314; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"69a501e4d073a224c6fad3b1","portMappingEnabled":false,"regionName":"NORTH_AMERICA_NORTHEAST_1","serviceAttachmentNames":["projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-0","projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-1","projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-2","projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-3","projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-4","projects/p-tzgj55pw5r5cr1f53k97x46m/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-69a501df756ae9983e995518-5"],"status":"AVAILABLE"}]

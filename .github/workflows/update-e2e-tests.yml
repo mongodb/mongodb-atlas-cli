@@ -247,7 +247,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots
@@ -293,7 +293,7 @@ jobs:
           fetch-depth: 0
       - run: rm -rf test/e2e/testdata/.snapshots && mkdir -p test/e2e/testdata/.snapshots
       - name: Download artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: snapshots_*
           path: test/e2e/testdata/.snapshots

@@ -15,7 +15,7 @@ pkg:golang/github.com/AzureAD/microsoft-authentication-library-for-go@v1.6.0
 pkg:golang/github.com/Masterminds/semver/v3@v3.4.0
 pkg:golang/github.com/PaesslerAG/gval@v1.0.0
 pkg:golang/github.com/PaesslerAG/jsonpath@v0.1.1
-pkg:golang/github.com/ProtonMail/go-crypto@v1.3.0
+pkg:golang/github.com/ProtonMail/go-crypto@v1.4.0
 pkg:golang/github.com/STARRY-S/zip@v0.2.3
 pkg:golang/github.com/andybalholm/brotli@v1.2.0
 pkg:golang/github.com/aws/aws-sdk-go-v2/config@v1.32.10

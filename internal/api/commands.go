@@ -7964,7 +7964,25 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
+						Sunset:             shared_api.NewSunset(2027, 3, 1),
 						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -8075,7 +8093,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -8172,7 +8190,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -8250,6 +8277,15 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					Verb: http.MethodGet,
 				},
 				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
@@ -8746,7 +8782,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -8977,7 +9022,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -9199,7 +9244,25 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
+						Sunset:             shared_api.NewSunset(2027, 3, 1),
 						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -9295,6 +9358,15 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					Verb: http.MethodPatch,
 				},
 				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
@@ -15143,7 +15215,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -15223,7 +15304,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -15303,7 +15393,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -15403,7 +15502,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -15483,7 +15591,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
+						Deprecated:         true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -19483,7 +19600,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
-						Sunset:             shared_api.NewSunset(2026, 11, 30),
+						Sunset:             shared_api.NewSunset(2027, 7, 1),
 						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{

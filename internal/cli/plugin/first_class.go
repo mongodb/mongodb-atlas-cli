@@ -25,6 +25,8 @@ import (
 const (
 	FirstClassSourceType = "first-class"
 	sourceType           = "sourceType"
+
+	AtlasLocalPluginMinVersion = "0.11.0"
 )
 
 // uncomment example plugin to test first class plugin feature.
@@ -58,7 +60,7 @@ var FirstClassPlugins = []*FirstClassPlugin{
 	},
 	{
 		Name:       "atlas-local-plugin",
-		MinVersion: "0.0.10",
+		MinVersion: AtlasLocalPluginMinVersion,
 		Github: &Github{
 			Owner: "mongodb",
 			Name:  "atlas-local-cli",

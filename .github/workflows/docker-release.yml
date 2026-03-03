@@ -85,7 +85,7 @@ jobs:
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> "$GITHUB_ENV"
       - name: Enable containerd image store # See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
-        uses: crazy-max/ghaction-setup-docker@e43656e248c0bd0647d3f5c195d116aacf6fcaf4
+        uses: crazy-max/ghaction-setup-docker@1a6edb0ba9ac496f6850236981f15d8f9a82254d
         with:
           version: v24.0.6
           daemon-config: |

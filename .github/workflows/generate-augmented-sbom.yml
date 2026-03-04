@@ -8,9 +8,13 @@ jobs:
     name: Echo ASSIGNEE_JIRA_TICKET
     runs-on: ubuntu-latest
     steps:
-      # Base64 output avoids GitHub's secret masking so you can verify the value.
-      # Decode locally: echo '<base64-from-log>' | base64 -d
-      - name: Echo ASSIGNEE_JIRA_TICKET (base64, decode to see value)
+      - name: Write ASSIGNEE_JIRA_TICKET to file
+        env:
+          ASSIGNEE_JIRA_TICKET: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
         run: |
-          echo "ASSIGNEE_JIRA_TICKET (base64):"
-          echo -n "${{ secrets.ASSIGNEE_JIRA_TICKET }}" | base64
+          echo -n "$ASSIGNEE_JIRA_TICKET" > assignee_jira_ticket.txt
+      - name: Upload ASSIGNEE_JIRA_TICKET file
+        uses: actions/upload-artifact@v4
+        with:
+          name: assignee-jira-ticket
+          path: assignee_jira_ticket.txt

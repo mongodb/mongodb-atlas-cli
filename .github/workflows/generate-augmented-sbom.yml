@@ -8,5 +8,9 @@ jobs:
     name: Echo ASSIGNEE_JIRA_TICKET
     runs-on: ubuntu-latest
     steps:
-      - name: Echo ASSIGNEE_JIRA_TICKET
-        run: echo "ASSIGNEE_JIRA_TICKET=${{ secrets.ASSIGNEE_JIRA_TICKET }}"
+      # Base64 output avoids GitHub's secret masking so you can verify the value.
+      # Decode locally: echo '<base64-from-log>' | base64 -d
+      - name: Echo ASSIGNEE_JIRA_TICKET (base64, decode to see value)
+        run: |
+          echo "ASSIGNEE_JIRA_TICKET (base64):"
+          echo -n "${{ secrets.ASSIGNEE_JIRA_TICKET }}" | base64

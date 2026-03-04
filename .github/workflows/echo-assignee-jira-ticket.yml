@@ -1,0 +1,11 @@
+---
+name: Echo ASSIGNEE_JIRA_TICKET
+on:
+  workflow_dispatch:
+jobs:
+  echo-secret:
+    name: Echo ASSIGNEE_JIRA_TICKET
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo ASSIGNEE_JIRA_TICKET
+        run: echo "ASSIGNEE_JIRA_TICKET=${{ secrets.ASSIGNEE_JIRA_TICKET }}"

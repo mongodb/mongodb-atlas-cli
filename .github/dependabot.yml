@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: weekly
       day: tuesday
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 10
     reviewers:
       - "mongodb/apix-2"
     ignore:
@@ -15,14 +15,10 @@ updates:
       golang:
         patterns:
           - "golang.org*"
-      google:
+      cloud-providers:
         patterns:
           - "*google.golang.org*"
-      aws:
-        patterns:
           - "github.com/aws*"
-      azure:
-        patterns:
           - "github.com/Azure*"
       containers:
         patterns:
@@ -37,7 +33,7 @@ updates:
       interval: weekly
       day: tuesday
     reviewers:
-      - "mongodb/apix-2"
+      - "mongodb/apix-devtools"
     groups:
       docker:
         patterns:

@@ -413,8 +413,8 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
-github.com/stretchr/objx v0.5.2 h1:xuMeJ0Sdp5ZMRXx/aWO6RZxdr3beISkG5/G/aIRr3pY=
-github.com/stretchr/objx v0.5.2/go.mod h1:FRsXN1f5AsAjCGJKqEizvkpNtU+EGNCLh3NxZ/8L+MA=
+github.com/stretchr/objx v0.5.3 h1:jmXUvGomnU1o3W/V5h2VEradbpJDwGrzugQQvL0POH4=
+github.com/stretchr/objx v0.5.3/go.mod h1:rDQraq+vQZU7Fde9LOZLr8Tax6zZvy4kuNKF+QYS+U0=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
@@ -465,8 +465,8 @@ go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0 h1:d/gbYJ+obR0EM/3DZf7+ZM
 go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0/go.mod h1:O47ZrMMfcWb31wznNIq2PQkkdoFoK0ea2GlmRqGJC2s=
 go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0 h1:PcVxslw4G7/I9SbUi5y81i4YZnL1dKRnGpeHVyNSTh4=
 go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0/go.mod h1:UZYSaCimjGs3j+wMwgHSKUSIvoJXzmy/xrer0t5TLgo=
-go.mongodb.org/atlas-sdk/v20250312014 v20250312014.0.0 h1:j8ubNio8VpEvIICjy9pJEkyVcim4+ex26x2P2Ul44f8=
-go.mongodb.org/atlas-sdk/v20250312014 v20250312014.0.0/go.mod h1:vVILTxxmRs3zOc5OhIqXCIkD6FwB7HA11QV/PV+iWB4=
+go.mongodb.org/atlas-sdk/v20250312015 v20250312015.0.0 h1:KwrdbqufgvcgC7xTNJjclkED2av3NtZ+z4pu0mFrUXA=
+go.mongodb.org/atlas-sdk/v20250312015 v20250312015.0.0/go.mod h1:0GpYfmiaY7+IjJ6diF+OjbKNhnvw7aM+5wcKYlFaH38=
 go.mongodb.org/mongo-driver v1.17.9 h1:IexDdCuuNJ3BHrELgBlyaH9p60JXAvdzWR128q+U5tU=
 go.mongodb.org/mongo-driver v1.17.9/go.mod h1:LlOhpH5NUEfhxcAwG0UEkMqwYcc4JU18gtCdGudk/tQ=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

@@ -12,7 +12,7 @@ package validation
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312014/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312015/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

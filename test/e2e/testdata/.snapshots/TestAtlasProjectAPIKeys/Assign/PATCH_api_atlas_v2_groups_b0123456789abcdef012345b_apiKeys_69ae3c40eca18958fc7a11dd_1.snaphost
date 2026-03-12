@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 404
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 09 Mar 2026 03:19:31 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 197
+X-Frame-Options: DENY
+X-Java-Method: ApiProjectApiUsersResource::updateApiUserDescAndRoles
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"desc":"e2e-test","id":"69ae3c40eca18958fc7a11dd","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/69ae3c40eca18958fc7a11dd","rel":"self"}],"privateKey":"********-****-****-1cdfde23944d","publicKey":"ibpwtano","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_DATA_ACCESS_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"}]}

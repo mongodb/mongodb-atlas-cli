@@ -1,0 +1,20 @@
+HTTP/2.0 201 Created
+Content-Length: 201
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 12 Mar 2026 17:47:47 GMT
+Deprecation: Thu, 30 Apr 2026 00:00:00 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Fri, 30 Apr 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 247
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::addEndpointService
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=ace598dfe4bd0e9565dc96751602f474cbfb8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"AWS","endpointServiceName":null,"errorMessage":null,"id":"69b2fc43c7c4e13aed9e56b4","interfaceEndpoints":[],"regionName":"SA_EAST_1","status":"INITIATING","supportedRemoteRegions":[]}

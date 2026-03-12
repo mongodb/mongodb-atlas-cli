@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 401
 Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
-Date: Mon, 02 Mar 2026 03:17:27 GMT
+Date: Mon, 09 Mar 2026 03:20:15 GMT
 Ratelimit-Limit: 1200
-Ratelimit-Remaining: 1198
+Ratelimit-Remaining: 1197
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 187
+X-Envoy-Upstream-Service-Time: 399
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasFlexBackupResource::createRestoreJob
 X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=050fc97ae4d478026201e2bfddb9dfe56d88b314; versionString=master
+X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"deliveryType":"RESTORE","expirationDate":"2026-03-02T09:17:27Z","id":"69a50147d073a224c6fab483","instanceName":"test-flex","projectId":"b0123456789abcdef012345b","restoreScheduledDate":"2026-03-02T03:17:27Z","snapshotFinishedDate":"2026-02-22T17:06:41Z","snapshotId":"699b3755dbf49c6d565c94f8","status":"PENDING","targetDeploymentItemName":"cluster-426","targetProjectId":"b0123456789abcdef012345b"}
+{"deliveryType":"RESTORE","expirationDate":"2026-03-09T09:20:15Z","id":"69ae3c6f71956e49fdbe18b1","instanceName":"test-flex","projectId":"b0123456789abcdef012345b","restoreScheduledDate":"2026-03-09T03:20:15Z","snapshotFinishedDate":"2026-03-01T17:07:05Z","snapshotId":"69a471ec2f75663ab03079e7","status":"PENDING","targetDeploymentItemName":"cluster-409","targetProjectId":"b0123456789abcdef012345b"}

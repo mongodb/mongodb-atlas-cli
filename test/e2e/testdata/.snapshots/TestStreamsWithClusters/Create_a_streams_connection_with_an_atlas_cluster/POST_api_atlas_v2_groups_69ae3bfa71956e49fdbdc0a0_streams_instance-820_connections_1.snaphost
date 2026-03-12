@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 196
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 09 Mar 2026 03:35:45 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 175
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::createConnection
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"clusterName":"cluster-65","dbRoleToExecute":{"role":"atlasAdmin","type":"BUILT_IN"},"id":"69ae4011eca18958fc7a61c9","name":"ClusterConn","region":"VIRGINIA_USA","state":"READY","type":"Cluster"}

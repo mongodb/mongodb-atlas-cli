@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 970
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 12 Mar 2026 17:57:20 GMT
+Deprecation: Thu, 30 Apr 2026 00:00:00 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3992
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Fri, 30 Apr 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 65
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=ace598dfe4bd0e9565dc96751602f474cbfb8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"69b2fd60c7c4e13aed9e6738","portMappingEnabled":false,"regionName":"EUROPE_CENTRAL_2","serviceAttachmentNames":["projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-0","projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-1","projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-2","projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-3","projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-4","projects/p-cljbuc6u3mgrfym8ec82lk2s/regions/europe-central2/serviceAttachments/sa-europe-central2-69b2fd5bc7c4e13aed9e63a2-5"],"status":"AVAILABLE"}]

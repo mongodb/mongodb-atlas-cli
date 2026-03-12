@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1886
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 09 Mar 2026 03:35:48 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 50
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10
+X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3c0771956e49fdbdd97b/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-09T03:27:53Z","groupId":"69ae3c0771956e49fdbdd97b","hostname":"atlas-k7wom2-shard-00-00.adrlh3.mongodb-dev.net","id":"atlas-k7wom2-shard-00-00.adrlh3.mongodb-dev.net:27017","lastPing":"2026-03-09T03:35:48Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3c0771956e49fdbdd97b/processes/atlas-k7wom2-shard-00-00.adrlh3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-k7wom2-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-835-shard-00-00.adrlh3.mongodb-dev.net","version":"8.0.20"},{"created":"2026-03-09T03:27:53Z","groupId":"69ae3c0771956e49fdbdd97b","hostname":"atlas-k7wom2-shard-00-01.adrlh3.mongodb-dev.net","id":"atlas-k7wom2-shard-00-01.adrlh3.mongodb-dev.net:27017","lastPing":"2026-03-09T03:35:48Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3c0771956e49fdbdd97b/processes/atlas-k7wom2-shard-00-01.adrlh3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-k7wom2-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-835-shard-00-01.adrlh3.mongodb-dev.net","version":"8.0.20"},{"created":"2026-03-09T03:27:53Z","groupId":"69ae3c0771956e49fdbdd97b","hostname":"atlas-k7wom2-shard-00-02.adrlh3.mongodb-dev.net","id":"atlas-k7wom2-shard-00-02.adrlh3.mongodb-dev.net:27017","lastPing":"2026-03-09T03:35:48Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3c0771956e49fdbdd97b/processes/atlas-k7wom2-shard-00-02.adrlh3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-k7wom2-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-835-shard-00-02.adrlh3.mongodb-dev.net","version":"8.0.20"}],"totalCount":3}

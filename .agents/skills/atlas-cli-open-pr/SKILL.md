@@ -105,7 +105,7 @@ For each changed `.go` file (excluding `_test.go` and `mock`), check for a corre
 git push -u origin HEAD
 ```
 
-Then create the PR using the repo's template:
+Then create the PR using the repo's [PR template](.github/pull_request_template.md):
 
 ```bash
 gh pr create --title "CLOUDP-XXXXX: <description>" --body "$(cat <<'EOF'

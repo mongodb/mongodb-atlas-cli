@@ -145,23 +145,45 @@ func (opts *SetupOpts) downloadImage(ctx context.Context, currentStep int) error
 	opts.logStepStarted("Downloading the latest MongoDB image to your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	err := opts.ContainerEngine.ImagePull(ctx, opts.MongodDockerImageName())
-	if err == nil {
-		return nil
+	candidates := []string{
+		opts.MongodDockerImageName(),
+		opts.MongodDockerImageNameFallback(),
 	}
-	_, _ = log.Debugf("Error encountered while pulling image '%s': %s\n", opts.MongodDockerImageName(), err.Error())
-	if opts.isDiskSpaceError(err) {
-		return errInsufficientDiskSpace
-	}
-	_, _ = log.Debugf("Checking if image exists locally\n")
-	// In case we already have an image present and the download fails, we can continue with the existing image
-	images, _ := opts.ContainerEngine.ImageList(ctx, opts.MongodDockerImageName())
-	if len(images) != 0 {
-		_, _ = log.Debugf("Image '%s' exists locally, continuing with the existing image\n", opts.MongodDockerImageName())
-		return nil
-	}
-	_, _ = log.Debugf("Failed to find image '%s' locally\n", opts.MongodDockerImageName())
 
+	prevImage := ""
+	for _, image := range candidates {
+		if prevImage != "" {
+			_, _ = log.Debugf("Image '%s' not available, trying to download fallback image '%s'\n", prevImage, image)
+		}
+		err := opts.ContainerEngine.ImagePull(ctx, image)
+		if err == nil {
+			_, _ = log.Debugf("Successfully pulled image '%s'\n", image)
+			opts.SetResolvedImageName(image)
+			return nil
+		}
+		_, _ = log.Debugf("Error encountered while pulling image '%s': %s\n", image, err.Error())
+		if opts.isDiskSpaceError(err) {
+			return errInsufficientDiskSpace
+		}
+		prevImage = image
+	}
+
+	_, _ = log.Debugf("Could not pull images, checking if any candidate exists locally\n")
+	prevImage = ""
+	for _, image := range candidates {
+		if prevImage != "" {
+			_, _ = log.Debugf("Image '%s' not found locally, looking for fallback image '%s'\n", prevImage, image)
+		}
+		images, _ := opts.ContainerEngine.ImageList(ctx, image)
+		if len(images) != 0 {
+			_, _ = log.Debugf("Found image '%s' locally, continuing with existing image\n", image)
+			opts.SetResolvedImageName(image)
+			return nil
+		}
+		prevImage = image
+	}
+
+	_, _ = log.Debugf("Failed to find any of %v locally\n", candidates)
 	return errFailedToDownloadImage
 }
 

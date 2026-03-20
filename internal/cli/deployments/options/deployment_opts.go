@@ -105,6 +105,7 @@ type DeploymentOpts struct {
 	Config                ProfileReader
 	DeploymentTelemetry   DeploymentTelemetry
 	DeploymentUUID        string
+	resolvedImageName     string
 }
 
 type Deployment struct {
@@ -152,8 +153,20 @@ func getLocalDevImage() string {
 }
 
 func (opts *DeploymentOpts) MongodDockerImageName() string {
+	if opts.resolvedImageName != "" {
+		return opts.resolvedImageName
+	}
 	v, _ := semver.NewVersion(opts.MdbVersion)
 	return getLocalDevImage() + ":" + strconv.FormatUint(v.Major(), 10)
+}
+
+func (opts *DeploymentOpts) MongodDockerImageNameFallback() string {
+	v, _ := semver.NewVersion(opts.MdbVersion)
+	return getLocalDevImage() + ":" + strconv.FormatUint(v.Major(), 10) + ".0"
+}
+
+func (opts *DeploymentOpts) SetResolvedImageName(name string) {
+	opts.resolvedImageName = name
 }
 
 func (opts *DeploymentOpts) Spin(funcs ...func() error) error {

@@ -5,19 +5,7 @@ description: Pre-PR validation and pull request creation workflow for the mongod
 
 # Atlas CLI - Open Pull Request
 
-## Step 1: Verify branch naming
-
-The branch name **must** be a JIRA ticket ID (e.g. `CLOUDP-12345`).
-
-```bash
-git rev-parse --abbrev-ref HEAD
-```
-
-If it doesn't match `CLOUDP-NNNNN`:
-1. Ask the user for the JIRA ticket ID.
-2. Rename the branch: `git branch -m CLOUDP-XXXXX`
-
-## Step 2: Run pre-PR checks
+## Step 1: Run pre-PR checks
 
 Run the validation script. It formats, lints, builds, tests, and regenerates docs — printing only errors:
 
@@ -27,11 +15,11 @@ Run the validation script. It formats, lints, builds, tests, and regenerates doc
 
 If any check fails, fix the reported issues and re-run until all checks pass. Stage and commit any files modified by formatting or doc generation.
 
-## Step 3: Verify unit test coverage
+## Step 2: Verify unit test coverage
 
 For each changed `.go` file (excluding `_test.go` and `mock`), check for a corresponding `_test.go`. Warn about missing test files but let the user decide whether to proceed.
 
-## Step 4: Push and create PR (optional)
+## Step 3: Push and create PR (optional)
 
 **Ask the user before proceeding with this step.** Only push and create a PR if the user explicitly confirms.
 
@@ -47,6 +35,8 @@ gh pr create --title "CLOUDP-XXXXX: <description>" --body "$(cat <<'EOF'
 
 _Jira ticket:_ CLOUDP-XXXXX
 
+<Description>
+
 ## Checklist
 
 - [x] I have added tests that prove my fix is effective or that my feature works
@@ -60,4 +50,4 @@ EOF
 )"
 ```
 
-Fill in the actual ticket ID and adjust the checklist to reflect what was done.
+Fill in the actual ticket ID and adjust the checklist to reflect what was done. Provide a suncict and clear description of the code changes in the `<Description>` placeholder.

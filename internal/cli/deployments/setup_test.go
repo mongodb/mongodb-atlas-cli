@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -29,6 +30,7 @@ import (
 )
 
 const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8"
+const dockerImageNameFallback = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 func TestSetupOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -138,10 +140,13 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 	// Verify version should always succeed
 	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
-	// Image gets pulled
+	// Primary image pull fails
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
 
-	// The image was downloaded before
+	// Fallback image pull also fails
+	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageNameFallback).Return(errors.New("image pull failed")).Times(1)
+
+	// The primary image was downloaded before
 	deploymentTest.MockContainerEngine.EXPECT().ImageList(ctx, dockerImageName).Return([]container.Image{{ID: dockerImageName}}, nil).Times(1)
 
 	// No local dev container exists yet
@@ -204,14 +209,18 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 	// Verify version should always succeed
 	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
-	// Image gets pulled
+	// Primary image pull fails
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
+
+	// Fallback image pull also fails
+	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageNameFallback).Return(errors.New("image pull failed")).Times(1)
 
 	// No local dev container exists yet
 	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{}, nil).Times(1)
 
-	// The image was downloaded before
+	// Neither image exists locally
 	deploymentTest.MockContainerEngine.EXPECT().ImageList(ctx, dockerImageName).Return([]container.Image{}, nil).Times(1)
+	deploymentTest.MockContainerEngine.EXPECT().ImageList(ctx, dockerImageNameFallback).Return([]container.Image{}, nil).Times(1)
 
 	// Container is removed
 	deploymentTest.MockContainerEngine.EXPECT().ContainerRm(ctx, deploymentName).Return(nil).Times(1)
@@ -394,6 +403,41 @@ func TestSetupOpts_MongodDockerImageName(t *testing.T) {
 	}
 }
 
+func TestSetupOpts_MongodDockerImageNameFallback(t *testing.T) {
+	testCases := []struct {
+		name          string
+		version       string
+		customImage   string
+		expectedImage string
+	}{
+		{name: "mdb70", version: mdb70, expectedImage: "docker.io/mongodb/mongodb-atlas-local:7.0"},
+		{name: "mdb80", version: mdb80, expectedImage: "docker.io/mongodb/mongodb-atlas-local:8.0"},
+		{name: "mdb8", version: mdb8, expectedImage: "docker.io/mongodb/mongodb-atlas-local:8.0"},
+		{name: "mdb7", version: mdb7, expectedImage: "docker.io/mongodb/mongodb-atlas-local:7.0"},
+		{name: "custom_mdb7", version: mdb7, customImage: "my-registry.example.com/mongo", expectedImage: "my-registry.example.com/mongo:7.0"},
+		{name: "custom_mdb8", version: mdb8, customImage: "my-registry.example.com/mongo", expectedImage: "my-registry.example.com/mongo:8.0"},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			if testCase.customImage != "" {
+				original := options.LocalDevImage
+				options.LocalDevImage = testCase.customImage
+				t.Cleanup(func() { options.LocalDevImage = original })
+			}
+			opts := &SetupOpts{}
+			opts.MdbVersion = testCase.version
+			assert.Equal(t, testCase.expectedImage, opts.MongodDockerImageNameFallback())
+		})
+	}
+}
+
+func TestSetupOpts_MongodDockerImageName_UsesResolvedName(t *testing.T) {
+	opts := &SetupOpts{}
+	opts.MdbVersion = mdb8
+	opts.SetResolvedImageName("override/mongodb-atlas-local:8.0")
+	assert.Equal(t, "override/mongodb-atlas-local:8.0", opts.MongodDockerImageName())
+}
+
 func TestSetupOpts_isDiskSpaceError(t *testing.T) {
 	testCases := []struct {
 		name        string
@@ -456,19 +500,24 @@ func TestSetupOpts_downloadImage_ErrorPulling_ImageExists(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
-	// Image fails to pull
+	// Primary image fails to pull
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(errors.New("network timeout")).
 		Times(1)
 
-	// Image exists locally
+	// Fallback image also fails to pull
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageNameFallback).
+		Return(errors.New("network timeout")).
+		Times(1)
+
+	// Primary image exists locally
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImageList(ctx, dockerImageName).
 		Return([]container.Image{{ID: dockerImageName}}, nil).
 		Times(1)
 
-	// Should return nil when image exists locally
 	err := opts.downloadImage(ctx, 1)
 	require.NoError(t, err, "Expected no error when image exists locally")
 }
@@ -483,19 +532,28 @@ func TestSetupOpts_downloadImage_FailedToDownloadImageError(t *testing.T) {
 	}
 	opts.MdbVersion = "8"
 
-	// Image fails to pull
+	// Primary image fails to pull
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImagePull(ctx, dockerImageName).
 		Return(errors.New("network timeout")).
 		Times(1)
 
-	// Image does not exist locally
+	// Fallback image also fails to pull
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageNameFallback).
+		Return(errors.New("network timeout")).
+		Times(1)
+
+	// Neither image exists locally
 	deploymentTest.MockContainerEngine.EXPECT().
 		ImageList(ctx, dockerImageName).
 		Return([]container.Image{}, nil).
 		Times(1)
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImageList(ctx, dockerImageNameFallback).
+		Return([]container.Image{}, nil).
+		Times(1)
 
-	// Should return errFailedToDownloadImage when no image exists
 	err := opts.downloadImage(ctx, 1)
 	require.ErrorIs(t, err, errFailedToDownloadImage, "Expected errFailedToDownloadImage when no local image exists")
 }
@@ -519,4 +577,132 @@ func TestSetupOpts_downloadImage_DiskSpaceError(t *testing.T) {
 	// Should return errInsufficientDiskSpace directly
 	err := opts.downloadImage(ctx, 1)
 	require.ErrorIs(t, err, errInsufficientDiskSpace, "Expected errInsufficientDiskSpace for disk space error")
+}
+
+func TestSetupOpts_downloadImage_FallbackPullSucceeds(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+
+	opts := &SetupOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+	opts.MdbVersion = "8"
+
+	// Primary pull fails
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageName).
+		Return(errors.New("not found")).
+		Times(1)
+
+	// Fallback pull succeeds
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageNameFallback).
+		Return(nil).
+		Times(1)
+
+	err := opts.downloadImage(ctx, 1)
+	require.NoError(t, err)
+	assert.Equal(t, dockerImageNameFallback, opts.MongodDockerImageName(),
+		"MongodDockerImageName should return the fallback image after fallback pull succeeds")
+}
+
+func TestSetupOpts_downloadImage_FallbackImageExistsLocally(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+
+	opts := &SetupOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+	opts.MdbVersion = "8"
+
+	// Both pulls fail
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageName).
+		Return(errors.New("not found")).
+		Times(1)
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageNameFallback).
+		Return(errors.New("not found")).
+		Times(1)
+
+	// Primary image not found locally
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImageList(ctx, dockerImageName).
+		Return([]container.Image{}, nil).
+		Times(1)
+
+	// Fallback image exists locally
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImageList(ctx, dockerImageNameFallback).
+		Return([]container.Image{{ID: dockerImageNameFallback}}, nil).
+		Times(1)
+
+	err := opts.downloadImage(ctx, 1)
+	require.NoError(t, err)
+	assert.Equal(t, dockerImageNameFallback, opts.MongodDockerImageName(),
+		"MongodDockerImageName should return the fallback image when only fallback exists locally")
+}
+
+func TestSetupOpts_downloadImage_FallbackDiskSpaceError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+
+	opts := &SetupOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+	opts.MdbVersion = "8"
+
+	// Primary pull fails with non-disk-space error
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageName).
+		Return(errors.New("not found")).
+		Times(1)
+
+	// Fallback pull fails with disk space error
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, dockerImageNameFallback).
+		Return(errors.New("no space left on device")).
+		Times(1)
+
+	err := opts.downloadImage(ctx, 1)
+	require.ErrorIs(t, err, errInsufficientDiskSpace)
+}
+
+// HELP-90753: customer uses a custom registry that only has the major.minor tag (e.g., "7.0"), not the major-only tag ("7").
+func TestSetupOpts_downloadImage_CustomRegistryOnlyHasFallbackTag(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+
+	originalImage := options.LocalDevImage
+	options.LocalDevImage = "my-registry.example.com/mongodb-atlas-local"
+	t.Cleanup(func() { options.LocalDevImage = originalImage })
+
+	opts := &SetupOpts{
+		DeploymentOpts: *deploymentTest.Opts,
+	}
+	opts.MdbVersion = "7"
+
+	primaryImage := "my-registry.example.com/mongodb-atlas-local:7"
+	fallbackImage := "my-registry.example.com/mongodb-atlas-local:7.0"
+
+	// Primary tag does not exist in the custom registry
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, primaryImage).
+		Return(errors.New("manifest unknown")).
+		Times(1)
+
+	// Fallback tag exists
+	deploymentTest.MockContainerEngine.EXPECT().
+		ImagePull(ctx, fallbackImage).
+		Return(nil).
+		Times(1)
+
+	err := opts.downloadImage(ctx, 1)
+	require.NoError(t, err)
+	assert.Equal(t, fallbackImage, opts.MongodDockerImageName(),
+		"MongodDockerImageName should return the fallback image from the custom registry")
 }

@@ -5,101 +5,35 @@ description: Pre-PR validation and pull request creation workflow for the mongod
 
 # Atlas CLI - Open Pull Request
 
-## Prerequisites
+## Step 1: Verify branch naming
 
-Ensure the working directory is the atlas-cli repo root.
-
-## Pre-PR Validation Checklist
-
-Run these checks **in order** before creating the PR. Stop and fix issues at each step before proceeding.
-
-```
-Task Progress:
-- [ ] Step 1: Verify branch and commit conventions
-- [ ] Step 2: Format code
-- [ ] Step 3: Fix lint issues
-- [ ] Step 4: Build the project
-- [ ] Step 5: Run unit tests
-- [ ] Step 6: Regenerate docs (if commands changed)
-- [ ] Step 7: Verify unit test coverage for changes
-- [ ] Step 8: Create the pull request
-```
-
-### Step 1: Verify branch and commit conventions
-
-**Branch naming**: Must be a JIRA ticket ID (e.g. `CLOUDP-12345`).
+The branch name **must** be a JIRA ticket ID (e.g. `CLOUDP-12345`).
 
 ```bash
 git rev-parse --abbrev-ref HEAD
 ```
 
-If the branch name does not match `CLOUDP-NNNNN`, warn the user and ask if they want to rename it.
+If it doesn't match `CLOUDP-NNNNN`:
+1. Ask the user for the JIRA ticket ID.
+2. Rename the branch: `git branch -m CLOUDP-XXXXX`
 
-**Commit messages**: Every commit must start with the ticket ID:
+## Step 2: Run pre-PR checks
 
-```
-CLOUDP-12345: Short description of the change
-```
-
-Verify with:
+Run the validation script. It formats, lints, builds, tests, and regenerates docs — printing only errors:
 
 ```bash
-git log main..HEAD --oneline
+./scripts/agent-pr-hook.sh
 ```
 
-Warn the user about any non-conforming commits.
+If any check fails, fix the reported issues and re-run until all checks pass. Stage and commit any files modified by formatting or doc generation.
 
-### Step 2: Format code
-
-```bash
-make fmt
-```
-
-If files were modified, stage and commit them using the branch's ticket ID:
-
-```bash
-git add -A && git commit -m "CLOUDP-XXXXX: Run make fmt"
-```
-
-### Step 3: Fix lint issues
-
-```bash
-make fix-lint
-```
-
-If auto-fixed, stage and commit. If unfixable errors remain, stop and report to user.
-
-### Step 4: Build the project
-
-```bash
-make build
-```
-
-If the build fails, stop and report errors.
-
-### Step 5: Run unit tests
-
-```bash
-make unit-test
-```
-
-If tests fail, stop and report. Do not proceed with failing tests.
-
-### Step 6: Regenerate docs (if commands changed)
-
-If files under `internal/cli/` were modified (`git diff main..HEAD --name-only`), run:
-
-```bash
-make gen-docs
-```
-
-Stage and commit any doc changes.
-
-### Step 7: Verify unit test coverage
+## Step 3: Verify unit test coverage
 
 For each changed `.go` file (excluding `_test.go` and `mock`), check for a corresponding `_test.go`. Warn about missing test files but let the user decide whether to proceed.
 
-### Step 8: Create the pull request
+## Step 4: Push and create PR (optional)
+
+**Ask the user before proceeding with this step.** Only push and create a PR if the user explicitly confirms.
 
 ```bash
 git push -u origin HEAD
@@ -127,10 +61,3 @@ EOF
 ```
 
 Fill in the actual ticket ID and adjust the checklist to reflect what was done.
-
-## Important Notes
-
-- **Never skip lint or test steps** -- they match CI checks.
-- Commit any files modified by `make fmt` or `make fix-lint` before opening the PR.
-- `make unit-test` may take several minutes; set an appropriate timeout.
-- If the user explicitly asks to skip a step, allow it but warn about potential CI failures.

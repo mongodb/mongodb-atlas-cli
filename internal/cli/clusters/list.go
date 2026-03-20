@@ -30,6 +30,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
 )
 
+const listClustersBehavior = `Use one of these examples:
+
+- atlas clusters list
+  List clusters returned by the pinned Admin API version used for L2 cluster commands.
+- atlas clusters list --autoScalingMode independentShardScaling
+  List only clusters with independent shard scaling enabled.
+- atlas clusters list --tier FLEX
+  List only Flex clusters.
+
+Flag guide:
+- Use --autoScalingMode independentShardScaling for independent shard scaling clusters.
+- Use --tier FLEX for Flex clusters.`
+
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=clusters . ClusterLister
 
 type ClusterLister interface {
@@ -132,7 +145,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "Return all clusters for your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Long:    fmt.Sprintf("%s\n\n%s", listClustersBehavior, fmt.Sprintf(usage.RequiredRole, "Project Read Only")),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Annotations: map[string]string{
@@ -143,6 +156,9 @@ func ListBuilder() *cobra.Command {
  
   # Return a JSON-formatted list of all clusters for the project with ID 5e2211c17a3e5a48f5497de3 and with independent shard scaling mode:
   atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --autoScalingMode independentShardScaling --output json
+
+  # Return a JSON-formatted list of all Flex clusters for the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --tier FLEX --output json
   `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

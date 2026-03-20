@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+# Copyright 2026 MongoDB Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 set -euo pipefail
 
 PASS="\033[32mOK\033[0m"
@@ -35,14 +48,14 @@ step " lint (make lint)" make lint
 step "build (make build)" make build
 step "unit tests (make unit-test)" make unit-test
 
-if git diff main..HEAD --name-only | grep -q '^internal/cli/'; then
+if git diff master..HEAD --name-only | grep -q '^internal/cli/'; then
     step "regenerate docs (make gen-docs)" make gen-docs
 else
     printf "%-40s %b\n" "regenerate docs:" "SKIP (no cli changes)"
 fi
 
 # check if any changes were done to files that have mockgen directives
-if git diff main..HEAD --name-only | xargs grep -q 'mockgen' 2>/dev/null; then
+if git diff master..HEAD --name-only | xargs grep -q 'mockgen' 2>/dev/null; then
     step "regenerate mocks (make gen-mocks)" make gen-mocks
 else
     printf "%-40s %b\n" "regenerate mocks:" "SKIP (no mockgen changes)"

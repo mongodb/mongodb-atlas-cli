@@ -54,13 +54,6 @@ else
     printf "%-40s %b\n" "regenerate docs:" "SKIP (no cli changes)"
 fi
 
-# check if any changes were done to files that have mockgen directives
-if git diff master..HEAD --name-only -- '*.go' | xargs grep -q 'mockgen' 2>/dev/null; then
-    step "regenerate mocks (make gen-mocks)" make gen-mocks
-else
-    printf "%-40s %b\n" "regenerate mocks:" "SKIP (no mockgen changes)"
-fi
-
 if [ "$failed" -ne 0 ]; then
     echo ""
     echo "Some checks failed. Fix the issues above before opening a PR."

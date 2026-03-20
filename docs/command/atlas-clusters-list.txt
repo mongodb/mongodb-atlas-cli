@@ -14,16 +14,18 @@ atlas clusters list
 
 Return all clusters for your project.
 
-This command supports three listing modes:
+Use one of these examples:
 
-- atlas clusters list:
-  Lists all clusters returned by the pinned Admin API version used for L2 cluster commands.
-- atlas clusters list --autoScalingMode independentShardScaling:
-  Lists only clusters with independent shard scaling enabled.
-- atlas clusters list --tier FLEX:
-  Lists only Flex clusters.
+- atlas clusters list
+  List clusters returned by the pinned Admin API version used for L2 cluster commands.
+- atlas clusters list --autoScalingMode independentShardScaling
+  List only clusters with independent shard scaling enabled.
+- atlas clusters list --tier FLEX
+  List only Flex clusters.
 
-Use --tier FLEX to list Flex clusters.
+Flag guide:
+- Use --autoScalingMode independentShardScaling for independent shard scaling clusters.
+- Use --tier FLEX for Flex clusters.
 
 To use this command, you must authenticate with a user account, a service account, or an API key with the Project Read Only role.
 

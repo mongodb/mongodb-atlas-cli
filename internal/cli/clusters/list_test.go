@@ -15,6 +15,7 @@
 package clusters
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -127,4 +128,13 @@ func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
 
 func TestListTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, atlasClustersPinned.PaginatedAdvancedClusterDescription{})
+}
+
+func TestListBuilder_HelpText(t *testing.T) {
+	cmd := ListBuilder()
+
+	require.Contains(t, cmd.Long, "Use one of these examples:")
+	require.Contains(t, cmd.Long, "Flag guide:")
+	require.Contains(t, cmd.Long, "atlas clusters list --tier FLEX")
+	require.True(t, strings.Contains(cmd.Example, "--tier FLEX"))
 }

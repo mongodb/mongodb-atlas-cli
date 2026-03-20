@@ -30,16 +30,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
 )
 
-const listClustersBehavior = `This command supports three listing modes:
+const listClustersBehavior = `Use one of these examples:
 
-- atlas clusters list:
-  Lists all clusters returned by the pinned Admin API version used for L2 cluster commands.
-- atlas clusters list --autoScalingMode independentShardScaling:
-  Lists only clusters with independent shard scaling enabled.
-- atlas clusters list --tier FLEX:
-  Lists only Flex clusters.
+- atlas clusters list
+  List clusters returned by the pinned Admin API version used for L2 cluster commands.
+- atlas clusters list --autoScalingMode independentShardScaling
+  List only clusters with independent shard scaling enabled.
+- atlas clusters list --tier FLEX
+  List only Flex clusters.
 
-Use --tier FLEX to list Flex clusters.`
+Flag guide:
+- Use --autoScalingMode independentShardScaling for independent shard scaling clusters.
+- Use --tier FLEX for Flex clusters.`
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=clusters . ClusterLister
 

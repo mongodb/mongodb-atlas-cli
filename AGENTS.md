@@ -49,7 +49,7 @@ scripts/                — Utility scripts
 
 ## Before Submitting Changes
 
-Run `make fmt && make fix-lint && make build && make unit-test` before every PR. See `.agents/skills/atlas-cli-open-pr/` for the full PR workflow.
+Ensure `.agents/skills/atlas-cli-open-pr/` is used for the full PR workflow and all failures are addressed before submitting changes.
 
 ## Further Reading
 

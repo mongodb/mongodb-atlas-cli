@@ -44,7 +44,7 @@ fi
 
 step "get dependencies (make setup)" make setup
 step "format code (make fmt)" make fmt
-step " lint (make lint)" make lint
+step "lint (make lint)" make lint
 step "build (make build)" make build
 step "unit tests (make unit-test)" make unit-test
 
@@ -55,7 +55,7 @@ else
 fi
 
 # check if any changes were done to files that have mockgen directives
-if git diff master..HEAD --name-only | xargs grep -q 'mockgen' 2>/dev/null; then
+if git diff master..HEAD --name-only -- '*.go' | xargs grep -q 'mockgen' 2>/dev/null; then
     step "regenerate mocks (make gen-mocks)" make gen-mocks
 else
     printf "%-40s %b\n" "regenerate mocks:" "SKIP (no mockgen changes)"

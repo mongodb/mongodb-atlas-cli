@@ -37,11 +37,8 @@ const (
 )
 
 const (
-	roleReadWrite        = "readWrite"
-	scopeClusterDataLake = "Cluster0,Cluster1:CLUSTER"
-	clusterName0         = "Cluster0"
-	clusterName1         = "Cluster1"
-	clusterType          = "CLUSTER"
+	roleReadWrite = "readWrite"
+	clusterType   = "CLUSTER"
 )
 
 func TestDBUserWithFlags(t *testing.T) {
@@ -51,6 +48,10 @@ func TestDBUserWithFlags(t *testing.T) {
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+
+	clusterName1, clusterName2, err := internal.TestClusterNames()
+	require.NoError(t, err)
+	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
@@ -129,7 +130,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"--role",
 			roleReadWrite,
 			"--scope",
-			clusterName0,
+			clusterName1,
 			"--password",
 			pwd,
 			"-o=json",
@@ -169,6 +170,10 @@ func TestDBUsersWithStdin(t *testing.T) {
 
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+
+	clusterName1, clusterName2, err := internal.TestClusterNames()
+	require.NoError(t, err)
+	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
 	idpID, err := internal.IdentityProviderID()
 	require.NoError(t, err)
@@ -229,7 +234,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 			"--role",
 			roleReadWrite,
 			"--scope",
-			clusterName0,
+			clusterName1,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -247,6 +252,9 @@ func TestDBUsersWithStdin(t *testing.T) {
 func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
+	clusterName1, clusterName2, err := internal.TestClusterNames()
+	require.NoError(t, err)
+
 	cmd.Env = os.Environ()
 
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -258,9 +266,9 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	a := assert.New(t)
 	a.Equal(username, user.Username)
 	if a.Len(user.GetScopes(), 2) {
-		a.Equal(clusterName0, user.GetScopes()[0].Name)
+		a.Equal(clusterName1, user.GetScopes()[0].Name)
 		a.Equal(clusterType, user.GetScopes()[0].Type)
-		a.Equal(clusterName1, user.GetScopes()[1].Name)
+		a.Equal(clusterName2, user.GetScopes()[1].Name)
 		a.Equal(clusterType, user.GetScopes()[1].Type)
 	}
 }
@@ -290,6 +298,9 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
+	clusterName1, _, err := internal.TestClusterNames()
+	require.NoError(t, err)
+
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -305,7 +316,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	}
 
 	a.Len(user.GetScopes(), 1)
-	a.Equal(clusterName0, user.GetScopes()[0].Name)
+	a.Equal(clusterName1, user.GetScopes()[0].Name)
 	a.Equal(clusterType, user.GetScopes()[0].Type)
 }
 

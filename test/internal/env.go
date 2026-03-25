@@ -35,6 +35,8 @@ const (
 	snapshotOrgID              = "a0123456789abcdef012345a"
 	snapshotProjectID          = "b0123456789abcdef012345b"
 	snapshotOpsManagerURL      = "http://localhost:8080/"
+	snapshotCluster1Name       = "Cluster0"
+	snapshotCluster2Name       = "Cluster1"
 )
 
 type TestMode string
@@ -235,4 +237,25 @@ func LocalDevImage() string {
 	}
 
 	return image
+}
+
+// TestClusterNames returns the name of the first cluster used for the test.
+// This is to support dyanically setting cluster to test against.
+func TestClusterNames() (string, string, error) {
+	mode, err := TestRunMode()
+	if err == nil && mode == TestModeReplay {
+		return snapshotCluster1Name, snapshotCluster2Name, nil
+	}
+
+	clusterName1, ok := os.LookupEnv("E2E_CLUSTER_1_NAME")
+	if !ok || clusterName1 == "" {
+		return "", "", errors.New("environment variable is missing: E2E_CLUSTER_1_NAME")
+	}
+
+	clusterName2, ok := os.LookupEnv("E2E_CLUSTER_2_NAME")
+	if !ok || clusterName2 == "" {
+		return "", "", errors.New("environment variable is missing: E2E_CLUSTER_2_NAME")
+	}
+
+	return clusterName1, clusterName2, nil
 }

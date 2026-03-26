@@ -35,8 +35,8 @@ const (
 	snapshotOrgID              = "a0123456789abcdef012345a"
 	snapshotProjectID          = "b0123456789abcdef012345b"
 	snapshotOpsManagerURL      = "http://localhost:8080/"
-	snapshotCluster1Name       = "Cluster0"
-	snapshotCluster2Name       = "Cluster1"
+	snapshotCluster1Name       = "snapshotCluster0Name"
+	snapshotCluster2Name       = "snapshotCluster1Name"
 )
 
 type TestMode string

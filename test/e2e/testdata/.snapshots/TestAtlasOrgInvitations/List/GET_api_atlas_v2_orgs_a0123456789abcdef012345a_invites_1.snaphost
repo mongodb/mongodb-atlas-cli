@@ -1,20 +1,20 @@
 HTTP/2.0 200 OK
-Content-Length: 886
+Content-Length: 1523
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 09 Mar 2026 03:18:55 GMT
+Date: Fri, 27 Mar 2026 13:21:11 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
 Ratelimit-Limit: 500
-Ratelimit-Remaining: 496
+Ratelimit-Remaining: 484
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Thu, 1 Jul 2027 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 35
+X-Envoy-Upstream-Service-Time: 46
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationInvitationResource::getInvitations
-X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=00446f8a252fd3c9b360f3b39dea8ceb04621d31; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-[{"createdAt":"2026-03-09T03:18:45Z","expiresAt":"2026-04-08T03:18:45Z","groupRoleAssignments":[],"id":"69ae3c15eca18958fc7a04f8","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_MEMBER"],"teamIds":[],"username":"test-583@mongodb.com"},{"createdAt":"2026-03-09T03:18:52Z","expiresAt":"2026-04-08T03:18:52Z","groupRoleAssignments":[],"id":"69ae3c1ceca18958fc7a0924","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"test-file-575@mongodb.com"},{"createdAt":"2026-03-09T03:18:48Z","expiresAt":"2026-04-08T03:18:48Z","groupRoleAssignments":[],"id":"69ae3c18eca18958fc7a08bc","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"test-file-96@mongodb.com"}]
+[{"createdAt":"2026-03-27T13:21:02Z","expiresAt":"2026-04-26T13:21:02Z","groupRoleAssignments":[],"id":"69c6843e00da7a63dbd1c593","inviterUsername":"tevdziqg","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"cli-test-629-0b9c709801d0a28dbc49e05828d32fb53d02b57d@moongodb.com"},{"createdAt":"2026-03-27T13:21:01Z","expiresAt":"2026-04-26T13:21:01Z","groupRoleAssignments":[],"id":"69c6843d00da7a63dbd1c261","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_MEMBER"],"teamIds":[],"username":"test-877@mongodb.com"},{"createdAt":"2026-03-27T13:21:04Z","expiresAt":"2026-04-26T13:21:04Z","groupRoleAssignments":[],"id":"69c6844055bccd10309d6fa6","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"test-file-419@mongodb.com"},{"createdAt":"2026-03-27T13:21:08Z","expiresAt":"2026-04-26T13:21:08Z","groupRoleAssignments":[],"id":"69c6844455bccd10309d701b","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"test-file-48@mongodb.com"},{"createdAt":"2026-03-27T13:20:30Z","expiresAt":"2026-04-26T13:20:30Z","groupRoleAssignments":[],"id":"69c6841e55bccd10309d3416","inviterUsername":"tevdziqg","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_READ_ONLY"],"teamIds":[],"username":"test-file-777@mongodb.com"}]

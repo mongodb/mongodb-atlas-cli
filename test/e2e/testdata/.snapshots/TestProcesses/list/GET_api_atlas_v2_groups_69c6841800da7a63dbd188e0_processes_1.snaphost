@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1868
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 27 Mar 2026 13:31:43 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 102
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=00446f8a252fd3c9b360f3b39dea8ceb04621d31; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c6841800da7a63dbd188e0/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-27T13:30:07Z","groupId":"69c6841800da7a63dbd188e0","hostname":"atlas-148mwr-shard-00-00.bao9ac.mongodb-dev.net","id":"atlas-148mwr-shard-00-00.bao9ac.mongodb-dev.net:27017","lastPing":"2026-03-27T13:31:32Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c6841800da7a63dbd188e0/processes/atlas-148mwr-shard-00-00.bao9ac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-148mwr-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-60-shard-00-00.bao9ac.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-27T13:30:07Z","groupId":"69c6841800da7a63dbd188e0","hostname":"atlas-148mwr-shard-00-01.bao9ac.mongodb-dev.net","id":"atlas-148mwr-shard-00-01.bao9ac.mongodb-dev.net:27017","lastPing":"2026-03-27T13:31:32Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c6841800da7a63dbd188e0/processes/atlas-148mwr-shard-00-01.bao9ac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-148mwr-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-60-shard-00-01.bao9ac.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-27T13:30:07Z","groupId":"69c6841800da7a63dbd188e0","hostname":"atlas-148mwr-shard-00-02.bao9ac.mongodb-dev.net","id":"atlas-148mwr-shard-00-02.bao9ac.mongodb-dev.net:27017","lastPing":"2026-03-27T13:31:32Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c6841800da7a63dbd188e0/processes/atlas-148mwr-shard-00-02.bao9ac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-148mwr-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-60-shard-00-02.bao9ac.mongodb-dev.net","version":"8.0.21-rc0"}],"totalCount":3}

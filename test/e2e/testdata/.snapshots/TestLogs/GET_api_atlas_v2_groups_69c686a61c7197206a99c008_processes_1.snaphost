@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 27 Mar 2026 13:42:03 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 191
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=e7a24535b283bee8bda5c530cf173b0678af893c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c686a61c7197206a99c008/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-27T13:40:24Z","groupId":"69c686a61c7197206a99c008","hostname":"atlas-qr9dw8-shard-00-00.0uqmkv.mongodb-dev.net","id":"atlas-qr9dw8-shard-00-00.0uqmkv.mongodb-dev.net:27017","lastPing":"2026-03-27T13:41:50Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c686a61c7197206a99c008/processes/atlas-qr9dw8-shard-00-00.0uqmkv.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qr9dw8-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-885-shard-00-00.0uqmkv.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-27T13:40:24Z","groupId":"69c686a61c7197206a99c008","hostname":"atlas-qr9dw8-shard-00-01.0uqmkv.mongodb-dev.net","id":"atlas-qr9dw8-shard-00-01.0uqmkv.mongodb-dev.net:27017","lastPing":"2026-03-27T13:41:50Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c686a61c7197206a99c008/processes/atlas-qr9dw8-shard-00-01.0uqmkv.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qr9dw8-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-885-shard-00-01.0uqmkv.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-27T13:40:24Z","groupId":"69c686a61c7197206a99c008","hostname":"atlas-qr9dw8-shard-00-02.0uqmkv.mongodb-dev.net","id":"atlas-qr9dw8-shard-00-02.0uqmkv.mongodb-dev.net:27017","lastPing":"2026-03-27T13:41:50Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c686a61c7197206a99c008/processes/atlas-qr9dw8-shard-00-02.0uqmkv.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qr9dw8-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-885-shard-00-02.0uqmkv.mongodb-dev.net","version":"8.0.21-rc0"}],"totalCount":3}

@@ -1,19 +1,19 @@
 HTTP/2.0 201 Created
 Content-Length: 1074
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 09 Mar 2026 03:21:54 GMT
+Date: Fri, 27 Mar 2026 13:23:31 GMT
 Location: http://localhost:8080//api/atlas/v1.0
 Ratelimit-Limit: 1200
-Ratelimit-Remaining: 1197
+Ratelimit-Remaining: 1198
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 2655
+X-Envoy-Upstream-Service-Time: 3091
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
-X-Java-Version: 17.0.17+10
-X-Mongodb-Service-Version: gitHash=b2364ed963a27e3f07a197f7fa99d645b304f356; versionString=master
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=00446f8a252fd3c9b360f3b39dea8ceb04621d31; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2026-03-09T03:21:57Z","id":"69ae3cd2eca18958fc7a3514","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/69ae3cd2eca18958fc7a3514/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"integrations-e2e-182","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}
+{"clusterCount":0,"created":"2026-03-27T13:23:34Z","id":"69c684d355bccd10309d9641","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/69c684d355bccd10309d9641/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"integrations-e2e-190","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}

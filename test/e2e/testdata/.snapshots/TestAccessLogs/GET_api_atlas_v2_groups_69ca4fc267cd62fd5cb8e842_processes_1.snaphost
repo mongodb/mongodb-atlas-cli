@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1874
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 10:37:05 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 123
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=f05f76f1b3ff1c21a14e9ba2db283d66a7268028; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca4fc267cd62fd5cb8e842/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-30T10:35:31Z","groupId":"69ca4fc267cd62fd5cb8e842","hostname":"atlas-z1vnv4-shard-00-00.ibugk7.mongodb-dev.net","id":"atlas-z1vnv4-shard-00-00.ibugk7.mongodb-dev.net:27017","lastPing":"2026-03-30T10:36:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca4fc267cd62fd5cb8e842/processes/atlas-z1vnv4-shard-00-00.ibugk7.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z1vnv4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-362-shard-00-00.ibugk7.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-30T10:35:31Z","groupId":"69ca4fc267cd62fd5cb8e842","hostname":"atlas-z1vnv4-shard-00-01.ibugk7.mongodb-dev.net","id":"atlas-z1vnv4-shard-00-01.ibugk7.mongodb-dev.net:27017","lastPing":"2026-03-30T10:36:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca4fc267cd62fd5cb8e842/processes/atlas-z1vnv4-shard-00-01.ibugk7.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z1vnv4-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-362-shard-00-01.ibugk7.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-30T10:35:31Z","groupId":"69ca4fc267cd62fd5cb8e842","hostname":"atlas-z1vnv4-shard-00-02.ibugk7.mongodb-dev.net","id":"atlas-z1vnv4-shard-00-02.ibugk7.mongodb-dev.net:27017","lastPing":"2026-03-30T10:36:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca4fc267cd62fd5cb8e842/processes/atlas-z1vnv4-shard-00-02.ibugk7.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-z1vnv4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-362-shard-00-02.ibugk7.mongodb-dev.net","version":"8.0.21-rc0"}],"totalCount":3}

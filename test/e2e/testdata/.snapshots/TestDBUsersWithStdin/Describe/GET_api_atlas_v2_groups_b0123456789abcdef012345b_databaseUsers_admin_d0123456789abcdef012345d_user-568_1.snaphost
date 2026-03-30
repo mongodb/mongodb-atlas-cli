@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 521
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 10:29:22 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9989
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 80
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getUserByName
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=f05f76f1b3ff1c21a14e9ba2db283d66a7268028; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"awsIAMType":"NONE","databaseName":"admin","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/admin/d0123456789abcdef012345d%2Fuser-568","rel":"self"}],"oidcAuthType":"IDP_GROUP","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[{"name":"test-flex","type":"CLUSTER"},{"name":"snapshotCluster1Name","type":"CLUSTER"}],"username":"d0123456789abcdef012345d/user-568","x509Type":"NONE"}

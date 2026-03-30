@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 355
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 10:26:57 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1188
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 78
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::getConnection
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=20e99902f3a3c0dd485814b975aaaeda821ba91f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"authentication":{"mechanism":"SCRAM-256","username":"admin"},"bootstrapServers":"example.com:8080,fraud.example.com:8000","config":{"auto.offset.reset":"earliest"},"id":"69ca4feee3f6633b87224f3d","name":"connection-683","networking":{"access":{"type":"PUBLIC"}},"region":"VIRGINIA_USA","security":{"protocol":"PLAINTEXT"},"state":"READY","type":"Kafka"}

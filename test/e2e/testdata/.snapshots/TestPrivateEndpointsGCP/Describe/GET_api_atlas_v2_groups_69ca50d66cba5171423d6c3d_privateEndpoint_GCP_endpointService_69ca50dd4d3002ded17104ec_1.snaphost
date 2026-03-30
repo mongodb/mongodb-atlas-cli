@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 914
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 10:35:05 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3997
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 64
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=f05f76f1b3ff1c21a14e9ba2db283d66a7268028; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"69ca50dd4d3002ded17104ec","portMappingEnabled":false,"regionName":"CENTRAL_US","serviceAttachmentNames":["projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-0","projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-1","projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-2","projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-3","projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-4","projects/p-dots7v81npmzstnildmuyvp6/regions/us-central1/serviceAttachments/sa-us-central1-69ca50d66cba5171423d6c3d-5"],"status":"AVAILABLE"}

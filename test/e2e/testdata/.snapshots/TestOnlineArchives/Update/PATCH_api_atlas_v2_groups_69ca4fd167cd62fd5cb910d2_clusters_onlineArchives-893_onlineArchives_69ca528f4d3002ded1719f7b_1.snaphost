@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 453
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 10:38:24 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1194
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 105
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasOnlineArchiveResource::updateOnlineArchive
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=f05f76f1b3ff1c21a14e9ba2db283d66a7268028; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"69ca528f4d3002ded1719f7b","clusterName":"onlineArchives-893","collName":"test","collectionType":"STANDARD","criteria":{"dateField":"test","dateFormat":"ISODATE","expireAfterDays":4,"type":"DATE"},"dataProcessRegion":{"cloudProvider":"AWS","region":"US_EAST_1"},"dbName":"test","groupId":"69ca4fd167cd62fd5cb910d2","partitionFields":[{"fieldName":"test","fieldType":null,"order":0}],"paused":false,"schedule":{"type":"DEFAULT"},"state":"PENDING"}

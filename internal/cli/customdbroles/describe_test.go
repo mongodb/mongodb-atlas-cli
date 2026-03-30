@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -32,7 +32,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Actions: &[]atlasv2.DatabasePrivilegeAction{
 			{
 				Action: "test",
-				Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+				Resources: []atlasv2.DatabasePermittedNamespaceResource{
 					{
 						Collection: "test",
 						Db:         "test",

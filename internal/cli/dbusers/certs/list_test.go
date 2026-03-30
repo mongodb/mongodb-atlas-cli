@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -27,7 +27,7 @@ func TestListBuilder(t *testing.T) {
 	mockStore := NewMockDBUserCertificateLister(ctrl)
 
 	expected := atlasv2.PaginatedUserCert{
-		Results: &[]atlasv2.UserCert{},
+		Results: []atlasv2.UserCert{},
 	}
 
 	username := "user"

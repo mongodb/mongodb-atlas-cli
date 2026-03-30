@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -56,7 +56,7 @@ func TestList_RunFlexCluster(t *testing.T) {
 	mockStore := NewMockClusterLister(ctrl)
 
 	expected := &atlasv2.PaginatedFlexClusters20241113{
-		Results: &[]atlasv2.FlexClusterDescription20241113{
+		Results: []atlasv2.FlexClusterDescription20241113{
 			{
 				Name: pointer.Get("test"),
 				Id:   pointer.Get("123"),
@@ -83,7 +83,7 @@ func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
 	mockStore := NewMockClusterLister(ctrl)
 
 	expected := &atlasv2.PaginatedClusterDescription20240805{
-		Results: &[]atlasv2.ClusterDescription20240805{
+		Results: []atlasv2.ClusterDescription20240805{
 			{
 				Name: pointer.Get("test"),
 				Id:   pointer.Get("123"),

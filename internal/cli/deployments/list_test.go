@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -46,7 +46,7 @@ func TestList_Run(t *testing.T) {
 	})
 
 	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
-		Results: &[]atlasv2.ClusterDescription20240805{
+		Results: []atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -152,7 +152,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	})
 
 	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
-		Results: &[]atlasv2.ClusterDescription20240805{
+		Results: []atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -242,7 +242,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	})
 
 	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
-		Results: &[]atlasv2.ClusterDescription20240805{
+		Results: []atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),

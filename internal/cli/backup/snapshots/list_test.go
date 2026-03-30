@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -31,7 +31,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := NewMockLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
-		Results: &[]atlasv2.DiskBackupReplicaSet{
+		Results: []atlasv2.DiskBackupReplicaSet{
 			{
 				CloudProvider: pointer.Get("AWS"),
 				Id:            pointer.Get("5f9b0b5e0b5e9d6b6e0b5e9d"),
@@ -98,7 +98,7 @@ func TestList_Run_ClusterNotFoundFallback(t *testing.T) {
 	mockStore := NewMockLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
-		Results: &[]atlasv2.DiskBackupReplicaSet{
+		Results: []atlasv2.DiskBackupReplicaSet{
 			{
 				CloudProvider: pointer.Get("AWS"),
 				Id:            pointer.Get("5f9b0b5e0b5e9d6b6e0b5e9d"),

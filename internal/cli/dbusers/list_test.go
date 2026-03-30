@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -27,7 +27,7 @@ func TestDBUserList_Run(t *testing.T) {
 	mockStore := NewMockDatabaseUserLister(ctrl)
 
 	expected := atlasv2.PaginatedApiAtlasDatabaseUser{
-		Results: &[]atlasv2.CloudDatabaseUser{
+		Results: []atlasv2.CloudDatabaseUser{
 			{
 				Username: "test",
 			},

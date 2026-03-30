@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -28,7 +28,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := NewMockUserLister(ctrl)
 
 	expected := &atlasv2.PaginatedOrgUser{
-		Results: &[]atlasv2.OrgUserResponse{
+		Results: []atlasv2.OrgUserResponse{
 			{
 				Id: "123",
 			},

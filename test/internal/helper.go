@@ -36,7 +36,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -1326,7 +1326,7 @@ func deleteAllIDPs(t *testing.T, cliPath string) {
 	t.Helper()
 	fedSettingsID := getFedSettingsID(t, cliPath)
 	idps := listIDPs(t, cliPath, fedSettingsID)
-	for _, idp := range *idps.Results {
+	for _, idp := range idps.Results {
 		deleteIDP(t, cliPath, idp.Id, fedSettingsID)
 	}
 }

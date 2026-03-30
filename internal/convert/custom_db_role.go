@@ -17,7 +17,7 @@ package convert
 import (
 	"strings"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 )
 
 const (
@@ -64,7 +64,7 @@ func BuildAtlasActions(a []string) []atlasv2.DatabasePrivilegeAction {
 
 		actions[i] = atlasv2.DatabasePrivilegeAction{
 			Action:    actionName,
-			Resources: &[]atlasv2.DatabasePermittedNamespaceResource{resourceStruct},
+			Resources: []atlasv2.DatabasePermittedNamespaceResource{resourceStruct},
 		}
 	}
 	return actions

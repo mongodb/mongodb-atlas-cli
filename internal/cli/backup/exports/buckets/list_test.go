@@ -20,7 +20,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -29,7 +29,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := NewMockExportBucketsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshotExportBuckets{
-		Results: &[]atlasv2.DiskBackupSnapshotExportBucketResponse{
+		Results: []atlasv2.DiskBackupSnapshotExportBucketResponse{
 			{
 				Id:            "1",
 				CloudProvider: "AWS",

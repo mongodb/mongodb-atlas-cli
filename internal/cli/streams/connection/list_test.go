@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20250312015/admin"
+	"go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -30,7 +30,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := NewMockStreamsConnectionLister(ctrl)
 
 	expected := admin.PaginatedApiStreamsConnection{
-		Results: &[]admin.StreamsConnection{
+		Results: []admin.StreamsConnection{
 			{
 				Name:             admin.PtrString("ExampleConn"),
 				Type:             admin.PtrString("Kafka"),

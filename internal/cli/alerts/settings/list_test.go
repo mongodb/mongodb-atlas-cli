@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -31,7 +31,7 @@ func TestConfigList_Run(t *testing.T) {
 	mockStore := NewMockAlertConfigurationLister(ctrl)
 
 	expected := &atlasv2.PaginatedAlertConfig{
-		Results: &[]atlasv2.GroupAlertsConfig{
+		Results: []atlasv2.GroupAlertsConfig{
 			{
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),

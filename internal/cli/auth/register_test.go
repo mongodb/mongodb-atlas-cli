@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312015/admin"
+	"go.mongodb.org/atlas-sdk/v20250312016/admin"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
@@ -90,7 +90,7 @@ func Test_registerOpts_Run(t *testing.T) {
 
 	expectedOrgs := &admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
-		Results: &[]admin.AtlasOrganization{
+		Results: []admin.AtlasOrganization{
 			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
 	}
@@ -100,7 +100,7 @@ func Test_registerOpts_Run(t *testing.T) {
 		Return(expectedOrgs, nil).
 		Times(1)
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
-		Results: &[]admin.Group{
+		Results: []admin.Group{
 			{Id: pointer.Get("p1"), Name: "Project1"},
 		},
 	}

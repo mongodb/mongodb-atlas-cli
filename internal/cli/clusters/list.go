@@ -115,7 +115,7 @@ func (opts *ListOpts) filterClustersByAutoScalingMode(clusters *atlasv2.Paginate
 		}
 	}
 
-	clusters.Results = &filteredClusters
+	clusters.Results = filteredClusters
 	return clusters, nil
 }
 

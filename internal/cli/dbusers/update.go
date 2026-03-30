@@ -95,7 +95,7 @@ func (opts *UpdateOpts) update(out *atlasv2.CloudDatabaseUser) {
 
 	if len(opts.roles) > 0 {
 		roles := convert.BuildAtlasRoles(opts.roles)
-		out.Roles = &roles
+		out.Roles = roles
 	}
 
 	if len(opts.scopes) > 0 {

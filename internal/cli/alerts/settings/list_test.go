@@ -31,7 +31,7 @@ func TestConfigList_Run(t *testing.T) {
 	mockStore := NewMockAlertConfigurationLister(ctrl)
 
 	expected := &atlasv2.PaginatedAlertConfig{
-		Results: &[]atlasv2.GroupAlertsConfig{
+		Results: []atlasv2.GroupAlertsConfig{
 			{
 				Id:              pointer.Get("test"),
 				GroupId:         pointer.Get("test"),

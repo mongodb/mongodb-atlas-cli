@@ -27,7 +27,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := NewMockProjectUsersLister(ctrl)
 
 	expected := atlasv2.PaginatedGroupUser{
-		Results: &[]atlasv2.GroupUserResponse{
+		Results: []atlasv2.GroupUserResponse{
 			{
 				Username: "Test",
 			},

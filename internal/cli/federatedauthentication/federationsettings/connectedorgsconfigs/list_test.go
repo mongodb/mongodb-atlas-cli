@@ -38,7 +38,7 @@ func TestList_Run(t *testing.T) {
 
 	idpID := "id"
 	expected := &atlasv2.PaginatedConnectedOrgConfigs{
-		Results: &[]atlasv2.ConnectedOrgConfig{
+		Results: []atlasv2.ConnectedOrgConfig{
 			{
 				OrgId:                         "id",
 				IdentityProviderId:            &idpID,

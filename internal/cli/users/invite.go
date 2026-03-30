@@ -80,7 +80,7 @@ func (opts *InviteOpts) newUserRequest() (*atlasv2.CloudAppUser, error) {
 		EmailAddress: opts.email,
 		MobileNumber: opts.mobile,
 		Country:      opts.country,
-		Roles:        &roles,
+		Roles:        roles,
 	}
 
 	return &user, nil

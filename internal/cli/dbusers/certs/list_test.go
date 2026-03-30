@@ -27,7 +27,7 @@ func TestListBuilder(t *testing.T) {
 	mockStore := NewMockDBUserCertificateLister(ctrl)
 
 	expected := atlasv2.PaginatedUserCert{
-		Results: &[]atlasv2.UserCert{},
+		Results: []atlasv2.UserCert{},
 	}
 
 	username := "user"

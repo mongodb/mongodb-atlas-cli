@@ -32,7 +32,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &atlasv2.PaginatedApiAtlasProviderRegions{
-		Results: &[]atlasv2.CloudProviderRegions{
+		Results: []atlasv2.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
 				InstanceSizes: &[]atlasv2.ClusterCloudProviderInstanceSize{
@@ -64,7 +64,7 @@ func Test_autoCompleteOpts_regionSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &atlasv2.PaginatedApiAtlasProviderRegions{
-		Results: &[]atlasv2.CloudProviderRegions{
+		Results: []atlasv2.CloudProviderRegions{
 			{
 				Provider: pointer.Get("AWS"),
 				InstanceSizes: &[]atlasv2.ClusterCloudProviderInstanceSize{

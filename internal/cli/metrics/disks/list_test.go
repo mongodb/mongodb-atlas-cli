@@ -28,7 +28,7 @@ func TestDisksListsOpts_Run(t *testing.T) {
 	mockStore := NewMockProcessDisksLister(ctrl)
 
 	expected := &atlasv2.PaginatedDiskPartition{
-		Results: &[]atlasv2.MeasurementDiskPartition{
+		Results: []atlasv2.MeasurementDiskPartition{
 			{
 				PartitionName: pointer.Get("test"),
 			},

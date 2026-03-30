@@ -40,7 +40,7 @@ func TestListOpts_Run(t *testing.T) {
 		IncludeCount: pointer.Get(listOpts.IncludeCount),
 	}
 	expected := admin.PaginatedApiUserAccessListResponse{
-		Results: &[]admin.UserAccessListResponse{},
+		Results: []admin.UserAccessListResponse{},
 	}
 	mockStore.
 		EXPECT().

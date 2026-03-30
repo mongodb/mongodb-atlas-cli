@@ -29,7 +29,7 @@ func TestListOpts_Run(t *testing.T) {
 	mockStore := NewMockExportBucketsLister(ctrl)
 
 	expected := &atlasv2.PaginatedBackupSnapshotExportBuckets{
-		Results: &[]atlasv2.DiskBackupSnapshotExportBucketResponse{
+		Results: []atlasv2.DiskBackupSnapshotExportBucketResponse{
 			{
 				Id:            "1",
 				CloudProvider: "AWS",

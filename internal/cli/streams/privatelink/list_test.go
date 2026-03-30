@@ -57,8 +57,7 @@ func TestListOpts_Run(t *testing.T) {
 	}
 
 	connections := getPrivateLinkConnections()
-	expected := atlasv2.NewPaginatedApiStreamsPrivateLink()
-	expected.SetResults(connections)
+	expected := atlasv2.NewPaginatedApiStreamsPrivateLink(connections)
 
 	mockStore.
 		EXPECT().

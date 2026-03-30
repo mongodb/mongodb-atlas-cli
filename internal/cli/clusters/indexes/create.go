@@ -110,7 +110,7 @@ func (opts *CreateOpts) newIndexViaFlags() (*atlasv2.DatabaseRollingIndexRequest
 
 	i.Db = opts.db
 	i.Collection = opts.collection
-	i.Keys = &keys
+	i.Keys = keys
 	i.Options = opts.newIndexOptions()
 	return i, nil
 }

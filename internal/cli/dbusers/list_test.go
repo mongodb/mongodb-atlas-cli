@@ -27,7 +27,7 @@ func TestDBUserList_Run(t *testing.T) {
 	mockStore := NewMockDatabaseUserLister(ctrl)
 
 	expected := atlasv2.PaginatedApiAtlasDatabaseUser{
-		Results: &[]atlasv2.CloudDatabaseUser{
+		Results: []atlasv2.CloudDatabaseUser{
 			{
 				Username: "test",
 			},

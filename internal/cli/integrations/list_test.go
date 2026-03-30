@@ -40,7 +40,7 @@ func TestDBUserList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedIntegration{
-		Results: &[]atlasv2.ThirdPartyIntegration{
+		Results: []atlasv2.ThirdPartyIntegration{
 			{
 				Type:   pointer.Get("DATADOG"),
 				ApiKey: pointer.Get("testsApiKey"),

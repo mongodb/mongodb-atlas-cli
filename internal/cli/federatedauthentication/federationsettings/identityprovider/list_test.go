@@ -55,7 +55,7 @@ func TestList_Run(t *testing.T) {
 				Href: pointer.Get("test"),
 			},
 		},
-		Results: &[]atlasv2.FederationIdentityProvider{
+		Results: []atlasv2.FederationIdentityProvider{
 			{
 				DisplayName: &displayName,
 				IssuerUri:   &issuerURI,

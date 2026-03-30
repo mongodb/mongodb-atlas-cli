@@ -28,7 +28,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := NewMockProjectTeamLister(ctrl)
 
 	expected := atlasv2.PaginatedTeamRole{
-		Results: &[]atlasv2.TeamRole{
+		Results: []atlasv2.TeamRole{
 			{
 				TeamId: "1",
 			},

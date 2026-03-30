@@ -61,7 +61,7 @@ func (opts *LiveMigrationsOpts) NewCreateRequest() *atlasv2.LiveMigrationRequest
 			ClusterName: opts.DestinationClusterName,
 			GroupId:     opts.ConfigProjectID(),
 		},
-		MigrationHosts:      &opts.MigrationHosts,
+		MigrationHosts:      opts.MigrationHosts,
 		DropDestinationData: &opts.DestinationDropEnabled,
 	}
 }

@@ -32,7 +32,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 		Actions: &[]atlasv2.DatabasePrivilegeAction{
 			{
 				Action: "test",
-				Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+				Resources: []atlasv2.DatabasePermittedNamespaceResource{
 					{
 						Collection: "test",
 						Db:         "test",

@@ -122,7 +122,7 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	roles := convert.BuildAtlasRoles(opts.roles)
 	scopes := convert.BuildAtlasScopes(opts.scopes)
 	u := &atlasv2.CloudDatabaseUser{
-		Roles:           &roles,
+		Roles:           roles,
 		Scopes:          &scopes,
 		GroupId:         opts.ConfigProjectID(),
 		Username:        opts.username,

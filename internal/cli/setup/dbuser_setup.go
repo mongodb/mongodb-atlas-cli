@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312016/admin"
@@ -94,7 +93,7 @@ func (opts *Opts) validateUniqueUsername(val any) error {
 func (opts *Opts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 	var none = "NONE"
 	return &atlasv2.CloudDatabaseUser{
-		Roles:        pointer.Get(convert.BuildAtlasRoles([]string{atlasAdmin})),
+		Roles:        convert.BuildAtlasRoles([]string{atlasAdmin}),
 		GroupId:      opts.ConfigProjectID(),
 		Password:     &opts.DBUserPassword,
 		X509Type:     &none,

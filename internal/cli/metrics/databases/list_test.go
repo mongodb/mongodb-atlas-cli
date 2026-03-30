@@ -28,7 +28,7 @@ func TestDatabasesListsOpts_Run(t *testing.T) {
 	mockStore := NewMockProcessDatabaseLister(ctrl)
 
 	expected := &atlasv2.PaginatedDatabase{
-		Results: &[]atlasv2.MesurementsDatabase{
+		Results: []atlasv2.MesurementsDatabase{
 			{
 				DatabaseName: pointer.Get("test"),
 			},

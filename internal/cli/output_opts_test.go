@@ -69,15 +69,14 @@ func TestOutputOpts_outputTypeAndValue(t *testing.T) {
 
 func TestOutputOpts_mapReduceResults(t *testing.T) {
 	t.Run("when results present", func(t *testing.T) {
-		input := *atlasv2.NewPaginatedTeam()
 		wantID := "123"
 		wantName := "Team A"
-		input.Results = &[]atlasv2.TeamResponse{
+		input := *atlasv2.NewPaginatedTeam([]atlasv2.TeamResponse{
 			{
 				Id:   pointer.Get(wantID),
 				Name: pointer.Get(wantName),
 			},
-		}
+		})
 
 		compactResults, err := mapReduceResults(input)
 		if err != nil {

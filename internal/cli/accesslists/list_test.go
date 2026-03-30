@@ -37,7 +37,7 @@ func TestWhitelistList_Run(t *testing.T) {
 				Href: pointer.Get("test"),
 			},
 		},
-		Results: &[]atlasv2.NetworkPermissionEntry{
+		Results: []atlasv2.NetworkPermissionEntry{
 			{
 				AwsSecurityGroup: pointer.Get("test"),
 				CidrBlock:        pointer.Get("test"),

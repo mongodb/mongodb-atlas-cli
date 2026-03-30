@@ -75,7 +75,7 @@ func TestDefaultOpts_Projects(t *testing.T) {
 	})
 	t.Run("with one project", func(t *testing.T) {
 		expectedProjects := &atlasv2.PaginatedAtlasGroup{
-			Results: &[]atlasv2.Group{
+			Results: []atlasv2.Group{
 				{
 					Id:   pointer.Get("1"),
 					Name: "Project 1",
@@ -107,7 +107,7 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 	})
 	t.Run("with one org", func(t *testing.T) {
 		expectedOrgs := &atlasv2.PaginatedOrganization{
-			Results: &[]atlasv2.AtlasOrganization{
+			Results: []atlasv2.AtlasOrganization{
 				{
 					Id:   pointer.Get("1"),
 					Name: "Org 1",
@@ -123,7 +123,7 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 
 	t.Run("with no org", func(t *testing.T) {
 		expectedOrgs := &atlasv2.PaginatedOrganization{
-			Results: &[]atlasv2.AtlasOrganization{},
+			Results: []atlasv2.AtlasOrganization{},
 		}
 		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 		_, err := opts.orgs("")

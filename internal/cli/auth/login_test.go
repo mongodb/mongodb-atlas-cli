@@ -269,13 +269,13 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 
 	expectedOrgs := &admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
-		Results: &[]admin.AtlasOrganization{
+		Results: []admin.AtlasOrganization{
 			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
 	}
 	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
-		Results: &[]admin.Group{
+		Results: []admin.Group{
 			{Id: pointer.Get("p1"), Name: "Project1"},
 		},
 	}

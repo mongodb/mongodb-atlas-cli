@@ -1326,7 +1326,7 @@ func deleteAllIDPs(t *testing.T, cliPath string) {
 	t.Helper()
 	fedSettingsID := getFedSettingsID(t, cliPath)
 	idps := listIDPs(t, cliPath, fedSettingsID)
-	for _, idp := range *idps.Results {
+	for _, idp := range idps.Results {
 		deleteIDP(t, cliPath, idp.Id, fedSettingsID)
 	}
 }

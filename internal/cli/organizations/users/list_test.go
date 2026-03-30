@@ -28,7 +28,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := NewMockUserLister(ctrl)
 
 	expected := &atlasv2.PaginatedOrgUser{
-		Results: &[]atlasv2.OrgUserResponse{
+		Results: []atlasv2.OrgUserResponse{
 			{
 				Id: "123",
 			},

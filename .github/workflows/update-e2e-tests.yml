@@ -123,6 +123,8 @@ jobs:
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
+          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
+          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
           IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -213,6 +215,8 @@ jobs:
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
+          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
+          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
           IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1865
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 30 Mar 2026 14:25:38 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 67
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=e5bc9ecfcfb6721c9e74e92089c42eda31f1204a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca852d26948f737c9eb5ea/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-03-30T14:24:10Z","groupId":"69ca852d26948f737c9eb5ea","hostname":"atlas-lewyin-shard-00-00.7qcpix.mongodb-dev.net","id":"atlas-lewyin-shard-00-00.7qcpix.mongodb-dev.net:27017","lastPing":"2026-03-30T14:25:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca852d26948f737c9eb5ea/processes/atlas-lewyin-shard-00-00.7qcpix.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lewyin-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-274-shard-00-00.7qcpix.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-30T14:24:10Z","groupId":"69ca852d26948f737c9eb5ea","hostname":"atlas-lewyin-shard-00-01.7qcpix.mongodb-dev.net","id":"atlas-lewyin-shard-00-01.7qcpix.mongodb-dev.net:27017","lastPing":"2026-03-30T14:25:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca852d26948f737c9eb5ea/processes/atlas-lewyin-shard-00-01.7qcpix.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lewyin-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-274-shard-00-01.7qcpix.mongodb-dev.net","version":"8.0.21-rc0"},{"created":"2026-03-30T14:24:10Z","groupId":"69ca852d26948f737c9eb5ea","hostname":"atlas-lewyin-shard-00-02.7qcpix.mongodb-dev.net","id":"atlas-lewyin-shard-00-02.7qcpix.mongodb-dev.net:27017","lastPing":"2026-03-30T14:25:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/69ca852d26948f737c9eb5ea/processes/atlas-lewyin-shard-00-02.7qcpix.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-lewyin-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-274-shard-00-02.7qcpix.mongodb-dev.net","version":"8.0.21-rc0"}],"totalCount":3}

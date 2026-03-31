@@ -554,6 +554,8 @@ func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), snapshotFlexInstanceName)
 	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), snapshotTestBucket)
 	o = strings.ReplaceAll(o, g.snapshotTargetURI, snapshotOpsManagerURL)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLUSTER_1_NAME"), snapshotCluster1Name)
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLUSTER_2_NAME"), snapshotCluster2Name)
 	o = replaceLinkToken(o)
 
 	return o

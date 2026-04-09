@@ -242,6 +242,7 @@ func TestAlertConfig(t *testing.T) {
 		}
 
 		expected := []string{
+			"ATLAS_NODE_TYPE",
 			"TYPE_NAME",
 			"HOSTNAME",
 			"PORT",

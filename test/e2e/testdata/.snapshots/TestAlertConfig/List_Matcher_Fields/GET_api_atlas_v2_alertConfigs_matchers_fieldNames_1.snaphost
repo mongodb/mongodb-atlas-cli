@@ -1,5 +1,5 @@
 HTTP/2.0 200 OK
-Content-Length: 115
+Content-Length: 133
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
 Date: Mon, 30 Mar 2026 14:15:52 GMT
 Ratelimit-Limit: 300
@@ -15,4 +15,4 @@ X-Java-Version: 17.0.17+10-LTS
 X-Mongodb-Service-Version: gitHash=ac2cadf464d07271acfe780d08000d36c691114a; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-["CLUSTER_NAME","HOSTNAME","PORT","HOSTNAME_AND_PORT","APPLICATION_ID","REPLICA_SET_NAME","TYPE_NAME","SHARD_NAME"]
+["CLUSTER_NAME","HOSTNAME","PORT","HOSTNAME_AND_PORT","APPLICATION_ID","REPLICA_SET_NAME","TYPE_NAME","SHARD_NAME","ATLAS_NODE_TYPE"]

@@ -50,7 +50,7 @@ jobs:
           if echo "$labels" | grep -q "need-doc-review"; then
             echo "review_needed=true" >> "$GITHUB_ENV"
           fi
-      - uses: marocchino/sticky-pull-request-comment@70d2764d1a7d5d9560b100cbea0077fc8f633987
+      - uses: marocchino/sticky-pull-request-comment@d4d6b0936434b21bc8345ad45a440c5f7d2c40ff
         id: append_comment
         if: env.review_needed == 'true'
         with:

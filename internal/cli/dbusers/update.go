@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
@@ -95,7 +95,7 @@ func (opts *UpdateOpts) update(out *atlasv2.CloudDatabaseUser) {
 
 	if len(opts.roles) > 0 {
 		roles := convert.BuildAtlasRoles(opts.roles)
-		out.Roles = &roles
+		out.Roles = roles
 	}
 
 	if len(opts.scopes) > 0 {

@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
 var inviteTemplate = `The user '{{.Username}}' has been invited.
@@ -80,7 +80,7 @@ func (opts *InviteOpts) newUserRequest() (*atlasv2.CloudAppUser, error) {
 		EmailAddress: opts.email,
 		MobileNumber: opts.mobile,
 		Country:      opts.country,
-		Roles:        &roles,
+		Roles:        roles,
 	}
 
 	return &user, nil

@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -31,7 +31,7 @@ func Test_autoCompleteOpts_tierSuggestions(t *testing.T) {
 		store: mockStore,
 	}
 	expected := &atlasv2.PaginatedHostViewAtlas{
-		Results: &[]atlasv2.ApiHostViewAtlas{
+		Results: []atlasv2.ApiHostViewAtlas{
 			{
 				Id:       pointer.Get("test.com:27017"),
 				Hostname: pointer.Get("test"),

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20250312015/admin"
+	"go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -33,7 +33,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	expected := &admin.PaginatedPrivateNetworkEndpointIdEntry{
 		TotalCount: pointer.Get(1),
-		Results: &[]admin.PrivateNetworkEndpointIdEntry{
+		Results: []admin.PrivateNetworkEndpointIdEntry{
 			{
 				EndpointId: "id",
 				Comment:    pointer.Get("comment"),

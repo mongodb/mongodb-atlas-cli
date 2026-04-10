@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312015/admin"
+	"go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
 const (
@@ -242,6 +242,7 @@ func TestAlertConfig(t *testing.T) {
 		}
 
 		expected := []string{
+			"ATLAS_NODE_TYPE",
 			"TYPE_NAME",
 			"HOSTNAME",
 			"PORT",

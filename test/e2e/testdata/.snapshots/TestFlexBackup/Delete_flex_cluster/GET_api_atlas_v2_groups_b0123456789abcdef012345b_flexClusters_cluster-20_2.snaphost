@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 516
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Mon, 30 Mar 2026 14:18:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1193
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 118
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getFlexCluster
+X-Java-Version: 17.0.17+10-LTS
+X-Mongodb-Service-Version: gitHash=e5bc9ecfcfb6721c9e74e92089c42eda31f1204a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-20.0fic1hd.mongodb-dev.net"},"createDate":"2026-03-30T14:14:02Z","groupId":"b0123456789abcdef012345b","id":"69ca852a26948f737c9eb153","mongoDBVersion":"8.0.21-rc0","name":"cluster-20","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"DELETING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

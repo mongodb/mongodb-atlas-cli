@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
 const listClustersBehavior = `Use one of these examples:
@@ -115,7 +115,7 @@ func (opts *ListOpts) filterClustersByAutoScalingMode(clusters *atlasv2.Paginate
 		}
 	}
 
-	clusters.Results = &filteredClusters
+	clusters.Results = filteredClusters
 	return clusters, nil
 }
 

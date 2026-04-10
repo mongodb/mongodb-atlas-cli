@@ -123,6 +123,8 @@ jobs:
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
+          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
+          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
           IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -213,6 +215,8 @@ jobs:
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
+          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
+          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
           IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -278,7 +282,7 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           labels: update-snapshots
-      - uses: marocchino/sticky-pull-request-comment@70d2764d1a7d5d9560b100cbea0077fc8f633987
+      - uses: marocchino/sticky-pull-request-comment@d4d6b0936434b21bc8345ad45a440c5f7d2c40ff
         with:
           header: test
           message: "Failed to update test snapshots."

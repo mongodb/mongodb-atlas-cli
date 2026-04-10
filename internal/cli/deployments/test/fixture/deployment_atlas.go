@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -45,7 +45,7 @@ func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 
 func (m *MockDeploymentOpts) MockPaginatedAdvancedClusterDescription(state string) *atlasv2.PaginatedClusterDescription20240805 {
 	return &atlasv2.PaginatedClusterDescription20240805{
-		Results: &[]atlasv2.ClusterDescription20240805{
+		Results: []atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get(m.Opts.DeploymentName),
 				Id:             pointer.Get("123"),

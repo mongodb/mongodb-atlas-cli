@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -40,7 +40,7 @@ func TestDBUserList_Run(t *testing.T) {
 	}
 
 	expected := &atlasv2.PaginatedIntegration{
-		Results: &[]atlasv2.ThirdPartyIntegration{
+		Results: []atlasv2.ThirdPartyIntegration{
 			{
 				Type:   pointer.Get("DATADOG"),
 				ApiKey: pointer.Get("testsApiKey"),

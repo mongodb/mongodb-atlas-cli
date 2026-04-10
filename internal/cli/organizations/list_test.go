@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312015/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -32,7 +32,7 @@ func TestList_Run(t *testing.T) {
 		{
 			name: "non-nil result",
 			expected: &atlasv2.PaginatedOrganization{
-				Results: &[]atlasv2.AtlasOrganization{{}, {}, {}},
+				Results: []atlasv2.AtlasOrganization{{}, {}, {}},
 			},
 		},
 		{
@@ -48,13 +48,13 @@ func TestList_Run(t *testing.T) {
 		{
 			name: "no results",
 			expected: &atlasv2.PaginatedOrganization{
-				Results: &[]atlasv2.AtlasOrganization{},
+				Results: []atlasv2.AtlasOrganization{},
 			},
 		},
 		{
 			name: "with results",
 			expected: &atlasv2.PaginatedOrganization{
-				Results: &[]atlasv2.AtlasOrganization{
+				Results: []atlasv2.AtlasOrganization{
 					{
 						Id:   pointer.Get("test"),
 						Name: "test",

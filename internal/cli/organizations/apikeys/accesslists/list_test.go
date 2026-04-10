@@ -19,7 +19,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20250312015/admin"
+	"go.mongodb.org/atlas-sdk/v20250312018/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -40,7 +40,7 @@ func TestListOpts_Run(t *testing.T) {
 		IncludeCount: pointer.Get(listOpts.IncludeCount),
 	}
 	expected := admin.PaginatedApiUserAccessListResponse{
-		Results: &[]admin.UserAccessListResponse{},
+		Results: []admin.UserAccessListResponse{},
 	}
 	mockStore.
 		EXPECT().

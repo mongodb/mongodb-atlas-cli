@@ -110,7 +110,7 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
-	rm -rf ./internal/mocks
+	rm -rf ./**/*mock*.go
 	go generate ./internal...
 
 .PHONY: gen-docs

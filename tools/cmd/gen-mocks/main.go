@@ -15,6 +15,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -109,15 +110,14 @@ func runParallel(pkgs []string) []string {
 
 	var wg sync.WaitGroup
 	for range runtime.NumCPU() {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			for pkg := range jobs {
-				cmd := exec.Command("go", "generate", "./"+filepath.ToSlash(pkg))
+				// #nosec G204 -- pkg is derived from filepath.WalkDir over the repo, not external input
+				cmd := exec.CommandContext(context.Background(), "go", "generate", "./"+filepath.ToSlash(pkg))
 				out, err := cmd.CombinedOutput()
 				results <- generateResult{pkg: pkg, output: out, err: err}
 			}
-		}()
+		})
 	}
 
 	go func() {

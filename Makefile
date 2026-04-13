@@ -109,9 +109,7 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
-	@echo "==> Generating mocks"
-	rm -rf ./**/*mock*.go
-	go generate ./internal...
+	go run ./tools/cmd/gen-mocks
 
 .PHONY: gen-docs
 gen-docs: gen-docs-metadata ## Generate docs for atlascli commands

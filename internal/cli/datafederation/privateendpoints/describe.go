@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=privateendpoints -source=describe.go
 
 type DataFederationPrivateEndpointDescriber interface {
 	DataFederationPrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)

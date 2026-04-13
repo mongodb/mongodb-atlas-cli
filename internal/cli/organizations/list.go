@@ -32,7 +32,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=organizations . OrganizationLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=organizations -source=list.go
 
 type OrganizationLister interface {
 	Organizations(*atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error)

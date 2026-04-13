@@ -29,7 +29,7 @@ import (
 
 const describeTemplate = "{{if .CustomerX509}}{{.CustomerX509.Cas}}{{end}}\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=customercerts . X509CertificateConfDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=customercerts -source=describe.go
 
 type X509CertificateConfDescriber interface {
 	X509Configuration(string) (*atlasv2.UserSecurity, error)

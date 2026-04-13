@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=teams . TeamDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=teams -source=delete.go
 
 type TeamDeleter interface {
 	DeleteTeam(string, string) error

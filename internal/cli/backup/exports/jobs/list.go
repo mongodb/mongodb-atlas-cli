@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=jobs . ExportJobsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=jobs -source=list.go
 
 type ExportJobsLister interface {
 	ExportJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error)

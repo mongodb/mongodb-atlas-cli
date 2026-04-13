@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=snapshots . Creator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=snapshots -source=create.go
 
 type Creator interface {
 	CreateSnapshot(string, string, *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error)

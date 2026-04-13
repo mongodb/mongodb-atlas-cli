@@ -53,7 +53,7 @@ const (
 	readOnlyNode                  = 0
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=clusters . ClusterCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=clusters -source=create.go
 
 type ClusterCreator interface {
 	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)

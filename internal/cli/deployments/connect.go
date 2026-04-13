@@ -240,7 +240,7 @@ func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
 	return opts.connectToDeployment(connectionString)
 }
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=deployments . ClusterDescriberStarter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=deployments -source=connect.go
 
 type ClusterDescriberStarter interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

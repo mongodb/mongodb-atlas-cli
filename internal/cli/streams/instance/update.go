@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=instance . StreamsUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=instance -source=update.go
 
 type StreamsUpdater interface {
 	UpdateStream(string, string, *atlasv2.StreamsTenantUpdateRequest) (*atlasv2.StreamsTenant, error)

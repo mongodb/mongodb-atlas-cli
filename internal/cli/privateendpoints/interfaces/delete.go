@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=interfaces . InterfaceEndpointDeleterDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=interfaces -source=delete.go
 
 type InterfaceEndpointDeleterDeprecated interface {
 	DeleteInterfaceEndpointDeprecated(string, string, string) error

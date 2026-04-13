@@ -32,7 +32,7 @@ import (
 
 const updateTemplate = "Invitation {{.Id}} updated.\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=invitations . OrganizationInvitationUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=invitations -source=update.go
 
 type OrganizationInvitationUpdater interface {
 	UpdateOrganizationInvitation(string, string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)

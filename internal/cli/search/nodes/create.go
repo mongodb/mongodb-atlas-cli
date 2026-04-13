@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=nodes . SearchNodesCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=nodes -source=create.go
 
 type SearchNodesCreator interface {
 	CreateSearchNodes(string, string, *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error)

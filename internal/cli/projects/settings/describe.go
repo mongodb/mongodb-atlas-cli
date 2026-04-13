@@ -25,7 +25,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=settings . ProjectSettingsDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=settings -source=describe.go
 
 type ProjectSettingsDescriber interface {
 	ProjectSettings(string) (*atlasv2.GroupSettings, error)

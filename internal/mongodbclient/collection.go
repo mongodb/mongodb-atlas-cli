@@ -25,6 +25,8 @@ import (
 
 var ErrSearchIndexNotFound = errors.New("search index not found")
 
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_mongodb_collection.go -package=mocks -source=collection.go
+
 type Collection interface {
 	Aggregate(ctx context.Context, pipeline any) (*mongo.Cursor, error)
 	CreateSearchIndex(ctx context.Context, name, indexType string, definition any) (*SearchIndexDefinition, error)

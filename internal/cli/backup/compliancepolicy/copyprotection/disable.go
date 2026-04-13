@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=copyprotection . CompliancePolicyCopyProtectionDisabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=copyprotection -source=disable.go
 
 type CompliancePolicyCopyProtectionDisabler interface {
 	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)

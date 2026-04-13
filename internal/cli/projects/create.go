@@ -31,7 +31,7 @@ import (
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=projects . ProjectCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=projects -source=create.go
 
 type ProjectCreator interface {
 	CreateProject(*atlasv2.CreateGroupApiParams) (*atlasv2.Group, error)

@@ -32,7 +32,7 @@ const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 {{.Namespace}}	{{.Type}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=namespaces . PerformanceAdvisorNamespacesLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=namespaces -source=list.go
 
 type PerformanceAdvisorNamespacesLister interface {
 	PerformanceAdvisorNamespaces(opts *atlasv2.ListPerformanceAdvisorNamespacesApiParams) (*atlasv2.Namespaces, error)

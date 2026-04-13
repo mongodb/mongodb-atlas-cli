@@ -25,7 +25,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=settings . AlertConfigurationEnabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=settings -source=enable.go
 
 type AlertConfigurationEnabler interface {
 	EnableAlertConfiguration(string, string) (*atlasv2.GroupAlertsConfig, error)

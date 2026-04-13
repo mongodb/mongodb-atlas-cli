@@ -30,7 +30,7 @@ import (
 
 const addTemplate = "Team added to the project.\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=add_mock_test.go -package=teams . ProjectTeamAdder
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=add_mock_test.go -package=teams -source=add.go
 
 type ProjectTeamAdder interface {
 	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)

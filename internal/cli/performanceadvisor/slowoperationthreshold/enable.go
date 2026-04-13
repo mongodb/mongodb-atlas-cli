@@ -29,7 +29,7 @@ import (
 const EnableTemplate = `Atlas management of the slow operation enabled
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=slowoperationthreshold . PerformanceAdvisorSlowOperationThresholdEnabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=slowoperationthreshold -source=enable.go
 
 type PerformanceAdvisorSlowOperationThresholdEnabler interface {
 	EnablePerformanceAdvisorSlowOperationThreshold(string) error

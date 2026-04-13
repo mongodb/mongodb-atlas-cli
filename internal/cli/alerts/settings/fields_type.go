@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=fields_type_mock_test.go -package=settings . MatcherFieldsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=fields_type_mock_test.go -package=settings -source=fields_type.go
 
 type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)

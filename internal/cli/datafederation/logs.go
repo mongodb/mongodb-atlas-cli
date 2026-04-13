@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=logs_mock_test.go -package=datafederation . LogDownloader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=logs_mock_test.go -package=datafederation -source=logs.go
 
 type LogDownloader interface {
 	DataFederationLogs(string, string, int64, int64) (io.ReadCloser, error)

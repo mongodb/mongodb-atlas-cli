@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_autocomplete_mock_test.go -package=availableregions . CloudProviderRegionsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_autocomplete_mock_test.go -package=availableregions -source=list.go
 
 type CloudProviderRegionsLister interface {
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)

@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=pointintimerestore . CompliancePolicyPointInTimeRestoresEnabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=pointintimerestore -source=enable.go
 
 type CompliancePolicyPointInTimeRestoresEnabler interface {
 	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)

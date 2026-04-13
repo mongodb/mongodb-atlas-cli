@@ -112,7 +112,7 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=setup_mock_test.go -package=setup . AtlasClusterQuickStarter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=setup_mock_test.go -package=setup -source=setup_cmd.go
 
 type profileReader interface {
 	ProjectID() string

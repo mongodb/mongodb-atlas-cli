@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=databases . ProcessDatabaseLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=databases -source=list.go
 
 type ProcessDatabaseLister interface {
 	ProcessDatabases(string, string, int, *store.ListOptions) (*atlasv2.PaginatedDatabase, error)

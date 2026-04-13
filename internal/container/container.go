@@ -53,7 +53,7 @@ type RunFlags struct {
 	HealthRetries     *int
 }
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_container.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container Engine
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_container.go -package=mocks -source=container.go
 
 type Engine interface {
 	Name() string

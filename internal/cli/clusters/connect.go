@@ -53,7 +53,7 @@ var (
 	promptDBUserPassword                     = "Password for authenticating to MongoDB cluster"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=clusters . ConnectClusterStore
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=clusters -source=connect.go
 
 type ConnectClusterStore interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

@@ -27,7 +27,7 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=schedule . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=schedule -source=describe.go
 
 type Describer interface {
 	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)

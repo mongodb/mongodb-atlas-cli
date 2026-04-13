@@ -32,7 +32,7 @@ const listTemplate = `USERNAME	DATABASE{{range valueOrEmptySlice .Results}}
 {{.Username}}	{{.DatabaseName}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=dbusers . DatabaseUserLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=dbusers -source=list.go
 
 type DatabaseUserLister interface {
 	DatabaseUsers(groupID string, opts *store.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)

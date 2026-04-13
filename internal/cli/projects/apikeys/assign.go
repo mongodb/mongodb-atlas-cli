@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=assign_mock_test.go -package=apikeys . ProjectAPIKeyAssigner
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=assign_mock_test.go -package=apikeys -source=assign.go
 
 type ProjectAPIKeyAssigner interface {
 	AssignProjectAPIKey(string, string, *atlasv2.UpdateAtlasProjectApiKey) error

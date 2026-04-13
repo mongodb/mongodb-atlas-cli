@@ -31,7 +31,7 @@ const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME{{range valueOrEmptySlice 
 {{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=users . UserLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=users -source=list.go
 
 type UserLister interface {
 	OrganizationUsers(string, *store.ListOptions) (*atlasv2.PaginatedOrgUser, error)

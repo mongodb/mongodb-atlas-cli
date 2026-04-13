@@ -30,7 +30,7 @@ import (
 
 const aws = "AWS"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datalake . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datalake -source=update.go
 
 type Updater interface {
 	UpdateDataLake(string, string, *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error)

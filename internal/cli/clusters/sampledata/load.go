@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=load_mock_test.go -package=sampledata . Adder
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=load_mock_test.go -package=sampledata -source=load.go
 
 type Adder interface {
 	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)

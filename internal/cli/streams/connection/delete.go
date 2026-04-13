@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=connection . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=connection -source=delete.go
 
 type Deleter interface {
 	DeleteConnection(string, string, string) error

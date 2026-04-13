@@ -31,7 +31,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=deployments . ClusterStarter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=deployments -source=start.go
 
 type ClusterStarter interface {
 	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

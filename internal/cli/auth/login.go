@@ -37,7 +37,7 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig,TrackAsker
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth -source=login.go
 
 type SetSaver interface {
 	SetAuthType(config.AuthMechanism)

@@ -43,7 +43,7 @@ Flag guide:
 - Use --autoScalingMode independentShardScaling for independent shard scaling clusters.
 - Use --tier FLEX for Flex clusters.`
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=clusters . ClusterLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=clusters -source=list.go
 
 type ClusterLister interface {
 	ProjectClusters(string, *store.ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)

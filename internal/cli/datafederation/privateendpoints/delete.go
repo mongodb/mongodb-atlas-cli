@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=privateendpoints -source=delete.go
 
 type DataFederationPrivateEndpointDeleter interface {
 	DeleteDataFederationPrivateEndpoint(string, string) error

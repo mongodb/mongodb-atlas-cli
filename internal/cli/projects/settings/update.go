@@ -28,7 +28,7 @@ import (
 
 const updateTemplate = "Project settings updated.\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=settings . ProjectSettingsUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=settings -source=update.go
 
 type ProjectSettingsUpdater interface {
 	UpdateProjectSettings(string, *atlasv2.GroupSettings) (*atlasv2.GroupSettings, error)

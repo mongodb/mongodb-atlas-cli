@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=set_mock_test.go -package=config . SetSaver
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=set_mock_test.go -package=config -source=set.go
 
 type SetSaver interface {
 	Set(string, any)

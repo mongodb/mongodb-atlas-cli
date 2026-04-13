@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=search . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=search -source=delete.go
 
 type Deleter interface {
 	DeleteSearchIndex(string, string, string) error

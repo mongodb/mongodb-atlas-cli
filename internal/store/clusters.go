@@ -20,7 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterDescriber
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks -source=clusters.go
 
 type ClusterDescriber interface { //nolint:iface // right now requires some refactor to deployment commands
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

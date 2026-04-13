@@ -32,7 +32,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datafederation . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datafederation -source=update.go
 
 type Updater interface {
 	UpdateDataFederation(string, string, *atlasv2.DataLakeTenant) (*atlasv2.DataLakeTenant, error)

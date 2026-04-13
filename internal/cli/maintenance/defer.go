@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=defer_mock_test.go -package=maintenance . Deferrer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=defer_mock_test.go -package=maintenance -source=defer.go
 
 type Deferrer interface {
 	DeferMaintenanceWindow(string) error

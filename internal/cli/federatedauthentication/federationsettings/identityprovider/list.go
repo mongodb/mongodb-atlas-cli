@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=identityprovider . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=identityprovider -source=list.go
 
 type Lister interface {
 	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error)

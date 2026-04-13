@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=interfaces . InterfaceEndpointCreatorDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=interfaces -source=create.go
 
 type InterfaceEndpointCreatorDeprecated interface {
 	CreateInterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)

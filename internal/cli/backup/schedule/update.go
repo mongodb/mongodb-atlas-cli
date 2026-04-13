@@ -47,7 +47,7 @@ const (
 	backupPolicyLength = 6
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=schedule . DescribeUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=schedule -source=update.go
 
 type DescribeUpdater interface {
 	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)

@@ -25,7 +25,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=autoscalingconfig_mock_test.go -package=clusters . ClusterAutoscalingConfigGetter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=autoscalingconfig_mock_test.go -package=clusters -source=autoscalingconfig.go
 
 type ClusterAutoscalingConfigGetter interface {
 	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)

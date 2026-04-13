@@ -26,7 +26,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=regionalmodes . RegionalizedPrivateEndpointSettingUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=regionalmodes -source=disable.go
 
 type RegionalizedPrivateEndpointSettingUpdater interface {
 	UpdateRegionalizedPrivateEndpointSetting(string, bool) (*atlasv2.ProjectSettingItem, error)

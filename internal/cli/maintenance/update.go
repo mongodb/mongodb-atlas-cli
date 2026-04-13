@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=maintenance . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=maintenance -source=update.go
 
 type Updater interface {
 	UpdateMaintenanceWindow(string, *atlasv2.GroupMaintenanceWindow) error

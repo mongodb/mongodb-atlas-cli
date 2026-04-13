@@ -32,7 +32,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=connection . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=connection -source=update.go
 
 type Updater interface {
 	UpdateConnection(string, string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)

@@ -41,7 +41,7 @@ const (
 	promptEventType = "prompt"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=tracker_mock_test.go -package=telemetry . EventsSender,UnauthEventsSender
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=tracker_mock_test.go -package=telemetry -source=tracker.go
 
 type EventsSender interface {
 	SendEvents(body any) error

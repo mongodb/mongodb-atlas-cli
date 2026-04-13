@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=querylimits . DataFederationQueryLimitDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=querylimits -source=delete.go
 
 type DataFederationQueryLimitDeleter interface {
 	DeleteDataFederationQueryLimit(string, string, string) error

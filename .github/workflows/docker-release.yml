@@ -52,7 +52,7 @@ jobs:
           push: true
       - name: Create Issue
         if: ${{ failure() }}
-        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
         with:
           labels: failed-release
           title: Release Failure for Atlas CLI Docker Image ${{ env.LATEST_VERSION }}
@@ -158,7 +158,7 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}:latest
       - name: Create Issue
         if: ${{ failure() }}
-        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
         with:
           labels: failed-release
           title: Release Failure for Atlas CLI Docker Image ${{ env.LATEST_VERSION }}
@@ -195,7 +195,7 @@ jobs:
           fi
       - name: Create Issue
         if: ${{ failure() }}
-        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
         with:
           labels: failed-release
           title: Signature Verification Failure for Atlas CLI Docker Image on Docker Hub
@@ -234,7 +234,7 @@ jobs:
           fi
       - name: Create Issue
         if: ${{ failure() }}
-        uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd
+        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
         with:
           labels: failed-release
           title: Signature Verification Failure for Atlas CLI Docker Image on Quay.io

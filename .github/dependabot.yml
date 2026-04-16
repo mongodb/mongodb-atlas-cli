@@ -7,8 +7,6 @@ updates:
       interval: weekly
       day: tuesday
     open-pull-requests-limit: 10
-    reviewers:
-      - "mongodb/apix-2"
     ignore:
       - dependency-name: "go.mongodb.org/atlas-sdk/*"
     groups:
@@ -32,8 +30,6 @@ updates:
     schedule:
       interval: weekly
       day: tuesday
-    reviewers:
-      - "mongodb/apix-devtools"
     groups:
       docker:
         patterns:

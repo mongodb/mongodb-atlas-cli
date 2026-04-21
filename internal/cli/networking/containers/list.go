@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=containers . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=containers -source=list.go
 
 type Lister interface {
 	ContainersByProvider(string, *store.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error)

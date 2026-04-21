@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=databases . ProcessDatabaseMeasurementsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=databases -source=describe.go
 
 type ProcessDatabaseMeasurementsLister interface {
 	ProcessDatabaseMeasurements(*atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)

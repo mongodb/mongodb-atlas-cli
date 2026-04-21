@@ -31,7 +31,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=onlinearchive . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=onlinearchive -source=update.go
 
 type Updater interface {
 	UpdateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)

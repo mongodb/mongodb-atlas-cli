@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=search . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=search -source=describe.go
 
 type Describer interface {
 	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)

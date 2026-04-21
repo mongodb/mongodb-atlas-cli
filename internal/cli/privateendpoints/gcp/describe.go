@@ -31,7 +31,7 @@ var describeTemplate = `ID	GROUP NAME	REGION	STATUS	PORT MAPPING ENABLED	ERROR
 {{.Id}}	{{if and .EndpointGroupNames (gt (len .EndpointGroupNames) 0)}}{{range $i, $g := .EndpointGroupNames}}{{if $i}}, {{end}}{{$g}}{{end}}{{else}}N/A{{end}}	{{.RegionName}}	{{.Status}}	{{.PortMappingEnabled}}	{{.ErrorMessage}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp -source=describe.go
 
 type PrivateEndpointDescriber interface {
 	PrivateEndpoint(string, string, string) (*atlasv2.EndpointService, error)

@@ -32,7 +32,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=teams . TeamLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=teams -source=list.go
 
 type TeamLister interface {
 	Teams(string, *store.ListOptions) (*atlasv2.PaginatedTeam, error)

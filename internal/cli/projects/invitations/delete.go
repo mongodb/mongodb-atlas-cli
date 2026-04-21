@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=invitations . ProjectInvitationDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=invitations -source=delete.go
 
 type ProjectInvitationDeleter interface {
 	DeleteProjectInvitation(string, string) error

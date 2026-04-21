@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=privateendpoints . PrivateEndpointDeleterDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=privateendpoints -source=delete.go
 
 type PrivateEndpointDeleterDeprecated interface {
 	DeletePrivateEndpointDeprecated(string, string) error

@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=token_mock_test.go -package=auth . TokenConfig
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=token_mock_test.go -package=auth -source=token.go
 
 type TokenConfig interface {
 	AccessToken() string

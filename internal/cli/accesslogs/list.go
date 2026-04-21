@@ -38,7 +38,7 @@ const (
 	invalidValueAuthResultErrorMessage = "you must set --%s to %q or %q"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=accesslogs . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=accesslogs -source=list.go
 
 type Lister interface {
 	AccessLogsByHostname(string, string, *store.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)

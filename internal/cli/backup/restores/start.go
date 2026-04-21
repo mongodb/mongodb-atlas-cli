@@ -36,7 +36,7 @@ const (
 	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=restores . RestoreJobsCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=restores -source=start.go
 
 type RestoreJobsCreator interface {
 	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)

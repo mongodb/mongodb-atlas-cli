@@ -37,7 +37,7 @@ import (
 
 var errEmptyLog = errors.New("log is empty")
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=logs . Downloader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=logs -source=download.go
 
 type Downloader interface {
 	DownloadLog(*atlasv2.DownloadClusterLogApiParams) (io.ReadCloser, error)

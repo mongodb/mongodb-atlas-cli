@@ -26,7 +26,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=aws . CustomDNSEnabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=aws -source=enable.go
 
 type CustomDNSEnabler interface {
 	EnableCustomDNS(string) (*atlasv2.AWSCustomDNSEnabled, error)

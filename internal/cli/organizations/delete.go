@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=organizations . OrganizationDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=organizations -source=delete.go
 
 type OrganizationDeleter interface {
 	DeleteOrganization(string) error

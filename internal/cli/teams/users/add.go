@@ -30,7 +30,7 @@ import (
 
 const addTemplate = "User(s) added to the team.\n"
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=add_mock_test.go -package=users . TeamAdder
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=add_mock_test.go -package=users -source=add.go
 
 type TeamAdder interface {
 	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)

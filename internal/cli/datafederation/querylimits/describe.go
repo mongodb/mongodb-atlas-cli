@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=querylimits . DataFederationQueryLimitDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=querylimits -source=describe.go
 
 type DataFederationQueryLimitDescriber interface {
 	DataFederationQueryLimit(string, string, string) (*atlasv2.DataFederationTenantQueryLimit, error)

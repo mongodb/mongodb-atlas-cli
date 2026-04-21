@@ -21,6 +21,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_mongodb_database.go -package=mocks -source=database.go
+
 type Database interface {
 	RunCommand(ctx context.Context, runCommand any) (any, error)
 	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)

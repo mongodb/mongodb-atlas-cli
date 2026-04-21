@@ -32,7 +32,7 @@ var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range valueOrEmptySlice .
 {{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=aws . DataLakePrivateEndpointLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=aws -source=list.go
 
 type DataLakePrivateEndpointLister interface {
 	DataLakePrivateEndpoints(*atlasv2.ListPrivateEndpointIdsApiParams) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)

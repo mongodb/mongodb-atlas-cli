@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=onlinearchive . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=onlinearchive -source=describe.go
 
 type Describer interface {
 	OnlineArchive(string, string, string) (*atlasv2.BackupOnlineArchive, error)

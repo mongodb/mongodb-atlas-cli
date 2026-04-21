@@ -53,7 +53,7 @@ Options
    * - --limitName
      - string
      - true
-     - Human-readable label that identifies the user-managed limit whose description you want to retrieve.
+     - Identifies the user-managed limit.
    * - -o, --output
      - string
      - false

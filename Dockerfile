@@ -1,30 +1,31 @@
-# syntax=docker/dockerfile:1.3-labs
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
+# Build stage: compile atlas CLI from source with current Go toolchain
+FROM golang:1.26 AS builder
+
+ARG TARGETARCH
+ARG GIT_SHA=""
+ARG ATLAS_VERSION=""
+
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+
+RUN CGO_ENABLED=0 GOARCH=${TARGETARCH} go build \
+    -trimpath -mod=readonly \
+    -ldflags "-s -w \
+      -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${GIT_SHA} \
+      -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION}" \
+    -o /atlas ./cmd/atlas
+
+# Runtime stage
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7
+
 ENV MONGODB_ATLAS_IS_CONTAINERIZED=true
 
-COPY <<EOF /etc/yum.repos.d/mongodb-org-x86_64-8.0.repo
-[mongodb-org-x86_64-8.0]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/8.0/x86_64/
-gpgcheck=1
-enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-8.0.asc
-EOF
-
-COPY <<EOF /etc/yum.repos.d/mongodb-org-aarch64-8.0.repo
-[mongodb-org-aarch64-8.0]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/8.0/aarch64/
-gpgcheck=1
-enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-8.0.asc
-EOF
-
-RUN microdnf -y install jq yum &&\
-    yum -y update &&\
-    yum install -y mongodb-atlas &&\
-    yum clean all &&\
-    microdnf clean all &&\
+RUN microdnf -y install jq && \
+    microdnf clean all && \
     rm -rf /var/cache
+
+COPY --from=builder /atlas /usr/bin/atlas
 
 CMD ["tail", "-f", "/dev/null"]

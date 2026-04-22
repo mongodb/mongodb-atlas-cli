@@ -1,0 +1,8 @@
+.git
+bin/
+cov/
+docs/
+test/
+*.md
+!go.md
+LICENSE

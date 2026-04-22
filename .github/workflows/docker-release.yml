@@ -15,8 +15,6 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - name: Check out code
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - name: Set date
         id: set-date
         run: |
@@ -33,6 +31,10 @@ jobs:
         run: |
           release_tag=${{ steps.get-latest-tag.outputs.tag }}
           echo "LATEST_VERSION=${release_tag#*/}" >> "$GITHUB_ENV"
+      - name: Check out release tag
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        with:
+          ref: ${{ steps.get-latest-tag.outputs.tag }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
       - name: Login to Docker Hub
@@ -50,6 +52,9 @@ jobs:
             ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
           file: Dockerfile
           push: true
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+            ATLAS_VERSION=${{ env.LATEST_VERSION }}
       - name: Create Issue
         if: ${{ failure() }}
         uses: imjohnbo/issue-bot@572eed14422c4d6ca37e870f97e7da209422f5bd

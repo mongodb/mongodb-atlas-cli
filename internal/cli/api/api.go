@@ -618,7 +618,7 @@ func addVersionFlag(cmd *cobra.Command, apiCommand shared_api.Command, version *
 	// Convert the list to a string
 	supportedVersionsVersionsString := strings.Join(supportedVersionsVersions, ", ")
 
-	cmd.Flags().StringVar(version, flag.Version, *version, fmt.Sprintf("api version to use when calling the api call [options: %s], defaults to the latest version or the profiles api_version config value if set", supportedVersionsVersionsString))
+	cmd.Flags().StringVar(version, flag.Version, *version, fmt.Sprintf("API version to use when calling the Atlas API endpoints [options: %s]. If not set by the user, defaults to the latest version or the profile's api_version config value if set.", supportedVersionsVersionsString))
 }
 
 func addOutputFlags(cmd *cobra.Command, apiCommand shared_api.Command, format *string, outputFile *string) error {

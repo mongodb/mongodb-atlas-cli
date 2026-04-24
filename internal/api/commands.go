@@ -30109,15 +30109,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 4, 19),
-						Deprecated:         true,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{
@@ -30239,15 +30230,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 4, 19),
-						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

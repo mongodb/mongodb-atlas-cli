@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
@@ -31,21 +32,21 @@ func Test_pluginTargetDirectory(t *testing.T) {
 	}{
 		{
 			name:               "plugin in custom directory is updated in place",
-			existingPluginPath: "/custom/plugins/my-plugin",
+			existingPluginPath: filepath.FromSlash("/custom/plugins/my-plugin"),
 			newDirectoryName:   "my-plugin",
-			want:               "/custom/plugins/my-plugin",
+			want:               filepath.FromSlash("/custom/plugins/my-plugin"),
 		},
 		{
 			name:               "plugin in extra dir with new version directory name stays in extra dir",
-			existingPluginPath: "/extra/plugins/owner-repo-1.0.0",
+			existingPluginPath: filepath.FromSlash("/extra/plugins/owner-repo-1.0.0"),
 			newDirectoryName:   "owner-repo-2.0.0",
-			want:               "/extra/plugins/owner-repo-2.0.0",
+			want:               filepath.FromSlash("/extra/plugins/owner-repo-2.0.0"),
 		},
 		{
 			name:               "plugin in default directory stays in default directory",
-			existingPluginPath: "/home/user/.config/atlascli/plugins/my-plugin",
+			existingPluginPath: filepath.FromSlash("/home/user/.config/atlascli/plugins/my-plugin"),
 			newDirectoryName:   "my-plugin",
-			want:               "/home/user/.config/atlascli/plugins/my-plugin",
+			want:               filepath.FromSlash("/home/user/.config/atlascli/plugins/my-plugin"),
 		},
 	}
 

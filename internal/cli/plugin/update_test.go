@@ -22,6 +22,42 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func Test_pluginTargetDirectory(t *testing.T) {
+	tests := []struct {
+		name               string
+		existingPluginPath string
+		newDirectoryName   string
+		want               string
+	}{
+		{
+			name:               "plugin in custom directory is updated in place",
+			existingPluginPath: "/custom/plugins/my-plugin",
+			newDirectoryName:   "my-plugin",
+			want:               "/custom/plugins/my-plugin",
+		},
+		{
+			name:               "plugin in extra dir with new version directory name stays in extra dir",
+			existingPluginPath: "/extra/plugins/owner-repo-1.0.0",
+			newDirectoryName:   "owner-repo-2.0.0",
+			want:               "/extra/plugins/owner-repo-2.0.0",
+		},
+		{
+			name:               "plugin in default directory stays in default directory",
+			existingPluginPath: "/home/user/.config/atlascli/plugins/my-plugin",
+			newDirectoryName:   "my-plugin",
+			want:               "/home/user/.config/atlascli/plugins/my-plugin",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := pluginTargetDirectory(tt.existingPluginPath, tt.newDirectoryName)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
 func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
 	var (
 		v1, _       = semver.NewVersion("1.0.0")

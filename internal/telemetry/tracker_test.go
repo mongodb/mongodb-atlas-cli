@@ -210,6 +210,72 @@ func TestOpenCacheFile(t *testing.T) {
 	a.Equal(expectedSize, info.Size())
 }
 
+func TestTrackCommandBlockedByDailyCap(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	fs := afero.NewMemMapFs()
+	cacheDir := t.TempDir()
+	dailyCap := 2
+
+	tr := &tracker{
+		fs:               fs,
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+		dailyCap:         newDailyEventCounter(fs, cacheDir, dailyCap),
+	}
+
+	// First two events should go through
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(nil).
+		Times(2)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	// Third event should be silently dropped — no SendEvents call
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+}
+
+func TestTrackCommandNilDailyCapAllowsAll(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+		dailyCap:         nil, // no cap configured
+	}
+
+	mockStore.
+		EXPECT().
+		SendEvents(gomock.Any()).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+}
+
 func TestTrackSurvey(t *testing.T) {
 	cacheDir := t.TempDir()
 	cmd := &cobra.Command{

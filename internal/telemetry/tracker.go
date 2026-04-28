@@ -61,6 +61,7 @@ type tracker struct {
 	cmd              *cobra.Command
 	args             []string
 	installer        *string
+	dailyCap         *dailyEventCounter
 }
 
 func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracker, error) {
@@ -73,13 +74,15 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 
 	cacheDir = filepath.Join(cacheDir, config.AtlasCLI)
 
+	fs := afero.NewOsFs()
 	t := &tracker{
-		fs:               afero.NewOsFs(),
+		fs:               fs,
 		maxCacheFileSize: defaultMaxCacheFileSize,
 		cacheDir:         cacheDir,
 		cmd:              cmd,
 		args:             args,
 		installer:        readInstaller(),
+		dailyCap:         newDailyEventCounter(fs, cacheDir, DefaultDailyEventCap),
 	}
 
 	t.storeSet = true
@@ -124,6 +127,10 @@ func (t *tracker) defaultCommandOptions() []EventOpt {
 }
 
 func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
+	if t.dailyCap != nil && !t.dailyCap.CheckAndIncrement() {
+		return nil
+	}
+
 	o := append(t.defaultCommandOptions(), withDuration(t.cmd))
 	if data.Signal != "" {
 		o = append(o, withSignal(data.Signal))

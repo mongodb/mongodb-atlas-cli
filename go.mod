@@ -32,7 +32,7 @@ require (
 	github.com/creack/pty v1.1.24
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/evergreen-ci/shrub v0.0.0-20250506131348-39cf0eb2b3dc
-	github.com/getkin/kin-openapi v0.135.0
+	github.com/getkin/kin-openapi v0.136.0
 	github.com/go-test/deep v1.1.1
 	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
@@ -85,6 +85,7 @@ require (
 	github.com/mongodb-forks/digest v1.1.0 // indirect
 	github.com/otiai10/copy v1.14.1 // indirect
 	github.com/otiai10/mint v1.6.3 // indirect
+	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/woodsbury/decimal128 v1.3.0 // indirect
 	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0 // indirect
@@ -159,7 +160,7 @@ require (
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/nwaples/rardecode/v2 v2.2.0 // indirect
 	github.com/oasdiff/yaml v0.0.9 // indirect
-	github.com/oasdiff/yaml3 v0.0.9 // indirect
+	github.com/oasdiff/yaml3 v0.0.12 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect

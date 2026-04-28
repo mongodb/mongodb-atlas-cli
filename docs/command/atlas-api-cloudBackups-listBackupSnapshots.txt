@@ -70,6 +70,14 @@ Options
      - int
      - false
      - Number of items that the response returns per page.
+   * - --oplogInc
+     - oplogTs
+     - false
+     - Oplog operation number that represents the desired point in time. This is the second part of an Oplog timestamp. Must be used with oplogTs. Mutually exclusive with `pointInTimeUtcSeconds`.
+   * - --oplogTs
+     - oplogInc
+     - false
+     - Oplog timestamp that represents the desired point in time. This is the first part of an Oplog timestamp. Must be used with oplogInc. Mutually exclusive with `pointInTimeUtcSeconds`.
    * - -o, --output
      - string
      - false
@@ -82,6 +90,10 @@ Options
      - int
      - false
      - Number of the page that displays the current set of the total objects that the response returns.
+   * - --pointInTimeUtcSeconds
+     - oplogTs
+     - false
+     - Desired point in time, expressed as the number of seconds that have elapsed since the UNIX epoch. If specified, returns the closest snapshot created before that point in time. Mutually exclusive with oplogTs and `oplogInc`.
    * - --pretty
      - 
      - false

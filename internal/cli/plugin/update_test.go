@@ -15,12 +15,49 @@
 package plugin
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func Test_pluginTargetDirectory(t *testing.T) {
+	tests := []struct {
+		name               string
+		existingPluginPath string
+		newDirectoryName   string
+		want               string
+	}{
+		{
+			name:               "plugin in custom directory is updated in place",
+			existingPluginPath: filepath.FromSlash("/custom/plugins/my-plugin"),
+			newDirectoryName:   "my-plugin",
+			want:               filepath.FromSlash("/custom/plugins/my-plugin"),
+		},
+		{
+			name:               "plugin in extra dir with new version directory name stays in extra dir",
+			existingPluginPath: filepath.FromSlash("/extra/plugins/owner-repo-1.0.0"),
+			newDirectoryName:   "owner-repo-2.0.0",
+			want:               filepath.FromSlash("/extra/plugins/owner-repo-2.0.0"),
+		},
+		{
+			name:               "plugin in default directory stays in default directory",
+			existingPluginPath: filepath.FromSlash("/home/user/.config/atlascli/plugins/my-plugin"),
+			newDirectoryName:   "my-plugin",
+			want:               filepath.FromSlash("/home/user/.config/atlascli/plugins/my-plugin"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got := pluginTargetDirectory(tt.existingPluginPath, tt.newDirectoryName)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
 
 func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
 	var (

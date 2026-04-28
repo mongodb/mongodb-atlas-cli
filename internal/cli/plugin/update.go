@@ -19,7 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -50,6 +50,10 @@ type UpdateOpts struct {
 	pluginUpdateVersion       *semver.Version
 	ghClient                  *github.Client
 	skipSignatureVerification bool
+}
+
+func pluginTargetDirectory(existingPluginPath, newDirectoryName string) string {
+	return filepath.Join(filepath.Dir(existingPluginPath), newDirectoryName)
 }
 
 func printPluginUpdateWarning(p *plugin.Plugin, err error) {
@@ -188,14 +192,9 @@ func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *Gi
 	}
 	defer os.RemoveAll(oldPluginDirectoryPath)
 
-	// rename temp plugin directory to actual name
-	// if anything goes wrong, rollback the old version of the directory
-	pluginsDefaultDirectory, err := plugin.GetDefaultPluginDirectory()
-	if err != nil {
-		err = os.Rename(oldPluginDirectoryPath, existingPlugin.PluginDirectoryPath)
-		return err
-	}
-	pluginDirectoryPath := path.Join(pluginsDefaultDirectory, githubAssetRelease.getPluginDirectoryName())
+	// rename temp plugin directory to actual name in the same parent directory as the existing plugin,
+	// so plugins installed in ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY are updated in place.
+	pluginDirectoryPath := pluginTargetDirectory(existingPlugin.PluginDirectoryPath, githubAssetRelease.getPluginDirectoryName())
 	err = os.Rename(tempPluginDirectoryPath, pluginDirectoryPath)
 	if err != nil {
 		err = os.Rename(oldPluginDirectoryPath, existingPlugin.PluginDirectoryPath)

@@ -157,6 +157,7 @@ var agentEnvVars = []struct {
 }{
 	{"CLAUDECODE", "claude_code"},
 	{"CURSOR_AGENT", "cursor"},
+	{"GEMINI_CLI", "gemini_cli"},
 }
 
 func withAgent() EventOpt {

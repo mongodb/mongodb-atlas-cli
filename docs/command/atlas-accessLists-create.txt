@@ -142,3 +142,4 @@ Examples
    # Create an access list entry for the AWS security group sg-903004f8 in the project with ID 5e2211c17a3e5a48f5497de3:
    atlas accessList create sg-903004f8 --type awsSecurityGroup
    --projectId 5e2211c17a3e5a48f5497de3 --output json --comment "AWS Security Group"
+

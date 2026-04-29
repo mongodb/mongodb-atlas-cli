@@ -151,6 +151,26 @@ func withCI() EventOpt {
 	}
 }
 
+var agentEnvVars = []struct {
+	envVar string
+	name   string
+}{
+	{"CLAUDECODE", "claude_code"},
+	{"CURSOR_AGENT", "cursor"},
+	{"GEMINI_CLI", "gemini_cli"},
+}
+
+func withAgent() EventOpt {
+	return func(event Event) {
+		for _, a := range agentEnvVars {
+			if v, ok := os.LookupEnv(a.envVar); ok && v == "1" {
+				event.Properties["agent_env_var"] = a.name
+				return
+			}
+		}
+	}
+}
+
 func withAnonymousID() EventOpt {
 	return func(event Event) {
 		id, err := machineid.ProtectedID(config.AtlasCLI)

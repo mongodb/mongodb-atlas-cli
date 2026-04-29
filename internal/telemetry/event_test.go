@@ -403,6 +403,33 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
+func TestWithAgent(t *testing.T) {
+	t.Run("claude_code detected", func(t *testing.T) {
+		t.Setenv("CLAUDECODE", "1")
+		t.Setenv("CURSOR_AGENT", "")
+		e := newEvent(withAgent())
+		assert.Equal(t, "claude_code", e.Properties["agent_env_var"])
+	})
+	t.Run("cursor detected", func(t *testing.T) {
+		t.Setenv("CLAUDECODE", "")
+		t.Setenv("CURSOR_AGENT", "1")
+		e := newEvent(withAgent())
+		assert.Equal(t, "cursor", e.Properties["agent_env_var"])
+	})
+	t.Run("none set", func(t *testing.T) {
+		t.Setenv("CLAUDECODE", "")
+		t.Setenv("CURSOR_AGENT", "")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+	t.Run("non-1 values ignored", func(t *testing.T) {
+		t.Setenv("CLAUDECODE", "true")
+		t.Setenv("CURSOR_AGENT", "true")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+}
+
 func TestWithSearchIndexType(t *testing.T) {
 	val := "search"
 	e := newEvent(WithSearchIndexType(val))

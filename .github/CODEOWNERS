@@ -3,3 +3,7 @@
 
 # Docs maintained by Docs Cloud Team
 /docs/  @mongodb/docs-cloud-team
+
+# Auto-generated API command docs are not reviewed by the Docs team
+/docs/command/atlas-api-*  @mongodb/apix-devtools
+/docs/command/includes/    @mongodb/apix-devtools

@@ -160,7 +160,7 @@ var agentEnvVars = []struct {
 	{"CURSOR_AGENT", "1", "cursor"},
 	{"GEMINI_CLI", "1", "gemini_cli"},
 	{"CODEX_SANDBOX", "seatbelt", "codex_cli"},
-	{"AUGMENT_AGENT", "1", "augment"},
+	{"AUGMENT_AGENT", "1", "auggie_cli"},
 	{"CLINE_ACTIVE", "true", "cline"},
 	{"OPENCODE_CLIENT", "1", "opencode_client"},
 	{"TRAE_AI_SHELL_ID", "", "trae_ai"},

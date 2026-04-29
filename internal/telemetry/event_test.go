@@ -421,7 +421,7 @@ func TestWithAgent(t *testing.T) {
 		{name: "cursor", envVar: "CURSOR_AGENT", value: "1", want: "cursor"},
 		{name: "gemini_cli", envVar: "GEMINI_CLI", value: "1", want: "gemini_cli"},
 		{name: "codex_cli", envVar: "CODEX_SANDBOX", value: "seatbelt", want: "codex_cli"},
-		{name: "augment", envVar: "AUGMENT_AGENT", value: "1", want: "augment"},
+		{name: "augment", envVar: "AUGMENT_AGENT", value: "1", want: "auggie_cli"},
 		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
 		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
 		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},

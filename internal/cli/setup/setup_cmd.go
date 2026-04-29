@@ -277,7 +277,11 @@ func (opts *Opts) sampleDataWatcher() (any, bool, error) {
 		return nil, false, err
 	}
 	if result.GetState() == "FAILED" {
-		return nil, false, fmt.Errorf("failed to load data: %s", result.GetErrorMessage())
+		errMsg := result.GetErrorMessage()
+		if strings.HasPrefix(errMsg, "continuing through error:") {
+			return nil, true, nil
+		}
+		return nil, false, fmt.Errorf("failed to load data: %s", errMsg)
 	}
 	return nil, result.GetState() == "COMPLETED", nil
 }

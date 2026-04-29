@@ -282,3 +282,61 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 	assert.False(t, opts.shouldAskForValue(flag.Password))
 	assert.False(t, opts.shouldAskForValue(flag.EnableTerminationProtection))
 }
+
+func TestOpts_SampleDataWatcher(t *testing.T) {
+	tests := []struct {
+		name     string
+		state    string
+		errMsg   string
+		wantDone bool
+		wantErr  bool
+	}{
+		{
+			name:     "completed",
+			state:    "COMPLETED",
+			wantDone: true,
+		},
+		{
+			name:     "pending",
+			state:    "WORKING",
+			wantDone: false,
+		},
+		{
+			name:    "failed with hard error",
+			state:   "FAILED",
+			errMsg:  "something went wrong",
+			wantErr: true,
+		},
+		{
+			name:     "failed with continuing through error is treated as completed",
+			state:    "FAILED",
+			errMsg:   "continuing through error: E11000 duplicate key error collection: sample_guides.planets index: _id_ dup key: { _id: ObjectId('621ff30d2a3e781873fcb663') }",
+			wantDone: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := NewMockAtlasClusterQuickStarter(ctrl)
+
+			status := &atlasv2.SampleDatasetStatus{}
+			status.State = pointer.Get(tt.state)
+			if tt.errMsg != "" {
+				status.ErrorMessage = pointer.Get(tt.errMsg)
+			}
+
+			mockStore.EXPECT().SampleDataStatus(gomock.Any(), gomock.Any()).Return(status, nil).Times(1)
+
+			opts := &Opts{store: mockStore}
+			_, done, err := opts.sampleDataWatcher()
+
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.wantDone, done)
+			}
+		})
+	}
+}

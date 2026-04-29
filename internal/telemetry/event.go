@@ -164,6 +164,8 @@ var agentEnvVars = []struct {
 	{"CLINE_ACTIVE", "true", "cline"},
 	{"OPENCODE_CLIENT", "1", "opencode_client"},
 	{"TRAE_AI_SHELL_ID", "", "trae_ai"},
+	{"AMP_AGENT", "1", "amp"},
+	{"GOOSE_AGENT", "1", "goose"},
 }
 
 func withAgent() EventOpt {

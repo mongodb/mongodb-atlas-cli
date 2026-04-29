@@ -425,6 +425,8 @@ func TestWithAgent(t *testing.T) {
 		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
 		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
 		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
+		{name: "amp", envVar: "AMP_AGENT", value: "1", want: "amp"},
+		{name: "goose", envVar: "GOOSE_AGENT", value: "1", want: "goose"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name+" detected", func(t *testing.T) {

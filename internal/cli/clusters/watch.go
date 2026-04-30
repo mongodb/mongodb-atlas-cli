@@ -149,7 +149,7 @@ func WatchBuilder() *cobra.Command {
 		Use:   "watch <clusterName>",
 		Short: "Watch the specified cluster in your project until it becomes available.",
 		Long: `This command checks the cluster's status periodically until it reaches an IDLE state. 
-Once the cluster reaches the expected state, the command prints "Cluster available."
+Once the cluster reaches the expected state, the command prints "Cluster available." in plaintext output and null in JSON output.
 If you run the command in the terminal, it blocks the terminal session until the resource state changes to IDLE.
 You can interrupt the command's polling at any time with CTRL-C.
 

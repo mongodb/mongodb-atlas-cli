@@ -403,37 +403,48 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
+func clearAgentEnvVars(t *testing.T) {
+	t.Helper()
+	for _, a := range agentEnvVars {
+		t.Setenv(a.envVar, "")
+	}
+}
+
 func TestWithAgent(t *testing.T) {
-	t.Run("claude_code detected", func(t *testing.T) {
-		t.Setenv("CLAUDECODE", "1")
-		t.Setenv("CURSOR_AGENT", "")
-		e := newEvent(withAgent())
-		assert.Equal(t, "claude_code", e.Properties["agent_env_var"])
-	})
-	t.Run("cursor detected", func(t *testing.T) {
-		t.Setenv("CLAUDECODE", "")
-		t.Setenv("CURSOR_AGENT", "1")
-		e := newEvent(withAgent())
-		assert.Equal(t, "cursor", e.Properties["agent_env_var"])
-	})
-	t.Run("gemini_cli detected", func(t *testing.T) {
-		t.Setenv("CLAUDECODE", "")
-		t.Setenv("CURSOR_AGENT", "")
-		t.Setenv("GEMINI_CLI", "1")
-		e := newEvent(withAgent())
-		assert.Equal(t, "gemini_cli", e.Properties["agent_env_var"])
-	})
+	tests := []struct {
+		name   string
+		envVar string
+		value  string
+		want   string
+	}{
+		{name: "claude_code", envVar: "CLAUDECODE", value: "1", want: "claude_code"},
+		{name: "cursor", envVar: "CURSOR_AGENT", value: "1", want: "cursor"},
+		{name: "gemini_cli", envVar: "GEMINI_CLI", value: "1", want: "gemini_cli"},
+		{name: "codex_cli", envVar: "CODEX_SANDBOX", value: "seatbelt", want: "codex_cli"},
+		{name: "augment", envVar: "AUGMENT_AGENT", value: "1", want: "auggie_cli"},
+		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
+		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
+		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
+		{name: "amp", envVar: "AMP_AGENT", value: "1", want: "amp"},
+		{name: "goose", envVar: "GOOSE_AGENT", value: "1", want: "goose"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name+" detected", func(t *testing.T) {
+			clearAgentEnvVars(t)
+			t.Setenv(tt.envVar, tt.value)
+			e := newEvent(withAgent())
+			assert.Equal(t, tt.want, e.Properties["agent_env_var"])
+		})
+	}
 	t.Run("none set", func(t *testing.T) {
-		t.Setenv("CLAUDECODE", "")
-		t.Setenv("CURSOR_AGENT", "")
-		t.Setenv("GEMINI_CLI", "")
+		clearAgentEnvVars(t)
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
 	})
-	t.Run("non-1 values ignored", func(t *testing.T) {
+	t.Run("wrong values ignored", func(t *testing.T) {
+		clearAgentEnvVars(t)
 		t.Setenv("CLAUDECODE", "true")
-		t.Setenv("CURSOR_AGENT", "true")
-		t.Setenv("GEMINI_CLI", "true")
+		t.Setenv("CODEX_SANDBOX", "1")
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
 	})

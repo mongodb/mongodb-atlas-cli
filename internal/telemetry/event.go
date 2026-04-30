@@ -153,20 +153,36 @@ func withCI() EventOpt {
 
 var agentEnvVars = []struct {
 	envVar string
+	value  string // empty means any non-empty value matches
 	name   string
 }{
-	{"CLAUDECODE", "claude_code"},
-	{"CURSOR_AGENT", "cursor"},
-	{"GEMINI_CLI", "gemini_cli"},
+	{"CLAUDECODE", "1", "claude_code"},
+	{"CURSOR_AGENT", "1", "cursor"},
+	{"GEMINI_CLI", "1", "gemini_cli"},
+	{"CODEX_SANDBOX", "seatbelt", "codex_cli"},
+	{"AUGMENT_AGENT", "1", "auggie_cli"},
+	{"CLINE_ACTIVE", "true", "cline"},
+	{"OPENCODE_CLIENT", "1", "opencode_client"},
+	{"TRAE_AI_SHELL_ID", "", "trae_ai"},
+	{"AMP_AGENT", "1", "amp"},
+	{"GOOSE_AGENT", "1", "goose"},
 }
 
 func withAgent() EventOpt {
 	return func(event Event) {
 		for _, a := range agentEnvVars {
-			if v, ok := os.LookupEnv(a.envVar); ok && v == "1" {
-				event.Properties["agent_env_var"] = a.name
-				return
+			v, ok := os.LookupEnv(a.envVar)
+			if !ok || v == "" {
+				continue
 			}
+			if a.value != "" && v != a.value {
+				continue
+			}
+			event.Properties["agent_env_var"] = a.name
+			return
+		}
+		if _, err := os.Stat("/opt/.devin"); err == nil {
+			event.Properties["agent_env_var"] = "devin"
 		}
 	}
 }

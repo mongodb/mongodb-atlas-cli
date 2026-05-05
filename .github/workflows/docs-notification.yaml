@@ -19,7 +19,7 @@ jobs:
         with:
           header: pr-title-slack-doc
           message: "APIx Bot :bowtie:: a message has been sent to Docs Slack channel :rocket:."
-      - uses: slackapi/slack-github-action@af78098f536edbc4de71162a307590698245be95
+      - uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c
         if: steps.append_comment.outputs.previous_comment_id == ''
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}

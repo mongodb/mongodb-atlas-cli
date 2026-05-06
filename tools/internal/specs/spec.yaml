@@ -14914,6 +14914,7 @@ components:
                             - CLUSTER_CONNECTION_CREATE_COLLECTION
                             - CLUSTER_CONNECTION_SAMPLE_COLLECTION_FIELD_NAMES
                             - CLUSTER_CONNECTION_SAMPLE_COLLECTION_FIELD_NAMES_AND_TYPES
+                            - CLUSTER_CONNECTION_FIND_DOCUMENTS
                             - CLUSTER_CONNECTION_GET_NAMESPACES_AND_PROJECT_SQL_SCHEMA_DATA
                           title: Cluster Connection Audit Types
                           type: string
@@ -18116,6 +18117,7 @@ components:
                     - CLUSTER_CONNECTION_CREATE_COLLECTION
                     - CLUSTER_CONNECTION_SAMPLE_COLLECTION_FIELD_NAMES
                     - CLUSTER_CONNECTION_SAMPLE_COLLECTION_FIELD_NAMES_AND_TYPES
+                    - CLUSTER_CONNECTION_FIND_DOCUMENTS
                     - CLUSTER_CONNECTION_GET_NAMESPACES_AND_PROJECT_SQL_SCHEMA_DATA
                   title: Cluster Connection Audit Types
                   type: string
@@ -35724,6 +35726,10 @@ components:
                         enum:
                             - S3_LOG_EXPORT
                         type: string
+                    useLegacyPathStructure:
+                        description: 'When true, uses the legacy daily-folder path structure compatible with Push-Based Log Export: `{prefix}/{cluster}/{hostname}/{logType}/{YYYY-MM-DD}/{timestamp}-{logType}.log`. When false (default), uses the flat timestamped structure: `{prefix}/{cluster}/{hostname}/{logType}/{timestamp}-{logType}.log`.'
+                        nullable: true
+                        type: boolean
                   type: object
             description: Request schema for creating or updating an S3 log export integration.
             required:
@@ -35761,6 +35767,10 @@ components:
                         enum:
                             - S3_LOG_EXPORT
                         type: string
+                    useLegacyPathStructure:
+                        description: 'When true, uses the legacy daily-folder path structure compatible with Push-Based Log Export: `{prefix}/{cluster}/{hostname}/{logType}/{YYYY-MM-DD}/{timestamp}-{logType}.log`. When false (default), uses the flat timestamped structure: `{prefix}/{cluster}/{hostname}/{logType}/{timestamp}-{logType}.log`.'
+                        nullable: true
+                        type: boolean
                   type: object
             description: Details to integrate S3 log export with one Atlas project.
             required:
@@ -43251,7 +43261,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 14bb8b23cb85320f615bbf77b43839c63d071469
+    x-xgen-sha: 201d16e50382fe21e2bfeb20cc8d6b1f5a0a95be
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

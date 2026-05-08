@@ -254,6 +254,8 @@ func withAuthMethod(c Authenticator) EventOpt {
 			return
 		case config.UserAccount:
 			event.Properties["auth_method"] = "oauth"
+		case config.UserDelegation:
+			event.Properties["auth_method"] = "user_delegation"
 		case config.ServiceAccount:
 			event.Properties["auth_method"] = "service_account"
 		case config.NoAuth:

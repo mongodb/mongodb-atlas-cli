@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -25,7 +26,9 @@ import (
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas/auth"
 )
 
 // ConnectConfig defines the profile operations needed by the connect command.
@@ -37,24 +40,23 @@ type ConnectConfig interface {
 }
 
 type ConnectOpts struct {
-	config ConnectConfig
+	config    ConnectConfig
+	OutWriter io.Writer
+	NoBrowser bool
 }
 
-// discoverOrLoadMetadata returns cached AS metadata if still valid,
-// otherwise fetches fresh metadata via RFC 8414 discovery and caches it.
-func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context) (map[string]any, error) {
+// discoverOrLoadMetadata returns cached AS metadata if still valid and from
+// the expected issuer, otherwise fetches fresh metadata via RFC 8414 discovery.
+func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context, authCfg *auth.Config) (map[string]any, error) {
 	if cached := opts.config.AuthServerMetadata(); cached != nil {
 		if !metadataExpired(cached) {
 			if metadata, ok := cached["metadata"].(map[string]any); ok {
-				return metadata, nil
+				// Verify the cached metadata came from the AS we're configured to use
+			if issuerStr, ok := metadata["issuer"].(string); ok && issuerStr == authCfg.AuthServerURL.String() {
+					return metadata, nil
+				}
 			}
 		}
-	}
-
-	client := &http.Client{Transport: transport.Default()}
-	authCfg, err := transport.FlowForAuthIssuer(opts.config, client, version.Version)
-	if err != nil {
-		return nil, fmt.Errorf("failed to configure auth issuer: %w", err)
 	}
 
 	cached, err := authCfg.DiscoverAuthServer(ctx)
@@ -75,19 +77,80 @@ func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context) (map[string
 }
 
 func (opts *ConnectOpts) Run(ctx context.Context) error {
-	metadata, err := opts.discoverOrLoadMetadata(ctx)
+	client := &http.Client{Transport: transport.Default()}
+	authCfg, err := transport.FlowForAuthIssuer(opts.config, client, version.Version)
+	if err != nil {
+		return fmt.Errorf("failed to configure auth issuer: %w", err)
+	}
+
+	metadata, err := opts.discoverOrLoadMetadata(ctx, authCfg)
 	if err != nil {
 		return err
 	}
 
-	_ = metadata // will be used by the authorization code flow
+	authorizationEndpoint, ok := metadata["authorization_endpoint"].(string)
+	if !ok || authorizationEndpoint == "" {
+		return errors.New("authorization_endpoint not found in server metadata")
+	}
+	tokenEndpoint, ok := metadata["token_endpoint"].(string)
+	if !ok || tokenEndpoint == "" {
+		return errors.New("token_endpoint not found in server metadata")
+	}
 
-	opts.config.SetAuthType(config.UserDelegation)
-	if err := opts.config.Save(); err != nil {
+	// Generate PKCE and state
+	pkce, err := auth.GeneratePKCE()
+	if err != nil {
+		return err
+	}
+	state, err := auth.GenerateState()
+	if err != nil {
 		return err
 	}
 
-	return errors.New("connect is not yet implemented")
+	// Start the callback server before sending the user to the AS
+	callbackServer, err := auth.StartCallbackServer(state)
+	if err != nil {
+		return fmt.Errorf("failed to start callback server: %w", err)
+	}
+	defer callbackServer.Close()
+
+	// Build the authorization URL
+	authURL, err := authCfg.AuthorizationURL(authorizationEndpoint, callbackServer.RedirectURI(), state, pkce)
+	if err != nil {
+		return err
+	}
+
+	// Direct the user to the authorization URL
+	_, _ = fmt.Fprintf(opts.OutWriter, "\nTo authenticate, visit:\n%s\n", authURL)
+	if !opts.NoBrowser {
+		if errBrowser := browser.OpenURL(authURL); errBrowser != nil {
+			_, _ = fmt.Fprintln(opts.OutWriter, "There was an issue opening your browser. Please visit the URL above manually.")
+		}
+	}
+
+	// Wait for the authorization code callback
+	_, _ = fmt.Fprintln(opts.OutWriter, "\nWaiting for authorization...")
+	code, err := callbackServer.WaitForCallback(ctx)
+	if err != nil {
+		return fmt.Errorf("authorization failed: %w", err)
+	}
+
+	// Exchange the authorization code for tokens
+	token, err := authCfg.ExchangeCode(ctx, tokenEndpoint, code, callbackServer.RedirectURI(), pkce.CodeVerifier)
+	if err != nil {
+		return err
+	}
+
+	// Store the tokens and auth type
+	opts.config.SetAccessToken(token.AccessToken)
+	opts.config.SetRefreshToken(token.RefreshToken)
+	opts.config.SetAuthType(config.UserDelegation)
+	if err := opts.config.Save(); err != nil {
+		return fmt.Errorf("failed to save credentials: %w", err)
+	}
+
+	_, _ = fmt.Fprintln(opts.OutWriter, "Successfully connected to MongoDB Atlas.")
+	return nil
 }
 
 func ConnectBuilder() *cobra.Command {
@@ -102,6 +165,7 @@ func ConnectBuilder() *cobra.Command {
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.config = config.Default()
+			opts.OutWriter = cmd.OutOrStdout()
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -109,6 +173,8 @@ func ConnectBuilder() *cobra.Command {
 		},
 		Args: require.NoArgs,
 	}
+
+	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
 
 	return cmd
 }

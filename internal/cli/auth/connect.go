@@ -34,6 +34,7 @@ import (
 // ConnectConfig defines the profile operations needed by the connect command.
 type ConnectConfig interface {
 	SetSaver
+	SetTokenExpiry(string) // TODO: remove when Token() reads expiry directly instead of via tokenClaims
 	AuthServerMetadata() map[string]any
 	SetAuthServerMetadata(map[string]any)
 	Service() string
@@ -143,9 +144,12 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	// Store the tokens and auth type
+	// Store the tokens, expiry, and auth type
 	opts.config.SetAccessToken(token.AccessToken)
 	opts.config.SetRefreshToken(token.RefreshToken)
+	if !token.Expiry.IsZero() {
+		opts.config.SetTokenExpiry(token.Expiry.Format(time.RFC3339))
+	}
 	opts.config.SetAuthType(config.UserDelegation)
 	if err := opts.config.Save(); err != nil {
 		return fmt.Errorf("failed to save credentials: %w", err)

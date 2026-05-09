@@ -37,6 +37,8 @@ type ConnectConfig interface {
 	AuthServerMetadata() map[string]any
 	SetAuthServerMetadata(map[string]any)
 	Service() string
+	ClientID() string
+	AuthServerURL() string
 }
 
 type ConnectOpts struct {

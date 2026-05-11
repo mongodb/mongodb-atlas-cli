@@ -43,19 +43,27 @@ type ConnectConfig interface {
 }
 
 type ConnectOpts struct {
-	config    ConnectConfig
-	OutWriter io.Writer
-	NoBrowser bool
+	config         ConnectConfig
+	OutWriter      io.Writer
+	NoBrowser      bool
+	Discover bool
 }
 
 // discoverOrLoadMetadata returns cached AS metadata if still valid and from
 // the expected issuer, otherwise fetches fresh metadata via RFC 8414 discovery.
 func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context, authCfg *auth.Config) (map[string]any, error) {
+	if opts.Discover {
+		opts.config.SetAuthServerMetadata(nil)
+		if err := opts.config.Save(); err != nil {
+			return nil, fmt.Errorf("failed to clear metadata cache: %w", err)
+		}
+	}
+
 	if cached := opts.config.AuthServerMetadata(); cached != nil {
 		if !metadataExpired(cached) {
 			if metadata, ok := cached["metadata"].(map[string]any); ok {
 				// Verify the cached metadata came from the AS we're configured to use
-			if issuerStr, ok := metadata["issuer"].(string); ok && issuerStr == authCfg.AuthServerURL.String() {
+				if issuerStr, ok := metadata["issuer"].(string); ok && issuerStr == authCfg.AuthServerURL.String() {
 					return metadata, nil
 				}
 			}
@@ -181,6 +189,7 @@ func ConnectBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
+	cmd.Flags().BoolVar(&opts.Discover, "discover", false, "Force re-discovery of authorization server metadata.")
 
 	return cmd
 }

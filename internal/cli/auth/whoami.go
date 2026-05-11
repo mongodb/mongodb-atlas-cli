@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -36,6 +37,32 @@ func (opts *whoOpts) Run() error {
 	return nil
 }
 
+func (opts *whoOpts) RunUserDelegation() error {
+	msg := "Connected to MongoDB Atlas"
+
+	if expiry := config.TokenExpiry(); expiry != "" {
+		if t, err := time.Parse(time.RFC3339, expiry); err == nil {
+			remaining := time.Until(t).Truncate(time.Second)
+			if remaining > 0 {
+				msg += fmt.Sprintf(" (expires in %s", remaining)
+			} else {
+				msg += " (token expired"
+			}
+			if config.RefreshToken() != "" {
+				msg += ", auto-refresh enabled"
+			}
+			msg += ")."
+		}
+	} else if config.RefreshToken() != "" {
+		msg += " (auto-refresh enabled)."
+	} else {
+		msg += "."
+	}
+
+	_, _ = fmt.Fprintln(opts.OutWriter, msg)
+	return nil
+}
+
 var ErrUnauthenticated = errors.New("not logged in with an Atlas account, Service Account or API key")
 
 func authTypeAndSubject() (string, string, error) {
@@ -50,6 +77,8 @@ func authTypeAndSubject() (string, string, error) {
 			return "", "", ErrUnauthenticated
 		}
 		return "account", subject, nil
+	case config.UserDelegation:
+		return "delegation", "", nil
 	case config.NoAuth:
 		return "", "", ErrUnauthenticated
 	}
@@ -70,6 +99,10 @@ func WhoAmIBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
+			if config.AuthType() == config.UserDelegation {
+				return opts.RunUserDelegation()
+			}
+
 			var err error
 			if opts.authType, opts.authSubject, err = authTypeAndSubject(); err != nil {
 				return err

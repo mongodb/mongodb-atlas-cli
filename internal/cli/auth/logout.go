@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -52,6 +53,9 @@ type ConfigDeleter interface {
 	ClientSecret() string
 	AccessTokenSubject() (string, error)
 	RefreshToken() string
+	Service() string
+	AuthServerURL() string
+	AuthServerMetadata() map[string]any
 	Save() error
 }
 
@@ -95,6 +99,31 @@ func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret strin
 	return cfg.RevokeToken(ctx, token)
 }
 
+func (opts *logoutOpts) revokeAuthServerToken(ctx context.Context) error {
+	metadata := opts.config.AuthServerMetadata()
+	if metadata == nil {
+		return errors.New("no auth server metadata available")
+	}
+	m, ok := metadata["metadata"].(map[string]any)
+	if !ok {
+		return errors.New("invalid auth server metadata")
+	}
+	revocationEndpoint, ok := m["revocation_endpoint"].(string)
+	if !ok || revocationEndpoint == "" {
+		return errors.New("revocation_endpoint not found in auth server metadata")
+	}
+
+	client := http.DefaultClient
+	client.Transport = transport.Default()
+
+	authCfg, err := transport.FlowForAuthIssuer(opts.config, client, version.Version)
+	if err != nil {
+		return err
+	}
+
+	return authCfg.RevokeAuthServerToken(ctx, revocationEndpoint, opts.config.RefreshToken(), "refresh_token")
+}
+
 func (opts *logoutOpts) Run(ctx context.Context) error {
 	if !opts.Confirm {
 		return nil
@@ -105,6 +134,10 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
 		if err != nil {
 			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
+		}
+	case config.UserDelegation:
+		if err := opts.revokeAuthServerToken(ctx); err != nil {
+			_, _ = log.Warningf("Warning: unable to revoke token: %v, proceeding with logout\n", err)
 		}
 	case config.ServiceAccount:
 		if err := opts.revokeServiceAccountToken(); err != nil {
@@ -184,6 +217,8 @@ func LogoutBuilder() *cobra.Command {
 				}
 
 				message = logoutMessage + " with user account " + subject + "?"
+			case config.UserDelegation:
+				message = logoutMessage + "?"
 			case config.NoAuth, "":
 				message = logoutMessage + "?"
 			}

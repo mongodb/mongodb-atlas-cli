@@ -26,6 +26,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -284,5 +285,6 @@ Please switch to the new command structure based on your target environment:
 	cmd.Flags().StringVar(&opts.Host, flag.Hostname, "", usage.LogHostName)
 	cmd.Flags().StringVar(&opts.Name, flag.Name, "", usage.LogName)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

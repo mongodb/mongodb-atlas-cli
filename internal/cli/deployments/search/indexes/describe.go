@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
@@ -166,5 +167,6 @@ Please switch to the new command structure based on your target environment:
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

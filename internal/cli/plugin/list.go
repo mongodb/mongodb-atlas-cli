@@ -16,6 +16,7 @@ package plugin
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -52,5 +53,6 @@ func ListBuilder(pluginOpts *Opts) *cobra.Command {
 		},
 	}
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

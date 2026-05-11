@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
@@ -103,5 +104,6 @@ The requesting API key must have the Organization Owner or Project Owner role to
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 	_ = cmd.MarkFlagRequired(flag.RoutingKey)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

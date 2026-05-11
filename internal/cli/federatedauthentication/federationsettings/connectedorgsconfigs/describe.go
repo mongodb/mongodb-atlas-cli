@@ -16,6 +16,7 @@ package connectedorgsconfigs
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -75,5 +76,6 @@ func DescribeBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 	_ = cmd.MarkFlagRequired(flag.IdentityProviderID)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

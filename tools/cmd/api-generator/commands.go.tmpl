@@ -71,6 +71,7 @@ var Commands = shared_api.GroupedAndSortedCommands{
 					},
 					Verb: {{ .RequestParameters.Verb }},
 				},
+				Permission: shared_api.PermissionTier(`{{ .Permission }}`),
 				Versions: []shared_api.CommandVersion{
 				{{- range .Versions }}
 					{

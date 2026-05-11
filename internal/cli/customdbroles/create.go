@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -127,5 +128,6 @@ func CreateBuilder() *cobra.Command {
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

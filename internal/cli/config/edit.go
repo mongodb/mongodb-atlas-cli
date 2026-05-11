@@ -21,6 +21,8 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -70,5 +72,6 @@ Note: You can't modify authentication credentials directly in the config file if
 		Args: require.NoArgs,
 	}
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

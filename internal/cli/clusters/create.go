@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -648,5 +649,6 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())
 	_ = cmd.RegisterFlagCompletionFunc(flag.Region, autocomplete.autocompleteRegion())
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

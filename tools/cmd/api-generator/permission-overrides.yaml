@@ -1,0 +1,35 @@
+# Permission overrides for atlas-cli pledge enforcement.
+#
+# By default, HTTP verb determines tier: GET -> read, everything else -> write.
+# List operationIDs here only when they deviate from that default.
+#
+# read: POST operations that are semantically read-only (validation, dry-run, verify).
+# admin: Operations that affect org-level resources, billing, or credential management.
+
+read:
+  # Validation / dry-run POSTs that do not mutate state.
+  - validateGroupLiveMigrations
+  - validateOrgResourcePolicies
+
+admin:
+  # Org lifecycle
+  - createOrg
+  - deleteOrg
+
+  # Org-level API key management
+  - createOrgApiKey
+  - deleteOrgApiKey
+  - createOrgApiKeyAccessListEntry
+  - deleteOrgApiKeyAccessListEntry
+
+  # Service account secrets (credential material)
+  - createOrgServiceAccountSecret
+  - deleteOrgServiceAccountSecret
+  - createOrgServiceAccount
+  - deleteOrgServiceAccount
+  - createGroupServiceAccount
+  - deleteGroupServiceAccount
+
+  # Billing / invoices
+  - generateOrgInvoiceAndDownloadReport
+  - createOrgBillingCostExplorerUsageProcess

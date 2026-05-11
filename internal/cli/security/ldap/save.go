@@ -22,6 +22,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -187,5 +188,6 @@ func SaveBuilder() *cobra.Command {
 
 	cmd.MarkFlagsMutuallyExclusive(flag.MappingLdapQuery, flag.MappingSubstitution)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

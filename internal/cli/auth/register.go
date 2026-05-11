@@ -19,9 +19,11 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
@@ -122,5 +124,6 @@ func RegisterBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

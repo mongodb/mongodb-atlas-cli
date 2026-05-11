@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -149,5 +150,6 @@ func ListBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.ClusterName, flag.Hostname)
 	cmd.MarkFlagsOneRequired(flag.ClusterName, flag.Hostname)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

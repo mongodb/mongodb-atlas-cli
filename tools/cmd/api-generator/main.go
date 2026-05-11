@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 //go:embed commands.go.tmpl
@@ -39,6 +40,9 @@ var commandsTemplateContent string
 
 //go:embed metadata.go.tmpl
 var metadataTemplateContent string
+
+//go:embed permission-overrides.yaml
+var permissionOverridesYAML []byte
 
 type OutputType string
 
@@ -105,8 +109,29 @@ func run(ctx context.Context, specPath string, outputType OutputType, w io.Write
 	}
 }
 
+type permissionOverrides struct {
+	Read  []string `yaml:"read"`
+	Admin []string `yaml:"admin"`
+}
+
+func loadPermissionOverrides(data []byte) (permissionOverrides, error) {
+	var overrides permissionOverrides
+	if err := yaml.Unmarshal(data, &overrides); err != nil {
+		return permissionOverrides{}, fmt.Errorf("failed to parse permission-overrides.yaml: %w", err)
+	}
+	return overrides, nil
+}
+
 func convertSpecToAPICommands(ctx context.Context, now time.Time, r io.Reader, w io.Writer) error {
-	return convertSpec(ctx, now, r, w, specToCommands, commandsTemplateContent)
+	parsed, err := loadPermissionOverrides(permissionOverridesYAML)
+	if err != nil {
+		return err
+	}
+	overrides := permOverrides{Read: parsed.Read, Admin: parsed.Admin}
+	mapper := func(now time.Time, spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
+		return specToCommands(now, spec, overrides)
+	}
+	return convertSpec(ctx, now, r, w, mapper, commandsTemplateContent)
 }
 
 func convertSpecToMetadata(ctx context.Context, now time.Time, r io.Reader, w io.Writer) error {

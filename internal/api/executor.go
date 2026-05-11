@@ -17,13 +17,19 @@ package api
 import (
 	"context"
 	"errors"
+	"fmt"
+	"io"
 	"net/http"
 	"net/http/httputil"
+	"os"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pledge"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 var (
@@ -102,6 +108,10 @@ func (e *Executor) ensureInitialized() {
 func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandRequest) (*CommandResponse, error) {
 	e.ensureInitialized()
 
+	if err := checkPledge(commandRequest); err != nil {
+		return nil, err
+	}
+
 	// Set the content type
 	if err := e.SetContentType(&commandRequest); err != nil {
 		return nil, err
@@ -166,6 +176,72 @@ func (e *Executor) logRequest(httpRequest *http.Request) {
 	}
 
 	_, _ = e.logger.Debugf("\n%s\n", string(dump))
+}
+
+// checkPledge loads the active pledge for the current session and rejects the
+// request if the command's permission tier exceeds what the pledge allows.
+// When stdin is a TTY (human at a shell), the user is prompted inline to widen
+// the session pledge. Non-TTY callers (agents, scripts) receive an error immediately.
+func checkPledge(req CommandRequest) error {
+	sid, err := pledge.Session()
+	if err != nil {
+		// Windows or no session support — skip enforcement.
+		return nil
+	}
+	pf, err := pledge.Load(sid)
+	if err != nil {
+		// No pledge set for this session.
+		return nil
+	}
+	opID := req.Command.OperationID
+	tier := req.Command.Permission
+	outcome, checkErr := pledge.Check(pf, tier, opID)
+	if outcome != pledge.Block {
+		return nil
+	}
+
+	pledge.LogAudit(pledge.AuditEntry{
+		SID:         sid,
+		OperationID: opID,
+		Outcome:     pledge.AuditBlocked,
+	})
+
+	if !terminal.IsTerminalInput(os.Stdin) {
+		return checkErr
+	}
+
+	return widenInteractiveExec(os.Stdin, os.Stderr, sid, pf, tier, opID)
+}
+
+// widenInteractiveExec prompts the user inline to widen the session pledge.
+// Called only when os.Stdin is a TTY.
+func widenInteractiveExec(in io.Reader, errW io.Writer, sid int, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
+	targetProfile := pledge.ProfileReadWrite
+	if required == shared_api.PermissionAdmin {
+		targetProfile = pledge.ProfileAdmin
+	}
+
+	fmt.Fprintf(errW, "\natlas pledge [%s]: %q requires %q permission.\n", current.Profile, opID, required)
+	if targetProfile == pledge.ProfileAdmin {
+		fmt.Fprintln(errW, "WARNING: admin allows all operations including destructive org-level actions.")
+	}
+	fmt.Fprintf(errW, "Widen this session to %s? [y/N] ", targetProfile)
+
+	var answer string
+	if _, err := fmt.Fscan(in, &answer); err != nil || answer != "y" && answer != "Y" {
+		return &pledge.BlockedError{
+			OperationID: opID,
+			Required:    required,
+			MaxAllowed:  current.MaxTier,
+			Profile:     current.Profile,
+		}
+	}
+
+	pf, err := pledge.NewPledgeFile(targetProfile, nil)
+	if err != nil {
+		return err
+	}
+	return pledge.Widen(sid, pf)
 }
 
 // Log the response if the logger is set to debug

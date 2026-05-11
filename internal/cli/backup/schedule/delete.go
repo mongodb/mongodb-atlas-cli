@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -90,5 +91,6 @@ func DeleteBuilder() *cobra.Command {
 
 	opts.AddProjectOptsFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

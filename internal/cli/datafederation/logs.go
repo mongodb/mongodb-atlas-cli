@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -114,5 +115,6 @@ func LogBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.Out)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

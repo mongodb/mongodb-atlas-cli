@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -101,5 +102,6 @@ func ListBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

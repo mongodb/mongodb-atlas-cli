@@ -26,6 +26,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -199,5 +200,6 @@ To find the hostnames for an Atlas project, use the process list command.
 
 	_ = cmd.MarkFlagFilename(flag.Out)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

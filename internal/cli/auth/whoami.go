@@ -20,7 +20,9 @@ import (
 	"io"
 
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -80,5 +82,6 @@ func WhoAmIBuilder() *cobra.Command {
 		Args: require.NoArgs,
 	}
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

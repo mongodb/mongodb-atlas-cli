@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -201,5 +202,6 @@ func LogoutBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.keepConfig, "keep", false, usage.Keep)
 
 	_ = cmd.Flags().MarkHidden("keep")
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

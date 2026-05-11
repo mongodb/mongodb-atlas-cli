@@ -26,6 +26,8 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pledge"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslogs"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/alerts"
@@ -52,6 +54,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
+	hookCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/hook"
+	pledgeCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/pledge"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
@@ -122,6 +126,8 @@ Use the --help flag with any command for more info on that command.`,
 				log.SetLevel(log.DebugLevel)
 			}
 
+			pledge.CheckSIDLineage()
+
 			if err := config.InitProfile(profile); err != nil {
 				return err
 			}
@@ -132,6 +138,10 @@ Use the --help flag with any command for more info on that command.`,
 
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
+			}
+
+			if err := checkCommandPledge(cmd); err != nil {
+				return err
 			}
 
 			return prerun.ExecuteE(opts.InitFlow(config.Default()))
@@ -212,6 +222,8 @@ Use the --help flag with any command for more info on that command.`,
 		deployments.Builder(),
 		federatedauthentication.Builder(),
 		apiCmd.Builder(),
+		pledgeCmd.Builder(),
+		hookCmd.Builder(),
 	)
 
 	pluginCmd.RegisterCommands(rootCmd)
@@ -302,4 +314,72 @@ To disable this alert, run "atlas config set skip_update_check true"
 
 func isAtLeast24HoursPast(t time.Time) bool {
 	return !t.IsZero() && time.Since(t) >= time.Hour*24
+}
+
+// widenInteractive prompts the user inline to widen the session pledge.
+// Called only when stdin is a TTY (human at a shell).
+func widenInteractive(in io.Reader, errW io.Writer, sid int, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
+	targetProfile := pledge.ProfileReadWrite
+	if required == shared_api.PermissionAdmin {
+		targetProfile = pledge.ProfileAdmin
+	}
+
+	fmt.Fprintf(errW, "\natlas pledge [%s]: %q requires %q permission.\n", current.Profile, opID, required)
+	if targetProfile == pledge.ProfileAdmin {
+		fmt.Fprintln(errW, "WARNING: admin allows all operations including destructive org-level actions.")
+	}
+	fmt.Fprintf(errW, "Widen this session to %s? [y/N] ", targetProfile)
+
+	var answer string
+	if _, err := fmt.Fscan(in, &answer); err != nil || answer != "y" && answer != "Y" {
+		return &pledge.BlockedError{
+			OperationID: opID,
+			Required:    required,
+			MaxAllowed:  current.MaxTier,
+			Profile:     current.Profile,
+		}
+	}
+
+	pf, err := pledge.NewPledgeFile(targetProfile, nil)
+	if err != nil {
+		return err
+	}
+	return pledge.Widen(sid, pf)
+}
+
+// checkCommandPledge enforces the active pledge for hand-written commands.
+// It reads the atlas.permission annotation (set by cli.SetPermission) and
+// checks it against the pledge stored for the current POSIX session.
+// atlas api commands are exempt here — they are checked inside executor.go.
+func checkCommandPledge(cmd *cobra.Command) error {
+	tierStr, ok := cmd.Annotations[cli.AnnotationKeyPermission]
+	if !ok {
+		return nil
+	}
+	sid, err := pledge.Session()
+	if err != nil {
+		return nil
+	}
+	pf, err := pledge.Load(sid)
+	if err != nil {
+		return nil
+	}
+	tier := shared_api.PermissionTier(tierStr)
+	opID := cmd.CommandPath()
+	outcome, checkErr := pledge.Check(pf, tier, opID)
+	if outcome != pledge.Block {
+		return nil
+	}
+
+	pledge.LogAudit(pledge.AuditEntry{
+		SID:         sid,
+		OperationID: opID,
+		Outcome:     pledge.AuditBlocked,
+	})
+
+	if !terminal.IsTerminalInput(cmd.InOrStdin()) {
+		return checkErr
+	}
+
+	return widenInteractive(cmd.InOrStdin(), cmd.ErrOrStderr(), sid, pf, tier, opID)
 }

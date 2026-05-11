@@ -23,6 +23,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
@@ -443,5 +444,6 @@ Please switch to the new command structure based on your target environment:
 	cmd.MarkFlagsMutuallyExclusive(flag.Collection, flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

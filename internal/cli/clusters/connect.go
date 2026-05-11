@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
@@ -111,6 +112,7 @@ func ConnectBuilder() *cobra.Command {
 
 	opts.AddOutputOptFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }
 

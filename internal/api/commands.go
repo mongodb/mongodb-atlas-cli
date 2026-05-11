@@ -79,6 +79,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -151,6 +152,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -223,6 +225,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -291,6 +294,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -373,6 +377,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -451,6 +456,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -523,6 +529,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -601,6 +608,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -669,6 +677,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -751,6 +760,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -829,6 +839,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -901,6 +912,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -963,6 +975,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -1035,6 +1048,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -1103,6 +1117,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1164,6 +1179,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1291,6 +1307,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1412,6 +1429,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1512,6 +1530,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -1592,6 +1611,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -1662,6 +1682,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1736,6 +1757,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1840,6 +1862,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1914,6 +1937,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -1960,6 +1984,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2054,6 +2079,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2131,6 +2157,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2208,6 +2235,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2288,6 +2316,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2371,6 +2400,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2475,6 +2505,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2579,6 +2610,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2656,6 +2688,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2729,6 +2762,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2827,6 +2861,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -2908,6 +2943,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -2981,6 +3017,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -3085,6 +3122,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3186,6 +3224,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3267,6 +3306,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -3340,6 +3380,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -3439,6 +3480,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3540,6 +3582,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3631,6 +3674,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -3724,6 +3768,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3795,6 +3840,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -3876,6 +3922,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -3949,6 +3996,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4057,6 +4105,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -4158,6 +4207,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -4225,6 +4275,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4286,6 +4337,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4373,6 +4425,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4434,6 +4487,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4514,6 +4568,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -4575,6 +4630,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4670,6 +4726,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4741,6 +4798,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -4802,6 +4860,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -4883,6 +4942,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -4944,6 +5004,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5034,6 +5095,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5130,6 +5192,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5191,6 +5254,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -5269,6 +5333,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5339,6 +5404,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5429,6 +5495,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -5500,6 +5567,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5581,6 +5649,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5652,6 +5721,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5742,6 +5812,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -5833,6 +5904,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -5934,6 +6006,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -6015,6 +6088,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -6096,6 +6170,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -6187,6 +6262,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -6278,6 +6354,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -6388,6 +6465,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -6489,6 +6567,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -6590,6 +6669,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -6711,6 +6791,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -6822,6 +6903,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -6893,6 +6975,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7024,6 +7107,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7155,6 +7239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -7246,6 +7331,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -7320,6 +7406,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7411,6 +7498,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7508,6 +7596,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -7579,6 +7668,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7669,6 +7759,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7765,6 +7856,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7831,6 +7923,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7902,6 +7995,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -7949,6 +8043,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8020,6 +8115,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8081,6 +8177,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8138,6 +8235,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8199,6 +8297,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8285,6 +8384,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8346,6 +8446,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8427,6 +8528,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8498,6 +8600,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8559,6 +8662,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8636,6 +8740,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8721,6 +8826,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8792,6 +8898,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -8887,6 +8994,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -8952,6 +9060,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9081,6 +9190,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9178,6 +9288,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9267,6 +9378,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9347,6 +9459,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9408,6 +9521,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9479,6 +9593,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -9555,6 +9670,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9666,6 +9782,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9770,6 +9887,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -9859,6 +9977,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -9920,6 +10039,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -10010,6 +10130,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -10090,6 +10211,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -10161,6 +10283,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -10232,6 +10355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -10348,6 +10472,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -10421,6 +10546,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -10528,6 +10654,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -10619,6 +10746,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -10750,6 +10878,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -10811,6 +10940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -10862,6 +10992,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -10983,6 +11114,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -11044,6 +11176,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -11106,6 +11239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -11167,6 +11301,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -11235,6 +11370,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11306,6 +11442,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11377,6 +11514,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11438,6 +11576,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11509,6 +11648,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11586,6 +11726,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11647,6 +11788,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11718,6 +11860,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11797,6 +11940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11868,6 +12012,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -11939,6 +12084,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12000,6 +12146,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12089,6 +12236,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12160,6 +12308,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12231,6 +12380,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12302,6 +12452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12393,6 +12544,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12472,6 +12624,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12553,6 +12706,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12620,6 +12774,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12714,6 +12869,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12808,6 +12964,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12899,6 +13056,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -12993,6 +13151,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13070,6 +13229,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13134,6 +13294,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13215,6 +13376,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13316,6 +13478,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13397,6 +13560,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13461,6 +13625,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13551,6 +13716,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13631,6 +13797,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13707,6 +13874,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -13867,6 +14035,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14000,6 +14169,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14063,6 +14233,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14113,6 +14284,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -14149,6 +14321,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14216,6 +14389,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14276,6 +14450,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -14333,6 +14508,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14400,6 +14576,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14457,6 +14634,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -14503,6 +14681,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14560,6 +14739,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14617,6 +14797,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14684,6 +14865,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14771,6 +14953,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14828,6 +15011,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -14888,6 +15072,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -14957,6 +15142,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -15024,6 +15210,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -15087,6 +15274,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -15154,6 +15342,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15244,6 +15433,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15329,6 +15519,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15420,6 +15611,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15481,6 +15673,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15552,6 +15745,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15647,6 +15841,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15748,6 +15943,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15849,6 +16045,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15926,6 +16123,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -15997,6 +16195,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -16098,6 +16297,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -16176,6 +16376,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16265,6 +16466,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16354,6 +16556,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16463,6 +16666,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16552,6 +16756,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16623,6 +16828,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16669,6 +16875,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -16736,6 +16943,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -16793,6 +17001,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16862,6 +17071,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16931,6 +17141,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -16988,6 +17199,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -17045,6 +17257,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17193,6 +17406,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17269,6 +17483,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -17346,6 +17561,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -17413,6 +17629,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17474,6 +17691,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17545,6 +17763,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17609,6 +17828,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17670,6 +17890,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17766,6 +17987,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17848,6 +18070,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -17930,6 +18153,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18015,6 +18239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18097,6 +18322,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18172,6 +18398,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18274,6 +18501,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18389,6 +18617,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18501,6 +18730,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18583,6 +18813,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18658,6 +18889,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -18732,6 +18964,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -18809,6 +19042,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -18886,6 +19120,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -18973,6 +19208,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19050,6 +19286,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19113,6 +19350,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19180,6 +19418,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19238,6 +19477,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -19299,6 +19539,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -19350,6 +19591,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -19401,6 +19643,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -19452,6 +19695,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -19519,6 +19763,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19590,6 +19835,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19661,6 +19907,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19772,6 +20019,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19843,6 +20091,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -19923,6 +20172,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -19994,6 +20244,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20064,6 +20315,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20137,6 +20389,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20197,6 +20450,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20249,6 +20503,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20328,6 +20583,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20401,6 +20657,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -20458,6 +20715,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20517,6 +20775,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20656,6 +20915,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20788,6 +21048,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20910,6 +21171,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -20996,6 +21258,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21079,6 +21342,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -21149,6 +21413,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -21222,6 +21487,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21304,6 +21570,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -21377,6 +21644,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 2, 19),
@@ -21474,6 +21742,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21624,6 +21893,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21695,6 +21965,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21776,6 +22047,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21907,6 +22179,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -21978,6 +22251,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22126,6 +22400,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22267,6 +22542,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22398,6 +22674,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22509,6 +22786,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22570,6 +22848,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22671,6 +22950,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22772,6 +23052,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22863,6 +23144,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22931,6 +23213,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -22992,6 +23275,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23063,6 +23347,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23134,6 +23419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23195,6 +23481,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23267,6 +23554,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23338,6 +23626,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23429,6 +23718,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23530,6 +23820,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23631,6 +23922,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23702,6 +23994,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23773,6 +24066,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23834,6 +24128,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -23912,6 +24207,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24016,6 +24312,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24122,6 +24419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24203,6 +24501,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24304,6 +24603,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24385,6 +24685,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24460,6 +24761,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24520,6 +24822,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24577,6 +24880,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24647,6 +24951,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24706,6 +25011,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24820,6 +25126,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24880,6 +25187,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -24939,6 +25247,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25009,6 +25318,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25097,6 +25407,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25154,6 +25465,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25221,6 +25533,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25280,6 +25593,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25339,6 +25653,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25406,6 +25721,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25475,6 +25791,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25536,6 +25853,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25597,6 +25915,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -25647,6 +25966,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -25697,6 +26017,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -25802,6 +26123,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -25907,6 +26229,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26062,6 +26385,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26227,6 +26551,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26294,6 +26619,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26395,6 +26721,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26476,6 +26803,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26582,6 +26910,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26663,6 +26992,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26754,6 +27084,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26815,6 +27146,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26886,6 +27218,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -26947,6 +27280,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27018,6 +27352,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27095,6 +27430,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27156,6 +27492,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27213,6 +27550,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27310,6 +27648,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27377,6 +27716,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27454,6 +27794,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27521,6 +27862,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27598,6 +27940,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27689,6 +28032,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27786,6 +28130,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27873,6 +28218,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -27944,6 +28290,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28045,6 +28392,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28112,6 +28460,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28209,6 +28558,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28290,6 +28640,7 @@ which protocol (like TCP or UDP) the connection uses.`,
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28361,6 +28712,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28432,6 +28784,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28523,6 +28876,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28590,6 +28944,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -28649,6 +29004,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28710,6 +29066,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28773,6 +29130,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28834,6 +29192,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28923,6 +29282,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -28984,6 +29344,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29041,6 +29402,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29112,6 +29474,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29175,6 +29538,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29262,6 +29626,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29373,6 +29738,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29434,6 +29800,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29505,6 +29872,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29568,6 +29936,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29644,6 +30013,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29695,6 +30065,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -29785,6 +30156,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29846,6 +30218,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29907,6 +30280,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -29970,6 +30344,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30033,6 +30408,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30104,6 +30480,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30173,6 +30550,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30234,6 +30612,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30307,6 +30686,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30368,6 +30748,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30441,6 +30822,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30502,6 +30884,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30605,6 +30988,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30676,6 +31060,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30737,6 +31122,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -30826,6 +31212,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -30951,6 +31338,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31116,6 +31504,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31227,6 +31616,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31308,6 +31698,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31411,6 +31802,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31537,6 +31929,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -31600,6 +31993,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31667,6 +32061,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31724,6 +32119,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31791,6 +32187,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31848,6 +32245,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31915,6 +32313,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -31972,6 +32371,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -32052,6 +32452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -32104,6 +32505,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -32140,6 +32542,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 11, 15),
@@ -32203,6 +32606,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32249,6 +32653,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32320,6 +32725,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32387,6 +32793,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32464,6 +32871,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32531,6 +32939,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -32611,6 +33020,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -32707,6 +33117,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -32776,6 +33187,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -32877,6 +33289,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -32948,6 +33361,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33005,6 +33419,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33102,6 +33517,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33169,6 +33585,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33240,6 +33657,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33321,6 +33739,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33402,6 +33821,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33469,6 +33889,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33546,6 +33967,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33623,6 +34045,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`admin`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33694,6 +34117,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33761,6 +34185,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33848,6 +34273,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -33919,6 +34345,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34020,6 +34447,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34101,6 +34529,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34198,6 +34627,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34275,6 +34705,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34346,6 +34777,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34413,6 +34845,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -34466,6 +34899,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34523,6 +34957,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34580,6 +35015,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34637,6 +35073,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34704,6 +35141,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34771,6 +35209,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34858,6 +35297,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -34935,6 +35375,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -35002,6 +35443,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35073,6 +35515,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35154,6 +35597,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
@@ -35215,6 +35659,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35286,6 +35731,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -35347,6 +35793,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35428,6 +35875,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35499,6 +35947,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35580,6 +36029,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -35641,6 +36091,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35712,6 +36163,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35803,6 +36255,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -35894,6 +36347,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -35965,6 +36419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -36036,6 +36491,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36097,6 +36553,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36178,6 +36635,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -36279,6 +36737,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -36350,6 +36809,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36431,6 +36891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 11, 13),
@@ -36522,6 +36983,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36603,6 +37065,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36694,6 +37157,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36775,6 +37239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36836,6 +37301,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -36917,6 +37383,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -36998,6 +37465,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
@@ -37086,6 +37554,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -37167,6 +37636,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -37248,6 +37718,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 5, 30),
@@ -37319,6 +37790,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
@@ -37380,6 +37852,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2024, 8, 5),
@@ -37447,6 +37920,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37517,6 +37991,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37576,6 +38051,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37643,6 +38119,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37714,6 +38191,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37781,6 +38259,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37848,6 +38327,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -37939,6 +38419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38026,6 +38507,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38087,6 +38569,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38167,6 +38650,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38236,6 +38720,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38307,6 +38792,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38417,6 +38903,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38488,6 +38975,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38559,6 +39047,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38650,6 +39139,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38751,6 +39241,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38834,6 +39325,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38888,6 +39380,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
@@ -38989,6 +39482,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),

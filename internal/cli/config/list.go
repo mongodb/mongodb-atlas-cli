@@ -17,6 +17,7 @@ package config
 import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -51,5 +52,6 @@ func ListBuilder() *cobra.Command {
 
 	o.AddOutputOptFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

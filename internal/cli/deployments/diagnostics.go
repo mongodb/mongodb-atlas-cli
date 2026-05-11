@@ -20,6 +20,7 @@ import (
 	"runtime"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
@@ -159,5 +160,6 @@ func DiagnosticsBuilder() *cobra.Command {
 		},
 	}
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

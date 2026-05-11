@@ -173,6 +173,17 @@ For an `atlas scope newCommand` command, a file `internal/cli/scope/new_command.
 - A `func ScopeNewCommandBuilder() *cobra.Command` function to put together the expected cobra definition along with the `ScopeNewCommandOpts` logic.
 - A set of documentation fields further described in the section below.
 
+> [!IMPORTANT]
+> Every new leaf command **must** carry a permission tier annotation, added with `cli.SetPermission(cmd, api.PermissionXxx)` before `return cmd` in the Builder function. A CI test (`TestAllLeafCommandsHavePermissionAnnotation`) enforces this.
+>
+> Choose the tier based on what the command does:
+> - `api.PermissionRead` — read-only operations (list, describe, get, watch)
+> - `api.PermissionWrite` — mutations (create, update, delete, start, stop)
+> - `api.PermissionAdmin` — org-level or privileged operations
+> - `api.PermissionLocalWrite` — local-only operations that do not call Atlas APIs (auth, config, plugin)
+>
+> If an endpoint's HTTP verb disagrees with its semantics (e.g., a POST that is effectively read-only), add the operationID to `tools/cmd/api-generator/permission-overrides.yaml` with the correct tier. A drift test ensures override entries stay valid as the spec evolves.
+
 Commands follow a [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) approach to match the APIs, whenever possible.
 For that reason, command arguments tend to match the path and query params of the APIs,
 with the last param being a required argument and the rest handled via flag options.

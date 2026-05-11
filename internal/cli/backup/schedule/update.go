@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
@@ -418,5 +419,6 @@ func UpdateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.NoUseOrgAndGroupNamesInExportPrefix)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.BackupPolicy)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

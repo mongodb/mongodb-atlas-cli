@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -135,6 +136,7 @@ If you don't set the duration option or the since option, this command returns d
 
 	autocomplete := &processes.AutoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.ProcessName, autocomplete.AutocompleteProcesses())
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }
 

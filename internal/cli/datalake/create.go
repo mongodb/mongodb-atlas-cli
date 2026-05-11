@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
@@ -112,5 +113,6 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.Role)
 	_ = cmd.MarkFlagRequired(flag.TestBucket)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

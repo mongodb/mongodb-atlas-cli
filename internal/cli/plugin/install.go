@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -172,5 +173,6 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 
 	cmd.Flags().BoolVar(&opts.skipSignatureVerification, flag.SkipSignatureVerification, false, usage.SkipSignatureVerification)
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

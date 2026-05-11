@@ -16,6 +16,8 @@ package config
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -28,5 +30,6 @@ func InitBuilder() *cobra.Command {
   # To configure the tool to work with Atlas for Government:
   atlas config init --gov`
 	cmd.Deprecated = "Please use the 'atlas auth login' command instead."
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

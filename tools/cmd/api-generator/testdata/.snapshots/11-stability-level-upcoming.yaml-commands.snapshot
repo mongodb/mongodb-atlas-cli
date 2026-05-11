@@ -78,6 +78,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
+				Permission: shared_api.PermissionTier(`read`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewUpcomingVersion(2025, 1, 1),

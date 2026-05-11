@@ -21,6 +21,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -80,5 +82,6 @@ func RenameBuilder() *cobra.Command {
 		},
 	}
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

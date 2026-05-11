@@ -23,6 +23,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -472,5 +473,6 @@ func LoginBuilder() *cobra.Command {
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 	_ = cmd.Flags().MarkHidden(flag.Force)
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

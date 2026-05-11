@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
@@ -136,5 +137,6 @@ func DecryptBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagFilename(flag.Out)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

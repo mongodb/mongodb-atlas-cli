@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
@@ -54,6 +55,44 @@ func testSpec(t *testing.T, name, specPath string) {
 
 		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
 			t.Fatalf("unexpected result %s", err)
+		}
+	}
+}
+
+// TestPermissionOverridesDrift asserts every operationID in permission-overrides.yaml
+// exists in the spec. When an endpoint is removed, this fails so the override entry
+// is cleaned up rather than silently rotting.
+func TestPermissionOverridesDrift(t *testing.T) {
+	const specPath = "../../internal/specs/spec-with-overlays.yaml"
+	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		t.Skipf("spec not found at %s, skipping drift test: %v", specPath, err)
+	}
+	defer specFile.Close()
+
+	loader := openapi3.NewLoader()
+	spec, err := loader.LoadFromIoReader(specFile)
+	if err != nil {
+		t.Fatalf("failed to load spec: %v", err)
+	}
+
+	existing := make(map[string]struct{})
+	for _, item := range spec.Paths.Map() {
+		for _, op := range item.Operations() {
+			if op != nil {
+				existing[op.OperationID] = struct{}{}
+			}
+		}
+	}
+
+	overrides, err := loadPermissionOverrides(permissionOverridesYAML)
+	if err != nil {
+		t.Fatalf("failed to parse permission-overrides.yaml: %v", err)
+	}
+
+	for _, id := range append(overrides.Read, overrides.Admin...) {
+		if _, ok := existing[id]; !ok {
+			t.Errorf("permission-overrides.yaml references operationID %q which does not exist in the spec; remove the stale entry", id)
 		}
 	}
 }

@@ -29,6 +29,16 @@ type Group struct {
 	Commands    []Command
 }
 
+// PermissionTier classifies an operation's required privilege level for pledge enforcement.
+type PermissionTier string
+
+const (
+	PermissionRead      PermissionTier = "read"
+	PermissionWrite     PermissionTier = "write"
+	PermissionAdmin     PermissionTier = "admin"
+	PermissionLocalWrite PermissionTier = "local-write"
+)
+
 type Command struct {
 	OperationID       string
 	ShortOperationID  string
@@ -37,6 +47,9 @@ type Command struct {
 	RequestParameters RequestParameters
 	Versions          []CommandVersion
 	Watcher           *WatcherProperties
+	// Permission is the minimum privilege tier required to run this command under a pledge.
+	// Derived from HTTP verb by the generator; overridable via permission-overrides.yaml.
+	Permission        PermissionTier
 }
 
 type RequestParameters struct {

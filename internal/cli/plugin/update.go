@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -316,5 +317,6 @@ Additionally, you can use the "--all" flag to update all plugins.
 	cmd.Flags().BoolVar(&opts.UpdateAll, flag.All, false, usage.UpdateAllPlugins)
 	cmd.Flags().BoolVar(&opts.skipSignatureVerification, flag.SkipSignatureVerification, false, usage.SkipSignatureVerification)
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

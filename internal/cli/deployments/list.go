@@ -21,6 +21,7 @@ import (
 	"os"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -146,5 +147,6 @@ Please switch to the new command structure based on your target environment:
 	})
 	_ = cmd.Flags().MarkHidden(flag.TypeFlag)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

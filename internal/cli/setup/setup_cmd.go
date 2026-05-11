@@ -42,6 +42,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -709,5 +710,6 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)
 	_ = cmd.Flags().MarkDeprecated(flag.Default, "please use --force instead")
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

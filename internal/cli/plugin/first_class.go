@@ -18,7 +18,9 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -205,7 +207,8 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 			Use:   firstClassPluginCommand.Name,
 			Short: firstClassPluginCommand.Description,
 			Annotations: map[string]string{
-				sourceType: FirstClassSourceType,
+				sourceType:               FirstClassSourceType,
+				cli.AnnotationKeyPermission: string(api.PermissionLocalWrite),
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return fcp.runFirstClassPluginCommand(cmd, args, plugins)

@@ -19,6 +19,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
@@ -94,5 +95,6 @@ The user you specify must authenticate using X.509 certificates.`,
 	opts.AddOutputOptFlags(cmd)
 	opts.AddListOptsFlags(cmd)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
@@ -112,5 +113,6 @@ func SetBuilder() *cobra.Command {
 		},
 	}
 
+	cli.SetPermission(cmd, api.PermissionLocalWrite)
 	return cmd
 }

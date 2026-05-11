@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
@@ -144,5 +145,6 @@ atlas processes list
 	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.Start)
 	cmd.MarkFlagsMutuallyExclusive(flag.Period, flag.End)
 
+	cli.SetPermission(cmd, api.PermissionRead)
 	return cmd
 }

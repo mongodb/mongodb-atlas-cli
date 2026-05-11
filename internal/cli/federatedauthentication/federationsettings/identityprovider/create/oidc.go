@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
 )
@@ -172,5 +173,6 @@ func OIDCBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.UserClaim)
 	_ = cmd.MarkFlagRequired(flag.IssuerURI)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

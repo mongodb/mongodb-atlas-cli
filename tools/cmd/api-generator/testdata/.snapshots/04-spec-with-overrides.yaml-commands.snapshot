@@ -75,6 +75,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
+				Permission: shared_api.PermissionTier(`write`),
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),

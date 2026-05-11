@@ -20,6 +20,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -127,5 +128,6 @@ func InviteBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Role)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TeamID)
 
+	cli.SetPermission(cmd, api.PermissionWrite)
 	return cmd
 }

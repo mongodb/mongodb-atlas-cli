@@ -17,6 +17,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"regexp"
 	"sort"
@@ -33,12 +34,57 @@ var (
 	contentTypeHeaderRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?<version>[^+]+)\+(?P<contentType>[\w]+)$`)
 )
 
-func specToCommands(now time.Time, spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
+// permissionOverrides is the interface the converter uses — avoids importing main's type.
+type permissionOverrideSet interface {
+	tierFor(operationID, verb string) api.PermissionTier
+}
+
+type overrideMap struct {
+	read  map[string]struct{}
+	admin map[string]struct{}
+}
+
+func newOverrideMap(read, admin []string) *overrideMap {
+	m := &overrideMap{
+		read:  make(map[string]struct{}, len(read)),
+		admin: make(map[string]struct{}, len(admin)),
+	}
+	for _, id := range read {
+		m.read[id] = struct{}{}
+	}
+	for _, id := range admin {
+		m.admin[id] = struct{}{}
+	}
+	return m
+}
+
+func (o *overrideMap) tierFor(operationID, verb string) api.PermissionTier {
+	if _, ok := o.admin[operationID]; ok {
+		return api.PermissionAdmin
+	}
+	if _, ok := o.read[operationID]; ok {
+		return api.PermissionRead
+	}
+	// Default: derive from HTTP verb.
+	if strings.EqualFold(verb, http.MethodGet) {
+		return api.PermissionRead
+	}
+	return api.PermissionWrite
+}
+
+// permOverrides is passed through from main so tests can inject a fake.
+type permOverrides struct {
+	Read  []string
+	Admin []string
+}
+
+func specToCommands(now time.Time, spec *openapi3.T, overrides permOverrides) (api.GroupedAndSortedCommands, error) {
+	om := newOverrideMap(overrides.Read, overrides.Admin)
 	groups := make(map[string]*api.Group, 0)
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
-			command, err := operationToCommand(now, path, verb, operation)
+			command, err := operationToCommand(now, path, verb, operation, om)
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
 			}
@@ -143,7 +189,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 	return ext
 }
 
-func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation, om *overrideMap) (*api.Command, error) {
 	extensions := extractExtensionsFromOperation(operation)
 	if extensions.skip {
 		return nil, nil
@@ -199,8 +245,9 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 			URLParameters:   parameters.url,
 			Verb:            httpVerb,
 		},
-		Versions: versions,
-		Watcher:  watcher,
+		Versions:   versions,
+		Watcher:    watcher,
+		Permission: om.tierFor(operationID, verb),
 	}
 
 	return &command, nil

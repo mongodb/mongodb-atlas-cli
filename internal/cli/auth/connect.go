@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
@@ -118,36 +119,55 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	// Start the callback server before sending the user to the AS
-	callbackServer, err := auth.StartCallbackServer(state)
-	if err != nil {
-		return fmt.Errorf("failed to start callback server: %w", err)
-	}
-	defer callbackServer.Close()
+	var code string
+	var redirectURI string
 
-	// Build the authorization URL
-	authURL, err := authCfg.AuthorizationURL(authorizationEndpoint, callbackServer.RedirectURI(), state, pkce)
-	if err != nil {
-		return err
-	}
+	if opts.NoBrowser {
+		// Manual flow: user authorizes in their own browser and pastes the redirect URL back
+		redirectURI = auth.NoBrowserRedirectURI()
+		authURL, err := authCfg.AuthorizationURL(authorizationEndpoint, redirectURI, state, pkce)
+		if err != nil {
+			return err
+		}
 
-	// Direct the user to the authorization URL
-	_, _ = fmt.Fprintf(opts.OutWriter, "\nTo authenticate, visit:\n%s\n", authURL)
-	if !opts.NoBrowser {
+		_, _ = fmt.Fprintf(opts.OutWriter, "\nTo authenticate, visit the following URL in your browser:\n\n%s\n", authURL)
+		_, _ = fmt.Fprintln(opts.OutWriter, "\nAfter you approve, your browser will redirect to a page that fails to load.")
+		_, _ = fmt.Fprintln(opts.OutWriter, "This is expected. Copy the full URL from your browser's address bar and paste it here.")
+		_, _ = fmt.Fprint(opts.OutWriter, "\nPaste the URL: ")
+
+		code, err = auth.ParseCodeFromRedirectURL(state)
+		if err != nil {
+			return fmt.Errorf("authorization failed: %w", err)
+		}
+	} else {
+		// Browser flow: start a local callback server and open the browser
+		callbackServer, err := auth.StartCallbackServer(state)
+		if err != nil {
+			return fmt.Errorf("failed to start callback server: %w", err)
+		}
+		defer callbackServer.Close()
+
+		redirectURI = callbackServer.RedirectURI()
+		authURL, err := authCfg.AuthorizationURL(authorizationEndpoint, redirectURI, state, pkce)
+		if err != nil {
+			return err
+		}
+
 		if errBrowser := browser.OpenURL(authURL); errBrowser != nil {
-			_, _ = fmt.Fprintln(opts.OutWriter, "There was an issue opening your browser. Please visit the URL above manually.")
+			_, _ = fmt.Fprintf(opts.OutWriter, "\nThere was an issue opening your browser. To authenticate, visit:\n%s\n", authURL)
+		} else if log.IsDebugLevel() {
+			_, _ = fmt.Fprintf(opts.OutWriter, "\nAuthorization URL: %s\n", authURL)
+		}
+
+		_, _ = fmt.Fprintln(opts.OutWriter, "\nWaiting for authorization...")
+		code, err = callbackServer.WaitForCallback(ctx)
+		if err != nil {
+			return fmt.Errorf("authorization failed: %w", err)
 		}
 	}
 
-	// Wait for the authorization code callback
-	_, _ = fmt.Fprintln(opts.OutWriter, "\nWaiting for authorization...")
-	code, err := callbackServer.WaitForCallback(ctx)
-	if err != nil {
-		return fmt.Errorf("authorization failed: %w", err)
-	}
-
 	// Exchange the authorization code for tokens
-	token, err := authCfg.ExchangeCode(ctx, tokenEndpoint, code, callbackServer.RedirectURI(), pkce.CodeVerifier)
+	token, err := authCfg.ExchangeCode(ctx, tokenEndpoint, code, redirectURI, pkce.CodeVerifier)
 	if err != nil {
 		return err
 	}

@@ -123,13 +123,26 @@ func (a *claudeCodeAgent) Install(opts InstallOpts) error {
 		profile = "readonly"
 	}
 
+	// Resolve the path to the running atlas binary so the hook calls exactly
+	// this build, not whatever `atlas` resolves to in the hook's PATH.
+	atlasBin, err := os.Executable()
+	if err != nil {
+		atlasBin = "atlas" // safe fallback
+	}
+
+	// Use `set-claude-code` which reads the session UUID from the hook's JSON
+	// stdin (Claude Code sends {"session_id":"..."} to every hook via stdin).
+	// This is more reliable than env-based detection because CLAUDECODE and
+	// CLAUDE_CODE_SESSION_ID are not always propagated to hook subprocesses.
+	wrapperCmd := fmt.Sprintf("%s pledge set-claude-code %s --yes", atlasBin, profile)
+
 	entry := map[string]any{
 		managedTag: true,
 		"matcher":  "",
 		"hooks": []map[string]any{
 			{
 				"type":    "command",
-				"command": fmt.Sprintf("atlas pledge set %s --yes", profile),
+				"command": wrapperCmd,
 			},
 		},
 	}

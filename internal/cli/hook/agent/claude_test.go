@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/hook/agent"
@@ -167,6 +168,16 @@ func TestClaudeInstallHookShape(t *testing.T) {
 	}
 	if _, hasMatcher := managed["matcher"]; !hasMatcher {
 		t.Error("managed entry must have a 'matcher' field")
+	}
+
+	// The inner hook command must use the set-claude-code subcommand.
+	inner := innerHooks[0].(map[string]any)
+	cmd, _ := inner["command"].(string)
+	if !strings.Contains(cmd, "pledge set-claude-code") {
+		t.Errorf("installed command must use 'pledge set-claude-code', got: %q", cmd)
+	}
+	if !strings.Contains(cmd, "--yes") {
+		t.Errorf("installed command must include --yes, got: %q", cmd)
 	}
 }
 

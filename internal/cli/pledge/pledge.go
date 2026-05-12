@@ -29,6 +29,7 @@ Pledges can only be narrowed, never widened.`,
 
 	cmd.AddCommand(
 		SetBuilder(),
+		SetClaudeCodeBuilder(),
 		ShowBuilder(),
 		AllowBuilder(),
 	)

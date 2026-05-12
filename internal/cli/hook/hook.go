@@ -27,7 +27,16 @@ func Builder() *cobra.Command {
 When installed, the hook runs "atlas pledge set <profile>" at the start of each
 new agent session, automatically restricting the CLI to the configured profile.
 
-Supported agents: claude-code, shell`,
+Claude Code note: each Bash tool invocation in Claude runs in a separate shell
+session. The installed hook reads Claude's session_id from the SessionStart
+payload and keys the pledge on the conversation UUID rather than the POSIX
+session ID. This means the pledge applies consistently across all Bash calls
+within a single Claude conversation.
+
+When you resume a conversation with "claude --resume <uuid>", atlas pledge
+recognises the same UUID and the existing pledge namespace is reused.
+
+Supported agents: claude-code, codex, pi, opencode, shell`,
 	}
 
 	cmd.AddCommand(

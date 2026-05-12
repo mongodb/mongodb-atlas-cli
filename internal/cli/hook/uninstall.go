@@ -31,10 +31,14 @@ func (o *uninstallOpts) agentFor(name string) (agent.Agent, error) {
 		return agent.NewClaudeCode(""), nil
 	case "codex":
 		return agent.NewCodex(), nil
+	case "pi":
+		return agent.NewPi(), nil
+	case "opencode":
+		return agent.NewOpencode(), nil
 	case "shell":
 		return agent.NewShell(o.shellPath), nil
 	default:
-		return nil, fmt.Errorf("unknown agent %q; supported agents: claude-code, codex, shell", name)
+		return nil, fmt.Errorf("unknown agent %q; supported agents: claude-code, codex, pi, opencode, shell", name)
 	}
 }
 
@@ -44,8 +48,9 @@ func UninstallBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "uninstall <agent>",
 		Short:   "Remove a pledge hook from an AI agent's configuration.",
-		Args:    cobra.ExactArgs(1),
-		Example: "  atlas hook uninstall claude-code\n  atlas hook uninstall shell --write ~/.bashrc",
+		Args:      cobra.ExactArgs(1),
+		ValidArgs: []string{"claude-code", "codex", "pi", "opencode", "shell"},
+		Example:   "  atlas hook uninstall claude-code\n  atlas hook uninstall codex\n  atlas hook uninstall pi\n  atlas hook uninstall opencode\n  atlas hook uninstall shell --write ~/.bashrc",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			a, err := opts.agentFor(args[0])
 			if err != nil {

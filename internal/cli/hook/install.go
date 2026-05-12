@@ -37,10 +37,14 @@ func (o *installOpts) agentFor(name string) (agent.Agent, error) {
 		return agent.NewClaudeCode(path), nil
 	case "codex":
 		return agent.NewCodex(), nil
+	case "pi":
+		return agent.NewPi(), nil
+	case "opencode":
+		return agent.NewOpencode(), nil
 	case "shell":
 		return agent.NewShell(o.shellPath), nil
 	default:
-		return nil, fmt.Errorf("unknown agent %q; supported agents: claude-code, codex, shell", name)
+		return nil, fmt.Errorf("unknown agent %q; supported agents: claude-code, codex, pi, opencode, shell", name)
 	}
 }
 
@@ -50,15 +54,17 @@ func InstallBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install <agent>",
 		Short: "Install a pledge hook in an AI agent's configuration.",
-		Long: `Installs a SessionStart hook that runs "atlas pledge set <profile> --yes" at the
-start of every new agent session.
+		Long: `Installs a hook that runs "atlas pledge set <profile> --yes" at the start of every new agent session.
 
 Supported agents:
   claude-code  Edits ~/.claude/settings.json (or ./.claude/settings.json with --project).
-  shell        Prints a sourceable snippet; use --write to inject into a shell config file.
-  codex        Not yet supported.`,
-		Args:    cobra.ExactArgs(1),
-		Example: "  atlas hook install claude-code\n  atlas hook install claude-code --profile read-write\n  atlas hook install shell --write ~/.bashrc",
+  codex        Edits ~/.codex/hooks.json (PreToolUse, since Codex has no SessionStart event).
+  pi           Writes ~/.pi/agent/extensions/atlas-pledge.ts. Reload pi with /reload after install.
+  opencode     Writes ~/.config/opencode/plugins/atlas-pledge.ts. Loaded automatically by opencode.
+  shell        Prints a sourceable snippet; use --write to inject into a shell config file.`,
+		Args:      cobra.ExactArgs(1),
+		ValidArgs: []string{"claude-code", "codex", "pi", "opencode", "shell"},
+		Example:   "  atlas hook install claude-code\n  atlas hook install claude-code --profile read-write\n  atlas hook install codex\n  atlas hook install pi\n  atlas hook install opencode\n  atlas hook install shell --write ~/.bashrc",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			a, err := opts.agentFor(args[0])
 			if err != nil {

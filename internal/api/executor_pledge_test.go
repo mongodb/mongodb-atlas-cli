@@ -16,7 +16,6 @@ package api
 
 import (
 	"context"
-	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -32,6 +31,14 @@ import (
 func withTempStateDir(t *testing.T) {
 	t.Helper()
 	t.Setenv("ATLAS_PLEDGE_STATE_DIR", t.TempDir())
+}
+
+// currentSessionKey resolves the pledge session key for the current process.
+func currentSessionKey(t *testing.T) pledge.SessionKey {
+	t.Helper()
+	k, err := pledge.ResolveSessionKey()
+	require.NoError(t, err)
+	return k
 }
 
 func makeExecutor(t *testing.T, httpCode int) *Executor {
@@ -85,21 +92,19 @@ func readOnlyRequest(opID string, tier shared_api.PermissionTier) CommandRequest
 func TestPledgeBlocksWriteUnderReadonly(t *testing.T) {
 	withTempStateDir(t)
 
-	sid, err := pledge.Session()
-	require.NoError(t, err)
-
+	k := currentSessionKey(t)
 	pf, err := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
 	require.NoError(t, err)
-	require.NoError(t, pledge.Save(sid, pf))
+	require.NoError(t, pledge.Save(k, pf))
 
 	exec := makeExecutor(t, http.StatusOK)
 	req := readOnlyRequest("deleteCluster", shared_api.PermissionWrite)
 
 	_, err = exec.ExecuteCommand(context.Background(), req)
 	require.Error(t, err)
-
-	var be *pledge.BlockedError
-	require.True(t, errors.As(err, &be), "expected BlockedError, got %T: %v", err, err)
+	// Non-TTY path: returns a token-bearing error (not BlockedError directly).
+	require.Contains(t, err.Error(), "atlas pledge [readonly]")
+	require.Contains(t, err.Error(), "atlas pledge allow")
 }
 
 // TestPledgeAllowsReadUnderReadonly verifies that a read operation is allowed
@@ -107,12 +112,10 @@ func TestPledgeBlocksWriteUnderReadonly(t *testing.T) {
 func TestPledgeAllowsReadUnderReadonly(t *testing.T) {
 	withTempStateDir(t)
 
-	sid, err := pledge.Session()
-	require.NoError(t, err)
-
+	k := currentSessionKey(t)
 	pf, err := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
 	require.NoError(t, err)
-	require.NoError(t, pledge.Save(sid, pf))
+	require.NoError(t, pledge.Save(k, pf))
 
 	exec := makeExecutor(t, http.StatusOK)
 	req := readOnlyRequest("listClusters", shared_api.PermissionRead)
@@ -127,12 +130,10 @@ func TestPledgeAllowsReadUnderReadonly(t *testing.T) {
 func TestPledgeAllowsAllUnderAdmin(t *testing.T) {
 	withTempStateDir(t)
 
-	sid, err := pledge.Session()
-	require.NoError(t, err)
-
+	k := currentSessionKey(t)
 	pf, err := pledge.NewPledgeFile(pledge.ProfileAdmin, nil)
 	require.NoError(t, err)
-	require.NoError(t, pledge.Save(sid, pf))
+	require.NoError(t, pledge.Save(k, pf))
 
 	exec := makeExecutor(t, http.StatusOK)
 	req := readOnlyRequest("deleteCluster", shared_api.PermissionWrite)

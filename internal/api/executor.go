@@ -183,39 +183,61 @@ func (e *Executor) logRequest(httpRequest *http.Request) {
 // When stdin is a TTY (human at a shell), the user is prompted inline to widen
 // the session pledge. Non-TTY callers (agents, scripts) receive an error immediately.
 func checkPledge(req CommandRequest) error {
-	sid, err := pledge.Session()
+	key, err := pledge.ResolveSessionKey()
 	if err != nil {
 		// Windows or no session support — skip enforcement.
 		return nil
 	}
-	pf, err := pledge.Load(sid)
+	pf, err := pledge.Load(key)
 	if err != nil {
 		// No pledge set for this session.
 		return nil
 	}
 	opID := req.Command.OperationID
 	tier := req.Command.Permission
-	outcome, checkErr := pledge.Check(pf, tier, opID)
+	outcome, _ := pledge.Check(pf, tier, opID)
 	if outcome != pledge.Block {
 		return nil
 	}
 
 	pledge.LogAudit(pledge.AuditEntry{
-		SID:         sid,
-		OperationID: opID,
-		Outcome:     pledge.AuditBlocked,
+		SessionKeyStr: key.String(),
+		OperationID:   opID,
+		Outcome:       pledge.AuditBlocked,
 	})
 
 	if !terminal.IsTerminalInput(os.Stdin) {
-		return checkErr
+		return requestOutOfBandApproval(key, pf, tier, opID)
 	}
 
-	return widenInteractiveExec(os.Stdin, os.Stderr, sid, pf, tier, opID)
+	return widenInteractiveExec(os.Stdin, os.Stderr, key, pf, tier, opID)
+}
+
+// requestOutOfBandApproval generates an approval token and returns an error
+// containing it so the agent or user can run `atlas pledge allow <token>` in
+// another terminal and then retry the command.
+func requestOutOfBandApproval(key pledge.SessionKey, pf *pledge.PledgeFile, tier shared_api.PermissionTier, opID string) error {
+	token, err := pledge.WriteApprovalRequest(key, opID, tier)
+	if err != nil {
+		// Fall back to the plain blocked error if we can't write the request.
+		return &pledge.BlockedError{
+			OperationID: opID,
+			Required:    tier,
+			MaxAllowed:  pf.MaxTier,
+			Profile:     pf.Profile,
+		}
+	}
+
+	return fmt.Errorf(
+		"atlas pledge [%s]: operation %q requires %q but session is restricted to %q\n"+
+			"Run in another terminal to approve, then retry:\n\n  atlas pledge allow %s",
+		pf.Profile, opID, tier, pf.MaxTier, token,
+	)
 }
 
 // widenInteractiveExec prompts the user inline to widen the session pledge.
 // Called only when os.Stdin is a TTY.
-func widenInteractiveExec(in io.Reader, errW io.Writer, sid int, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
+func widenInteractiveExec(in io.Reader, errW io.Writer, key pledge.SessionKey, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
 	targetProfile := pledge.ProfileReadWrite
 	if required == shared_api.PermissionAdmin {
 		targetProfile = pledge.ProfileAdmin
@@ -241,7 +263,7 @@ func widenInteractiveExec(in io.Reader, errW io.Writer, sid int, current *pledge
 	if err != nil {
 		return err
 	}
-	return pledge.Widen(sid, pf)
+	return pledge.Widen(key, pf)
 }
 
 // Log the response if the logger is set to debug

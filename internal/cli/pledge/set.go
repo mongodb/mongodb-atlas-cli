@@ -17,6 +17,8 @@ package pledge
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pledge"
@@ -28,6 +30,7 @@ type setOpts struct {
 	profile    string
 	allowedOps []string
 	yes        bool
+	sessionID  string
 }
 
 var errAdminRequiresConfirm = errors.New("use --yes to confirm setting admin pledge")
@@ -54,9 +57,36 @@ func (o *setOpts) Run(cmd *cobra.Command) error {
 		}
 	}
 
-	sid, err := pledge.Session()
-	if err != nil {
-		return fmt.Errorf("pledge is not supported on this platform: %w", err)
+	// Resolve the session key. --session-id (or ATLAS_PLEDGE_SESSION_ID) overrides the resolver.
+	var key pledge.SessionKey
+	sid := o.sessionID
+	if sid == "" {
+		sid = os.Getenv("ATLAS_PLEDGE_SESSION_ID")
+	}
+	if sid != "" {
+		if !pledge.IsValidUUID(sid) {
+			return fmt.Errorf("invalid --session-id %q: must be a UUID v4 (xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx)", sid)
+		}
+		var err error
+		key, err = pledge.NewSessionKey("claude", sid)
+		if err != nil {
+			return err
+		}
+		// Write a breadcrumb so subsequent atlas invocations with CLAUDECODE=1
+		// and CLAUDE_PROJECT_DIR can discover the conversation UUID without
+		// ATLAS_PLEDGE_SESSION_ID in their environment.
+		if projectDir := os.Getenv("CLAUDE_PROJECT_DIR"); projectDir != "" {
+			breadcrumbDir := pledge.ClaudeBreadcrumbDir(projectDir)
+			if mkErr := os.MkdirAll(breadcrumbDir, 0o700); mkErr == nil {
+				_ = os.WriteFile(filepath.Join(breadcrumbDir, sid), []byte(sid), 0o600)
+			}
+		}
+	} else {
+		var err error
+		key, err = pledge.ResolveSessionKey()
+		if err != nil {
+			return fmt.Errorf("pledge is not supported on this platform: %w", err)
+		}
 	}
 
 	pf, err := pledge.NewPledgeFile(prof, o.allowedOps)
@@ -64,7 +94,7 @@ func (o *setOpts) Run(cmd *cobra.Command) error {
 		return err
 	}
 
-	if err := pledge.Narrow(sid, pf); err != nil {
+	if err := pledge.Narrow(key, pf); err != nil {
 		if errors.Is(err, pledge.ErrWouldWiden) {
 			return fmt.Errorf("cannot widen an existing pledge (current session already has a more restrictive pledge); open a new terminal to reset")
 		}
@@ -98,6 +128,7 @@ To reset, open a new terminal session.`,
 
 	cmd.Flags().StringSliceVar(&opts.allowedOps, "allow", nil, "Comma-separated list of operationIDs explicitly permitted regardless of tier.")
 	cmd.Flags().BoolVar(&opts.yes, "yes", false, "Skip the admin confirmation prompt.")
+	cmd.Flags().StringVar(&opts.sessionID, "session-id", "", "Claude Code conversation UUID; overrides automatic session detection.")
 
 	return cmd
 }

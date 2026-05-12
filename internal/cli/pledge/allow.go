@@ -45,8 +45,12 @@ is valid for 5 minutes.`,
 				return fmt.Errorf("pledge is not supported on this platform: %w", err)
 			}
 
-			// Load approver's own pledge (nil = no pledge = can approve anything).
-			approverPledge, err := pledge.Load(approverSID)
+			// Load approver's own pledge using the resolved session key.
+			approverKey, err := pledge.ResolveSessionKey()
+			if err != nil {
+				return fmt.Errorf("pledge is not supported on this platform: %w", err)
+			}
+			approverPledge, err := pledge.Load(approverKey)
 			if errors.Is(err, pledge.ErrNoPledge) {
 				approverPledge = nil
 			} else if err != nil {

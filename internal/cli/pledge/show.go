@@ -28,11 +28,11 @@ func ShowBuilder() *cobra.Command {
 		Use:   "show",
 		Short: "Show the active pledge for the current session.",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			sid, err := pledge.Session()
+			key, err := pledge.ResolveSessionKey()
 			if err != nil {
 				return fmt.Errorf("pledge is not supported on this platform: %w", err)
 			}
-			pf, err := pledge.Load(sid)
+			pf, err := pledge.Load(key)
 			if errors.Is(err, pledge.ErrNoPledge) {
 				fmt.Fprintln(cmd.OutOrStdout(), "No pledge set for this session.")
 				return nil

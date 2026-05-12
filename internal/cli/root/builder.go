@@ -318,7 +318,7 @@ func isAtLeast24HoursPast(t time.Time) bool {
 
 // widenInteractive prompts the user inline to widen the session pledge.
 // Called only when stdin is a TTY (human at a shell).
-func widenInteractive(in io.Reader, errW io.Writer, sid int, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
+func widenInteractive(in io.Reader, errW io.Writer, key pledge.SessionKey, current *pledge.PledgeFile, required shared_api.PermissionTier, opID string) error {
 	targetProfile := pledge.ProfileReadWrite
 	if required == shared_api.PermissionAdmin {
 		targetProfile = pledge.ProfileAdmin
@@ -344,7 +344,7 @@ func widenInteractive(in io.Reader, errW io.Writer, sid int, current *pledge.Ple
 	if err != nil {
 		return err
 	}
-	return pledge.Widen(sid, pf)
+	return pledge.Widen(key, pf)
 }
 
 // checkCommandPledge enforces the active pledge for hand-written commands.
@@ -356,11 +356,11 @@ func checkCommandPledge(cmd *cobra.Command) error {
 	if !ok {
 		return nil
 	}
-	sid, err := pledge.Session()
+	key, err := pledge.ResolveSessionKey()
 	if err != nil {
 		return nil
 	}
-	pf, err := pledge.Load(sid)
+	pf, err := pledge.Load(key)
 	if err != nil {
 		return nil
 	}
@@ -372,14 +372,14 @@ func checkCommandPledge(cmd *cobra.Command) error {
 	}
 
 	pledge.LogAudit(pledge.AuditEntry{
-		SID:         sid,
-		OperationID: opID,
-		Outcome:     pledge.AuditBlocked,
+		SessionKeyStr: key.String(),
+		OperationID:   opID,
+		Outcome:       pledge.AuditBlocked,
 	})
 
 	if !terminal.IsTerminalInput(cmd.InOrStdin()) {
 		return checkErr
 	}
 
-	return widenInteractive(cmd.InOrStdin(), cmd.ErrOrStderr(), sid, pf, tier, opID)
+	return widenInteractive(cmd.InOrStdin(), cmd.ErrOrStderr(), key, pf, tier, opID)
 }

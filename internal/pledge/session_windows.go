@@ -24,5 +24,16 @@ func Session() (int, error) {
 	return 0, ErrWindowsUnsupported
 }
 
-// CheckSIDLineage is a no-op on Windows.
+// ResolveSessionKey is not implemented on Windows.
+func ResolveSessionKey() (SessionKey, error) {
+	return SessionKey{}, ErrWindowsUnsupported
+}
+
+// CheckSessionLineage is a no-op on Windows.
+func CheckSessionLineage() {}
+
+// CheckSIDLineage is a no-op on Windows (kept for backward-compat).
 func CheckSIDLineage() {}
+
+// ClaudeBreadcrumbDir is a no-op on Windows.
+func ClaudeBreadcrumbDir(_ string) string { return "" }

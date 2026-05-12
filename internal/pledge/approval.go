@@ -35,25 +35,25 @@ const (
 	grantsSubdir    = "grants"
 )
 
-// ApprovalRequest is written to <state>/<sid>/requests/<token>.json by the
-// blocked process. It is read by the approver running atlas pledge --allow.
+// ApprovalRequest is written to <state>/<sessionKey>/requests/<token>.json by
+// the blocked process. It is read by the approver running atlas pledge allow.
 type ApprovalRequest struct {
-	Token       string                   `json:"token"`
-	SID         int                      `json:"sid"`
-	OperationID string                   `json:"operationID"`
-	Tier        shared_api.PermissionTier `json:"tier"`
-	ParamsHash  string                   `json:"paramsHash,omitempty"`
-	CreatedAt   time.Time                `json:"createdAt"`
+	Token         string                   `json:"token"`
+	SessionKeyStr string                   `json:"sessionKey"`
+	OperationID   string                   `json:"operationID"`
+	Tier          shared_api.PermissionTier `json:"tier"`
+	ParamsHash    string                   `json:"paramsHash,omitempty"`
+	CreatedAt     time.Time                `json:"createdAt"`
 }
 
-// ApprovalGrant is written to <state>/<sid>/grants/<token>.json by the approver.
+// ApprovalGrant is written to <state>/<sessionKey>/grants/<token>.json by the approver.
 type ApprovalGrant struct {
-	Token       string    `json:"token"`
-	OperationID string    `json:"operationID"`
-	ApproverSID int       `json:"approverSID"`
-	GrantedAt   time.Time `json:"grantedAt"`
-	ExpiresAt   time.Time `json:"expiresAt"`
-	HMAC        string    `json:"hmac"`
+	Token         string    `json:"token"`
+	OperationID   string    `json:"operationID"`
+	ApproverSID   int       `json:"approverSID"`
+	GrantedAt     time.Time `json:"grantedAt"`
+	ExpiresAt     time.Time `json:"expiresAt"`
+	HMAC          string    `json:"hmac"`
 }
 
 var (
@@ -64,23 +64,25 @@ var (
 	ErrApproverUnderPledged = errors.New("approver's pledge does not permit this operation")
 )
 
-func sidDir(sid int) (string, error) {
+func sessionKeyDir(k SessionKey) (string, error) {
 	dir, err := StateDir()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(dir, fmt.Sprintf("%d", sid)), nil
+	return filepath.Join(dir, k.String()), nil
 }
 
 // WriteApprovalRequest creates a request file and returns the token.
-func WriteApprovalRequest(sid int, opID string, tier shared_api.PermissionTier) (string, error) {
+// The request is keyed on the SessionKey so both SID-based and Claude-based
+// sessions can use the approval flow.
+func WriteApprovalRequest(k SessionKey, opID string, tier shared_api.PermissionTier) (string, error) {
 	raw := make([]byte, 16)
 	if _, err := rand.Read(raw); err != nil {
 		return "", fmt.Errorf("generating token: %w", err)
 	}
 	token := hex.EncodeToString(raw)
 
-	base, err := sidDir(sid)
+	base, err := sessionKeyDir(k)
 	if err != nil {
 		return "", err
 	}
@@ -90,11 +92,11 @@ func WriteApprovalRequest(sid int, opID string, tier shared_api.PermissionTier) 
 	}
 
 	req := ApprovalRequest{
-		Token:       token,
-		SID:         sid,
-		OperationID: opID,
-		Tier:        tier,
-		CreatedAt:   time.Now().UTC(),
+		Token:         token,
+		SessionKeyStr: k.String(),
+		OperationID:   opID,
+		Tier:          tier,
+		CreatedAt:     time.Now().UTC(),
 	}
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -206,10 +208,10 @@ func Approve(token string, approverPledge *PledgeFile, approverSID int) error {
 	return nil
 }
 
-// WaitForGrant polls for a grant file for the given token and SID.
+// WaitForGrant polls for a grant file for the given session key and token.
 // Returns the grant if one appears within the context deadline.
-func WaitForGrant(ctx context.Context, sid int, token string) (*ApprovalGrant, error) {
-	base, err := sidDir(sid)
+func WaitForGrant(ctx context.Context, k SessionKey, token string) (*ApprovalGrant, error) {
+	base, err := sessionKeyDir(k)
 	if err != nil {
 		return nil, err
 	}
@@ -245,8 +247,8 @@ func WaitForGrant(ctx context.Context, sid int, token string) (*ApprovalGrant, e
 
 // ConsumeGrant verifies the HMAC of a grant and renames it to .consumed.
 // Returns ErrApprovalExpired, ErrApprovalForged, or ErrApprovalConsumed on failure.
-func ConsumeGrant(sid int, token string, expectedOpID string) error {
-	base, err := sidDir(sid)
+func ConsumeGrant(k SessionKey, token string, expectedOpID string) error {
+	base, err := sessionKeyDir(k)
 	if err != nil {
 		return err
 	}

@@ -14,8 +14,9 @@
 
 // Package pledge implements session-scoped permission restriction for atlas-cli.
 // A pledge is a voluntary, monotonically-narrowing allowlist of operations that
-// the CLI is permitted to perform. State is anchored to the POSIX session ID so
-// all atlas invocations within the same shell session share the same pledge.
+// the CLI is permitted to perform. State is anchored to a session key (POSIX SID
+// or Claude Code conversation UUID) so all atlas invocations within the same
+// session share the same pledge.
 package pledge
 
 import (
@@ -62,25 +63,25 @@ var (
 
 // PledgeFile is the on-disk representation of a session pledge.
 type PledgeFile struct {
-	Version    int                   `json:"version"`
-	Profile    Profile               `json:"profile"`
-	AllowedOps []string              `json:"allowedOps,omitempty"`
-	MaxTier    api.PermissionTier    `json:"maxTier"`
-	NarrowedAt time.Time             `json:"narrowedAt"`
+	Version    int                `json:"version"`
+	Profile    Profile            `json:"profile"`
+	AllowedOps []string           `json:"allowedOps,omitempty"`
+	MaxTier    api.PermissionTier `json:"maxTier"`
+	NarrowedAt time.Time          `json:"narrowedAt"`
 }
 
-// sidPath returns the path to the pledge file for the given SID.
-func sidPath(stateDir string, sid int) string {
-	return filepath.Join(stateDir, fmt.Sprintf("%d.json", sid))
+// keyPath returns the path to the pledge file for the given SessionKey.
+func keyPath(stateDir string, k SessionKey) string {
+	return filepath.Join(stateDir, k.String()+".json")
 }
 
-// Load reads the pledge file for the given SID. Returns ErrNoPledge if none exists.
-func Load(sid int) (*PledgeFile, error) {
+// Load reads the pledge file for the given SessionKey. Returns ErrNoPledge if none exists.
+func Load(k SessionKey) (*PledgeFile, error) {
 	dir, err := StateDir()
 	if err != nil {
 		return nil, err
 	}
-	return loadFrom(sidPath(dir, sid))
+	return loadFrom(keyPath(dir, k))
 }
 
 func loadFrom(path string) (*PledgeFile, error) {
@@ -98,8 +99,8 @@ func loadFrom(path string) (*PledgeFile, error) {
 	return &pf, nil
 }
 
-// Save persists the pledge for the given SID, mode 0600.
-func Save(sid int, pf *PledgeFile) error {
+// Save persists the pledge for the given SessionKey, mode 0600.
+func Save(k SessionKey, pf *PledgeFile) error {
 	dir, err := StateDir()
 	if err != nil {
 		return err
@@ -107,35 +108,40 @@ func Save(sid int, pf *PledgeFile) error {
 	if err := ensureDir(dir); err != nil {
 		return fmt.Errorf("creating state directory: %w", err)
 	}
-	gcStalePledgeFiles(dir, sid)
+	gcStalePledgeFiles(dir, k)
 
 	data, err := json.MarshalIndent(pf, "", "  ")
 	if err != nil {
 		return err
 	}
-	path := sidPath(dir, sid)
+	path := keyPath(dir, k)
+	LogAudit(AuditEntry{
+		SessionKeyStr: k.String(),
+		OperationID:   "<pledge-saved>",
+		Outcome:       AuditOutcome(fmt.Sprintf("profile:%s", pf.Profile)),
+	})
 	return atomicWrite(path, data, 0o600)
 }
 
-// Widen saves pf as the new pledge for sid without enforcing the narrowing
+// Widen saves pf as the new pledge for k without enforcing the narrowing
 // constraint. Only call this after obtaining explicit interactive consent.
-func Widen(sid int, next *PledgeFile) error {
+func Widen(k SessionKey, next *PledgeFile) error {
 	next.NarrowedAt = time.Now().UTC()
-	if err := Save(sid, next); err != nil {
+	if err := Save(k, next); err != nil {
 		return err
 	}
 	LogAudit(AuditEntry{
-		SID:         sid,
-		OperationID: "<pledge-widened>",
-		Outcome:     AuditOutcome(fmt.Sprintf("widened-to:%s", next.MaxTier)),
+		SessionKeyStr: k.String(),
+		OperationID:   "<pledge-widened>",
+		Outcome:       AuditOutcome(fmt.Sprintf("widened-to:%s", next.MaxTier)),
 	})
 	return nil
 }
 
-// Narrow applies next as the new pledge for sid, returning ErrWouldWiden if next
+// Narrow applies next as the new pledge for k, returning ErrWouldWiden if next
 // would be more permissive than the current pledge.
-func Narrow(sid int, next *PledgeFile) error {
-	current, err := Load(sid)
+func Narrow(k SessionKey, next *PledgeFile) error {
+	current, err := Load(k)
 	if err != nil && !errors.Is(err, ErrNoPledge) {
 		return err
 	}
@@ -150,7 +156,12 @@ func Narrow(sid int, next *PledgeFile) error {
 		next.Version = current.Version + 1
 	}
 	next.NarrowedAt = time.Now().UTC()
-	return Save(sid, next)
+	LogAudit(AuditEntry{
+		SessionKeyStr: k.String(),
+		OperationID:   "<pledge-narrowed>",
+		Outcome:       AuditOutcome(fmt.Sprintf("profile:%s", next.Profile)),
+	})
+	return Save(k, next)
 }
 
 // Outcome is the result of a pledge check.
@@ -213,9 +224,10 @@ func NewPledgeFile(profile Profile, allowedOps []string) (*PledgeFile, error) {
 	}, nil
 }
 
-// gcStalePledgeFiles lazily removes <sid>.json files whose SID no longer has
-// a running process. It is best-effort and ignores errors.
-func gcStalePledgeFiles(dir string, currentSID int) {
+// gcStalePledgeFiles lazily removes stale pledge files. It handles both
+// "sid-<n>.json" files (reaped when POSIX SID has no live process) and
+// "claude-<uuid>.json" files (reaped when no breadcrumb exists AND mtime > 7 days).
+func gcStalePledgeFiles(dir string, current SessionKey) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return
@@ -224,15 +236,98 @@ func gcStalePledgeFiles(dir string, currentSID int) {
 		if e.IsDir() {
 			continue
 		}
-		var sid int
-		if _, err := fmt.Sscanf(e.Name(), "%d.json", &sid); err != nil {
+		name := e.Name()
+		if name == current.String()+".json" {
 			continue
 		}
-		if sid == currentSID {
-			continue
-		}
-		if !sidHasLiveProcess(sid) {
-			_ = os.Remove(filepath.Join(dir, e.Name()))
+
+		switch {
+		case isSIDFile(name):
+			gcSIDFile(dir, name)
+		case isClaudeFile(name):
+			gcClaudeFile(dir, name, e)
 		}
 	}
+}
+
+func isSIDFile(name string) bool {
+	var n int
+	_, err := fmt.Sscanf(name, "sid-%d.json", &n)
+	return err == nil
+}
+
+func isClaudeFile(name string) bool {
+	if len(name) < len("claude-")+len(".json") {
+		return false
+	}
+	prefix := "claude-"
+	suffix := ".json"
+	if !startsWith(name, prefix) || !endsWith(name, suffix) {
+		return false
+	}
+	uuid := name[len(prefix) : len(name)-len(suffix)]
+	return IsValidUUID(uuid)
+}
+
+func startsWith(s, prefix string) bool { return len(s) >= len(prefix) && s[:len(prefix)] == prefix }
+func endsWith(s, suffix string) bool {
+	return len(s) >= len(suffix) && s[len(s)-len(suffix):] == suffix
+}
+
+func gcSIDFile(dir, name string) {
+	var sid int
+	if _, err := fmt.Sscanf(name, "sid-%d.json", &sid); err != nil {
+		return
+	}
+	if !sidHasLiveProcess(sid) {
+		_ = os.Remove(filepath.Join(dir, name))
+	}
+}
+
+func gcClaudeFile(dir, name string, e os.DirEntry) {
+	prefix := "claude-"
+	suffix := ".json"
+	uuid := name[len(prefix) : len(name)-len(suffix)]
+
+	// Check for any live breadcrumb pointing at this UUID.
+	if claudeUUIDHasLiveBreadcrumb(uuid) {
+		return
+	}
+	info, err := e.Info()
+	if err != nil {
+		return
+	}
+	if time.Since(info.ModTime()) > 7*24*time.Hour {
+		_ = os.Remove(filepath.Join(dir, name))
+	}
+}
+
+// claudeUUIDHasLiveBreadcrumb returns true if any breadcrumb file matching uuid
+// exists under any project-dir subdirectory.
+func claudeUUIDHasLiveBreadcrumb(uuid string) bool {
+	// We don't know the project dir at GC time, so scan the entire
+	// claude-session directory for any matching breadcrumb filename.
+	breadcrumbRoot := os.Getenv("XDG_RUNTIME_DIR")
+	if breadcrumbRoot == "" {
+		stateDir, err := StateDir()
+		if err != nil {
+			return false
+		}
+		breadcrumbRoot = filepath.Dir(stateDir)
+	}
+	sessionDir := filepath.Join(breadcrumbRoot, "atlascli", "claude-session")
+	entries, err := os.ReadDir(sessionDir)
+	if err != nil {
+		return false
+	}
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		candidate := filepath.Join(sessionDir, e.Name(), uuid)
+		if _, err := os.Stat(candidate); err == nil {
+			return true
+		}
+	}
+	return false
 }

@@ -32,12 +32,13 @@ const (
 
 // AuditEntry is a single JSON line in the audit log.
 type AuditEntry struct {
-	Timestamp    time.Time    `json:"timestamp"`
-	SID          int          `json:"sid"`
-	OperationID  string       `json:"operationID"`
-	ParamsHash   string       `json:"paramsHash,omitempty"`
-	Outcome      AuditOutcome `json:"outcome"`
-	ApproverSID  int          `json:"approverSID,omitempty"`
+	Timestamp     time.Time    `json:"timestamp"`
+	SID           int          `json:"sid,omitempty"`
+	SessionKeyStr string       `json:"sessionKey,omitempty"`
+	OperationID   string       `json:"operationID"`
+	ParamsHash    string       `json:"paramsHash,omitempty"`
+	Outcome       AuditOutcome `json:"outcome"`
+	ApproverSID   int          `json:"approverSID,omitempty"`
 }
 
 // LogAudit appends an entry to the audit log, creating it if necessary.

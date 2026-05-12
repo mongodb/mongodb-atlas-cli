@@ -23,6 +23,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
+const testUUID = "47a415e1-c599-401f-9bac-65e71a7232b2"
+
 // withTempStateDir sets ATLAS_PLEDGE_STATE_DIR to a fresh temp dir for the test.
 func withTempStateDir(t *testing.T) {
 	t.Helper()
@@ -32,14 +34,15 @@ func withTempStateDir(t *testing.T) {
 
 func TestLoadSave(t *testing.T) {
 	withTempStateDir(t)
+	k, _ := pledge.NewSessionKey("sid", "1234")
 	pf, err := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := pledge.Save(1234, pf); err != nil {
+	if err := pledge.Save(k, pf); err != nil {
 		t.Fatal(err)
 	}
-	loaded, err := pledge.Load(1234)
+	loaded, err := pledge.Load(k)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +56,8 @@ func TestLoadSave(t *testing.T) {
 
 func TestLoadNoPledge(t *testing.T) {
 	withTempStateDir(t)
-	_, err := pledge.Load(9999)
+	k, _ := pledge.NewSessionKey("sid", "9999")
+	_, err := pledge.Load(k)
 	if !errors.Is(err, pledge.ErrNoPledge) {
 		t.Errorf("expected ErrNoPledge, got %v", err)
 	}
@@ -61,25 +65,26 @@ func TestLoadNoPledge(t *testing.T) {
 
 func TestNarrowAllowed(t *testing.T) {
 	withTempStateDir(t)
-	// Start with read-write, narrow to readonly.
+	k, _ := pledge.NewSessionKey("sid", "1234")
 	rw, _ := pledge.NewPledgeFile(pledge.ProfileReadWrite, nil)
-	if err := pledge.Narrow(1234, rw); err != nil {
+	if err := pledge.Narrow(k, rw); err != nil {
 		t.Fatal(err)
 	}
 	ro, _ := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
-	if err := pledge.Narrow(1234, ro); err != nil {
+	if err := pledge.Narrow(k, ro); err != nil {
 		t.Errorf("narrowing from read-write to readonly should succeed, got: %v", err)
 	}
 }
 
 func TestNarrowWideningRejected(t *testing.T) {
 	withTempStateDir(t)
+	k, _ := pledge.NewSessionKey("sid", "1234")
 	ro, _ := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
-	if err := pledge.Narrow(1234, ro); err != nil {
+	if err := pledge.Narrow(k, ro); err != nil {
 		t.Fatal(err)
 	}
 	rw, _ := pledge.NewPledgeFile(pledge.ProfileReadWrite, nil)
-	err := pledge.Narrow(1234, rw)
+	err := pledge.Narrow(k, rw)
 	if !errors.Is(err, pledge.ErrWouldWiden) {
 		t.Errorf("widening should return ErrWouldWiden, got: %v", err)
 	}
@@ -124,9 +129,9 @@ func TestAuditLog(t *testing.T) {
 	withTempStateDir(t)
 	dir := os.Getenv("ATLAS_PLEDGE_STATE_DIR")
 	pledge.LogAudit(pledge.AuditEntry{
-		SID:         1234,
-		OperationID: "deleteCluster",
-		Outcome:     pledge.AuditBlocked,
+		SessionKeyStr: "sid-1234",
+		OperationID:   "deleteCluster",
+		Outcome:       pledge.AuditBlocked,
 	})
 	entries, err := os.ReadDir(dir)
 	if err != nil {
@@ -160,5 +165,74 @@ func TestHMACIdempotent(t *testing.T) {
 	ok, err := pledge.VerifyHMAC(data, sig1)
 	if err != nil || !ok {
 		t.Errorf("VerifyHMAC failed: ok=%v err=%v", ok, err)
+	}
+}
+
+func TestNewSessionKeyInvalidKind(t *testing.T) {
+	_, err := pledge.NewSessionKey("unknown", "value")
+	if err == nil {
+		t.Error("expected error for unknown kind")
+	}
+}
+
+func TestNewSessionKeyValidKinds(t *testing.T) {
+	for _, kind := range []string{"sid", "claude"} {
+		k, err := pledge.NewSessionKey(kind, "value")
+		if err != nil {
+			t.Errorf("kind %q should be valid, got: %v", kind, err)
+		}
+		if k.Kind != kind {
+			t.Errorf("kind mismatch: want %q got %q", kind, k.Kind)
+		}
+	}
+}
+
+func TestSessionKeyString(t *testing.T) {
+	k, _ := pledge.NewSessionKey("claude", testUUID)
+	want := "claude-" + testUUID
+	if got := k.String(); got != want {
+		t.Errorf("String() = %q, want %q", got, want)
+	}
+}
+
+func TestIsValidUUID(t *testing.T) {
+	valid := []string{
+		"47a415e1-c599-401f-9bac-65e71a7232b2",
+		"550e8400-e29b-41d4-a716-446655440000",
+	}
+	invalid := []string{
+		"not-a-uuid",
+		"47a415e1-c599-401f-9bac",
+		"",
+	}
+	for _, u := range valid {
+		if !pledge.IsValidUUID(u) {
+			t.Errorf("IsValidUUID(%q) = false, want true", u)
+		}
+	}
+	for _, u := range invalid {
+		if pledge.IsValidUUID(u) {
+			t.Errorf("IsValidUUID(%q) = true, want false", u)
+		}
+	}
+}
+
+func TestClaudeKeyedSaveLoad(t *testing.T) {
+	withTempStateDir(t)
+	k, _ := pledge.NewSessionKey("claude", testUUID)
+	pf, _ := pledge.NewPledgeFile(pledge.ProfileReadonly, nil)
+	if err := pledge.Save(k, pf); err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := pledge.Load(k)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if loaded.Profile != pledge.ProfileReadonly {
+		t.Errorf("want profile %q, got %q", pledge.ProfileReadonly, loaded.Profile)
+	}
+	dir := os.Getenv("ATLAS_PLEDGE_STATE_DIR")
+	if _, err := os.Stat(dir + "/claude-" + testUUID + ".json"); err != nil {
+		t.Errorf("expected claude-keyed pledge file: %v", err)
 	}
 }

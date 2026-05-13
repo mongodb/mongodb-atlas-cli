@@ -44,10 +44,10 @@ type ConnectConfig interface {
 }
 
 type ConnectOpts struct {
-	config         ConnectConfig
-	OutWriter      io.Writer
-	NoBrowser      bool
-	Discover bool
+	config    ConnectConfig
+	OutWriter io.Writer
+	NoBrowser bool
+	Discover  bool
 }
 
 // discoverOrLoadMetadata returns cached AS metadata if still valid and from

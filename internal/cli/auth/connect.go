@@ -109,7 +109,6 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		return errors.New("token_endpoint not found in server metadata")
 	}
 
-	// Generate PKCE and state
 	pkce, err := auth.GeneratePKCE()
 	if err != nil {
 		return err
@@ -140,7 +139,7 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 			return fmt.Errorf("authorization failed: %w", err)
 		}
 	} else {
-		// Browser flow: start a local callback server and open the browser
+		// Browser flow: open the user's system browser, and start a local callback server to catch the redirect return from the AS
 		callbackServer, err := auth.StartCallbackServer(state)
 		if err != nil {
 			return fmt.Errorf("failed to start callback server: %w", err)
@@ -166,7 +165,6 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		}
 	}
 
-	// Exchange the authorization code for tokens
 	token, err := authCfg.ExchangeCode(ctx, tokenEndpoint, code, redirectURI, pkce.CodeVerifier)
 	if err != nil {
 		return err

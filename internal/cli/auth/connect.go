@@ -33,6 +33,8 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=auth -source=connect.go
+
 // ConnectConfig defines the profile operations needed by the connect command.
 type ConnectConfig interface {
 	SetSaver

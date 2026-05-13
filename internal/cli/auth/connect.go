@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -134,7 +135,7 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 		_, _ = fmt.Fprintln(opts.OutWriter, "This is expected. Copy the full URL from your browser's address bar and paste it here.")
 		_, _ = fmt.Fprint(opts.OutWriter, "\nPaste the URL: ")
 
-		code, err = auth.ParseCodeFromRedirectURL(state)
+		code, err = auth.ParseCodeFromRedirectURL(os.Stdin, state)
 		if err != nil {
 			return fmt.Errorf("authorization failed: %w", err)
 		}

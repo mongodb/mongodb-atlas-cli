@@ -1,16 +1,17 @@
 ---
   name: Create JIRA ticket for new issues
-  
+
   on:
     issues:
-      types: [opened]
-      
-  permissions: 
+      types: [opened, closed]
+
+  permissions:
     issues: write
     contents: read
   jobs:
     jira_task:
       name: Create Jira issue
+      if: github.event.action == 'opened'
       runs-on: ubuntu-latest
       steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
@@ -51,3 +52,26 @@
           issue-number: ${{ github.event.issue.number }}
           body: |
             Thanks for opening this issue. The ticket [${{ steps.create.outputs.issue-key }}](https://jira.mongodb.org/browse/${{ steps.create.outputs.issue-key }}) was created for internal tracking.
+    close_jira:
+      name: Close Jira issue
+      if: github.event.action == 'closed'
+      runs-on: ubuntu-latest
+      steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Set Jira key from issue comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          JIRA_KEY=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --comments | grep 'was created for internal tracking' | grep -oE 'CLOUDP-[0-9]+' | head -1)
+          echo "JIRA_KEY=$JIRA_KEY" >> "$GITHUB_ENV"
+      - name: Close JIRA ticket
+        if: env.JIRA_KEY != ''
+        uses: mongodb/apix-action/transition-jira@v14
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          issue-key: ${{ env.JIRA_KEY }}
+          transition-id: 1371 # Close Issue

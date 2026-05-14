@@ -71,6 +71,7 @@ type logoutOpts struct {
 	flow                      Revoker
 	keepConfig                bool
 	revokeServiceAccountToken func() error
+	revokeAuthServerToken     func(context.Context) error
 }
 
 func (opts *logoutOpts) initFlow(ctx context.Context) error {
@@ -80,6 +81,9 @@ func (opts *logoutOpts) initFlow(ctx context.Context) error {
 	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
 	opts.revokeServiceAccountToken = func() error {
 		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
+	}
+	opts.revokeAuthServerToken = func(ctx context.Context) error {
+		return revokeAuthServerToken(ctx, opts.config)
 	}
 	return err
 }
@@ -99,8 +103,8 @@ func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret strin
 	return cfg.RevokeToken(ctx, token)
 }
 
-func (opts *logoutOpts) revokeAuthServerToken(ctx context.Context) error {
-	metadata := opts.config.AuthServerMetadata()
+func revokeAuthServerToken(ctx context.Context, cfg ConfigDeleter) error {
+	metadata := cfg.AuthServerMetadata()
 	if metadata == nil {
 		return errors.New("no auth server metadata available")
 	}
@@ -116,12 +120,12 @@ func (opts *logoutOpts) revokeAuthServerToken(ctx context.Context) error {
 	client := http.DefaultClient
 	client.Transport = transport.Default()
 
-	authCfg, err := transport.FlowForAuthIssuer(opts.config, client, version.Version)
+	authCfg, err := transport.FlowForAuthIssuer(cfg, client, version.Version)
 	if err != nil {
 		return err
 	}
 
-	return authCfg.RevokeAuthServerToken(ctx, revocationEndpoint, opts.config.RefreshToken(), "refresh_token")
+	return authCfg.RevokeAuthServerToken(ctx, revocationEndpoint, cfg.RefreshToken(), "refresh_token")
 }
 
 func (opts *logoutOpts) Run(ctx context.Context) error {

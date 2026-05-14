@@ -7800,6 +7800,9 @@ var metadata = metadatatypes.Metadata{
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
+			`orgMembershipStatuses`: {
+				Usage: `Organization membership status to filter users by. You can supply this parameter multiple times. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Not supported in deprecated versions.`,
+			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
@@ -8478,6 +8481,9 @@ var metadata = metadatatypes.Metadata{
 			},
 			`orgId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`orgMembershipStatuses`: {
+				Usage: `Organization membership status to filter users by. You can supply this parameter multiple times. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Not supported in deprecated versions.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -11758,7 +11764,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of items that the response returns per page.`,
 			},
 			`orgMembershipStatus`: {
-				Usage: `Flag that indicates whether to filter the returned list by users organization membership status. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+				Usage: `Deprecated: Use ` + "`" + `orgMembershipStatuses` + "`" + ` instead. Organization membership status to filter users by. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Not supported in deprecated versions.`,
+			},
+			`orgMembershipStatuses`: {
+				Usage: `Organization membership status to filter users by. You can supply this parameter multiple times. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. Replaces the deprecated ` + "`" + `orgMembershipStatus` + "`" + ` parameter. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Cannot be combined with ` + "`" + `orgMembershipStatus` + "`" + `. Not supported in deprecated versions.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -12236,7 +12245,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`orgMembershipStatus`: {
-				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+				Usage: `Deprecated: Use ` + "`" + `orgMembershipStatuses` + "`" + ` instead. Organization membership status to filter users by. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Not supported in deprecated versions.`,
+			},
+			`orgMembershipStatuses`: {
+				Usage: `Organization membership status to filter users by. You can supply this parameter multiple times. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. Replaces the deprecated ` + "`" + `orgMembershipStatus` + "`" + ` parameter. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Cannot be combined with ` + "`" + `orgMembershipStatus` + "`" + `. Not supported in deprecated versions.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
@@ -12314,7 +12326,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`orgMembershipStatus`: {
-				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+				Usage: `Deprecated: Use ` + "`" + `orgMembershipStatuses` + "`" + ` instead. Organization membership status to filter users by. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Not supported in deprecated versions.`,
+			},
+			`orgMembershipStatuses`: {
+				Usage: `Organization membership status to filter users by. You can supply this parameter multiple times. Allowed values: ` + "`" + `ACTIVE` + "`" + `, ` + "`" + `PENDING` + "`" + `, ` + "`" + `INVITATION_EXPIRED` + "`" + `, ` + "`" + `INVITATION_REJECTED` + "`" + `. Replaces the deprecated ` + "`" + `orgMembershipStatus` + "`" + ` parameter. If you exclude this parameter, this resource returns ACTIVE and PENDING users. Cannot be combined with ` + "`" + `orgMembershipStatus` + "`" + `. Not supported in deprecated versions.`,
 			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,

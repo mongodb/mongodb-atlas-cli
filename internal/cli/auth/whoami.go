@@ -26,9 +26,11 @@ import (
 )
 
 type whoOpts struct {
-	OutWriter   io.Writer
-	authSubject string
-	authType    string
+	OutWriter    io.Writer
+	authSubject  string
+	authType     string
+	tokenExpiry  string
+	refreshToken string
 }
 
 func (opts *whoOpts) Run() error {
@@ -40,20 +42,20 @@ func (opts *whoOpts) Run() error {
 func (opts *whoOpts) RunUserDelegation() error {
 	msg := "Connected to MongoDB Atlas"
 
-	if expiry := config.TokenExpiry(); expiry != "" {
-		if t, err := time.Parse(time.RFC3339, expiry); err == nil {
+	if opts.tokenExpiry != "" {
+		if t, err := time.Parse(time.RFC3339, opts.tokenExpiry); err == nil {
 			remaining := time.Until(t).Truncate(time.Second)
 			if remaining > 0 {
 				msg += fmt.Sprintf(" (expires in %s", remaining)
 			} else {
 				msg += " (token expired"
 			}
-			if config.RefreshToken() != "" {
+			if opts.refreshToken != "" {
 				msg += ", auto-refresh enabled"
 			}
 			msg += ")."
 		}
-	} else if config.RefreshToken() != "" {
+	} else if opts.refreshToken != "" {
 		msg += " (auto-refresh enabled)."
 	} else {
 		msg += "."
@@ -100,6 +102,8 @@ func WhoAmIBuilder() *cobra.Command {
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			if config.AuthType() == config.UserDelegation {
+				opts.tokenExpiry = config.TokenExpiry()
+				opts.refreshToken = config.RefreshToken()
 				return opts.RunUserDelegation()
 			}
 

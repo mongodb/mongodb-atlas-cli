@@ -29,9 +29,9 @@ const testInvalidJSON = `(╯°□°)╯︵ ┻━┻`
 const fileName = "spec.json"
 
 var testJSONParsed = atlasv2.ApiSearchDeploymentRequest{
-	Specs: []atlasv2.ApiSearchDeploymentSpec{
-		{InstanceSize: "S20_HIGHCPU_NVME", NodeCount: 2},
-		{InstanceSize: "S110_LOWCPU_NVME", NodeCount: 42},
+	Specs: []atlasv2.ApiSearchDeploymentRequestSpec{
+		{InstanceSize: "S20_HIGHCPU_NVME", NodeCount: pointer.Get(2)},
+		{InstanceSize: "S110_LOWCPU_NVME", NodeCount: pointer.Get(42)},
 	},
 }
 

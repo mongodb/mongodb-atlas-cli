@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 217
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 18 May 2026 17:05:01 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 229
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::addEndpointService
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=8c312cdc9daf5b7aac905c50ba003d50d197b109; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6a0b46bda4da2c59ed672bad","portMappingEnabled":false,"regionName":"NORTH_AMERICA_NORTHEAST_1","serviceAttachmentNames":[],"status":"INITIATING"}

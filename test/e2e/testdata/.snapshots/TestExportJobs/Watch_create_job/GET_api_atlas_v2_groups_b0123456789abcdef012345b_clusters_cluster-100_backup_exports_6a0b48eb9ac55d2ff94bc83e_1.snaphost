@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 366
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 18 May 2026 17:14:22 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1188
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 63
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupExportJobsResource::getExportJob
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=b774a4944b4a31692245dfd782176644c55667a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"createdAt":"2026-05-18T17:14:19Z","customData":[],"exportBucketId":"6a0b484ff90e9faa352bf4db","exportStatus":{"exportedCollections":0,"totalCollections":0},"id":"6a0b48eb9ac55d2ff94bc83e","prefix":"exported_snapshots/a0123456789abcdef012345a/b0123456789abcdef012345b/cluster-100/2026-05-18T1713/1779124458","snapshotId":"6a0b4853f90e9faa352bf50c","state":"Queued"}

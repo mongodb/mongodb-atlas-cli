@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 129
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 18 May 2026 17:04:42 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1193
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 45
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupIntegrationsResource::getIntegration
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=8c312cdc9daf5b7aac905c50ba003d50d197b109; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"id":"6a0b46a4a4da2c59ed67206c","secret":"**************************2208","url":"https://example.com/****2208","type":"WEBHOOK"}

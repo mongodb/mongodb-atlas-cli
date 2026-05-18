@@ -208,15 +208,25 @@ func SplitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, enableBackup bool) (string, error) {
+func deployClusterForProject(projectID, clusterName, tier, mDBVersion, provider string, enableBackup bool) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return "", err
 	}
-	region, err := NewAvailableRegion(projectID, tier, e2eClusterProvider)
-	if err != nil {
-		return "", fmt.Errorf("failed to get available region for project %s, tier %s, provider %s: %w", projectID, tier, e2eClusterProvider, err)
+
+	var diskSize string
+	var region string
+	if provider == "AZURE" {
+		region = "US_EAST_2"
+		diskSize = "--diskSizeGB=32"
+	} else {
+		region, err = NewAvailableRegion(projectID, tier, provider)
+		if err != nil {
+			return "", fmt.Errorf("failed to get available region for project %s, tier %s, provider %s: %w", projectID, tier, provider, err)
+		}
+		diskSize = "--diskSizeGB=30"
 	}
+
 	args := []string{
 		clustersEntity,
 		"create",
@@ -224,8 +234,8 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 		"--mdbVersion", mDBVersion,
 		"--region", region,
 		"--tier", tier,
-		"--provider", e2eClusterProvider,
-		"--diskSizeGB=30",
+		"--provider", provider,
+		diskSize,
 		"-P",
 		ProfileName(),
 	}

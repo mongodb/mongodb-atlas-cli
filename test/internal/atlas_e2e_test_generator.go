@@ -295,7 +295,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	})
 }
 
-func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
+func (g *AtlasE2ETestGenerator) generateClusterWithPrefixAndProvider(prefix, provider string) {
 	g.t.Helper()
 
 	if g.ProjectID == "" {
@@ -316,27 +316,23 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 
 	g.ClusterName = g.Memory(prefix+"GenerateClusterName", Must(RandClusterNameWithPrefix(prefix))).(string)
 
-	g.clusterRegion, err = deployClusterForProject(g.ProjectID, g.ClusterName, g.Tier, g.MDBVer, g.enableBackup)
+	g.clusterRegion, err = deployClusterForProject(g.ProjectID, g.ClusterName, g.Tier, g.MDBVer, provider, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.ProjectID, g.ClusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)
 	}
-	g.t.Logf("clusterName=%s", g.ClusterName)
 
 	if SkipCleanup() {
 		return
 	}
 
 	g.t.Cleanup(func() {
-		g.Logf("Cluster cleanup for project %q\n", g.ProjectID)
 		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
 		if err == nil {
-			g.t.Logf("Cluster %q was deleted", g.ClusterName)
 			return
 		}
 
 		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
-			g.t.Logf("Cluster %q was already deleted", g.ClusterName)
 			return
 		}
 
@@ -344,9 +340,18 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	})
 }
 
+func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
+	g.generateClusterWithPrefixAndProvider(prefix, e2eClusterProvider)
+}
+
 // GenerateCluster generates a new cluster and also registers its deletion on test cleanup.
 func (g *AtlasE2ETestGenerator) GenerateCluster() {
 	g.generateClusterWithPrefix("cluster")
+}
+
+// GenerateAzureCluster generates a new Azure cluster and also registers its deletion on test cleanup.
+func (g *AtlasE2ETestGenerator) GenerateAzureCluster() {
+	g.generateClusterWithPrefixAndProvider("azureCluster", "AZURE")
 }
 
 // GenerateProjectAndCluster calls both generateProject and generateCluster.

@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 204
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 19 May 2026 15:48:42 GMT
+Deprecation: Thu, 30 May 2024 00:00:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 173
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFTSIndexConfigResource::getFTSIndex
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=a0c713afb04da75d3a268dbd3d474270f7d560d9; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"collectionName":"movies","database":"sample_mflix","indexID":"6a0c865598d657f46ef5a9ee","mappings":{"dynamic":true,"fields":null},"name":"index-172","status":"IN_PROGRESS","synonyms":[],"type":"search"}

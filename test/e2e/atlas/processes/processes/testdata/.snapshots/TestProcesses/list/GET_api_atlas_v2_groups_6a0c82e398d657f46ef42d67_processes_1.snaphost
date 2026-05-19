@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1871
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 19 May 2026 15:45:55 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 83
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=a0c713afb04da75d3a268dbd3d474270f7d560d9; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82e398d657f46ef42d67/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-05-19T15:44:29Z","groupId":"6a0c82e398d657f46ef42d67","hostname":"atlas-5m5fyf-shard-00-00.7thwcj.mongodb-dev.net","id":"atlas-5m5fyf-shard-00-00.7thwcj.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:53Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82e398d657f46ef42d67/processes/atlas-5m5fyf-shard-00-00.7thwcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5m5fyf-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-720-shard-00-00.7thwcj.mongodb-dev.net","version":"8.0.24-rc0"},{"created":"2026-05-19T15:44:29Z","groupId":"6a0c82e398d657f46ef42d67","hostname":"atlas-5m5fyf-shard-00-01.7thwcj.mongodb-dev.net","id":"atlas-5m5fyf-shard-00-01.7thwcj.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:53Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82e398d657f46ef42d67/processes/atlas-5m5fyf-shard-00-01.7thwcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5m5fyf-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-720-shard-00-01.7thwcj.mongodb-dev.net","version":"8.0.24-rc0"},{"created":"2026-05-19T15:44:29Z","groupId":"6a0c82e398d657f46ef42d67","hostname":"atlas-5m5fyf-shard-00-02.7thwcj.mongodb-dev.net","id":"atlas-5m5fyf-shard-00-02.7thwcj.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:53Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82e398d657f46ef42d67/processes/atlas-5m5fyf-shard-00-02.7thwcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-5m5fyf-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-720-shard-00-02.7thwcj.mongodb-dev.net","version":"8.0.24-rc0"}],"totalCount":3}

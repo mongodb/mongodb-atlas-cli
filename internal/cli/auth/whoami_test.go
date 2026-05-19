@@ -35,7 +35,7 @@ func Test_whoOpts_Run(t *testing.T) {
 	assert.Equal(t, "Logged in as test@test.com account\n", buf.String())
 }
 
-func Test_whoOpts_RunUserDelegation(t *testing.T) {
+func Test_whoOpts_Run_UserDelegation(t *testing.T) {
 	futureExpiry := time.Now().Add(time.Hour).Format(time.RFC3339)
 	pastExpiry := time.Now().Add(-time.Hour).Format(time.RFC3339)
 
@@ -76,10 +76,11 @@ func Test_whoOpts_RunUserDelegation(t *testing.T) {
 			buf := new(bytes.Buffer)
 			opts := &whoOpts{
 				OutWriter:    buf,
+				authType:     "delegation",
 				tokenExpiry:  tt.tokenExpiry,
 				refreshToken: tt.refreshToken,
 			}
-			require.NoError(t, opts.RunUserDelegation())
+			require.NoError(t, opts.Run())
 			for _, want := range tt.wantContains {
 				assert.True(t, strings.Contains(buf.String(), want),
 					"output %q does not contain %q", buf.String(), want)

@@ -34,12 +34,14 @@ type whoOpts struct {
 }
 
 func (opts *whoOpts) Run() error {
+	if opts.authType == "delegation" {
+		return opts.runUserDelegation()
+	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s %s\n", opts.authSubject, opts.authType)
-
 	return nil
 }
 
-func (opts *whoOpts) RunUserDelegation() error {
+func (opts *whoOpts) runUserDelegation() error {
 	msg := "Connected to MongoDB Atlas"
 
 	if opts.tokenExpiry != "" {
@@ -101,17 +103,12 @@ func WhoAmIBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
-			if config.AuthType() == config.UserDelegation {
-				opts.tokenExpiry = config.TokenExpiry()
-				opts.refreshToken = config.RefreshToken()
-				return opts.RunUserDelegation()
-			}
-
 			var err error
 			if opts.authType, opts.authSubject, err = authTypeAndSubject(); err != nil {
 				return err
 			}
-
+			opts.tokenExpiry = config.TokenExpiry()
+			opts.refreshToken = config.RefreshToken()
 			return opts.Run()
 		},
 		Args: require.NoArgs,

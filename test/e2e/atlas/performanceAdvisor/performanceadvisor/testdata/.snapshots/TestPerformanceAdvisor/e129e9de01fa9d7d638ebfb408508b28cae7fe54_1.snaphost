@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1898
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 19 May 2026 15:45:52 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 73
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=a0c713afb04da75d3a268dbd3d474270f7d560d9; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82fd7379b6c6f1df90dc/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-05-19T15:44:25Z","groupId":"6a0c82fd7379b6c6f1df90dc","hostname":"atlas-j0rrxd-shard-00-00.slzsda.mongodb-dev.net","id":"atlas-j0rrxd-shard-00-00.slzsda.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82fd7379b6c6f1df90dc/processes/atlas-j0rrxd-shard-00-00.slzsda.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j0rrxd-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-418-shard-00-00.slzsda.mongodb-dev.net","version":"8.0.24-rc0"},{"created":"2026-05-19T15:44:25Z","groupId":"6a0c82fd7379b6c6f1df90dc","hostname":"atlas-j0rrxd-shard-00-01.slzsda.mongodb-dev.net","id":"atlas-j0rrxd-shard-00-01.slzsda.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82fd7379b6c6f1df90dc/processes/atlas-j0rrxd-shard-00-01.slzsda.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j0rrxd-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-418-shard-00-01.slzsda.mongodb-dev.net","version":"8.0.24-rc0"},{"created":"2026-05-19T15:44:25Z","groupId":"6a0c82fd7379b6c6f1df90dc","hostname":"atlas-j0rrxd-shard-00-02.slzsda.mongodb-dev.net","id":"atlas-j0rrxd-shard-00-02.slzsda.mongodb-dev.net:27017","lastPing":"2026-05-19T15:45:51Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0c82fd7379b6c6f1df90dc/processes/atlas-j0rrxd-shard-00-02.slzsda.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j0rrxd-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-418-shard-00-02.slzsda.mongodb-dev.net","version":"8.0.24-rc0"}],"totalCount":3}

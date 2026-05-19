@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 445
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 18 May 2026 17:12:33 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 294
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 183
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getDiskMeasurementLinks
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=b774a4944b4a31692245dfd782176644c55667a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0b45ada4da2c59ed66c442/processes/atlas-14id1i-shard-00-00.lmxr1d.mongodb-dev.net:27017/disks?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0b45ada4da2c59ed66c442/processes/atlas-14id1i-shard-00-00.lmxr1d.mongodb-dev.net:27017/disks/data","rel":"self"}],"partitionName":"data"}],"totalCount":1}

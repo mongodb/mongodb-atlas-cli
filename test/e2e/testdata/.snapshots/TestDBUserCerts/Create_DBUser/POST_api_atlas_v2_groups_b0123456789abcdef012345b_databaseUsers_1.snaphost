@@ -1,18 +1,18 @@
 HTTP/2.0 201 Created
-Content-Length: 387
+Content-Length: 385
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 30 Mar 2026 14:17:40 GMT
+Date: Mon, 18 May 2026 17:03:59 GMT
 Ratelimit-Limit: 10000
 Ratelimit-Remaining: 9985
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 206
+X-Envoy-Upstream-Service-Time: 176
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasV2DatabaseUsersResource::addUser
-X-Java-Version: 17.0.17+10-LTS
-X-Mongodb-Service-Version: gitHash=ac2cadf464d07271acfe780d08000d36c691114a; versionString=master
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=8c312cdc9daf5b7aac905c50ba003d50d197b109; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"awsIAMType":"NONE","databaseName":"$external","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/$external/user318","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"user318","x509Type":"MANAGED"}
+{"awsIAMType":"NONE","databaseName":"$external","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/$external/user47","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"user47","x509Type":"MANAGED"}

@@ -1,0 +1,20 @@
+HTTP/2.0 201 Created
+Content-Length: 1866
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 18 May 2026 17:00:35 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 736
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::createCluster
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=8c312cdc9daf5b7aac905c50ba003d50d197b109; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"customOpensslCipherConfigTls13":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2026-05-18T17:00:35Z","diskSizeGB":32.0,"diskWarmingMode":"FULLY_WARMED","effectiveIntelligentWorkloadManagementPolicies":{},"encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"6a0b45ac08a64ea03b40b52a","id":"6a0b45b308a64ea03b40ba1c","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a0b45ac08a64ea03b40b52a/clusters/azureCluster-468","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a0b45ac08a64ea03b40b52a/clusters/azureCluster-468/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a0b45ac08a64ea03b40b52a/clusters/azureCluster-468/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.24-rc0","name":"azureCluster-468","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"6a0b45b308a64ea03b40ba08","numShards":1,"regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3500,"diskThroughput":125,"nodeCount":0},"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"electableSpecs":{"instanceSize":"M10","diskIOPS":3500,"diskThroughput":125,"nodeCount":3},"priority":7,"providerName":"AZURE","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3500,"diskThroughput":125,"nodeCount":0},"regionName":"US_EAST_2"}],"zoneId":"6a0b45b308a64ea03b40ba14","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

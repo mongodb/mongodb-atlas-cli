@@ -40,6 +40,7 @@ func TestStreams(t *testing.T) {
 	}
 
 	g.GenerateProject("atlasStreams")
+	g.GenerateAzureCluster()
 	req := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()

@@ -185,11 +185,11 @@ func AtlasCLIBin() (string, error) {
 }
 
 func snapshotBasePath() (string, error) {
-	repo, err := repoPath()
+	wd, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(repo, "test", "e2e", "testdata", ".snapshots"), nil
+	return filepath.Join(wd, "testdata", ".snapshots"), nil
 }
 
 func ProfileData() (map[string]string, error) {

@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 578
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 19 May 2026 12:41:23 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9997
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 265
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::updateProcessArgs
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=740df2ab9ffc044b3c4ad4575ac80ce443353e6d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"changeStreamOptionsPreAndPostImagesExpireAfterSeconds":null,"chunkMigrationConcurrency":null,"customOpensslCipherConfigTls12":[],"customOpensslCipherConfigTls13":[],"defaultMaxTimeMS":null,"defaultReadConcern":null,"defaultWriteConcern":"majority","failIndexKeyTooLong":null,"javascriptEnabled":true,"minimumEnabledTlsProtocol":"TLS1_2","noTableScan":false,"oplogMinRetentionHours":null,"oplogSizeMB":null,"queryStatsLogVerbosity":null,"sampleRefreshIntervalBIConnector":null,"sampleSizeBIConnector":null,"tlsCipherConfigMode":"DEFAULT","transactionLifetimeLimitSeconds":null}

@@ -14876,6 +14876,7 @@ components:
                             - HOST_MONGOT_APPROACHING_STOP_REPLICATION
                             - HOST_MONGOT_PAUSE_INITIAL_SYNC
                             - HOST_SEARCH_NODE_INDEX_FAILED
+                            - HOST_SEARCH_PROCESS_THROTTLING
                             - HOST_EXTERNAL_LOG_SINK_EXPORT_DOWN
                             - HOST_NOT_ENOUGH_DISK_SPACE
                             - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
@@ -15151,6 +15152,7 @@ components:
                             - HOST_MONGOT_APPROACHING_STOP_REPLICATION
                             - HOST_MONGOT_PAUSE_INITIAL_SYNC
                             - HOST_SEARCH_NODE_INDEX_FAILED
+                            - HOST_SEARCH_PROCESS_THROTTLING
                             - HOST_EXTERNAL_LOG_SINK_EXPORT_DOWN
                             - HOST_NOT_ENOUGH_DISK_SPACE
                             - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
@@ -15965,83 +15967,6 @@ components:
                     writeOnly: true
             type: object
             writeOnly: true
-        DeprecatedStreamProcessorMetricThreshold:
-            deprecated: true
-            description: 'Threshold value that triggers an alert. Deprecated: use `metricThreshold` instead.'
-            discriminator:
-                mapping:
-                    STREAM_PROCESSOR_CHANGE_STREAM_LAG: '#/components/schemas/TimeMetricThresholdView'
-                    STREAM_PROCESSOR_DLQ_MESSAGE_COUNT: '#/components/schemas/DLQRawMetricThresholdView'
-                    STREAM_PROCESSOR_KAFKA_LAG: '#/components/schemas/KafkaRawMetricThresholdView'
-                    STREAM_PROCESSOR_OUTPUT_MESSAGE_COUNT: '#/components/schemas/RawMetricThresholdView'
-                propertyName: metricName
-            oneOf:
-                - $ref: '#/components/schemas/KafkaRawMetricThresholdView'
-                - $ref: '#/components/schemas/TimeMetricThresholdView'
-                - $ref: '#/components/schemas/DLQRawMetricThresholdView'
-                - $ref: '#/components/schemas/RawMetricThresholdView'
-            properties:
-                metricName:
-                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured `metricThreshold.threshold`.
-                    type: string
-                mode:
-                    description: MongoDB Cloud computes the current metric value as an average.
-                    enum:
-                        - AVERAGE
-                    type: string
-                operator:
-                    description: Comparison operator to apply when checking the current metric value.
-                    enum:
-                        - LESS_THAN
-                        - GREATER_THAN
-                    type: string
-                threshold:
-                    description: Value of metric that, when exceeded, triggers an alert.
-                    format: double
-                    type: number
-                units:
-                    description: Element used to express the quantity. This can be an element of time, storage capacity, and the like.
-                    enum:
-                        - bits
-                        - Kbits
-                        - Mbits
-                        - Gbits
-                        - bytes
-                        - KB
-                        - MB
-                        - GB
-                        - TB
-                        - PB
-                        - nsec
-                        - msec
-                        - sec
-                        - min
-                        - hours
-                        - million minutes
-                        - days
-                        - requests
-                        - 1000 requests
-                        - tokens
-                        - million tokens
-                        - pixels
-                        - billion pixels
-                        - GB seconds
-                        - GB hours
-                        - GB days
-                        - RPU
-                        - thousand RPU
-                        - million RPU
-                        - WPU
-                        - thousand WPU
-                        - million WPU
-                        - count
-                        - thousand
-                        - million
-                        - billion
-                    type: string
-            required:
-                - metricName
-            type: object
         Destination:
             description: Document that describes the destination of the migration.
             properties:
@@ -18675,6 +18600,8 @@ components:
                     - HOST_MONGOT_RESTARTED
                     - HOST_SEARCH_NODE_UNBLOCKED
                     - HOST_SEARCH_NODE_INDEX_FAILED
+                    - HOST_SEARCH_PROCESS_NOT_THROTTLING
+                    - HOST_SEARCH_PROCESS_THROTTLING
                     - HOST_EXTERNAL_LOG_SINK_EXPORT_DOWN
                     - HOST_EXTERNAL_LOG_SINK_EXPORT_RESUMED
                     - HOST_ENOUGH_DISK_SPACE
@@ -23775,6 +23702,8 @@ components:
                 - HOST_MONGOT_RESTARTED
                 - HOST_SEARCH_NODE_UNBLOCKED
                 - HOST_SEARCH_NODE_INDEX_FAILED
+                - HOST_SEARCH_PROCESS_NOT_THROTTLING
+                - HOST_SEARCH_PROCESS_THROTTLING
                 - HOST_EXTERNAL_LOG_SINK_EXPORT_DOWN
                 - HOST_EXTERNAL_LOG_SINK_EXPORT_RESUMED
                 - HOST_ENOUGH_DISK_SPACE
@@ -23809,6 +23738,7 @@ components:
                 - HOST_MONGOT_APPROACHING_STOP_REPLICATION
                 - HOST_MONGOT_PAUSE_INITIAL_SYNC
                 - HOST_SEARCH_NODE_INDEX_FAILED
+                - HOST_SEARCH_PROCESS_THROTTLING
                 - HOST_EXTERNAL_LOG_SINK_EXPORT_DOWN
                 - HOST_NOT_ENOUGH_DISK_SPACE
                 - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
@@ -39454,7 +39384,7 @@ components:
                 severityOverride:
                     $ref: '#/components/schemas/EventSeverity'
                 threshold:
-                    $ref: '#/components/schemas/DeprecatedStreamProcessorMetricThreshold'
+                    $ref: '#/components/schemas/StreamProcessorMetricThreshold'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -43865,7 +43795,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 677f01b5cd464ac228427468af4ec0306596daed
+    x-xgen-sha: 6e0eb0877a51cfbcf9718a406e37e31389da5cb3
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

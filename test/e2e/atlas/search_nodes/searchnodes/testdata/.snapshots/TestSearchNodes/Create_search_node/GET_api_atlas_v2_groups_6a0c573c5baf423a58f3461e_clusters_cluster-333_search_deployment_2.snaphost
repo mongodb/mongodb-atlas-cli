@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 297
+Content-Type: application/vnd.atlas.2025-03-12+json;charset=utf-8
+Date: Tue, 19 May 2026 12:59:25 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1191
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 58
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchDeploymentResource::getSearchDeployment
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=6344157135d95d8d8c213f4af5663609bf4a488f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"effectiveSpecs":[{"cloudProvider":"AWS","instanceSize":"S30_LOWCPU_NVME","nodeCount":2,"regionName":"US_EAST_1"}],"encryptionAtRestProvider":"NONE","groupId":"6a0c573c5baf423a58f3461e","id":"6a0c5cd2559de4331e252ee3","specs":[{"instanceSize":"S30_LOWCPU_NVME","nodeCount":2}],"stateName":"IDLE"}

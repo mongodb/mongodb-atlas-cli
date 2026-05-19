@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 480
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 19 May 2026 12:28:19 GMT
+Ratelimit-Limit: 500
+Ratelimit-Remaining: 495
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 115
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationApiUsersAccessListResource::addApiUserAccessList
+X-Java-Version: 17.0.18+9-LTS
+X-Mongodb-Service-Version: gitHash=740df2ab9ffc044b3c4ad4575ac80ce443353e6d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6a0c57565baf423a58f355a2/accessList?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cidrBlock":"52.186.174.151/32","count":0,"created":"2026-05-19T12:28:19Z","ipAddress":"52.186.174.151","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6a0c57565baf423a58f355a2/accessList/52.186.174.151","rel":"self"}]}],"totalCount":1}

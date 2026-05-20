@@ -204,6 +204,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	require.NoError(t, err)
 
 	region := regionsAzure[n.Int64()]
+	g.Logf("region=%s", region)
 	var id string
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

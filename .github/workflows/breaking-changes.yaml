@@ -3,6 +3,9 @@ name: Detect Breaking Changes
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   breaking-changes-manifest:
     name: Generate Breaking Changes Manifest

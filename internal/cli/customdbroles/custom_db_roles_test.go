@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312019/admin"
 )
 
 func Test_appendActions(t *testing.T) {

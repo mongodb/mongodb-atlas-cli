@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312019/admin"
 )
 
 const (
@@ -151,19 +151,18 @@ func (opts *ConfigOpts) newNotification() *atlasv2.AlertsNotificationRootForGrou
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *atlasv2.FlexClusterMetricThreshold {
+func (opts *ConfigOpts) newMetricThreshold() *atlasv2.StreamProcessorMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &atlasv2.FlexClusterMetricThreshold{
-		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
+	metricName := strings.ToUpper(opts.metricThresholdMetricName)
+	return &atlasv2.StreamProcessorMetricThreshold{
+		MetricName: &metricName,
 		Operator:   &operator,
 		Threshold:  &opts.metricThresholdThreshold,
 		Units:      &units,
 		Mode:       &mode,
 	}
-
-	return result
 }
 
 func (opts *ConfigOpts) newMatcher() atlasv2.StreamsMatcher {

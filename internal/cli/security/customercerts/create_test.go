@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312019/admin"
 	"go.uber.org/mock/gomock"
 )
 

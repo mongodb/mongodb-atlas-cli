@@ -17,7 +17,7 @@ package store
 import (
 	"errors"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312018/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312019/admin"
 )
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.

@@ -361,9 +361,7 @@ jobs:
             output = 'plaintext'
         run: |
           echo "$CONFIG_CONTENT" > "$CONFIG_PATH"
-      - run: |
-          set +e
-          make e2e-test-snapshots
+      - run: make e2e-test-snapshots
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           COVERAGE: coverage.out

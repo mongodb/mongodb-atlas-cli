@@ -364,14 +364,12 @@ jobs:
       - run: |
           set +e
           make e2e-test-snapshots
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "::error::Snapshot tests failed, consider adding label 'update-snapshots' to re-generate them"
-          fi
-          exit $EXIT_CODE
         env:
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           COVERAGE: coverage.out
+      - if: failure()
+        run:
+          echo "::error::Snapshot tests failed, consider adding label 'update-snapshots' to re-generate them"
       - name: Send coverage
         continue-on-error: true
         env:

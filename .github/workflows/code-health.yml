@@ -330,12 +330,6 @@ jobs:
       - run: |
           go install gotest.tools/gotestsum@v1.12.3
           go install github.com/mattn/goveralls@v0.0.12
-      - name: set Apix Bot token
-        id: app-token
-        uses: mongodb/apix-action/token@8549161120ce38b1e132ff833302a0ecbde58038
-        with:
-          app-id: ${{ secrets.APIXBOT_APP_ID }}
-          private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - run: make build
       - id: config-path
         env:
@@ -370,15 +364,12 @@ jobs:
       - run: |
           set +e
           make e2e-test-snapshots
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ]; then
-            echo "::error::Snapshot tests failed, consider adding label 'update-snapshots' to re-generate them"
-          fi
-          exit $EXIT_CODE
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           COVERAGE: coverage.out
+      - if: failure()
+        run:
+          echo "::error::Snapshot tests failed, consider adding label 'update-snapshots' to re-generate them"
       - name: Send coverage
         continue-on-error: true
         env:

@@ -12,7 +12,7 @@ package namespaces
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312019/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312020/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

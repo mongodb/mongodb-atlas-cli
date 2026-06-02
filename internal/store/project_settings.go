@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312019/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312020/admin"
 )
 
 // ProjectSettings encapsulates the logic of getting settings of a particular project.

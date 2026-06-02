@@ -25,6 +25,9 @@ import (
 	"time"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
+	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
@@ -56,6 +59,30 @@ func testSpec(t *testing.T, name, specPath string) {
 			t.Fatalf("unexpected result %s", err)
 		}
 	}
+}
+
+func TestDeduplicateConflictingPaths(t *testing.T) {
+	getOp := &openapi3.Operation{OperationID: "getGroupSampleDatasetLoad"}
+	postOp := &openapi3.Operation{OperationID: "requestGroupSampleDatasetLoad"}
+
+	spec := &openapi3.T{
+		Paths: openapi3.NewPaths(
+			openapi3.WithPath("/api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{name}", &openapi3.PathItem{
+				Post: postOp,
+			}),
+			openapi3.WithPath("/api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{sampleDatasetId}", &openapi3.PathItem{
+				Get: getOp,
+			}),
+		),
+	}
+
+	deduplicateConflictingPaths(spec)
+
+	require.Equal(t, 1, spec.Paths.Len(), "expected duplicate path to be removed")
+	remaining := spec.Paths.Value("/api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{name}")
+	require.NotNil(t, remaining, "expected first path to be kept")
+	assert.Equal(t, postOp, remaining.Post, "POST operation should be preserved")
+	assert.Equal(t, getOp, remaining.Get, "GET operation should be merged from duplicate")
 }
 
 // To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...

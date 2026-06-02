@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2678
+Content-Type: application/json
+Date: Mon, 01 Jun 2026 03:29:51 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::getCluster
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=a5ead5facd022536c7135a6e99fbdadfd937ec91; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-15mbiu7-shard-00-00.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-01.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-02.abiek8l.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-jhmpyg-shard-0","standardSrv":"mongodb+srv://cluster-509.abiek8l.mongodb-dev.net"},"createDate":"2026-06-01T03:29:41Z","deleteAfterDate":"2026-06-01T15:29:41Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","effectiveIntelligentWorkloadManagementPolicies":{},"encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"6a1cfc972c4d2404f1f7e11d","id":"6a1cfca52c4d2404f1f7e8b7","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a1cfc972c4d2404f1f7e11d/clusters/cluster-509","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a1cfc972c4d2404f1f7e11d/clusters/cluster-509/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a1cfc972c4d2404f1f7e11d/clusters/cluster-509/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.24","mongoURI":"mongodb://ac-15mbiu7-shard-00-00.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-01.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-02.abiek8l.mongodb-dev.net:27017","mongoURIUpdated":"2026-06-01T03:29:43Z","mongoURIWithOptions":"mongodb://ac-15mbiu7-shard-00-00.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-01.abiek8l.mongodb-dev.net:27017,ac-15mbiu7-shard-00-02.abiek8l.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-jhmpyg-shard-0","name":"cluster-509","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_2"},"replicationFactor":3,"replicationSpec":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"6a1cfca42c4d2404f1f7e8a7","numShards":1,"regionsConfig":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","srvAddress":"mongodb+srv://cluster-509.abiek8l.mongodb-dev.net","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

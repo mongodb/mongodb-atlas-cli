@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"regexp"
 	"slices"
 	"strings"
 	"text/template"
@@ -116,13 +117,26 @@ func convertSpecToMetadata(ctx context.Context, now time.Time, r io.Reader, w io
 }
 
 func convertSpec[T any](ctx context.Context, now time.Time, r io.Reader, w io.Writer, mapper func(now time.Time, spec *openapi3.T) (T, error), templateContent string) error {
-	spec, err := loadSpec(r)
+	specBytes, err := io.ReadAll(r)
+	if err != nil {
+		return fmt.Errorf("failed to read spec, error: %w", err)
+	}
+
+	spec, err := loadSpec(bytes.NewReader(specBytes))
 	if err != nil {
 		return fmt.Errorf("failed to load spec, error: %w", err)
 	}
 
 	if templateContent != metadataTemplateContent {
-		if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
+		// Validate a deduplicated copy: some paths are structurally identical but use different
+		// parameter names, which kin-openapi treats as conflicting. Dedup the copy only so the
+		// original spec retains correct parameter names for command generation.
+		specCopy, err := loadSpec(bytes.NewReader(specBytes))
+		if err != nil {
+			return fmt.Errorf("failed to load spec copy for validation, error: %w", err)
+		}
+		deduplicateConflictingPaths(specCopy)
+		if err := specCopy.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
 			return fmt.Errorf("spec validation failed, error: %w", err)
 		}
 	}
@@ -133,6 +147,29 @@ func convertSpec[T any](ctx context.Context, now time.Time, r io.Reader, w io.Wr
 	}
 
 	return writeCommands(now, w, templateContent, commands)
+}
+
+var pathParamPattern = regexp.MustCompile(`\{[^}]+\}`)
+
+// deduplicateConflictingPaths merges paths that are structurally identical but use different
+// parameter names (e.g. /groups/{groupId}/load/{sampleDatasetId} vs /groups/{groupId}/load/{name}).
+// OpenAPI treats these as conflicting; we merge all operations into the first occurrence and discard the rest.
+func deduplicateConflictingPaths(spec *openapi3.T) {
+	seen := make(map[string]string) // normalized path -> first real path
+	for _, path := range spec.Paths.Keys() {
+		normalized := pathParamPattern.ReplaceAllString(path, "{}")
+		if firstPath, exists := seen[normalized]; exists {
+			// Merge operations from this duplicate into the first path
+			first := spec.Paths.Value(firstPath)
+			duplicate := spec.Paths.Value(path)
+			for verb, op := range duplicate.Operations() {
+				first.SetOperation(verb, op)
+			}
+			spec.Paths.Delete(path)
+		} else {
+			seen[normalized] = path
+		}
+	}
 }
 
 func loadSpec(r io.Reader) (*openapi3.T, error) {

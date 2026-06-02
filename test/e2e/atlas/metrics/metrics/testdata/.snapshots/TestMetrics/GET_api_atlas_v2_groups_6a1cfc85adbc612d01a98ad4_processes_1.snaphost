@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 01 Jun 2026 03:41:01 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 61
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=a5ead5facd022536c7135a6e99fbdadfd937ec91; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc85adbc612d01a98ad4/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-06-01T03:36:00Z","groupId":"6a1cfc85adbc612d01a98ad4","hostname":"atlas-n4168s-shard-00-00.tqv42x.mongodb-dev.net","id":"atlas-n4168s-shard-00-00.tqv42x.mongodb-dev.net:27017","lastPing":"2026-06-01T03:40:52Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc85adbc612d01a98ad4/processes/atlas-n4168s-shard-00-00.tqv42x.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-n4168s-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-842-shard-00-00.tqv42x.mongodb-dev.net","version":"8.0.24"},{"created":"2026-06-01T03:36:00Z","groupId":"6a1cfc85adbc612d01a98ad4","hostname":"atlas-n4168s-shard-00-01.tqv42x.mongodb-dev.net","id":"atlas-n4168s-shard-00-01.tqv42x.mongodb-dev.net:27017","lastPing":"2026-06-01T03:40:52Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc85adbc612d01a98ad4/processes/atlas-n4168s-shard-00-01.tqv42x.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-n4168s-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-842-shard-00-01.tqv42x.mongodb-dev.net","version":"8.0.24"},{"created":"2026-06-01T03:36:00Z","groupId":"6a1cfc85adbc612d01a98ad4","hostname":"atlas-n4168s-shard-00-02.tqv42x.mongodb-dev.net","id":"atlas-n4168s-shard-00-02.tqv42x.mongodb-dev.net:27017","lastPing":"2026-06-01T03:40:52Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc85adbc612d01a98ad4/processes/atlas-n4168s-shard-00-02.tqv42x.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-n4168s-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-842-shard-00-02.tqv42x.mongodb-dev.net","version":"8.0.24"}],"totalCount":3}

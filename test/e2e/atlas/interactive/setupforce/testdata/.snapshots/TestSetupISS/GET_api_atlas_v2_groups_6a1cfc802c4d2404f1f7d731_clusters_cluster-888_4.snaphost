@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 2248
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Mon, 01 Jun 2026 03:29:39 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9994
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 99
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=a5ead5facd022536c7135a6e99fbdadfd937ec91; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"adaptiveCapacity":null,"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-wy9lpea-shard-00-00.migqmgm.mongodb-dev.net:27017,ac-wy9lpea-shard-00-01.migqmgm.mongodb-dev.net:27017,ac-wy9lpea-shard-00-02.migqmgm.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-aokdwk-shard-0","standardSrv":"mongodb+srv://cluster-888.migqmgm.mongodb-dev.net"},"createDate":"2026-06-01T03:29:17Z","diskWarmingMode":"FULLY_WARMED","effectiveIntelligentWorkloadManagementPolicies":{},"effectiveReplicationSpecs":[{"id":"6a1cfc8dadbc612d01a993bf","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6a1cfc8dadbc612d01a993bd","zoneName":"Zone 1"}],"encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"6a1cfc802c4d2404f1f7d731","id":"6a1cfc8dadbc612d01a993c9","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc802c4d2404f1f7d731/clusters/cluster-888","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc802c4d2404f1f7d731/clusters/cluster-888/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a1cfc802c4d2404f1f7d731/clusters/cluster-888/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.24","name":"cluster-888","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"6a1cfc8dadbc612d01a993bf","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6a1cfc8dadbc612d01a993bd","zoneName":"Zone 1"}],"retainBackups":false,"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[{"key":"env-iss","value":"e2etest-iss"}],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

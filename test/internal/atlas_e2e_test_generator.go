@@ -45,6 +45,12 @@ import (
 const redactedToken = "redactedToken"
 const ipMax = 255
 
+var pemPrivateKeyRe = regexp.MustCompile(`(?s)-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----`)
+
+func redactPEMPrivateKeys(body []byte) []byte {
+	return pemPrivateKeyRe.ReplaceAll(body, []byte("REDACTED"))
+}
+
 func decompress(r *http.Response) error {
 	var err error
 	shouldRemoveHeaders := false
@@ -671,22 +677,24 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 		g.t.Fatal(err)
 	}
 
-	if resp.ContentLength > 0 && strings.Contains(resp.Header.Get("Content-Type"), "json") {
+	if resp.ContentLength > 0 {
 		buf, err := io.ReadAll(resp.Body)
 		if err != nil {
 			g.t.Fatal(err)
 		}
 
+		buf = redactPEMPrivateKeys(buf)
 		buf = []byte(g.maskString(string(buf)))
-		resp.Body = io.NopCloser(bytes.NewReader(buf))
-		resp.ContentLength = int64(len(buf))
-		resp.Header["Content-Length"] = []string{strconv.FormatInt(resp.ContentLength, 10)}
 
 		for k, mv := range resp.Header {
 			for i, v := range mv {
 				resp.Header[k][i] = g.maskString(v)
 			}
 		}
+
+		resp.Body = io.NopCloser(bytes.NewReader(buf))
+		resp.ContentLength = int64(len(buf))
+		resp.Header.Set("Content-Length", strconv.FormatInt(resp.ContentLength, 10))
 	}
 
 	return resp

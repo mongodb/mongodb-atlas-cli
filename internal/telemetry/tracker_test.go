@@ -210,6 +210,257 @@ func TestOpenCacheFile(t *testing.T) {
 	a.Equal(expectedSize, info.Size())
 }
 
+func TestTrackCommandBatchLimit(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	cacheDir := t.TempDir()
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
+	// Pre-fill cache with maxBatchSize events so total = maxBatchSize+1 after new event.
+	for i := range maxBatchSize {
+		require.NoError(t, tr.save(Event{Properties: map[string]any{"i": i}}))
+	}
+
+	// Expect exactly maxBatchSize events in the batch (not maxBatchSize+1).
+	mockStore.EXPECT().
+		SendEvents(gomock.Len(maxBatchSize)).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	// The new event (allEvents[maxBatchSize]) was not in the batch and should be written back to cache.
+	remaining, err := tr.read()
+	require.NoError(t, err)
+	assert.Len(t, remaining, 1)
+}
+
+func TestTrackCommandRemainingEventsPersistedAfterSuccess(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	cacheDir := t.TempDir()
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
+	totalCached := maxBatchSize + 10
+	for i := range totalCached {
+		require.NoError(t, tr.save(Event{Properties: map[string]any{"i": i}}))
+	}
+
+	mockStore.EXPECT().
+		SendEvents(gomock.Len(maxBatchSize)).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	// totalCached+1 (new event) - maxBatchSize should remain.
+	remaining, err := tr.read()
+	require.NoError(t, err)
+	assert.Len(t, remaining, totalCached+1-maxBatchSize)
+}
+
+func TestTrackCommandRateLimitedPreservesEvents(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	cacheDir := t.TempDir()
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
+	// Pre-fill cache with some events.
+	preCached := 5
+	for i := range preCached {
+		require.NoError(t, tr.save(Event{Properties: map[string]any{"i": i}}))
+	}
+
+	mockStore.EXPECT().
+		SendEvents(gomock.Any()).
+		Return(errors.New("http 429: too many requests")).
+		Times(1)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	// Old events still in cache + new event appended = preCached+1.
+	remaining, err := tr.read()
+	require.NoError(t, err)
+	assert.Len(t, remaining, preCached+1)
+}
+
+func TestSaveAndIsBackedOff(t *testing.T) {
+	cacheDir := t.TempDir()
+	tr := &tracker{fs: afero.NewMemMapFs(), cacheDir: cacheDir}
+
+	// No backoff file yet.
+	assert.False(t, tr.isBackedOff())
+
+	// Create backoff sentinel file — mtime = now, within backoffDuration.
+	require.NoError(t, tr.saveBackoff())
+	assert.True(t, tr.isBackedOff())
+}
+
+func TestRemoveBackoff(t *testing.T) {
+	cacheDir := t.TempDir()
+	tr := &tracker{fs: afero.NewMemMapFs(), cacheDir: cacheDir}
+
+	require.NoError(t, tr.saveBackoff())
+	assert.True(t, tr.isBackedOff())
+
+	require.NoError(t, tr.removeBackoff())
+	assert.False(t, tr.isBackedOff())
+}
+
+func TestBackoffExpired(t *testing.T) {
+	cacheDir := t.TempDir()
+	fs := afero.NewMemMapFs()
+	tr := &tracker{fs: fs, cacheDir: cacheDir}
+
+	require.NoError(t, tr.saveBackoff())
+
+	// Wind the file's mtime back past backoffDuration.
+	filename := filepath.Join(cacheDir, backoffFilename)
+	past := time.Now().Add(-(backoffDuration + time.Second))
+	require.NoError(t, fs.Chtimes(filename, past, past))
+
+	assert.False(t, tr.isBackedOff())
+}
+
+func TestTrackCommandSkipsSendWhenBackedOff(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	cacheDir := t.TempDir()
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
+	require.NoError(t, tr.saveBackoff())
+
+	// SendEvents must NOT be called.
+	mockStore.EXPECT().SendEvents(gomock.Any()).Times(0)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	// Event should be cached for later.
+	events, err := tr.read()
+	require.NoError(t, err)
+	assert.Len(t, events, 1)
+}
+
+func TestTrackCommandSetsBackoffOnSendError(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		err  error
+	}{
+		{"rate limit 429", errors.New("http 429")},
+		{"connection refused", errors.New("connection refused")},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := NewMockEventsSender(ctrl)
+
+			cmd := &cobra.Command{
+				Use: "test-command",
+				Run: func(_ *cobra.Command, _ []string) {},
+			}
+			_ = cmd.ExecuteContext(NewContext())
+
+			cacheDir := t.TempDir()
+			tr := &tracker{
+				fs:               afero.NewMemMapFs(),
+				maxCacheFileSize: defaultMaxCacheFileSize,
+				cacheDir:         cacheDir,
+				store:            mockStore,
+				storeSet:         true,
+				cmd:              cmd,
+			}
+
+			mockStore.EXPECT().SendEvents(gomock.Any()).Return(tc.err).Times(1)
+
+			require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+			assert.True(t, tr.isBackedOff())
+		})
+	}
+}
+
+func TestTrackCommandClearsBackoffOnSuccess(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockEventsSender(ctrl)
+
+	cmd := &cobra.Command{
+		Use: "test-command",
+		Run: func(_ *cobra.Command, _ []string) {},
+	}
+	_ = cmd.ExecuteContext(NewContext())
+
+	cacheDir := t.TempDir()
+	tr := &tracker{
+		fs:               afero.NewMemMapFs(),
+		maxCacheFileSize: defaultMaxCacheFileSize,
+		cacheDir:         cacheDir,
+		store:            mockStore,
+		storeSet:         true,
+		cmd:              cmd,
+	}
+
+	mockStore.EXPECT().SendEvents(gomock.Any()).Return(nil).Times(1)
+
+	require.NoError(t, tr.trackCommand(TrackOptions{}))
+
+	assert.False(t, tr.isBackedOff())
+}
+
 func TestTrackSurvey(t *testing.T) {
 	cacheDir := t.TempDir()
 	cmd := &cobra.Command{

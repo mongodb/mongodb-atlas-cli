@@ -13,7 +13,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -41,7 +41,7 @@ jobs:
         if: runner.os == 'Windows'
         run: git config --system core.longpaths true
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install Go
@@ -73,7 +73,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -93,7 +93,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -107,7 +107,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -134,7 +134,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -161,7 +161,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Download actionlint
         id: get_actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
@@ -178,7 +178,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -205,7 +205,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Install ShellCheck
         run: |
           sudo apt-get update
@@ -232,7 +232,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -259,7 +259,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -272,7 +272,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
       - name: Install Go
         uses: actions/setup-go@v6
         with:
@@ -288,7 +288,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Check out the repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
       - name: Linting
         uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5
         with:
@@ -320,7 +320,7 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install Go

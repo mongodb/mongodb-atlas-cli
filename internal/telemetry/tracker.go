@@ -20,6 +20,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
@@ -31,9 +32,12 @@ import (
 
 const (
 	cacheFilename           = "telemetry"
+	backoffFilename         = "telemetry_backoff"
 	dirPermissions          = 0700
 	filePermissions         = 0600
-	defaultMaxCacheFileSize = 500_000 // 500KB
+	defaultMaxCacheFileSize = 500_000     // 500KB
+	maxBatchSize            = 32          // backend rate limit per request
+	backoffDuration         = time.Minute // minimum gap between send attempts
 )
 
 const (
@@ -134,35 +138,63 @@ func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
 	}
 	o = append(o, opt...)
 	event := newEvent(o...)
-	events, err := t.read()
+
+	// Skip sending if we're in a backoff window; just cache the event.
+	if t.isBackedOff() {
+		_, _ = log.Debugf("telemetry: in backoff window, caching event for later\n")
+		return t.save(event)
+	}
+
+	cachedEvents, err := t.read()
 	if err != nil {
 		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
-	events = append(events, event)
-	_, _ = log.Debugf("telemetry: events: %v\n", events)
-	if !t.storeSet {
-		err = t.unauthStore.SendUnauthEvents(events)
-	} else {
-		err = t.store.SendEvents(events)
+
+	cachedEvents = append(cachedEvents, event)
+
+	// Cap batch at maxBatchSize; backend enforces a per-request rate limit.
+	// Three-index slice prevents batch and remaining from sharing a backing array,
+	// so serialization of batch cannot silently corrupt remaining.
+	batch := cachedEvents
+	var remaining []Event
+	if len(cachedEvents) > maxBatchSize {
+		batch = cachedEvents[:maxBatchSize:maxBatchSize]
+		remaining = cachedEvents[maxBatchSize:]
 	}
-	if err != nil {
+
+	_, _ = log.Debugf("telemetry: sending %d events (remaining cached: %d)\n", len(batch), len(remaining))
+
+	var sendErr error
+	if !t.storeSet {
+		sendErr = t.unauthStore.SendUnauthEvents(batch)
+	} else {
+		sendErr = t.store.SendEvents(batch)
+	}
+
+	if sendErr != nil {
+		// On any error: do not retry. Create backoff file so rapid subsequent
+		// invocations skip the send entirely instead of hammering the backend.
+		_, _ = log.Debugf("telemetry: send error (%v), backing off for %v\n", sendErr, backoffDuration)
+		_ = t.saveBackoff() // best-effort: failure just means no backoff protection
+		// Old cached events remain on disk (remove() not called).
+		// Append only the new event so it's preserved for the next run.
 		return t.save(event)
 	}
-	return t.remove()
+
+	// Batch sent successfully: clear backoff, clear cache, persist remaining events.
+	_ = t.removeBackoff() // best-effort: stale file only wastes one invocation
+	if err := t.remove(); err != nil {
+		return err
+	}
+	return t.saveAll(remaining)
 }
 
 func (t *tracker) openCacheFile() (afero.File, error) {
-	exists, err := afero.DirExists(t.fs, t.cacheDir)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		if mkdirError := t.fs.MkdirAll(t.cacheDir, dirPermissions); mkdirError != nil {
-			return nil, mkdirError
-		}
+	if mkdirError := t.fs.MkdirAll(t.cacheDir, dirPermissions); mkdirError != nil {
+		return nil, mkdirError
 	}
 	filename := filepath.Join(t.cacheDir, cacheFilename)
-	exists, err = afero.Exists(t.fs, filename)
+	exists, err := afero.Exists(t.fs, filename)
 	if err != nil {
 		return nil, err
 	}
@@ -178,6 +210,55 @@ func (t *tracker) openCacheFile() (afero.File, error) {
 	}
 	file, err := t.fs.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, filePermissions)
 	return file, err
+}
+
+// Append multiple events to the cache file.
+func (t *tracker) saveAll(events []Event) error {
+	for _, e := range events {
+		if err := t.save(e); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// saveBackoff creates the backoff sentinel file. Its mtime marks when the
+// backoff window started; no content is written.
+func (t *tracker) saveBackoff() error {
+	if err := t.fs.MkdirAll(t.cacheDir, dirPermissions); err != nil {
+		return err
+	}
+	filename := filepath.Join(t.cacheDir, backoffFilename)
+	file, err := t.fs.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, filePermissions)
+	if err != nil {
+		return err
+	}
+	return file.Close()
+}
+
+// isBackedOff returns true when the backoff file exists and backoffDuration has
+// not yet elapsed since its creation. Deletes the file once the window expires.
+func (t *tracker) isBackedOff() bool {
+	filename := filepath.Join(t.cacheDir, backoffFilename)
+	info, err := t.fs.Stat(filename)
+	if err != nil {
+		return false
+	}
+	if time.Since(info.ModTime()) > backoffDuration {
+		_ = t.fs.Remove(filename)
+		return false
+	}
+	return true
+}
+
+// removeBackoff deletes the backoff file.
+func (t *tracker) removeBackoff() error {
+	filename := filepath.Join(t.cacheDir, backoffFilename)
+	err := t.fs.Remove(filename)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
+	return err
 }
 
 // Append a single event to the cache file.

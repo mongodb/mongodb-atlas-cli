@@ -65,7 +65,7 @@ func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
 	return err
 }
 
-const resultsLimit = 500
+const resultsLimit = 50
 
 var (
 	errTooManyResults = errors.New("too many results")

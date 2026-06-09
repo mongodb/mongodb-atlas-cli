@@ -89,6 +89,15 @@ func TestDefaultOpts_Projects(t *testing.T) {
 		assert.Equal(t, []string{"1"}, gotIDs)
 		assert.Equal(t, []string{"Project 1"}, gotNames)
 	})
+	t.Run("too many projects", func(t *testing.T) {
+		expectedProjects := &atlasv2.PaginatedAtlasGroup{
+			Results:    []atlasv2.Group{},
+			TotalCount: pointer.Get(resultsLimit + 1),
+		}
+		mockStore.EXPECT().Projects(gomock.Any()).Return(expectedProjects, nil).Times(1)
+		_, _, err := opts.projects()
+		require.ErrorIs(t, err, errTooManyResults)
+	})
 }
 
 func TestDefaultOpts_Orgs(t *testing.T) {
@@ -136,5 +145,14 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		_, err := opts.orgs("")
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())
+	})
+	t.Run("too many orgs", func(t *testing.T) {
+		expectedOrgs := &atlasv2.PaginatedOrganization{
+			Results:    []atlasv2.AtlasOrganization{},
+			TotalCount: pointer.Get(resultsLimit + 1),
+		}
+		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+		_, err := opts.orgs("")
+		require.ErrorIs(t, err, errTooManyResults)
 	})
 }

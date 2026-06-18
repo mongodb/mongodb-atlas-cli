@@ -37,8 +37,8 @@ var (
 	unsupportedNewOsByVersion = map[string][]string{
 		"8.2": {"debian11"},
 		"8.0": {"debian11"},
-		"7.0": {"ubuntu2404"},
-		"6.0": {"ubuntu2404"},
+		"7.0": {"ubuntu2404", "ubuntu2510"},
+		"6.0": {"ubuntu2404", "ubuntu2510"},
 	}
 
 	oses = []string{
@@ -49,6 +49,7 @@ var (
 		"debian12",
 		"ubuntu22.04",
 		"ubuntu24.04",
+		"ubuntu25.10",
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
@@ -57,6 +58,7 @@ var (
 		"rhel9":       "rhel9-rpm",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
+		"ubuntu25.10": "ubuntu25.10-deb",
 		"debian11":    "debian11-deb",
 		"debian12":    "debian12-deb",
 	}
@@ -66,6 +68,7 @@ var (
 		"rhel9":           "rhel90",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
+		"ubuntu25.10":     "ubuntu2510",
 		"debian11":        "debian11",
 		"debian12":        "debian12",
 		"amazonlinux2023": "amazon2023",

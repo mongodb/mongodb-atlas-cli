@@ -69,6 +69,10 @@ var distros = map[string]Platform{
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
+	"ubuntu2510": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
 	"suse15": {
 		extension:     rpm,
 		architectures: []string{x86_64},

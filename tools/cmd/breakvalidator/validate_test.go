@@ -183,6 +183,29 @@ func TestCompareCmds(t *testing.T) {
 			expectedErr: errFlagDefaultChanged,
 		},
 		{
+			name: "preview command alias removed - no error",
+			mainData: map[string]cmdData{
+				"cmd1": {
+					Preview: true,
+					Aliases: []string{"cmda"},
+				},
+			},
+			changedData: map[string]cmdData{
+				"cmd1": {},
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "preview command deleted - no error",
+			mainData: map[string]cmdData{
+				"cmd1": {
+					Preview: true,
+				},
+			},
+			changedData:  map[string]cmdData{},
+			expectedErr: nil,
+		},
+		{
 			name: "changed flag shorthand",
 			mainData: map[string]cmdData{
 				"cmd1": {

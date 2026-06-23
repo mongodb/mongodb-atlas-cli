@@ -25,6 +25,9 @@ import (
 
 func generateCmd(cmd *cobra.Command) cmdData {
 	data := cmdData{}
+	if cmd.Annotations["preview"] == "true" {
+		data.Preview = true
+	}
 	if len(cmd.Aliases) > 0 {
 		data.Aliases = cmd.Aliases
 	}

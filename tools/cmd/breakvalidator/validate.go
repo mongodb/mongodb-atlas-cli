@@ -68,6 +68,10 @@ func compareFlags(cmdPath string, mainFlags, changedFlags map[string]flagData) [
 func compareCmds(changedData, mainData map[string]cmdData) error {
 	changes := []error{}
 	for cmdPath, mv := range mainData {
+		if mv.Preview {
+			continue
+		}
+
 		cv, ok := changedData[cmdPath]
 		if !ok {
 			changes = append(changes, fmt.Errorf("%w: %s", errCmdDeleted, cmdPath))

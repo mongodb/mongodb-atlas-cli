@@ -280,6 +280,11 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 		},
 	}
 
+	// Mark command as preview so the breaking change validator skips it
+	if isPreviewOnly(command) {
+		cmd.Annotations["preview"] = "true"
+	}
+
 	// Add deprecation message if all versions are sunset
 	addDeprecationMessageIfNeeded(cmd, command)
 
@@ -430,6 +435,15 @@ func isPiped(file *os.File) (bool, error) {
 	isPiped := (info.Mode() & os.ModeCharDevice) == 0
 
 	return isPiped, nil
+}
+
+func isPreviewOnly(command shared_api.Command) bool {
+	for _, v := range command.Versions {
+		if v.Version.StabilityLevel() != shared_api.StabilityLevelPreview {
+			return false
+		}
+	}
+	return len(command.Versions) > 0
 }
 
 func defaultAPIVersion(command shared_api.Command) (string, error) {

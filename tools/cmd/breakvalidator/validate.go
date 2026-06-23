@@ -69,6 +69,11 @@ func compareCmds(changedData, mainData map[string]cmdData) error {
 	changes := []error{}
 	for cmdPath, mv := range mainData {
 		cv, ok := changedData[cmdPath]
+
+		if mv.Preview || cv.Preview {
+			continue
+		}
+
 		if !ok {
 			changes = append(changes, fmt.Errorf("%w: %s", errCmdDeleted, cmdPath))
 			continue

@@ -46,3 +46,21 @@ func TestGenerateCmds(t *testing.T) {
 		t.Fatalf("got: %v, expected: %v", generatedData, expectedData)
 	}
 }
+
+func TestGenerateCmdsPreview(t *testing.T) {
+	cliCmd := &cobra.Command{
+		Use:         "test",
+		Annotations: map[string]string{"preview": "true"},
+	}
+	generatedData := generateCmds(cliCmd)
+
+	expectedData := map[string]cmdData{
+		"test": {
+			Preview: true,
+		},
+	}
+
+	if !reflect.DeepEqual(generatedData, expectedData) {
+		t.Fatalf("got: %v, expected: %v", generatedData, expectedData)
+	}
+}

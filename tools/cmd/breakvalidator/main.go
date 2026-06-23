@@ -27,6 +27,7 @@ type flagData struct {
 }
 
 type cmdData struct {
+	Preview bool                `json:"preview,omitempty"`
 	Aliases []string            `json:"aliases,omitempty"`
 	Flags   map[string]flagData `json:"flags,omitempty"`
 }

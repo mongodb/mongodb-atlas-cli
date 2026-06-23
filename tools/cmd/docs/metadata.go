@@ -1777,7 +1777,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`createGroupStreamConnectionFailoverConnection`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionName`: {
 				Usage: `Label that identifies the stream connection name.`,
@@ -3060,7 +3059,7 @@ var metadata = metadatatypes.Metadata{
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
-| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
 | ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
@@ -3528,6 +3527,43 @@ var metadata = metadatatypes.Metadata{
 					`connectionName`: `[connectionName]`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`tenantName`:     `[tenantName]`,
+				},
+			},
+			},
+		},
+	},
+	`deleteGroupStreamConnectionFailoverConnection`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`connectionName`: {
+				Usage: `Label that identifies the stream connection.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`failoverConnectionId`: {
+				Usage: `Label that identifies the stream failover connection id.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`tenantName`: {
+				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`connectionName`:       `[connectionName]`,
+					`failoverConnectionId`: `[failoverConnectionId]`,
+					`groupId`:              `32b6e34b3d91647abb20e7b8`,
+					`tenantName`:           `[tenantName]`,
 				},
 			},
 			},
@@ -4615,7 +4651,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getGroupAiModelRateLimit`: {
+	`getGroupAiModelApiRateLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -6432,7 +6468,7 @@ var metadata = metadatatypes.Metadata{
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
-| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
 | ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
@@ -7575,6 +7611,43 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupStreamConnectionFailoverConnection`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`connectionName`: {
+				Usage: `Label that identifies the stream connection.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`failoverConnectionId`: {
+				Usage: `Label that identifies the stream failover connection id.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`tenantName`: {
+				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`connectionName`:       `[connectionName]`,
+					`failoverConnectionId`: `[failoverConnectionId]`,
+					`groupId`:              `32b6e34b3d91647abb20e7b8`,
+					`tenantName`:           `[tenantName]`,
+				},
+			},
+			},
+		},
+	},
 	`getGroupStreamPrivateLinkConnection`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`connectionId`: {
@@ -7897,7 +7970,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getOrgAiModelRateLimit`: {
+	`getOrgAiModelApiRateLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -8194,6 +8267,30 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`invoiceId`: `[invoiceId]`,
 					`orgId`:     `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgMaintenanceSettings`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -8826,7 +8923,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`listGroupAiModelRateLimits`: {
+	`listGroupAiModelApiRateLimits`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -9735,7 +9832,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `A list of SHA256 hashes of desired query shapes, output by MongoDB commands like ` + "`" + `$queryStats` + "`" + ` and $explain or slow query logs. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series.`,
 			},
 			`series`: {
-				Usage: `Query shape statistics data series to retrieve. A series represents a specific metric about query execution. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series.`,
+				Usage: `Query shape statistics data series to retrieve. A series represents a specific metric about query execution. To include multiple series, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each series. Omit this parameter to return results for all available series. The ` + "`" + `P50_EXECUTION_TIME` + "`" + `, ` + "`" + `P90_EXECUTION_TIME` + "`" + `, and ` + "`" + `P99_EXECUTION_TIME` + "`" + ` series are deprecated as the values they report may be inaccurate. They will be removed in a future release.`,
 			},
 			`since`: {
 				Usage: `Date and time from which to retrieve query shape statistics. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
@@ -11491,6 +11588,45 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupStreamConnectionFailoverConnections`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`connectionName`: {
+				Usage: `Label that identifies the stream connection.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`tenantName`: {
+				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`connectionName`: `[connectionName]`,
+					`groupId`:        `32b6e34b3d91647abb20e7b8`,
+					`tenantName`:     `[tenantName]`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupStreamConnections`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -11763,7 +11899,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`listOrgAiModelRateLimits`: {
+	`listOrgAiModelApiRateLimits`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12759,7 +12895,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`resetGroupAiModelRateLimit`: {
+	`resetGroupAiModelApiRateLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12788,7 +12924,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`resetGroupAiModelRateLimits`: {
+	`resetGroupAiModelApiRateLimits`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -13009,7 +13145,7 @@ var metadata = metadatatypes.Metadata{
 | Limit Name | Description | Default | API Override Limit |
 | --- | --- | --- | --- |
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
-| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
 | ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
@@ -13436,7 +13572,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
-	`updateGroupAiModelRateLimit`: {
+	`updateGroupAiModelApiRateLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -14250,6 +14386,31 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`updateGroupStreamConnectionFailoverConnection`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`connectionName`: {
+				Usage: `Label that identifies the stream connection.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`failoverConnectionId`: {
+				Usage: `Label that identifies the stream failover connection id.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`tenantName`: {
+				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: nil,
+	},
 	`updateGroupStreamProcessor`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -14394,6 +14555,21 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`updateOrgInvites`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateOrgMaintenanceSettings`: {
+		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,

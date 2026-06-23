@@ -202,7 +202,21 @@ func TestCompareCmds(t *testing.T) {
 					Preview: true,
 				},
 			},
-			changedData:  map[string]cmdData{},
+			changedData: map[string]cmdData{},
+			expectedErr: nil,
+		},
+		{
+			name: "preview only in changed manifest alias removed - no error",
+			mainData: map[string]cmdData{
+				"cmd1": {
+					Aliases: []string{"cmda"},
+				},
+			},
+			changedData: map[string]cmdData{
+				"cmd1": {
+					Preview: true,
+				},
+			},
 			expectedErr: nil,
 		},
 		{

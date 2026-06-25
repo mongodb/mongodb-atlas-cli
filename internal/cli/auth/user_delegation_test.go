@@ -114,7 +114,7 @@ func TestDiscoverOrLoadMetadata(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			mockConfig := NewMockConnectConfig(ctrl)
+			mockConfig := NewMockUserDelegationConfig(ctrl)
 
 			if tt.discover {
 				// Discover flag clears the cache first; subsequent reads see nil.
@@ -129,7 +129,7 @@ func TestDiscoverOrLoadMetadata(t *testing.T) {
 				mockConfig.EXPECT().Save().Return(nil).Times(1)
 			}
 
-			opts := &ConnectOpts{config: mockConfig, Discover: tt.discover}
+			opts := &UserDelegationFlow{config: mockConfig, Discover: tt.discover}
 
 			startHits := hits
 			metadata, err := opts.discoverOrLoadMetadata(t.Context(), authCfg)

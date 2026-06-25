@@ -33,10 +33,10 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=connect_mock_test.go -package=auth -source=connect.go
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=user_delegation_mock_test.go -package=auth -source=user_delegation.go
 
-// ConnectConfig defines the profile operations needed by the connect command.
-type ConnectConfig interface {
+// UserDelegationConfig defines the profile operations needed by the authorization code flow for login to Atlas.
+type UserDelegationConfig interface {
 	SetSaver
 	SetTokenExpiry(string) // TODO: remove when Token() reads expiry directly instead of via tokenClaims
 	AuthServerMetadata() map[string]any
@@ -46,8 +46,8 @@ type ConnectConfig interface {
 	AuthServerURL() string
 }
 
-type ConnectOpts struct {
-	config    ConnectConfig
+type UserDelegationFlow struct {
+	config    UserDelegationConfig
 	OutWriter io.Writer
 	NoBrowser bool
 	Discover  bool
@@ -55,7 +55,7 @@ type ConnectOpts struct {
 
 // discoverOrLoadMetadata returns cached AS metadata if still valid and from
 // the expected issuer, otherwise fetches fresh metadata via RFC 8414 discovery.
-func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context, authCfg *auth.Config) (map[string]any, error) {
+func (opts *UserDelegationFlow) discoverOrLoadMetadata(ctx context.Context, authCfg *auth.Config) (map[string]any, error) {
 	if opts.Discover {
 		opts.config.SetAuthServerMetadata(nil)
 		if err := opts.config.Save(); err != nil {
@@ -91,7 +91,7 @@ func (opts *ConnectOpts) discoverOrLoadMetadata(ctx context.Context, authCfg *au
 	return nil, errors.New("discovery response missing metadata")
 }
 
-func (opts *ConnectOpts) Run(ctx context.Context) error {
+func (opts *UserDelegationFlow) Run(ctx context.Context) error {
 	client := &http.Client{Transport: transport.Default()}
 	authCfg, err := transport.FlowForAuthIssuer(opts.config, client, version.Version)
 	if err != nil {
@@ -189,7 +189,7 @@ func (opts *ConnectOpts) Run(ctx context.Context) error {
 }
 
 func ConnectBuilder() *cobra.Command {
-	opts := &ConnectOpts{}
+	opts := &UserDelegationFlow{}
 
 	cmd := &cobra.Command{
 		Use:   "connect",

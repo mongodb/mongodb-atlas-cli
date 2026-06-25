@@ -77,10 +77,10 @@ var (
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
 	authTypeOptions      = []string{userAccountAuth, prompt.UserDelegationAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
-		userAccountAuth:            "(legacy account connection)",
-		prompt.UserDelegationAuth:  "(best for user accounts)",
-		prompt.ServiceAccountAuth:  "(best for automation)",
-		prompt.APIKeysAuth:         "(for existing automations)",
+		userAccountAuth:           "(legacy account connection)",
+		prompt.UserDelegationAuth: "(best for user accounts)",
+		prompt.ServiceAccountAuth: "(best for automation)",
+		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
 

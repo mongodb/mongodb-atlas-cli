@@ -1,0 +1,20 @@
+# sync -> mongodb/atlas-local-lib
+# sync -> mongodb/atlas-local-cli
+# sync -> mongodb-js/atlas-local-lib-js
+# sync -> mongodb/mongodb-atlas-cli
+# sync -> mongodb/mongodb-atlas-local
+# sync -> mongodb-labs/cobra2snooty
+
+name: Create Jira Ticket
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions: {}
+
+jobs:
+  create-jira:
+    if: github.event.label.name == 'create_jira'
+    uses: mongodb/apix-action/.github/workflows/_create-jira.yaml@main
+    secrets: inherit

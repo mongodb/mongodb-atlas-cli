@@ -55,7 +55,7 @@ require (
 	github.com/zalando/go-keyring v0.2.8
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312020 v20250312020.1.0
+	go.mongodb.org/atlas-sdk/v20250312021 v20250312021.0.0
 	go.mongodb.org/mongo-driver v1.17.9
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.37.0

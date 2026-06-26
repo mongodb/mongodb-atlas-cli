@@ -43,7 +43,7 @@
 	"github.com/yuin/goldmark": "apix-devtools",
 	"github.com/zalando/go-keyring": "apix-devtools",
 	"go.mongodb.org/atlas-sdk/v20240530005": "apix-devtools",
-	"go.mongodb.org/atlas-sdk/v20250312020": "apix-devtools",
+	"go.mongodb.org/atlas-sdk/v20250312021": "apix-devtools",
 	"go.mongodb.org/atlas": "apix-devtools",
 	"go.mongodb.org/mongo-driver": "apix-devtools",
 	"go.opentelemetry.io/otel": "apix-devtools",

@@ -28,7 +28,6 @@ func Builder() *cobra.Command {
 	}
 	cmd.AddCommand(
 		LoginBuilder(),
-		ConnectBuilder(),
 		WhoAmIBuilder(),
 		LogoutBuilder(),
 		RegisterBuilder(),

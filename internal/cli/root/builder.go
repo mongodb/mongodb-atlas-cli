@@ -172,8 +172,6 @@ Use the --help flag with any command for more info on that command.`,
 	whoCmd.Hidden = true
 	registerCmd := auth.RegisterBuilder()
 	registerCmd.Hidden = true
-	connectCmd := auth.ConnectBuilder()
-	connectCmd.Hidden = true
 
 	rootCmd.AddCommand(
 		cliconfig.Builder(),
@@ -209,7 +207,6 @@ Use the --help flag with any command for more info on that command.`,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
-		connectCmd,
 		datafederation.Builder(),
 		auditing.Builder(),
 		deployments.Builder(),

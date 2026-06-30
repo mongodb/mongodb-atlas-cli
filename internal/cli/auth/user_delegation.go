@@ -23,13 +23,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pkg/browser"
-	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -173,46 +170,18 @@ func (opts *UserDelegationFlow) Run(ctx context.Context) error {
 		return err
 	}
 
-	// Store the tokens, expiry, and auth type
+	// Store the tokens and expiry.
 	opts.config.SetAccessToken(token.AccessToken)
 	opts.config.SetRefreshToken(token.RefreshToken)
 	if !token.Expiry.IsZero() {
 		opts.config.SetTokenExpiry(token.Expiry.Format(time.RFC3339))
 	}
-	opts.config.SetAuthType(config.UserDelegation)
 	if err := opts.config.Save(); err != nil {
 		return fmt.Errorf("failed to save credentials: %w", err)
 	}
 
 	_, _ = fmt.Fprintln(opts.OutWriter, "Successfully connected to MongoDB Atlas.")
 	return nil
-}
-
-func ConnectBuilder() *cobra.Command {
-	opts := &UserDelegationFlow{}
-
-	cmd := &cobra.Command{
-		Use:   "connect",
-		Short: "Connect to MongoDB Atlas using the dedicated authorization server.",
-		Long:  `This command authenticates with MongoDB Atlas via the dedicated OAuth Authorization Server at authorize.mongodb.com.`,
-		Example: `  # Connect to your MongoDB Atlas account:
-  atlas auth connect
-`,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			opts.config = config.Default()
-			opts.OutWriter = cmd.OutOrStdout()
-			return nil
-		},
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			return opts.Run(cmd.Context())
-		},
-		Args: require.NoArgs,
-	}
-
-	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
-	cmd.Flags().BoolVar(&opts.Discover, "discover", false, "Force re-discovery of authorization server metadata.")
-
-	return cmd
 }
 
 // metadataExpired checks whether the cached metadata has passed its expiry.

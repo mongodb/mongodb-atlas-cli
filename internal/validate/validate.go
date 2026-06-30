@@ -167,12 +167,24 @@ func NoAccessToken() error {
 	if config.AccessToken() == "" {
 		return nil
 	}
-	subject, _ := config.AccessTokenSubject()
-	return fmt.Errorf(`%w (%s)
+
+	// Only UserAccount issues a token whose subject we read; other methods
+	// keep the access token opaque to the client.
+	if config.AuthType() == config.UserAccount {
+		if subject, err := config.AccessTokenSubject(); err == nil && subject != "" {
+			return fmt.Errorf(`%w (%s)
+
+To log out, run: atlas auth logout`,
+				ErrAlreadyAuthenticatedToken,
+				subject,
+			)
+		}
+	}
+
+	return fmt.Errorf(`%w
 
 To log out, run: atlas auth logout`,
 		ErrAlreadyAuthenticatedToken,
-		subject,
 	)
 }
 

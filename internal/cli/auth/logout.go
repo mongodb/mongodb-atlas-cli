@@ -74,17 +74,11 @@ type logoutOpts struct {
 	revokeAuthServerToken     func(context.Context) error
 }
 
-func (opts *logoutOpts) initFlow(ctx context.Context) error {
+func (opts *logoutOpts) initFlow() error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
 	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
-	opts.revokeServiceAccountToken = func() error {
-		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
-	}
-	opts.revokeAuthServerToken = func(ctx context.Context) error {
-		return revokeAuthServerToken(ctx, opts.config)
-	}
 	return err
 }
 
@@ -192,9 +186,18 @@ func LogoutBuilder() *cobra.Command {
 				opts.config = config.Default()
 			}
 
-			// Only initialize OAuth flow if we have OAuth-based auth
-			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
-				return opts.initFlow(cmd.Context())
+			// Wire up the revoke path for the profile's auth type.
+			switch opts.config.AuthType() {
+			case config.UserAccount:
+				return opts.initFlow()
+			case config.ServiceAccount:
+				opts.revokeServiceAccountToken = func() error {
+					return revokeServiceAccountToken(cmd.Context(), opts.config.ClientID(), opts.config.ClientSecret())
+				}
+			case config.UserDelegation:
+				opts.revokeAuthServerToken = func(ctx context.Context) error {
+					return revokeAuthServerToken(ctx, opts.config)
+				}
 			}
 
 			return nil

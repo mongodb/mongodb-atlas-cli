@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 540
+Content-Type: application/vnd.atlas.2023-10-01+json;charset=utf-8
+Date: Mon, 29 Jun 2026 03:30:22 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1195
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 116
+X-Frame-Options: DENY
+X-Java-Method: ApiDiskBackupDataProtectionResource::updateDataProtectionSettings
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"authorizedEmail":"firstname.lastname@example.com","authorizedUserFirstName":"firstname","authorizedUserLastName":"lastname","copyProtectionEnabled":false,"deletable":false,"encryptionAtRestEnabled":false,"onDemandPolicyItem":null,"pitEnabled":true,"projectId":"6a41e6b947a46530bc32813c","restoreWindowDays":1,"scheduledPolicyItems":[{"frequencyInterval":1,"frequencyType":"hourly","id":"6a41e6be1531b7d29cab683c","retentionUnit":"days","retentionValue":1}],"state":"UPDATING","updatedDate":"2026-06-29T03:30:22Z","updatedUser":"nmtxqlkl"}

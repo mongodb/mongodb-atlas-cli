@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 301
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Mon, 29 Jun 2026 03:52:53 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 158
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchDeploymentResource::createSearchDeployment
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"effectiveSpecs":[{"cloudProvider":"AWS","instanceSize":"S30_LOWCPU_NVME","nodeCount":2,"regionName":"US_EAST_1"}],"encryptionAtRestProvider":"NONE","groupId":"6a41e6421531b7d29caae9cd","id":"6a41ec161531b7d29cad507e","specs":[{"instanceSize":"S30_LOWCPU_NVME","nodeCount":2}],"stateName":"UPDATING"}

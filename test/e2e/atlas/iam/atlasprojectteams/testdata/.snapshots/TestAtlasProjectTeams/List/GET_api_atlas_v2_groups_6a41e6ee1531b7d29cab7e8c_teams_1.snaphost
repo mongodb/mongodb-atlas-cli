@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 412
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 29 Jun 2026 03:31:13 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1197
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 50
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupTeamsResource::getTeams
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6ee1531b7d29cab7e8c/teams?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6ee1531b7d29cab7e8c/teams/6a41e6f61531b7d29cab8b2d","rel":"self"}],"roleNames":["GROUP_DATA_ACCESS_READ_ONLY","GROUP_READ_ONLY"],"teamId":"6a41e6f61531b7d29cab8b2d"}],"totalCount":1}

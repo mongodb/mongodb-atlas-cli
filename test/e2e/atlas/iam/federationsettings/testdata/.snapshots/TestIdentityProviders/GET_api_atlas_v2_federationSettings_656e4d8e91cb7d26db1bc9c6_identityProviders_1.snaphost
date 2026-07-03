@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
-Content-Length: 665
+Content-Length: 663
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 01 Jun 2026 03:34:25 GMT
+Date: Mon, 29 Jun 2026 03:33:15 GMT
 Ratelimit-Limit: 300
 Ratelimit-Remaining: 296
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 31
+X-Envoy-Upstream-Service-Time: 32
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.19+10-LTS
-X-Mongodb-Service-Version: gitHash=a5ead5facd022536c7135a6e99fbdadfd937ec91; versionString=master
+X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-215","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2026-06-01T03:33:48Z","description":"CLI TEST Provider","displayName":"idp-215","groupsClaim":"groups","id":"6a1cfd9c2c4d2404f1f8261f","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-74","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2026-06-29T03:32:40Z","description":"CLI TEST Provider","displayName":"idp-74","groupsClaim":"groups","id":"6a41e7581531b7d29cabc232","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}

@@ -17,6 +17,7 @@ package telemetry
 import (
 	"errors"
 	"fmt"
+	"os"
 	"runtime"
 	"testing"
 	"time"
@@ -406,7 +407,10 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 func clearAgentEnvVars(t *testing.T) {
 	t.Helper()
 	for _, a := range agentEnvVars {
+		// t.Setenv registers restoration of the original value; os.Unsetenv
+		// then actually clears it so presence-based checks see it as unset.
 		t.Setenv(a.envVar, "")
+		require.NoError(t, os.Unsetenv(a.envVar))
 	}
 }
 
@@ -436,6 +440,18 @@ func TestWithAgent(t *testing.T) {
 			assert.Equal(t, tt.want, e.Properties["agent_env_var"])
 		})
 	}
+	t.Run("trae_ai detected when set to empty value", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("TRAE_AI_SHELL_ID", "")
+		e := newEvent(withAgent())
+		assert.Equal(t, "trae_ai", e.Properties["agent_env_var"])
+	})
+	t.Run("value-matched var ignored when set to empty", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("CLAUDECODE", "")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
 	t.Run("none set", func(t *testing.T) {
 		clearAgentEnvVars(t)
 		e := newEvent(withAgent())

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 408
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Mon, 29 Jun 2026 03:29:40 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 91
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getRestoreJob
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"deliveryType":"RESTORE","expirationDate":"2026-06-29T09:29:37Z","id":"6a41e6a147a46530bc327661","instanceName":"snapshotCluster0","projectId":"b0123456789abcdef012345b","restoreScheduledDate":"2026-06-29T03:29:37Z","snapshotFinishedDate":"2026-06-21T17:07:21Z","snapshotId":"6a3819fa584d61a2b3277806","status":"RUNNING","targetDeploymentItemName":"cluster-526","targetProjectId":"b0123456789abcdef012345b"}

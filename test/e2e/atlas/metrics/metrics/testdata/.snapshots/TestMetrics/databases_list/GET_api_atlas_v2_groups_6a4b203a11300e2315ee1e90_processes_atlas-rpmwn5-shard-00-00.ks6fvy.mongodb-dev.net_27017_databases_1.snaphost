@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 662
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 06 Jul 2026 03:44:57 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 296
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 310
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getDatabaseMeasurementLinks
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=d61d17e1535e5b607c74038e3f0f90ed132c63d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b203a11300e2315ee1e90/processes/atlas-rpmwn5-shard-00-00.ks6fvy.mongodb-dev.net:27017/databases?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"databaseName":"config","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b203a11300e2315ee1e90/processes/atlas-rpmwn5-shard-00-00.ks6fvy.mongodb-dev.net:27017/databases/config","rel":"self"}]},{"databaseName":"local","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b203a11300e2315ee1e90/processes/atlas-rpmwn5-shard-00-00.ks6fvy.mongodb-dev.net:27017/databases/local","rel":"self"}]}],"totalCount":2}

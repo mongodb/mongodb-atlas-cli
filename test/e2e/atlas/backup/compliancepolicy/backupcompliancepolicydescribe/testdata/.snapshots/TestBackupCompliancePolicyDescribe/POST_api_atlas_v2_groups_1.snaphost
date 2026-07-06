@@ -1,19 +1,19 @@
 HTTP/2.0 201 Created
 Content-Length: 1088
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 29 Jun 2026 03:29:36 GMT
+Date: Mon, 06 Jul 2026 03:26:10 GMT
 Location: http://localhost:8080//api/atlas/v1.0
 Ratelimit-Limit: 1200
-Ratelimit-Remaining: 1198
+Ratelimit-Remaining: 1197
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1924
+X-Envoy-Upstream-Service-Time: 2401
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.19+10-LTS
-X-Mongodb-Service-Version: gitHash=b848f16afbefb8b93e31bb1ae0610e0c862727d7; versionString=master
+X-Mongodb-Service-Version: gitHash=d61d17e1535e5b607c74038e3f0f90ed132c63d7; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2026-06-29T03:29:38Z","id":"6a41e6a01531b7d29cab43c5","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a41e6a01531b7d29cab43c5/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"describe-compliance-policy-e2e-449","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}
+{"clusterCount":0,"created":"2026-07-06T03:26:12Z","id":"6a4b205211300e2315ee45ef","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a4b205211300e2315ee45ef/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"describe-compliance-policy-e2e-398","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}

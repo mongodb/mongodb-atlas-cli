@@ -1,0 +1,18 @@
+HTTP/2.0 202 Accepted
+Content-Length: 167
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 06 Jul 2026 04:12:46 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1197
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 108
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasUserSecurityResource::deleteUserSecurityLdapUserToDNMapping
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=d61d17e1535e5b607c74038e3f0f90ed132c63d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"customerX509":{},"ldap":{"authenticationEnabled":false,"authorizationEnabled":false,"bindUsername":"cn=admin,dc=example,dc=org","hostname":"localhost","port":19657}}

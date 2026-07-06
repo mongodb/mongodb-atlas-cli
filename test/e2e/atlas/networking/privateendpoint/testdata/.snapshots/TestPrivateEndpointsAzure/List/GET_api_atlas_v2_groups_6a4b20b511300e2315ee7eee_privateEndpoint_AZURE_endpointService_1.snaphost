@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 417
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 06 Jul 2026 03:28:59 GMT
+Ratelimit-Limit: 4000
+Ratelimit-Remaining: 3997
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=d61d17e1535e5b607c74038e3f0f90ed132c63d7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"AZURE","errorMessage":null,"id":"6a4b20ba57ab93bba9585b4e","privateEndpoints":[],"privateLinkServiceName":"pls_6a4b20ba57ab93bba9585b4e","privateLinkServiceResourceId":"/subscriptions/4e133d35-e734-4380-a565-c0945535da37/resourceGroups/rg_6a4b20ba57ab93bba9585b4f_avl0zuiz/providers/Microsoft.Network/privateLinkServices/pls_6a4b20ba57ab93bba9585b4e","regionName":"US_EAST_2","status":"AVAILABLE"}]

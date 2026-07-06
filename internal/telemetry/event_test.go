@@ -406,11 +406,16 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 
 func clearAgentEnvVars(t *testing.T) {
 	t.Helper()
+	envVars := make([]string, 0, len(agentEnvVars)+2)
 	for _, a := range agentEnvVars {
+		envVars = append(envVars, a.envVar)
+	}
+	envVars = append(envVars, aiAgentEnvVar, isCodeAgentEnvVar)
+	for _, name := range envVars {
 		// t.Setenv registers restoration of the original value; os.Unsetenv
 		// then actually clears it so presence-based checks see it as unset.
-		t.Setenv(a.envVar, "")
-		require.NoError(t, os.Unsetenv(a.envVar))
+		t.Setenv(name, "")
+		require.NoError(t, os.Unsetenv(name))
 	}
 }
 
@@ -431,6 +436,33 @@ func TestWithAgent(t *testing.T) {
 		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
 		{name: "amp", envVar: "AMP_AGENT", value: "1", want: "amp"},
 		{name: "goose", envVar: "GOOSE_AGENT", value: "1", want: "goose"},
+		{name: "replit", envVar: "REPL_ID", value: "repl-abc", want: "replit"},
+		{name: "cursor via trace id", envVar: "CURSOR_TRACE_ID", value: "trace-1", want: "cursor"},
+		{name: "cursor via extension host role", envVar: "CURSOR_EXTENSION_HOST_ROLE", value: "worker", want: "cursor"},
+		{name: "codex via ci", envVar: "CODEX_CI", value: "1", want: "codex_cli"},
+		{name: "codex via thread id", envVar: "CODEX_THREAD_ID", value: "thread-1", want: "codex_cli"},
+		{name: "antigravity", envVar: "ANTIGRAVITY_AGENT", value: "1", want: "antigravity"},
+		{name: "claude_code via CLAUDE_CODE", envVar: "CLAUDE_CODE", value: "1", want: "claude_code"},
+		{name: "cowork reported as claude_code", envVar: "CLAUDE_CODE_IS_COWORK", value: "1", want: "claude_code"},
+		{name: "github_copilot via model", envVar: "COPILOT_MODEL", value: "gpt-4o", want: "github_copilot"},
+		{name: "github_copilot via allow all", envVar: "COPILOT_ALLOW_ALL", value: "1", want: "github_copilot"},
+		{name: "github_copilot via github token", envVar: "COPILOT_GITHUB_TOKEN", value: "ghs_secret", want: "github_copilot"},
+		{name: "AI_AGENT cursor", envVar: "AI_AGENT", value: "cursor", want: "cursor"},
+		{name: "AI_AGENT cursor-cli", envVar: "AI_AGENT", value: "cursor-cli", want: "cursor"},
+		{name: "AI_AGENT claude", envVar: "AI_AGENT", value: "claude", want: "claude_code"},
+		{name: "AI_AGENT cowork reported as claude_code", envVar: "AI_AGENT", value: "cowork", want: "claude_code"},
+		{name: "AI_AGENT devin", envVar: "AI_AGENT", value: "devin", want: "devin"},
+		{name: "AI_AGENT replit", envVar: "AI_AGENT", value: "replit", want: "replit"},
+		{name: "AI_AGENT gemini", envVar: "AI_AGENT", value: "gemini", want: "gemini_cli"},
+		{name: "AI_AGENT codex", envVar: "AI_AGENT", value: "codex", want: "codex_cli"},
+		{name: "AI_AGENT antigravity", envVar: "AI_AGENT", value: "antigravity", want: "antigravity"},
+		{name: "AI_AGENT augment-cli", envVar: "AI_AGENT", value: "augment-cli", want: "auggie_cli"},
+		{name: "AI_AGENT opencode", envVar: "AI_AGENT", value: "opencode", want: "opencode_client"},
+		{name: "AI_AGENT github-copilot", envVar: "AI_AGENT", value: "github-copilot", want: "github_copilot"},
+		{name: "AI_AGENT github-copilot-cli", envVar: "AI_AGENT", value: "github-copilot-cli", want: "github_copilot"},
+		{name: "AI_AGENT v0", envVar: "AI_AGENT", value: "v0", want: "v0"},
+		{name: "unidentified via AI_AGENT unknown value", envVar: "AI_AGENT", value: "some-agent", want: "unidentified_agent"},
+		{name: "unidentified via IS_CODE_AGENT", envVar: "IS_CODE_AGENT", value: "1", want: "unidentified_agent"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name+" detected", func(t *testing.T) {
@@ -461,8 +493,30 @@ func TestWithAgent(t *testing.T) {
 		clearAgentEnvVars(t)
 		t.Setenv("CLAUDECODE", "true")
 		t.Setenv("CODEX_SANDBOX", "1")
+		t.Setenv("IS_CODE_AGENT", "0")
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+	t.Run("specific agent wins over generic flag", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("AI_AGENT", "some-agent")
+		t.Setenv("CURSOR_AGENT", "1")
+		e := newEvent(withAgent())
+		assert.Equal(t, "cursor", e.Properties["agent_env_var"])
+	})
+	t.Run("claude_code detected when cowork flag also set", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("CLAUDECODE", "1")
+		t.Setenv("CLAUDE_CODE_IS_COWORK", "1")
+		e := newEvent(withAgent())
+		assert.Equal(t, "claude_code", e.Properties["agent_env_var"])
+	})
+	t.Run("AI_AGENT known value wins over IS_CODE_AGENT", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("AI_AGENT", "claude")
+		t.Setenv("IS_CODE_AGENT", "1")
+		e := newEvent(withAgent())
+		assert.Equal(t, "claude_code", e.Properties["agent_env_var"])
 	})
 }
 

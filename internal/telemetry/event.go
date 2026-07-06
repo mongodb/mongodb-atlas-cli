@@ -157,17 +157,56 @@ var agentEnvVars = []struct {
 	name         string
 	presenceOnly bool // match whenever the variable is set, regardless of value
 }{
+	// withAgent returns on the first match; the generic AI_AGENT and
+	// IS_CODE_AGENT flags are handled after this table so specific tools win.
 	{"CLAUDECODE", "1", "claude_code", false},
+	{"CLAUDE_CODE", "", "claude_code", true},
+	{"CLAUDE_CODE_IS_COWORK", "", "claude_code", true}, // Cowork runs on Claude Code
 	{"CURSOR_AGENT", "1", "cursor", false},
+	{"CURSOR_TRACE_ID", "", "cursor", true},
+	{"CURSOR_EXTENSION_HOST_ROLE", "", "cursor", true},
 	{"GEMINI_CLI", "1", "gemini_cli", false},
 	{"CODEX_SANDBOX", "seatbelt", "codex_cli", false},
+	{"CODEX_CI", "", "codex_cli", true},
+	{"CODEX_THREAD_ID", "", "codex_cli", true},
 	{"AUGMENT_AGENT", "1", "auggie_cli", false},
 	{"CLINE_ACTIVE", "true", "cline", false},
 	{"OPENCODE_CLIENT", "1", "opencode_client", false},
 	{"TRAE_AI_SHELL_ID", "", "trae_ai", true},
+	{"ANTIGRAVITY_AGENT", "", "antigravity", true},
+	{"REPL_ID", "", "replit", true},
 	{"AMP_AGENT", "1", "amp", false},
 	{"GOOSE_AGENT", "1", "goose", false},
+	{"COPILOT_MODEL", "", "github_copilot", true},
+	{"COPILOT_ALLOW_ALL", "", "github_copilot", true},
+	{"COPILOT_GITHUB_TOKEN", "", "github_copilot", true},
 }
+
+// aiAgentNames maps the AI_AGENT value (the agent's own name, per Vercel's
+// @vercel/detect-agent) to our agent_env_var value. Any other value still
+// signals an agent, reported as unidentifiedAgent.
+var aiAgentNames = map[string]string{
+	"cursor":             "cursor",
+	"cursor-cli":         "cursor",
+	"claude":             "claude_code",
+	"cowork":             "claude_code",
+	"devin":              "devin",
+	"replit":             "replit",
+	"gemini":             "gemini_cli",
+	"codex":              "codex_cli",
+	"antigravity":        "antigravity",
+	"augment-cli":        "auggie_cli",
+	"opencode":           "opencode_client",
+	"github-copilot":     "github_copilot",
+	"github-copilot-cli": "github_copilot",
+	"v0":                 "v0",
+}
+
+const (
+	aiAgentEnvVar     = "AI_AGENT"
+	isCodeAgentEnvVar = "IS_CODE_AGENT"
+	unidentifiedAgent = "unidentified_agent"
+)
 
 func withAgent() EventOpt {
 	return func(event Event) {
@@ -187,6 +226,23 @@ func withAgent() EventOpt {
 				continue
 			}
 			event.Properties["agent_env_var"] = a.name
+			return
+		}
+		// AI_AGENT holds the agent's own name (Vercel's @vercel/detect-agent
+		// convention). Map known names; any other value still signals an agent.
+		if v, ok := os.LookupEnv(aiAgentEnvVar); ok {
+			if v = strings.TrimSpace(v); v != "" {
+				name, known := aiAgentNames[v]
+				if !known {
+					name = unidentifiedAgent
+				}
+				event.Properties["agent_env_var"] = name
+				return
+			}
+		}
+		// IS_CODE_AGENT is Bun's generic "an agent is present" flag.
+		if v, ok := os.LookupEnv(isCodeAgentEnvVar); ok && v == "1" {
+			event.Properties["agent_env_var"] = unidentifiedAgent
 			return
 		}
 		if _, err := os.Stat("/opt/.devin"); err == nil {

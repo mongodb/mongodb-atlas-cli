@@ -79,10 +79,13 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 
 func (opts *InstallOpts) Run(ctx context.Context) error {
 	// get all plugin assets info from github repository
-	assets, err := opts.githubAsset.getReleaseAssets(opts.ghClient)
+	// getReleaseAssets may fall back to an unauthenticated client; reuse the
+	// returned client for the subsequent asset downloads.
+	assets, ghClient, err := opts.githubAsset.getReleaseAssets(opts.ghClient)
 	if err != nil {
 		return err
 	}
+	opts.ghClient = ghClient
 
 	// find correct assetID, signatureID and pubKeyID using system requirements
 	assetID, signatureID, pubKeyID, err := opts.githubAsset.getIDs(assets)

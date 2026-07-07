@@ -16,6 +16,10 @@ package plugin
 
 import (
 	"errors"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
@@ -512,6 +516,165 @@ func Test_createGithubAssetFromPlugin(t *testing.T) {
 					t.Errorf("expected: %v, got: %v", tt.expected, got)
 				}
 			}
+		})
+	}
+}
+
+// newGithubTestClient returns an authenticated client pointing at the given
+// test server, mimicking NewAuthenticatedGithubClient when a token is present.
+func newGithubTestClient(t *testing.T, serverURL string) *github.Client {
+	t.Helper()
+	base, err := url.Parse(serverURL + "/")
+	require.NoError(t, err)
+	client := github.NewClient(nil).WithAuthToken("saml-blocked-token")
+	client.BaseURL = base
+	return client
+}
+
+func Test_getReleaseAssets_fallsBackToUnauthenticated(t *testing.T) {
+	const releasesBody = `[{"tag_name":"v1.0.0","assets":[{"id":1,"name":"plugin_linux_amd64.tar.gz","content_type":"application/gzip"}]}]`
+
+	var authedCalls, unauthedCalls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// the configured token is rejected (e.g. org SAML/SSO enforcement);
+		// an unauthenticated request to the public repo succeeds
+		if r.Header.Get("Authorization") != "" {
+			authedCalls++
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = w.Write([]byte(`{"message":"Resource protected by organization SAML enforcement"}`))
+			return
+		}
+		unauthedCalls++
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(releasesBody))
+	}))
+	t.Cleanup(server.Close)
+
+	asset := &GithubAsset{owner: "mongodb", name: "atlas-local-cli"}
+	authedClient := newGithubTestClient(t, server.URL)
+
+	assets, effectiveClient, err := asset.getReleaseAssets(authedClient)
+	require.NoError(t, err)
+	require.Len(t, assets, 1)
+	assert.Equal(t, "plugin_linux_amd64.tar.gz", assets[0].GetName())
+
+	// authenticated request tried first, then retried unauthenticated
+	assert.Equal(t, 1, authedCalls)
+	assert.Equal(t, 1, unauthedCalls)
+
+	// the returned client is unauthenticated so downloads reuse it
+	assert.NotEqual(t, authedClient, effectiveClient)
+}
+
+func Test_getReleaseAssets_succeedsWithoutFallback(t *testing.T) {
+	const releasesBody = `[{"tag_name":"v1.0.0","assets":[{"id":1,"name":"plugin_linux_amd64.tar.gz","content_type":"application/gzip"}]}]`
+
+	var calls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		calls++
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(releasesBody))
+	}))
+	t.Cleanup(server.Close)
+
+	asset := &GithubAsset{owner: "mongodb", name: "atlas-local-cli"}
+	client := newGithubTestClient(t, server.URL)
+
+	assets, effectiveClient, err := asset.getReleaseAssets(client)
+	require.NoError(t, err)
+	require.Len(t, assets, 1)
+
+	// no retry needed; same client returned
+	assert.Equal(t, 1, calls)
+	assert.Equal(t, client, effectiveClient)
+}
+
+func Test_getReleaseAssets_failsWhenBothAttemptsFail(t *testing.T) {
+	var calls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		calls++
+		w.WriteHeader(http.StatusForbidden)
+		_, _ = w.Write([]byte(`{"message":"forbidden"}`))
+	}))
+	t.Cleanup(server.Close)
+
+	asset := &GithubAsset{owner: "mongodb", name: "atlas-local-cli"}
+	client := newGithubTestClient(t, server.URL)
+
+	_, _, err := asset.getReleaseAssets(client)
+	require.Error(t, err)
+	// authenticated attempt plus one unauthenticated retry
+	assert.Equal(t, 2, calls)
+}
+
+func Test_getReleaseAssets_doesNotRetryOnNonForbiddenError(t *testing.T) {
+	var calls int
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		calls++
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(`{"message":"Not Found"}`))
+	}))
+	t.Cleanup(server.Close)
+
+	asset := &GithubAsset{owner: "mongodb", name: "atlas-local-cli"}
+	client := newGithubTestClient(t, server.URL)
+
+	_, _, err := asset.getReleaseAssets(client)
+	require.Error(t, err)
+	// non-403 error is surfaced without an unauthenticated retry
+	assert.Equal(t, 1, calls)
+}
+
+func Test_isForbiddenErr(t *testing.T) {
+	tests := []struct {
+		name     string
+		err      error
+		expected bool
+	}{
+		{
+			name:     "nil error",
+			err:      nil,
+			expected: false,
+		},
+		{
+			name:     "plain error",
+			err:      errors.New("boom"),
+			expected: false,
+		},
+		{
+			name: "403 error response (SAML/SSO)",
+			err: &github.ErrorResponse{
+				Response: &http.Response{StatusCode: http.StatusForbidden},
+				Message:  "Resource protected by organization SAML enforcement",
+			},
+			expected: true,
+		},
+		{
+			name: "wrapped 403 error response",
+			err: fmt.Errorf("could not fetch releases: %w", &github.ErrorResponse{
+				Response: &http.Response{StatusCode: http.StatusForbidden},
+			}),
+			expected: true,
+		},
+		{
+			name: "404 error response",
+			err: &github.ErrorResponse{
+				Response: &http.Response{StatusCode: http.StatusNotFound},
+			},
+			expected: false,
+		},
+		{
+			name: "rate limit error is not treated as forbidden",
+			err: &github.RateLimitError{
+				Response: &http.Response{StatusCode: http.StatusForbidden},
+			},
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, isForbiddenErr(tt.err))
 		})
 	}
 }

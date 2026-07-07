@@ -30,3 +30,13 @@ func NewAuthenticatedGithubClient() *github.Client {
 
 	return ghClient
 }
+
+// newUnauthenticatedGithubClient returns a GitHub client with no auth token. It
+// preserves the base and upload URLs of the provided client so it keeps
+// targeting the same host (important for tests using a mock server).
+func newUnauthenticatedGithubClient(ghClient *github.Client) *github.Client {
+	client := github.NewClient(nil)
+	client.BaseURL = ghClient.BaseURL
+	client.UploadURL = ghClient.UploadURL
+	return client
+}

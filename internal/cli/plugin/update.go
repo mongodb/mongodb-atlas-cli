@@ -138,10 +138,13 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 
 func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *GithubAsset, existingPlugin *plugin.Plugin) error {
 	// get all plugin assets info from github repository
-	assets, err := githubAssetRelease.getReleaseAssets(opts.ghClient)
+	// getReleaseAssets may fall back to an unauthenticated client; reuse the
+	// returned client for the subsequent asset downloads.
+	assets, ghClient, err := githubAssetRelease.getReleaseAssets(opts.ghClient)
 	if err != nil {
 		return err
 	}
+	opts.ghClient = ghClient
 
 	// find correct assetID, signatureID and pubKeyID using system requirements
 	assetID, signatureID, pubKeyID, err := githubAssetRelease.getIDs(assets)

@@ -76,10 +76,33 @@ func (g *GithubAsset) getPluginDirectoryName() string {
 	return fmt.Sprintf("%s@%s", g.owner, g.name)
 }
 
-func (g *GithubAsset) getReleaseAssets(ghClient *github.Client) ([]*github.ReleaseAsset, error) {
-	var err error
-	var release *github.RepositoryRelease
+// getReleaseAssets fetches the release assets for the plugin. It returns the
+// assets together with the client that succeeded, so callers can reuse it for
+// the subsequent asset downloads.
+func (g *GithubAsset) getReleaseAssets(ghClient *github.Client) ([]*github.ReleaseAsset, *github.Client, error) {
+	release, err := g.getRelease(ghClient)
+	if err != nil {
+		// Only retry without the token when the failure is a 403 caused by the
+		// configured token/login lacking access (e.g. org SAML/SSO enforcement).
+		// If the target plugin repository is public, an unauthenticated request
+		// can succeed. Any other error is surfaced as-is.
+		if !isForbiddenErr(err) {
+			return nil, nil, err
+		}
+		_, _ = log.Debugf("-- plugin debug: authenticated github request for %s was forbidden: %v\n", g.repository(), err)
+		_, _ = log.Debugf("-- plugin debug: retrying with unauthenticated github client\n")
+		ghClient = newUnauthenticatedGithubClient(ghClient)
+		release, err = g.getRelease(ghClient)
+	}
+	if err != nil {
+		_, _ = log.Debugf("-- plugin debug: unauthenticated GitHub request for %s also failed: %v\n", g.repository(), err)
+		return nil, nil, err
+	}
 
+	return release.Assets, ghClient, nil
+}
+
+func (g *GithubAsset) getRelease(ghClient *github.Client) (*github.RepositoryRelease, error) {
 	// download latest release if version is not specified
 	if g.version == nil {
 		// download the 100 latest releases
@@ -90,31 +113,43 @@ func (g *GithubAsset) getReleaseAssets(ghClient *github.Client) ([]*github.Relea
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker\n"+
-				"if you are using a private repository, you need to set the GH_TOKEN environment variable (needs content read access to the repository) or authenticate with the github cli\n"+
-				"more info about access tokens: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token\n\n"+
+			return nil, fmt.Errorf("could not fetch the release for %s. Make sure you have access to GitHub.\n"+
+				"If you are running the Atlas CLI via Docker, see https://dochub.mongodb.org/core/atlas-cli-deploy-docker\n"+
+				"If the plugin is stored in a private repository, set the GH_TOKEN environment variable to a token with content read access to that repository, or authenticate with the GitHub CLI.\n"+
+				"For more information about access tokens, see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token\n\n"+
 				"error: %w", g.repository(), err)
 		}
 
 		// get the latest release that doesn't have prerelease info or metadata in the version tag
-		release = getLatestStableRelease(releases)
+		release := getLatestStableRelease(releases)
 		if release == nil {
 			return nil, fmt.Errorf("could not find latest stable release for %s", g.repository())
 		}
-	} else {
-		// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
-		release, _, err = ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, "v"+g.version.String())
 
-		if release == nil || err != nil {
-			release, _, err = ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, g.version.String())
-		}
-
-		if err != nil {
-			return nil, fmt.Errorf("could not find the release %s for %s", g.version, g.repository())
-		}
+		return release, nil
 	}
 
-	return release.Assets, nil
+	// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
+	release, _, err := ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, "v"+g.version.String())
+
+	if release == nil || err != nil {
+		release, _, err = ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, g.version.String())
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("could not find the release %s for %s: %w", g.version, g.repository(), err)
+	}
+
+	return release, nil
+}
+
+// isForbiddenErr reports whether err is a GitHub 403 response. This is returned
+// when the configured token or login lacks access to the repository, most
+// notably when a Personal Access Token is blocked by an organization's SAML/SSO
+// enforcement ("Resource protected by organization SAML enforcement").
+func isForbiddenErr(err error) bool {
+	var ghErr *github.ErrorResponse
+	return errors.As(err, &ghErr) && ghErr.Response != nil && ghErr.Response.StatusCode == http.StatusForbidden
 }
 
 func getLatestStableRelease(releases []*github.RepositoryRelease) *github.RepositoryRelease {

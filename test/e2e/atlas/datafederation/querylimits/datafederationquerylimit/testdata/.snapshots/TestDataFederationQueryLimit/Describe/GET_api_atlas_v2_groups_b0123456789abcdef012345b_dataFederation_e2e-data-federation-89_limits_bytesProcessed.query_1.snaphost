@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 149
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 08 Jul 2026 11:35:05 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1189
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 73
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::getTenantUsageLimit
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=a5ac9fee72ce6bfffe30805e2b5feb78c97d3bf1; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"currentUsage":0,"lastModifiedDate":"2026-07-08T11:35:02Z","name":"bytesProcessed.query","tenantName":"e2e-data-federation-89","value":118000000000}

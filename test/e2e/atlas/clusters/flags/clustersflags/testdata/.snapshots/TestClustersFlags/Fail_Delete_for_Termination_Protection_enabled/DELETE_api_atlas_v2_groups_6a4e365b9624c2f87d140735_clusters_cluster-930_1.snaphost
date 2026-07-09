@@ -1,0 +1,19 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 412
+Content-Type: application/json
+Date: Wed, 08 Jul 2026 11:51:50 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9990
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 135
+X-Error-Code: CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=33590df16973a468d468e8b2c456eacffa64fc62; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Cannot terminate a cluster when termination protection is enabled. Disable termination protection and try again.","error":400,"errorCode":"CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED","parameters":["Cannot terminate cluster cluster-930 in group 6a4e365b9624c2f87d140735 because termination protection is enabled. Disable termination protection and try again."],"reason":"Bad Request"}

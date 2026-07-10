@@ -34,7 +34,7 @@ const (
 
 const (
 	pending          = "PENDING"
-	ldapHostname     = "localhost"
+	ldapHostname     = "2.tcp.ngrok.io"
 	ldapPort         = "19657"
 	ldapBindPassword = "admin"
 )

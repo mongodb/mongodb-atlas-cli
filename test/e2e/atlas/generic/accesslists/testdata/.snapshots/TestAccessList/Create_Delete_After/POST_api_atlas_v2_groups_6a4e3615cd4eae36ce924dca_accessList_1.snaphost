@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 472
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 08 Jul 2026 11:36:07 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1195
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 163
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasNetworkAccessListResource::addAtlasWhitelist
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=a5ac9fee72ce6bfffe30805e2b5feb78c97d3bf1; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4e3615cd4eae36ce924dca/accessList?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cidrBlock":"192.168.0.172/32","comment":"test","deleteAfterDate":"2026-07-08T11:41:06Z","groupId":"6a4e3615cd4eae36ce924dca","ipAddress":"192.168.0.172","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a4e3615cd4eae36ce924dca/accessList/192.168.0.172%2F32","rel":"self"}]}],"totalCount":1}

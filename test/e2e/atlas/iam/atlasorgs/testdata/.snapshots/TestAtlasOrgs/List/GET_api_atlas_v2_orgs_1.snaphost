@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 361
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 06 Jul 2026 08:37:34 GMT
+Date: Wed, 08 Jul 2026 11:36:46 GMT
 Ratelimit-Limit: 300
 Ratelimit-Remaining: 299
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 101
+X-Envoy-Upstream-Service-Time: 315
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationsResource::getAllOrgs
 X-Java-Version: 17.0.19+10-LTS
-X-Mongodb-Service-Version: gitHash=4abe0e99f03c076356926e01fabc22775252257c; versionString=master
+X-Mongodb-Service-Version: gitHash=33590df16973a468d468e8b2c456eacffa64fc62; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs?includeCount=true&name=&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"id":"a0123456789abcdef012345a","isDeleted":false,"links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a","rel":"self"}],"name":"Atlas CLI E2E","skipDefaultAlertsSettings":false}],"totalCount":1}

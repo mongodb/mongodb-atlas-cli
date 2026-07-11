@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -96,6 +97,45 @@ func Test_logoutOpts_Run_APIKeys(t *testing.T) {
 		Return(nil).
 		Times(1)
 	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_UserDelegation(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	var revokeCalled bool
+	opts := logoutOpts{
+		OutWriter: buf,
+		config:    mockConfig,
+		flow:      mockFlow,
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+		},
+		revokeAuthServerToken: func(context.Context) error {
+			revokeCalled = true
+			return nil
+		},
+	}
+	ctx := t.Context()
+	mockConfig.
+		EXPECT().
+		AuthType().
+		Return(config.UserDelegation).
+		Times(1)
+
+	mockConfigCleanUp(mockConfig)
+	mockProjectAndOrgCleanUp(mockConfig)
+	mockConfig.
+		EXPECT().
+		Delete().
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
+	require.True(t, revokeCalled, "expected revokeAuthServerToken to be called for UserDelegation")
 }
 
 func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {

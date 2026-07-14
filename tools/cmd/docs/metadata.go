@@ -845,7 +845,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`createGroupClusterCollectionRestoreJob`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the source cluster for the restore.`,
@@ -5187,7 +5186,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterBackupSnapshotDatabase`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -5225,7 +5223,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterBackupSnapshotDatabaseCollection`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -5340,7 +5337,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterCollectionRestoreJob`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster with the collection restore jobs you want to return.`,
@@ -5374,7 +5370,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterCollectionRestoreJobCollection`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster with the collection restore job you want to return.`,
@@ -6596,7 +6591,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`preview`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -8106,6 +8101,29 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getOrgDelegationSettings`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
 	`getOrgEvent`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -9271,7 +9289,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`listGroupClusterBackupSnapshotDatabaseCollections`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -9318,7 +9335,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`listGroupClusterBackupSnapshotDatabases`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -9514,7 +9530,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`listGroupClusterCollectionRestoreJobCollections`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster with the collection restore job you want to return.`,
@@ -9563,7 +9578,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`listGroupClusterCollectionRestoreJobs`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster with the collection restore jobs you want to return.`,
@@ -11491,6 +11505,9 @@ var metadata = metadatatypes.Metadata{
 
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
+			`includeSystemManaged`: {
+				Usage: `Flag that indicates whether system-managed Service Accounts (such as those used for MCP ingress/egress integrations) are included in the response. When false, only user-managed Service Accounts are returned.`,
+			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
@@ -12261,6 +12278,9 @@ var metadata = metadatatypes.Metadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
+			`includeSystemManaged`: {
+				Usage: `Flag that indicates whether system-managed Service Accounts (such as those used for MCP ingress/egress integrations) are included in the response. When false, only user-managed Service Accounts are returned.`,
+			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
@@ -12966,6 +12986,30 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`resetOrgMaintenanceSettings`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -14525,6 +14569,20 @@ var metadata = metadatatypes.Metadata{
 			`apiUserId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies this organization API key you  want to update.`,
 			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateOrgDelegationSettings`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},

@@ -390,6 +390,22 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupAiModelKey`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupAlertConfig`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -2279,6 +2295,35 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`deleteGroupAiModelApiKey`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`apiKeyId`: {
+				Usage: `The id of the API key to be deleted.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`apiKeyId`: `[apiKeyId]`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`deleteGroupAiModelKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
 				Usage: `The id of the API key to be deleted.`,
@@ -4621,6 +4666,43 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupAiModelApiCloudGeographyModelGroupNameRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloud`: {
+				Usage: `Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`geography`: {
+				Usage: `Geography scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`modelGroupName`: {
+				Usage: `The name of the model group to be retrieved.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloud`:          `[cloud]`,
+					`geography`:      `[geography]`,
+					`groupId`:        `32b6e34b3d91647abb20e7b8`,
+					`modelGroupName`: `[modelGroupName]`,
+				},
+			},
+			},
+		},
+	},
 	`getGroupAiModelApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
@@ -4639,7 +4721,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -4650,7 +4732,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getGroupAiModelApiRateLimit`: {
+	`getGroupAiModelApiLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -4674,6 +4756,66 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`modelGroupName`: `[modelGroupName]`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupAiModelApiRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupAiModelKey`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`apiKeyId`: {
+				Usage: `The id of the API key to be retrieved.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`apiKeyId`: `[apiKeyId]`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -7938,6 +8080,41 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getOrgAiModelApiCloudGeographyModelGroupNameRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloud`: {
+				Usage: `Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`geography`: {
+				Usage: `Geography scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`modelGroupName`: {
+				Usage: `The name of the model group to be retrieved.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloud`:          `[cloud]`,
+					`geography`:      `[geography]`,
+					`modelGroupName`: `[modelGroupName]`,
+					`orgId`:          `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
 	`getOrgAiModelApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
@@ -7954,7 +8131,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7965,7 +8142,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getOrgAiModelApiRateLimit`: {
+	`getOrgAiModelApiLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -7987,6 +8164,62 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`modelGroupName`: `[modelGroupName]`,
 					`orgId`:          `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgAiModelApiRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgAiModelKey`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`apiKeyId`: {
+				Usage: `The id of the API key to be retrieved.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`apiKeyId`: `[apiKeyId]`,
+					`orgId`:    `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -8931,6 +9164,37 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`listGroupAiModelApiLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
 			`preview`: {{
 				Source: `-`,
 
@@ -8941,7 +9205,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`listGroupAiModelApiRateLimits`: {
+	`listGroupAiModelKeys`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -11906,6 +12170,35 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`listOrgAiModelApiLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
 			`preview`: {{
 				Source: `-`,
 
@@ -11916,7 +12209,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`listOrgAiModelApiRateLimits`: {
+	`listOrgAiModelKeys`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12915,7 +13208,44 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`resetGroupAiModelApiRateLimit`: {
+	`resetGroupAiModelApiCloudGeographyModelGroupNameRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloud`: {
+				Usage: `Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`geography`: {
+				Usage: `Geography scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`modelGroupName`: {
+				Usage: `The name of the model group to be reset to default rate limits.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`cloud`:          `[cloud]`,
+					`geography`:      `[geography]`,
+					`groupId`:        `32b6e34b3d91647abb20e7b8`,
+					`modelGroupName`: `[modelGroupName]`,
+				},
+			},
+			},
+		},
+	},
+	`resetGroupAiModelApiLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12944,7 +13274,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`resetGroupAiModelApiRateLimits`: {
+	`resetGroupAiModelApiLimits`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12960,6 +13290,31 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
+	`resetGroupAiModelApiRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -13597,6 +13952,31 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`updateGroupAiModelApiCloudGeographyModelGroupNameRateLimits`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cloud`: {
+				Usage: `Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`geography`: {
+				Usage: `Geography scope. Must be "ANY". Additional values will be supported in future API versions.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`modelGroupName`: {
+				Usage: `The name of the model group to be updated.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`updateGroupAiModelApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`apiKeyId`: {
@@ -13616,7 +13996,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
-	`updateGroupAiModelApiRateLimit`: {
+	`updateGroupAiModelApiLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -13628,6 +14008,25 @@ var metadata = metadatatypes.Metadata{
 			},
 			`modelGroupName`: {
 				Usage: `The name of the model group to be updated.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateGroupAiModelKey`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`apiKeyId`: {
+				Usage: `The id of the API key to be updated.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
@@ -14451,6 +14850,25 @@ var metadata = metadatatypes.Metadata{
 			},
 			`tenantName`: {
 				Usage: `Label that identifies the stream workspace.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateGroupStreamPrivateLinkConnection`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`connectionId`: {
+				Usage: `Unique ID that identifies the Private Link connection.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,

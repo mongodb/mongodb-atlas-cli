@@ -1671,6 +1671,155 @@ components:
             required:
                 - policyItems
             type: object
+        AiModelApiKeyCreateRequest:
+            properties:
+                cloud:
+                    description: Cloud provider scope for this API key. Must be "ANY". Additional cloud values will be supported in future API versions.
+                    enum:
+                        - ANY
+                    example: ANY
+                    minLength: 1
+                    pattern: ANY
+                    type: string
+                    writeOnly: true
+                geography:
+                    description: Geography scope for this API key. Must be "ANY". Additional geography values will be supported in future API versions.
+                    enum:
+                        - ANY
+                    example: ANY
+                    minLength: 1
+                    pattern: ANY
+                    type: string
+                    writeOnly: true
+                name:
+                    description: A name for the new API key that will be created.
+                    maxLength: 250
+                    minLength: 1
+                    type: string
+            required:
+                - cloud
+                - geography
+                - name
+            type: object
+        AiModelApiKeyResponse:
+            properties:
+                apiKeyId:
+                    description: Identifier used to reference this API key in admin API calls.
+                    example: a86r5kwrfsk5r5ku5tgvhmpj
+                    readOnly: true
+                    type: string
+                cloud:
+                    description: Cloud provider scope for this API key. Use "ANY" for cloud-agnostic scope.
+                    example: ANY
+                    readOnly: true
+                    type: string
+                createdAt:
+                    description: UTC date when the API key was created. This parameter is formatted as an ISO 8601 timestamp.
+                    example: "2026-01-15T16:47:49.855000+00:00"
+                    readOnly: true
+                    type: string
+                createdBy:
+                    description: Name of the user that created this API key. If no user name is available, the user ID is returned.
+                    example: John Doe
+                    readOnly: true
+                    type: string
+                endpoint:
+                    description: Server-computed endpoint hostname derived from cloud and geography. This field is read-only and must not be supplied in request bodies.
+                    example: ai.mongodb.com
+                    readOnly: true
+                    type: string
+                geography:
+                    description: Geography scope for this API key. Use "ANY" for geography-agnostic scope.
+                    example: ANY
+                    readOnly: true
+                    type: string
+                groupId:
+                    description: ID of the Atlas group this API key belongs to.
+                    example: 69681d39c9e8cfd375386316
+                    readOnly: true
+                    type: string
+                lastUsedAt:
+                    description: UTC date when the API key was last used. This parameter is formatted as an ISO 8601 timestamp.
+                    example: "2026-01-15T16:47:49.855000+00:00"
+                    nullable: true
+                    readOnly: true
+                    type: string
+                maskedSecret:
+                    description: A partially obfuscated version of the API key secret returned when the API key was created.
+                    example: al-****odu2
+                    readOnly: true
+                    type: string
+                name:
+                    description: Arbitrary string identifier assigned to this API key for convenient identification.
+                    example: Production key
+                    maxLength: 250
+                    minLength: 1
+                    type: string
+                secret:
+                    description: 'The full API key secret used for interacting with the embedding / reranking service. Note: this will only be fully populated in the response to a create API key request. Responses to get, list, and update requests will not include the secret.'
+                    example: al-jZsluhPMzPM9CFXepRWwMwvpZDDra6tZMgoAZKdodu2
+                    format: password
+                    nullable: true
+                    readOnly: true
+                    type: string
+                status:
+                    description: A string describing the current status of the API key.
+                    example: ACTIVE
+                    readOnly: true
+                    type: string
+            type: object
+        AiModelApiKeyUpdateRequest:
+            properties:
+                name:
+                    description: A new name for the API key.
+                    maxLength: 250
+                    minLength: 1
+                    type: string
+            required:
+                - name
+            type: object
+        AiModelRateLimitResponse:
+            properties:
+                cloud:
+                    description: Cloud provider scope for this rate limit. Use "any" for cloud-agnostic scope.
+                    example: ANY
+                    readOnly: true
+                    type: string
+                endpoint:
+                    description: Server-computed endpoint hostname derived from cloud and geography. This field is read-only and must not be supplied in request bodies.
+                    example: ai.mongodb.com
+                    readOnly: true
+                    type: string
+                geography:
+                    description: Geography scope for this rate limit. Use "any" for geography-agnostic scope.
+                    example: ANY
+                    readOnly: true
+                    type: string
+                modelGroupName:
+                    description: Identifier used to reference this model group.
+                    example: embed_large
+                    readOnly: true
+                    type: string
+                modelNames:
+                    description: List of embedding model names included in this model group.
+                    items:
+                        type: string
+                    maxItems: 100
+                    readOnly: true
+                    type: array
+                requestsPerMinuteLimit:
+                    description: The number of requests per minute allowed for this model group. Must be a positive integer. Cannot be more than the organization level limit for this group model.
+                    example: 2000
+                    format: int32
+                    minimum: 1
+                    type: integer
+                tokensPerMinuteLimit:
+                    description: The number of tokens per minute allowed for this model group. Must be a positive integer. Cannot be more than the organization level limit for this group model.
+                    example: 3e+06
+                    format: int32
+                    minimum: 1
+                    type: integer
+            type: object
         AiModelsApiKeyCreateRequest:
             properties:
                 name:
@@ -14642,6 +14791,7 @@ components:
                             - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRING
                             - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRED
                             - ACTIVE_LEGACY_TLS_CONNECTIONS
+                            - WEBHOOK_TEMPLATE_RENDER_FAILED
                           title: Group Event Types
                           type: string
                         - enum:
@@ -14896,6 +15046,7 @@ components:
                             - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRING
                             - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRED
                             - ACTIVE_LEGACY_TLS_CONNECTIONS
+                            - WEBHOOK_TEMPLATE_RENDER_FAILED
                           title: Group Event Types
                           type: string
                         - enum:
@@ -15271,6 +15422,7 @@ components:
                             - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRED
                             - ACTIVE_LEGACY_TLS_CONNECTIONS
                             - NO_ACTIVE_LEGACY_TLS_CONNECTIONS
+                            - WEBHOOK_TEMPLATE_RENDER_FAILED
                           title: Group Event Types
                           type: string
                         - enum:
@@ -18453,6 +18605,7 @@ components:
                     - GROUP_SERVICE_ACCOUNT_SECRETS_EXPIRED
                     - ACTIVE_LEGACY_TLS_CONNECTIONS
                     - NO_ACTIVE_LEGACY_TLS_CONNECTIONS
+                    - WEBHOOK_TEMPLATE_RENDER_FAILED
                   title: Group Event Types
                   type: string
                 - enum:
@@ -33218,6 +33371,60 @@ components:
             required:
                 - results
             type: object
+        PaginatedAtlasAiModelApiKeysResponse:
+            description: List response for AI Model API keys at the organization and project level.
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/AiModelApiKeyResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
+        PaginatedAtlasAiModelRateLimitsResponse:
+            description: List response for AI Model rate limits at the organization and project level.
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/AiModelRateLimitResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
         PaginatedAtlasAiModelsApiKeysResponse:
             description: List response for AI Model API keys at the organization and project level.
             properties:
@@ -40568,6 +40775,13 @@ components:
             required:
                 - provider
             type: object
+        StreamsPrivateLinkConnectionRequest:
+            description: Request body for updating a Private Link connection.
+            properties:
+                dnsDomain:
+                    description: The domain hostname for the AWS Confluent Serverless Private Link connection. Allowed only when no domain is currently set, or when the connection is in `IDLE` state.
+                    type: string
+            type: object
         StreamsProcessor:
             description: An atlas stream processor.
             properties:
@@ -44281,7 +44495,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 04895cd609517c6f9545634d9e9730753ba07a5c
+    x-xgen-sha: e8318e5988fd75d4bdc61330330cecc7e9b59a3b
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -46068,6 +46282,199 @@ paths:
             x-rolesRequirements:
                 - Project Read Only
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Activity-Feed/operation/getGroupActivityFeed
+    /api/atlas/v2/groups/{groupId}/aiModelApiClouds/{cloud}/geographies/{geography}/modelGroupNames/{modelGroupName}/rateLimits:
+        get:
+            description: Retrieve a single scoped AI model rate limit for the given group.
+            operationId: getGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: cloud
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: Geography scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: geography
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: The name of the model group to be retrieved.
+                  in: path
+                  name: modelGroupName
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelRateLimitResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Single AI Model Rate Limit for One Group
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            x-xgen-operation-id-override: getGroupRateLimits
+        patch:
+            description: Update a scoped AI model rate limit for the given model group.
+            operationId: updateGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: cloud
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: Geography scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: geography
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: The name of the model group to be updated.
+                  in: path
+                  name: modelGroupName
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/AiModelsRateLimitUpdateRequest'
+                        x-xgen-version: "2025-03-12"
+                description: A request containing the new rate limits for the given model group.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelRateLimitResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update AI Model Rate Limit
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/updateGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            x-xgen-operation-id-override: updateGroupRateLimits
+    ? /api/atlas/v2/groups/{groupId}/aiModelApiClouds/{cloud}/geographies/{geography}/modelGroupNames/{modelGroupName}/rateLimits:reset
+    :   post:
+            description: Reset the scoped AI model rate limit for the given model group to default values.
+            operationId: resetGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: cloud
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: Geography scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: geography
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: The name of the model group to be reset to default rate limits.
+                  in: path
+                  name: modelGroupName
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelRateLimitResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Reset AI Model Rate Limit for One Model Group
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiCloudGeographyModelGroupNameRateLimits
+            x-xgen-operation-id-override: resetGroupModelLimits
     /api/atlas/v2/groups/{groupId}/aiModelApiKeys:
         get:
             description: Retrieve AI model API keys for the given group.
@@ -46081,12 +46488,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelApiKeysResponse'
+                            x-xgen-version: "2025-03-12"
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -46119,23 +46524,19 @@ paths:
                 - $ref: '#/components/parameters/pretty'
             requestBody:
                 content:
-                    application/vnd.atlas.preview+json:
+                    application/vnd.atlas.2025-03-12+json:
                         schema:
-                            $ref: '#/components/schemas/AiModelsApiKeyCreateRequest'
-                        x-xgen-preview:
-                            public: "true"
-                        x-xgen-version: preview
-                description: A request containing the name of the new API key.
+                            $ref: '#/components/schemas/AiModelApiKeyCreateRequest'
+                        x-xgen-version: "2025-03-12"
+                description: A request containing the name, cloud, and geography of the new API key.
                 required: true
             responses:
                 "201":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/AiModelApiKeyResponse'
+                            x-xgen-version: "2025-03-12"
                     description: Created
                     headers:
                         RateLimit-Limit:
@@ -46160,7 +46561,7 @@ paths:
             x-rolesRequirements:
                 - Project Model Owner
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/createGroupAiModelApiKey
-            x-xgen-operation-id-override: createModelApiKey
+            x-xgen-operation-id-override: createGroupModelKey
     /api/atlas/v2/groups/{groupId}/aiModelApiKeys/{apiKeyId}:
         delete:
             description: Delete an existing AI model API key in the given group.
@@ -46178,10 +46579,8 @@ paths:
             responses:
                 "204":
                     content:
-                        application/vnd.atlas.preview+json:
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
                     description: No Content
                     headers:
                         RateLimit-Limit:
@@ -46206,7 +46605,7 @@ paths:
             x-rolesRequirements:
                 - Project Model Owner
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/deleteGroupAiModelApiKey
-            x-xgen-operation-id-override: deleteModelApiKey
+            x-xgen-operation-id-override: deleteGroupModelKey
         get:
             description: Retrieve a single AI model API key for the given group.
             operationId: getGroupAiModelApiKey
@@ -46223,12 +46622,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/AiModelApiKeyResponse'
+                            x-xgen-version: "2025-03-12"
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -46253,7 +46650,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getGroupAiModelApiKey
             x-xgen-operation-id-override: getGroupModelKey
         patch:
-            description: Update an existing AI model API key in the given group.
+            description: Update an existing AI model API key in the given group. Only the name can be updated; scope is immutable after creation.
             operationId: updateGroupAiModelApiKey
             parameters:
                 - $ref: '#/components/parameters/groupId'
@@ -46267,23 +46664,19 @@ paths:
                     type: string
             requestBody:
                 content:
-                    application/vnd.atlas.preview+json:
+                    application/vnd.atlas.2025-03-12+json:
                         schema:
-                            $ref: '#/components/schemas/AiModelsApiKeyUpdateRequest'
-                        x-xgen-preview:
-                            public: "true"
-                        x-xgen-version: preview
+                            $ref: '#/components/schemas/AiModelApiKeyUpdateRequest'
+                        x-xgen-version: "2025-03-12"
                 description: A request containing the new name for the API key.
                 required: true
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/AiModelApiKeyResponse'
+                            x-xgen-version: "2025-03-12"
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -46308,11 +46701,11 @@ paths:
             x-rolesRequirements:
                 - Project Model Owner
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/updateGroupAiModelApiKey
-            x-xgen-operation-id-override: updateModelApiKey
-    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits:
+            x-xgen-operation-id-override: updateGroupModelKey
+    /api/atlas/v2/groups/{groupId}/aiModelApiLimits:
         get:
             description: Retrieve AI model rate limits for the given group.
-            operationId: listGroupAiModelApiRateLimits
+            operationId: listGroupAiModelApiLimits
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/itemsPerPage'
@@ -46349,12 +46742,12 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listGroupAiModelApiRateLimits
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listGroupAiModelApiLimits
             x-xgen-operation-id-override: listGroupModelLimits
-    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits/{modelGroupName}:
+    /api/atlas/v2/groups/{groupId}/aiModelApiLimits/{modelGroupName}:
         get:
             description: Retrieve a single AI model rate limit for the given group.
-            operationId: getGroupAiModelApiRateLimit
+            operationId: getGroupAiModelApiLimit
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
@@ -46395,11 +46788,11 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getGroupAiModelApiRateLimit
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getGroupAiModelApiLimit
             x-xgen-operation-id-override: getGroupModelLimit
         patch:
             description: Update an AI model rate limit for the given model group.
-            operationId: updateGroupAiModelApiRateLimit
+            operationId: updateGroupAiModelApiLimit
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
@@ -46452,12 +46845,12 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/updateGroupAiModelApiRateLimit
-            x-xgen-operation-id-override: updateModelRateLimit
-    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits/{modelGroupName}:reset:
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/updateGroupAiModelApiLimit
+            x-xgen-operation-id-override: updateGroupModelLimit
+    /api/atlas/v2/groups/{groupId}/aiModelApiLimits/{modelGroupName}:reset:
         post:
             description: Reset the AI model rate limit for the given model group to default values.
-            operationId: resetGroupAiModelApiRateLimit
+            operationId: resetGroupAiModelApiLimit
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
@@ -46500,12 +46893,12 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiRateLimit
-            x-xgen-operation-id-override: resetModelRateLimit
-    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits:reset:
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiLimit
+            x-xgen-operation-id-override: resetGroupModelLimit
+    /api/atlas/v2/groups/{groupId}/aiModelApiLimits:reset:
         post:
             description: Reset the AI Model rate limits for the given group to default values.
-            operationId: resetGroupAiModelApiRateLimits
+            operationId: resetGroupAiModelApiLimits
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
@@ -46540,11 +46933,333 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiLimits
+            x-xgen-method-verb-override:
+                customMethod: "True"
+                verb: reset
+            x-xgen-operation-id-override: resetGroupApiLimits
+    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits:
+        get:
+            description: Retrieve AI model rate limits for the given group.
+            operationId: getGroupAiModelApiRateLimits
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelRateLimitsResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return AI Model Rate Limits for One Group
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getGroupAiModelApiRateLimits
+            x-xgen-operation-id-override: getGroupModelLimits
+    /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits:reset:
+        post:
+            description: Reset the AI Model rate limits for the given group to default values.
+            operationId: resetGroupAiModelApiRateLimits
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelRateLimitsResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Reset AI Model Rate Limits for Group
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Project Model Owner
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiRateLimits
             x-xgen-method-verb-override:
                 customMethod: "True"
                 verb: reset
-            x-xgen-operation-id-override: resetModelRateLimits
+            x-xgen-operation-id-override: resetGroupRateLimits
+    /api/atlas/v2/groups/{groupId}/aiModelKeys:
+        get:
+            description: Retrieve AI model API keys for the given group.
+            operationId: listGroupAiModelKeys
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return AI Model API Keys for One Group
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/listGroupAiModelKeys
+            x-xgen-operation-id-override: listGroupAiKeys
+        post:
+            description: Create a new AI model API key for the given group.
+            operationId: createGroupAiModelKey
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/AiModelsApiKeyCreateRequest'
+                        x-xgen-preview:
+                            public: "true"
+                        x-xgen-version: preview
+                description: A request containing the name of the new API key.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create New AI Model API Key
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/createGroupAiModelKey
+            x-xgen-operation-id-override: createGroupAiKey
+    /api/atlas/v2/groups/{groupId}/aiModelKeys/{apiKeyId}:
+        delete:
+            description: Delete an existing AI model API key in the given group.
+            operationId: deleteGroupAiModelKey
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: The id of the API key to be deleted.
+                  in: path
+                  name: apiKeyId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete Existing AI Model API Key
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/deleteGroupAiModelKey
+            x-xgen-operation-id-override: deleteGroupAiKey
+        get:
+            description: Retrieve a single AI model API key for the given group.
+            operationId: getGroupAiModelKey
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: The id of the API key to be retrieved.
+                  in: path
+                  name: apiKeyId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Single AI Model API Key for One Group
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getGroupAiModelKey
+            x-xgen-operation-id-override: getGroupAiKey
+        patch:
+            description: Update an existing AI model API key in the given group.
+            operationId: updateGroupAiModelKey
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: The id of the API key to be updated.
+                  in: path
+                  name: apiKeyId
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/AiModelsApiKeyUpdateRequest'
+                        x-xgen-preview:
+                            public: "true"
+                        x-xgen-version: preview
+                description: A request containing the new name for the API key.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update Existing AI Model API Key
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Project Model Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/updateGroupAiModelKey
+            x-xgen-operation-id-override: updateGroupAiKey
     /api/atlas/v2/groups/{groupId}/alertConfigs:
         get:
             description: "Returns all alert configurations for one project. These alert configurations apply to any component in the project. Alert configurations define the triggers and notification methods for alerts. \n\nThis resource remains under revision and may change."
@@ -67684,6 +68399,61 @@ paths:
                 "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamPrivateLinkConnection
             x-xgen-operation-id-override: getPrivateLinkConnection
+        patch:
+            description: Updates one Private Link connection in the specified project.
+            operationId: updateGroupStreamPrivateLinkConnection
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique ID that identifies the Private Link connection.
+                  in: path
+                  name: connectionId
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/StreamsPrivateLinkConnectionRequest'
+                description: The fields to update on the Private Link connection.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/StreamsPrivateLinkConnection'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update One Private Link Connection
+            tags:
+                - Streams
+            x-rolesRequirements:
+                - Organization Stream Processing Admin
+                - Project Stream Processing Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamPrivateLinkConnection
+            x-xgen-operation-id-override: updatePrivateLinkConnection
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections:
         get:
             description: Returns a list of incoming VPC Peering Connections.
@@ -69250,6 +70020,68 @@ paths:
             x-rolesRequirements:
                 - Organization Member
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Activity-Feed/operation/getOrgActivityFeed
+    /api/atlas/v2/orgs/{orgId}/aiModelApiClouds/{cloud}/geographies/{geography}/modelGroupNames/{modelGroupName}/rateLimits:
+        get:
+            description: Retrieve a single scoped AI model rate limit for the given organization.
+            operationId: getOrgAiModelApiCloudGeographyModelGroupNameRateLimits
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: Cloud provider scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: cloud
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: Geography scope. Must be "ANY". Additional values will be supported in future API versions.
+                  in: path
+                  name: geography
+                  required: true
+                  schema:
+                    enum:
+                        - ANY
+                    type: string
+                - description: The name of the model group to be retrieved.
+                  in: path
+                  name: modelGroupName
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelRateLimitResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Single AI Model Rate Limit for One Organization
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiCloudGeographyModelGroupNameRateLimits
+            x-xgen-operation-id-override: getOrgRateLimits
     /api/atlas/v2/orgs/{orgId}/aiModelApiKeys:
         get:
             description: Retrieve AI model API keys for the given organization.
@@ -69263,12 +70095,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelApiKeysResponse'
+                            x-xgen-version: "2025-03-12"
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -69309,12 +70139,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.preview+json:
+                        application/vnd.atlas.2025-03-12+json:
                             schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
+                                $ref: '#/components/schemas/AiModelApiKeyResponse'
+                            x-xgen-version: "2025-03-12"
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -69338,10 +70166,10 @@ paths:
                 - Organization Read Only
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getOrgAiModelApiKey
             x-xgen-operation-id-override: getOrgModelKey
-    /api/atlas/v2/orgs/{orgId}/aiModelApiRateLimits:
+    /api/atlas/v2/orgs/{orgId}/aiModelApiLimits:
         get:
             description: Retrieve AI model rate limits for the given organization.
-            operationId: listOrgAiModelApiRateLimits
+            operationId: listOrgAiModelApiLimits
             parameters:
                 - $ref: '#/components/parameters/orgId'
                 - $ref: '#/components/parameters/itemsPerPage'
@@ -69378,12 +70206,12 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listOrgAiModelApiRateLimits
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listOrgAiModelApiLimits
             x-xgen-operation-id-override: listOrgModelLimits
-    /api/atlas/v2/orgs/{orgId}/aiModelApiRateLimits/{modelGroupName}:
+    /api/atlas/v2/orgs/{orgId}/aiModelApiLimits/{modelGroupName}:
         get:
             description: Retrieve a single AI model rate limit for the given organization.
-            operationId: getOrgAiModelApiRateLimit
+            operationId: getOrgAiModelApiLimit
             parameters:
                 - $ref: '#/components/parameters/orgId'
                 - $ref: '#/components/parameters/envelope'
@@ -69424,8 +70252,136 @@ paths:
                 - AI Model Rate Limits
             x-rolesRequirements:
                 - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiRateLimit
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiLimit
             x-xgen-operation-id-override: getOrgModelLimit
+    /api/atlas/v2/orgs/{orgId}/aiModelApiRateLimits:
+        get:
+            description: Retrieve AI model rate limits for the given organization.
+            operationId: getOrgAiModelApiRateLimits
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelRateLimitsResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return AI Model Rate Limits for One Organization
+            tags:
+                - AI Model Rate Limits
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiRateLimits
+            x-xgen-operation-id-override: getOrgModelLimits
+    /api/atlas/v2/orgs/{orgId}/aiModelKeys:
+        get:
+            description: Retrieve AI model API keys for the given organization.
+            operationId: listOrgAiModelKeys
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return AI Model API Keys for One Organization
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/listOrgAiModelKeys
+            x-xgen-operation-id-override: listOrgAiKeys
+    /api/atlas/v2/orgs/{orgId}/aiModelKeys/{apiKeyId}:
+        get:
+            description: Retrieve a single AI model API key for the given organization.
+            operationId: getOrgAiModelKey
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - description: The id of the API key to be retrieved.
+                  in: path
+                  name: apiKeyId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return Single AI Model API Key for One Organization
+            tags:
+                - AI Model API Keys
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getOrgAiModelKey
+            x-xgen-operation-id-override: getOrgAiKey
     /api/atlas/v2/orgs/{orgId}/apiKeys:
         get:
             description: Returns all organization API keys for the specified organization. The organization API keys grant programmatic access to an organization. You can't use the API key to log into MongoDB Cloud through the console.

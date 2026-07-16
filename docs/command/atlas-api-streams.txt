@@ -85,6 +85,7 @@ Related Commands
 * :ref:`atlas-api-streams-startStreamProcessor` - Start a Stream Processor within the specified stream workspace.
 * :ref:`atlas-api-streams-startStreamProcessorWith` - Start a Stream Processor within the specified stream workspace.
 * :ref:`atlas-api-streams-stopStreamProcessor` - Stop a Stream Processor within the specified stream workspace.
+* :ref:`atlas-api-streams-updatePrivateLinkConnection` - Updates one Private Link connection in the specified project.
 * :ref:`atlas-api-streams-updateStreamConnection` - Update one connection for the specified stream workspace in the specified project.
 * :ref:`atlas-api-streams-updateStreamFailoverConnection` - Update one failover connection of the specified stream workspace.
 * :ref:`atlas-api-streams-updateStreamProcessor` - Modify one existing Stream Processor within the specified stream workspace.
@@ -126,6 +127,7 @@ Related Commands
    startStreamProcessor </command/atlas-api-streams-startStreamProcessor>
    startStreamProcessorWith </command/atlas-api-streams-startStreamProcessorWith>
    stopStreamProcessor </command/atlas-api-streams-stopStreamProcessor>
+   updatePrivateLinkConnection </command/atlas-api-streams-updatePrivateLinkConnection>
    updateStreamConnection </command/atlas-api-streams-updateStreamConnection>
    updateStreamFailoverConnection </command/atlas-api-streams-updateStreamFailoverConnection>
    updateStreamProcessor </command/atlas-api-streams-updateStreamProcessor>

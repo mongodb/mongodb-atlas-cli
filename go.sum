@@ -326,8 +326,8 @@ github.com/mongodb-forks/digest v1.1.0 h1:7eUdsR1BtqLv0mdNm4OXs6ddWvR4X2/OsLwdKk
 github.com/mongodb-forks/digest v1.1.0/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
 github.com/mongodb-labs/cobra2snooty v1.19.1 h1:GDEQZWy8f/DeJlImNgVvStu6sgNi8nuSOR1Oskcw8BI=
 github.com/mongodb-labs/cobra2snooty v1.19.1/go.mod h1:Hyq4YadN8dwdOiz56MXwTuVN63p0WlkQwxdLxOSGdX8=
-github.com/mongodb/atlas-cli-core v0.0.0-20260217164509-6f4f756f8870 h1:5Y3KF5sGkWj2zw32rBEbAr7kHIobtNAx9p62fPwP+u0=
-github.com/mongodb/atlas-cli-core v0.0.0-20260217164509-6f4f756f8870/go.mod h1:eo+exrvxihtIoTvVhYyr4lkhemVPVuVScJatsQrVd4g=
+github.com/mongodb/atlas-cli-core v0.0.0-20260717154943-ac6d7deea619 h1:PaEV2eV3O9kw6X5O1a8lgt45loAdCsEfKTRCQWYMCec=
+github.com/mongodb/atlas-cli-core v0.0.0-20260717154943-ac6d7deea619/go.mod h1:upvKuEi31kABocYXxZnvYDFdkIWtLESVKVoazK7lPik=
 github.com/montanaflynn/stats v0.7.1 h1:etflOAAHORrCC44V+aR6Ftzort912ZU+YLiSTuV8eaE=
 github.com/montanaflynn/stats v0.7.1/go.mod h1:etXPPgVO6n31NxCd9KQUMvCM+ve0ruNzt6R8Bnaayow=
 github.com/nwaples/rardecode/v2 v2.2.0 h1:4ufPGHiNe1rYJxYfehALLjup4Ls3ck42CWwjKiOqu0A=

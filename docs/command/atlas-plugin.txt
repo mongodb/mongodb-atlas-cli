@@ -50,7 +50,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-plugin-install` - Install Atlas CLI plugin from a GitHub repository.
-* :ref:`atlas-plugin-list` - Returns a list of all installed plugins.
+* :ref:`atlas-plugin-list` - Returns NOTHING.
 * :ref:`atlas-plugin-uninstall` - Uninstall Atlas CLI plugin.
 * :ref:`atlas-plugin-update` - Update Atlas CLI plugin.
 

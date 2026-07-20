@@ -12,7 +12,7 @@ atlas plugin list
    :depth: 1
    :class: singlecol
 
-Returns NOTHING.
+Returns a list of all installed plugins.
 
 Syntax
 ------

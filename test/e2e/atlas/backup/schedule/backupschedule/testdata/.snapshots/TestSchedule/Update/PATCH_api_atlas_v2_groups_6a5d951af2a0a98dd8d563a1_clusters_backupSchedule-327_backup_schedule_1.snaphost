@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 1252
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 20 Jul 2026 03:41:53 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1198
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Thu, 1 Jul 2027 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 146
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupScheduleResource::patchSnapshotSchedule
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"autoExportEnabled":false,"clusterId":"6a5d9526f2a0a98dd8d571e9","clusterName":"backupSchedule-327","copyPolicyItemsEnabled":false,"copySettings":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d951af2a0a98dd8d563a1/clusters/backupSchedule-327/backup/schedule","rel":"self"},{"href":"http://localhost:8080/api/public/v1.0/groups/6a5d951af2a0a98dd8d563a1","rel":"https://cloud.mongodb.com/group"}],"nextSnapshot":"2026-07-20T09:36:25Z","policies":[{"id":"6a5d97b84ca90f7e3cd245b0","policyItems":[{"frequencyInterval":6,"frequencyType":"hourly","id":"6a5d97b84ca90f7e3cd245b1","retentionUnit":"days","retentionValue":7},{"frequencyInterval":1,"frequencyType":"daily","id":"6a5d97b84ca90f7e3cd245b2","retentionUnit":"days","retentionValue":7},{"frequencyInterval":6,"frequencyType":"weekly","id":"6a5d97b84ca90f7e3cd245b3","retentionUnit":"weeks","retentionValue":4},{"frequencyInterval":40,"frequencyType":"monthly","id":"6a5d97b84ca90f7e3cd245b4","retentionUnit":"months","retentionValue":12},{"frequencyInterval":12,"frequencyType":"yearly","id":"6a5d97b84ca90f7e3cd245b5","retentionUnit":"years","retentionValue":1}]}],"referenceHourOfDay":3,"referenceMinuteOfHour":36,"restoreWindowDays":7,"useOrgAndGroupNamesInExportPrefix":true}

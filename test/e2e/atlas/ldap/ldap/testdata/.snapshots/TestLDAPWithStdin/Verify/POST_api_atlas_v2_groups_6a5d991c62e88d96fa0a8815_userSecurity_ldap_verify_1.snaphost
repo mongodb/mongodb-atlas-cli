@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 385
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 20 Jul 2026 04:15:29 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1199
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 275
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasUserSecurityResource::createLDAPVerifyConnectivityRequest
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"groupId":"6a5d991c62e88d96fa0a8815","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d991c62e88d96fa0a8815/userSecurity/ldap/verify/6a5da0e162e88d96fa0bf20b","rel":"self"}],"request":{"authzQueryTemplate":"","bindUsername":"cn=admin,dc=example,dc=org","hostname":"2.tcp.ngrok.io","port":19657},"requestId":"6a5da0e162e88d96fa0bf20b","status":"PENDING","validations":[]}

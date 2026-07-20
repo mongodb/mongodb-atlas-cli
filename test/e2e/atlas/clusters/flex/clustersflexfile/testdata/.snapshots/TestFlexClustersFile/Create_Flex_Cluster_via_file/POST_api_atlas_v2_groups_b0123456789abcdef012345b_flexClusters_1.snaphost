@@ -1,18 +1,18 @@
 HTTP/2.0 201 Created
 Content-Length: 546
 Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
-Date: Wed, 08 Jul 2026 11:35:49 GMT
+Date: Mon, 20 Jul 2026 03:26:45 GMT
 Ratelimit-Limit: 1200
-Ratelimit-Remaining: 1198
+Ratelimit-Remaining: 1195
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 595
+X-Envoy-Upstream-Service-Time: 607
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasFlexClusterResource::createFlexCluster
 X-Java-Version: 17.0.19+10-LTS
-X-Mongodb-Service-Version: gitHash=a5ac9fee72ce6bfffe30805e2b5feb78c97d3bf1; versionString=master
+X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-281.erksxik.mongodb-dev.net"},"createDate":"2026-07-08T11:35:49Z","groupId":"b0123456789abcdef012345b","id":"6a4e36159624c2f87d13eb24","mongoDBVersion":"8.0.27","name":"cluster-281","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[{"key":"e2e_test","value":"yes"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-929.epm8cio.mongodb-dev.net"},"createDate":"2026-07-20T03:26:45Z","groupId":"b0123456789abcdef012345b","id":"6a5d957562e88d96fa097a21","mongoDBVersion":"8.0.28","name":"cluster-929","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[{"key":"e2e_test","value":"yes"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

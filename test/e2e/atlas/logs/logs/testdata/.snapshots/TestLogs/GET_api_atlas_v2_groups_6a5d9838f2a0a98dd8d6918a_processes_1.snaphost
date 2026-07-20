@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 20 Jul 2026 04:13:41 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 77
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d9838f2a0a98dd8d6918a/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-07-20T03:51:59Z","groupId":"6a5d9838f2a0a98dd8d6918a","hostname":"atlas-t6wxoq-shard-00-00.d0byap.mongodb-dev.net","id":"atlas-t6wxoq-shard-00-00.d0byap.mongodb-dev.net:27017","lastPing":"2026-07-20T04:13:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d9838f2a0a98dd8d6918a/processes/atlas-t6wxoq-shard-00-00.d0byap.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t6wxoq-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-225-shard-00-00.d0byap.mongodb-dev.net","version":"8.0.28"},{"created":"2026-07-20T03:51:59Z","groupId":"6a5d9838f2a0a98dd8d6918a","hostname":"atlas-t6wxoq-shard-00-01.d0byap.mongodb-dev.net","id":"atlas-t6wxoq-shard-00-01.d0byap.mongodb-dev.net:27017","lastPing":"2026-07-20T04:13:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d9838f2a0a98dd8d6918a/processes/atlas-t6wxoq-shard-00-01.d0byap.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t6wxoq-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-225-shard-00-01.d0byap.mongodb-dev.net","version":"8.0.28"},{"created":"2026-07-20T03:51:59Z","groupId":"6a5d9838f2a0a98dd8d6918a","hostname":"atlas-t6wxoq-shard-00-02.d0byap.mongodb-dev.net","id":"atlas-t6wxoq-shard-00-02.d0byap.mongodb-dev.net:27017","lastPing":"2026-07-20T04:13:38Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d9838f2a0a98dd8d6918a/processes/atlas-t6wxoq-shard-00-02.d0byap.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-t6wxoq-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-225-shard-00-02.d0byap.mongodb-dev.net","version":"8.0.28"}],"totalCount":3}

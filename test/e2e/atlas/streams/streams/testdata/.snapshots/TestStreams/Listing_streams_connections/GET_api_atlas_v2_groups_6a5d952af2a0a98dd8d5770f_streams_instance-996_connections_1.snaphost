@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 545
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 20 Jul 2026 03:38:00 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1187
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 119
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::getConnections
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a5d952af2a0a98dd8d5770f/streams/instance-996/connections?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"authentication":{"mechanism":"SCRAM-256","username":"admin"},"bootstrapServers":"example.com:8080,fraud.example.com:8000","config":{"auto.offset.reset":"earliest"},"id":"6a5d981162e88d96fa0a4217","name":"connection-337","networking":{"access":{"type":"PUBLIC"}},"region":"VIRGINIA_USA","security":{"protocol":"PLAINTEXT"},"state":"READY","type":"Kafka"}],"totalCount":1}

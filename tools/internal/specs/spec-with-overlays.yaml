@@ -1820,105 +1820,6 @@ components:
                     minimum: 1
                     type: integer
             type: object
-        AiModelsApiKeyCreateRequest:
-            properties:
-                name:
-                    description: A name for the new API key that will be created.
-                    maxLength: 250
-                    minLength: 1
-                    type: string
-            required:
-                - name
-            type: object
-        AiModelsApiKeyResponse:
-            properties:
-                apiKeyId:
-                    description: Identifier used to reference this API key in admin API calls.
-                    example: a86r5kwrfsk5r5ku5tgvhmpj
-                    readOnly: true
-                    type: string
-                createdAt:
-                    description: UTC date when the API key was created. This parameter is formatted as an ISO 8601 timestamp.
-                    example: "2026-01-15T16:47:49.855000+00:00"
-                    readOnly: true
-                    type: string
-                createdBy:
-                    description: Name of the user that created this API key. If no user name is available, the user ID is returned.
-                    example: John Doe
-                    readOnly: true
-                    type: string
-                groupId:
-                    description: ID of the Atlas group this API key belongs to.
-                    example: 69681d39c9e8cfd375386316
-                    readOnly: true
-                    type: string
-                lastUsedAt:
-                    description: UTC date when the API key was last used. This parameter is formatted as an ISO 8601 timestamp.
-                    example: "2026-01-15T16:47:49.855000+00:00"
-                    nullable: true
-                    readOnly: true
-                    type: string
-                maskedSecret:
-                    description: A partially obfuscated version of the API key secret returned when the API key was created.
-                    example: al-****odu2
-                    readOnly: true
-                    type: string
-                name:
-                    description: Arbitrary string identifier assigned to this API key for convenient identification.
-                    example: Production key
-                    maxLength: 250
-                    minLength: 1
-                    type: string
-                secret:
-                    description: 'The full API key secret used for interacting with the embedding / reranking service. Note: this will only be fully populated in the response to a create API key request. Responses to get, list, and update requests will not include the secret.'
-                    example: al-jZsluhPMzPM9CFXepRWwMwvpZDDra6tZMgoAZKdodu2
-                    format: password
-                    nullable: true
-                    readOnly: true
-                    type: string
-                status:
-                    description: A string describing the current status of the API key.
-                    example: ACTIVE
-                    readOnly: true
-                    type: string
-            type: object
-        AiModelsApiKeyUpdateRequest:
-            properties:
-                name:
-                    description: A new name for the API key.
-                    maxLength: 250
-                    minLength: 1
-                    type: string
-            required:
-                - name
-            type: object
-        AiModelsRateLimitResponse:
-            properties:
-                modelGroupName:
-                    description: Identifier used to reference this model group.
-                    example: embed_large
-                    readOnly: true
-                    type: string
-                modelNames:
-                    description: List of embedding model names included in this model group.
-                    items:
-                        type: string
-                    maxItems: 100
-                    readOnly: true
-                    type: array
-                requestsPerMinuteLimit:
-                    description: The number of requests per minute allowed for this model group. Must be a positive integer. Cannot be more than the organization level limit for this group model.
-                    example: 2000
-                    format: int32
-                    minimum: 1
-                    type: integer
-                tokensPerMinuteLimit:
-                    description: The number of tokens per minute allowed for this model group. Must be a positive integer. Cannot be more than the organization level limit for this group model.
-                    example: 3e+06
-                    format: int32
-                    minimum: 1
-                    type: integer
-            type: object
         AiModelsRateLimitUpdateRequest:
             properties:
                 requestsPerMinuteLimit:
@@ -12478,30 +12379,6 @@ components:
             required:
                 - metricName
             type: object
-        DLSIngestionSink:
-            allOf:
-                - $ref: '#/components/schemas/IngestionSink'
-                - properties:
-                    metadataProvider:
-                        description: Target cloud provider for this Data Lake Pipeline.
-                        enum:
-                            - AWS
-                        type: string
-                    metadataRegion:
-                        description: Target cloud provider region for this Data Lake Pipeline.
-                        externalDocs:
-                            description: Supported cloud provider regions
-                            url: https://www.mongodb.com/docs/datalake/limitations
-                        type: string
-                    partitionFields:
-                        description: Ordered fields used to physically organize data in the destination.
-                        items:
-                            $ref: '#/components/schemas/DataLakePipelinesPartitionField'
-                        type: array
-                  type: object
-            description: Atlas Data Lake Storage as the destination for a Data Lake Pipeline.
-            title: DLS Ingestion Destination
-            type: object
         DailyScheduleView:
             allOf:
                 - $ref: '#/components/schemas/OnlineArchiveSchedule'
@@ -13439,71 +13316,6 @@ components:
                             type: string
                         type: array
                   type: object
-            type: object
-        DataLakeIngestionPipeline:
-            description: Details of a Data Lake Pipeline.
-            properties:
-                _id:
-                    description: Unique 24-hexadecimal digit string that identifies the Data Lake Pipeline.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                createdDate:
-                    description: Timestamp that indicates when the Data Lake Pipeline was created. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                datasetRetentionPolicy:
-                    $ref: '#/components/schemas/DatasetRetentionPolicy'
-                groupId:
-                    description: Unique 24-hexadecimal digit string that identifies the group.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                lastUpdatedDate:
-                    description: Timestamp that indicates the last time that the Data Lake Pipeline was updated. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                name:
-                    description: Name of this Data Lake Pipeline.
-                    type: string
-                sink:
-                    $ref: '#/components/schemas/IngestionSink'
-                source:
-                    $ref: '#/components/schemas/IngestionSource'
-                state:
-                    description: State of this Data Lake Pipeline.
-                    enum:
-                        - ACTIVE
-                        - PAUSED
-                    readOnly: true
-                    type: string
-                transformations:
-                    description: Fields to be excluded for this Data Lake Pipeline.
-                    items:
-                        $ref: '#/components/schemas/FieldTransformation'
-                    type: array
-            title: Data Lake Pipeline
-            type: object
-        DataLakePipelinesPartitionField:
-            description: Partition Field in the Data Lake Storage provider for a Data Lake Pipeline.
-            properties:
-                fieldName:
-                    description: Human-readable label that identifies the field name used to partition data.
-                    maxLength: 700
-                    type: string
-                order:
-                    default: 0
-                    description: Sequence in which MongoDB Cloud slices the collection data to create partitions. The resource expresses this sequence starting with zero.
-                    format: int32
-                    type: integer
-            required:
-                - fieldName
-                - order
-            title: Partition Field
             type: object
         DataLakeS3StoreSettings:
             allOf:
@@ -14530,31 +14342,6 @@ components:
             required:
                 - typeName
             title: Datadog Notification
-            type: object
-        DatasetRetentionPolicy:
-            description: Dataset Retention Policy for a Scheduled Data Lake Pipeline.
-            properties:
-                lastModifiedDate:
-                    description: Date when retention policy was last modified. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                units:
-                    description: Quantity of time in which the Data Lake Pipeline measures dataset retention.
-                    enum:
-                        - DAYS
-                        - WEEKS
-                        - MONTHS
-                    type: string
-                value:
-                    description: Number that indicates the amount of days, weeks, or months that the Data Lake Pipeline will retain datasets.
-                    format: int32
-                    minimum: 1
-                    type: integer
-            required:
-                - units
-                - value
-            title: Dataset Retention Policy
             type: object
         DateCriteriaView:
             allOf:
@@ -20521,19 +20308,6 @@ components:
                 - ssoDebugEnabled
             title: SAML
             type: object
-        FieldTransformation:
-            description: Field Transformations during ingestion of a Data Lake Pipeline.
-            properties:
-                field:
-                    description: Key in the document.
-                    type: string
-                type:
-                    description: Type of transformation applied during the export of the namespace in a Data Lake Pipeline.
-                    enum:
-                        - EXCLUDE
-                    type: string
-            title: Field Transformation
-            type: object
         FieldViolation:
             properties:
                 description:
@@ -25544,119 +25318,6 @@ components:
                     type: object
             type: object
             writeOnly: true
-        IngestionPipelineRun:
-            description: Run details of a Data Lake Pipeline.
-            properties:
-                _id:
-                    description: Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                backupFrequencyType:
-                    description: Backup schedule interval of the Data Lake Pipeline.
-                    enum:
-                        - HOURLY
-                        - DAILY
-                        - WEEKLY
-                        - MONTHLY
-                        - YEARLY
-                        - ON_DEMAND
-                    readOnly: true
-                    type: string
-                createdDate:
-                    description: Timestamp that indicates when the pipeline run was created. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                datasetName:
-                    description: Human-readable label that identifies the dataset that Atlas generates during this pipeline run. You can use this dataset as a `dataSource` in a Federated Database collection.
-                    example: v1$atlas$snapshot$Cluster0$myDatabase$myCollection$19700101T000000Z
-                    readOnly: true
-                    type: string
-                datasetRetentionPolicy:
-                    $ref: '#/components/schemas/DatasetRetentionPolicy'
-                groupId:
-                    description: Unique 24-hexadecimal character string that identifies the project.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                lastUpdatedDate:
-                    description: Timestamp that indicates the last time that the pipeline run was updated. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                phase:
-                    description: Processing phase of the Data Lake Pipeline.
-                    enum:
-                        - SNAPSHOT
-                        - EXPORT
-                        - INGESTION
-                    readOnly: true
-                    type: string
-                pipelineId:
-                    description: Unique 24-hexadecimal character string that identifies a Data Lake Pipeline.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                scheduledDeletionDate:
-                    description: Timestamp that indicates when the pipeline run will expire and its dataset will be deleted. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                    format: date-time
-                    readOnly: true
-                    type: string
-                snapshotId:
-                    description: Unique 24-hexadecimal character string that identifies the snapshot of a cluster.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    readOnly: true
-                    type: string
-                state:
-                    description: State of the pipeline run.
-                    enum:
-                        - PENDING
-                        - IN_PROGRESS
-                        - DONE
-                        - FAILED
-                        - DATASET_DELETED
-                    readOnly: true
-                    type: string
-                stats:
-                    $ref: '#/components/schemas/PipelineRunStats'
-            title: Data Lake Pipeline Run
-            type: object
-        IngestionSink:
-            description: Ingestion destination of a Data Lake Pipeline.
-            discriminator:
-                mapping:
-                    DLS: '#/components/schemas/DLSIngestionSink'
-                propertyName: type
-            properties:
-                type:
-                    description: Type of ingestion destination of this Data Lake Pipeline.
-                    enum:
-                        - DLS
-                    readOnly: true
-                    type: string
-            title: Ingestion Destination
-            type: object
-        IngestionSource:
-            description: Ingestion Source of a Data Lake Pipeline.
-            discriminator:
-                mapping:
-                    ON_DEMAND_CPS: '#/components/schemas/OnDemandCpsSnapshotSource'
-                    PERIODIC_CPS: '#/components/schemas/PeriodicCpsSnapshotSource'
-                propertyName: type
-            properties:
-                type:
-                    description: Type of ingestion source of this Data Lake Pipeline.
-                    enum:
-                        - PERIODIC_CPS
-                        - ON_DEMAND_CPS
-                    type: string
-            title: Ingestion Source
-            type: object
         InvoiceLineItem:
             description: One service included in this invoice.
             properties:
@@ -30776,29 +30437,6 @@ components:
                           type: string
                     type: object
             type: object
-        OnDemandCpsSnapshotSource:
-            allOf:
-                - $ref: '#/components/schemas/IngestionSource'
-                - properties:
-                    clusterName:
-                        description: Human-readable name that identifies the cluster.
-                        type: string
-                    collectionName:
-                        description: Human-readable name that identifies the collection.
-                        type: string
-                    databaseName:
-                        description: Human-readable name that identifies the database.
-                        type: string
-                    groupId:
-                        description: Unique 24-hexadecimal character string that identifies the project.
-                        example: 32b6e34b3d91647abb20e7b8
-                        pattern: ^([a-f0-9]{24})$
-                        readOnly: true
-                        type: string
-                  type: object
-            description: On-Demand Cloud Provider Snapshots as Source for a Data Lake Pipeline.
-            title: On-Demand Cloud Provider Snapshot Source
-            type: object
         OnlineArchiveSchedule:
             description: Regular frequency and duration when archiving process occurs.
             discriminator:
@@ -33425,60 +33063,6 @@ components:
             required:
                 - results
             type: object
-        PaginatedAtlasAiModelsApiKeysResponse:
-            description: List response for AI Model API keys at the organization and project level.
-            properties:
-                links:
-                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
-                    externalDocs:
-                        description: Web Linking Specification (RFC 5988)
-                        url: https://datatracker.ietf.org/doc/html/rfc5988
-                    items:
-                        $ref: '#/components/schemas/Link'
-                    readOnly: true
-                    type: array
-                results:
-                    description: List of returned documents that MongoDB Cloud provides when completing this request.
-                    items:
-                        $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                    readOnly: true
-                    type: array
-                totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
-                    format: int32
-                    minimum: 0
-                    readOnly: true
-                    type: integer
-            required:
-                - results
-            type: object
-        PaginatedAtlasAiModelsRateLimitsResponse:
-            description: List response for AI Model Rate Limits at the organization and project level.
-            properties:
-                links:
-                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
-                    externalDocs:
-                        description: Web Linking Specification (RFC 5988)
-                        url: https://datatracker.ietf.org/doc/html/rfc5988
-                    items:
-                        $ref: '#/components/schemas/Link'
-                    readOnly: true
-                    type: array
-                results:
-                    description: List of returned documents that MongoDB Cloud provides when completing this request.
-                    items:
-                        $ref: '#/components/schemas/AiModelsRateLimitResponse'
-                    readOnly: true
-                    type: array
-                totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
-                    format: int32
-                    minimum: 0
-                    readOnly: true
-                    type: integer
-            required:
-                - results
-            type: object
         PaginatedAtlasGroupView:
             properties:
                 links:
@@ -33572,32 +33156,6 @@ components:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
                         $ref: '#/components/schemas/DiskBackupSnapshotExportBucketResponse'
-                    readOnly: true
-                    type: array
-                totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
-                    format: int32
-                    minimum: 0
-                    readOnly: true
-                    type: integer
-            required:
-                - results
-            type: object
-        PaginatedBackupSnapshotView:
-            properties:
-                links:
-                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
-                    externalDocs:
-                        description: Web Linking Specification (RFC 5988)
-                        url: https://datatracker.ietf.org/doc/html/rfc5988
-                    items:
-                        $ref: '#/components/schemas/Link'
-                    readOnly: true
-                    type: array
-                results:
-                    description: List of returned documents that MongoDB Cloud provides when completing this request.
-                    items:
-                        $ref: '#/components/schemas/DiskBackupSnapshot'
                     readOnly: true
                     type: array
                 totalCount:
@@ -34291,32 +33849,6 @@ components:
             required:
                 - results
             type: object
-        PaginatedPipelineRunView:
-            properties:
-                links:
-                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
-                    externalDocs:
-                        description: Web Linking Specification (RFC 5988)
-                        url: https://datatracker.ietf.org/doc/html/rfc5988
-                    items:
-                        $ref: '#/components/schemas/Link'
-                    readOnly: true
-                    type: array
-                results:
-                    description: List of returned documents that MongoDB Cloud provides when completing this request.
-                    items:
-                        $ref: '#/components/schemas/IngestionPipelineRun'
-                    readOnly: true
-                    type: array
-                totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
-                    format: int32
-                    minimum: 0
-                    readOnly: true
-                    type: integer
-            required:
-                - results
-            type: object
         PaginatedPrivateNetworkEndpointIdEntryView:
             properties:
                 links:
@@ -34967,34 +34499,6 @@ components:
                     type: integer
             readOnly: true
             type: object
-        PeriodicCpsSnapshotSource:
-            allOf:
-                - $ref: '#/components/schemas/IngestionSource'
-                - properties:
-                    clusterName:
-                        description: Human-readable name that identifies the cluster.
-                        type: string
-                    collectionName:
-                        description: Human-readable name that identifies the collection.
-                        type: string
-                    databaseName:
-                        description: Human-readable name that identifies the database.
-                        type: string
-                    groupId:
-                        description: Unique 24-hexadecimal character string that identifies the project.
-                        example: 32b6e34b3d91647abb20e7b8
-                        pattern: ^([a-f0-9]{24})$
-                        readOnly: true
-                        type: string
-                    policyItemId:
-                        description: Unique 24-hexadecimal character string that identifies a policy item.
-                        example: 32b6e34b3d91647abb20e7b8
-                        pattern: ^([a-f0-9]{24})$
-                        type: string
-                  type: object
-            description: Scheduled Cloud Provider Snapshot as Source for a Data Lake Pipeline.
-            title: Periodic Cloud Provider Snapshot Source
-            type: object
         PinFCVView:
             properties:
                 expirationDate:
@@ -35036,22 +34540,6 @@ components:
                     type: array
             required:
                 - pinnedNamespaces
-            type: object
-        PipelineRunStats:
-            description: Runtime statistics for this Data Lake Pipeline run.
-            properties:
-                bytesExported:
-                    description: Total data size in bytes exported for this pipeline run.
-                    format: int64
-                    readOnly: true
-                    type: integer
-                numDocs:
-                    description: Number of docs ingested for a this pipeline run.
-                    format: int64
-                    readOnly: true
-                    type: integer
-            readOnly: true
-            title: Data Lake Pipeline Run Statistics
             type: object
         PrivateEndpointHostname:
             description: Set of Private endpoint and hostnames.
@@ -42704,19 +42192,6 @@ components:
                 - type
             title: kStemming
             type: object
-        TriggerIngestionPipelineRequest:
-            properties:
-                datasetRetentionPolicy:
-                    $ref: '#/components/schemas/DatasetRetentionPolicy'
-                snapshotId:
-                    description: Unique 24-hexadecimal character string that identifies the snapshot.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    type: string
-                    writeOnly: true
-            required:
-                - snapshotId
-            type: object
         UpdateAtlasOrganizationApiKey:
             properties:
                 desc:
@@ -44495,7 +43970,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: e8318e5988fd75d4bdc61330330cecc7e9b59a3b
+    x-xgen-sha: 89206a87add1aa585b794d67231df3ad3d651d27
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -46702,242 +46177,6 @@ paths:
                 - Project Model Owner
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/updateGroupAiModelApiKey
             x-xgen-operation-id-override: updateGroupModelKey
-    /api/atlas/v2/groups/{groupId}/aiModelApiLimits:
-        get:
-            description: Retrieve AI model rate limits for the given group.
-            operationId: listGroupAiModelApiLimits
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsRateLimitsResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return AI Model Rate Limits for One Group
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listGroupAiModelApiLimits
-            x-xgen-operation-id-override: listGroupModelLimits
-    /api/atlas/v2/groups/{groupId}/aiModelApiLimits/{modelGroupName}:
-        get:
-            description: Retrieve a single AI model rate limit for the given group.
-            operationId: getGroupAiModelApiLimit
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The name of the model group to be retrieved.
-                  in: path
-                  name: modelGroupName
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsRateLimitResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return Single AI Model Rate Limit for One Group
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getGroupAiModelApiLimit
-            x-xgen-operation-id-override: getGroupModelLimit
-        patch:
-            description: Update an AI model rate limit for the given model group.
-            operationId: updateGroupAiModelApiLimit
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The name of the model group to be updated.
-                  in: path
-                  name: modelGroupName
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/vnd.atlas.preview+json:
-                        schema:
-                            $ref: '#/components/schemas/AiModelsRateLimitUpdateRequest'
-                        x-xgen-preview:
-                            public: "true"
-                        x-xgen-version: preview
-                description: A request containing the new rate limits for the given model group.
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsRateLimitResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Update AI Model Rate Limit
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/updateGroupAiModelApiLimit
-            x-xgen-operation-id-override: updateGroupModelLimit
-    /api/atlas/v2/groups/{groupId}/aiModelApiLimits/{modelGroupName}:reset:
-        post:
-            description: Reset the AI model rate limit for the given model group to default values.
-            operationId: resetGroupAiModelApiLimit
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The name of the model group to be reset to default rate limits.
-                  in: path
-                  name: modelGroupName
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsRateLimitResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Reset AI Model Rate Limit for One Model Group
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiLimit
-            x-xgen-operation-id-override: resetGroupModelLimit
-    /api/atlas/v2/groups/{groupId}/aiModelApiLimits:reset:
-        post:
-            description: Reset the AI Model rate limits for the given group to default values.
-            operationId: resetGroupAiModelApiLimits
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsRateLimitsResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Reset AI Model Rate Limits for Group
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/resetGroupAiModelApiLimits
-            x-xgen-method-verb-override:
-                customMethod: "True"
-                verb: reset
-            x-xgen-operation-id-override: resetGroupApiLimits
     /api/atlas/v2/groups/{groupId}/aiModelApiRateLimits:
         get:
             description: Retrieve AI model rate limits for the given group.
@@ -47019,247 +46258,6 @@ paths:
                 customMethod: "True"
                 verb: reset
             x-xgen-operation-id-override: resetGroupRateLimits
-    /api/atlas/v2/groups/{groupId}/aiModelKeys:
-        get:
-            description: Retrieve AI model API keys for the given group.
-            operationId: listGroupAiModelKeys
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return AI Model API Keys for One Group
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/listGroupAiModelKeys
-            x-xgen-operation-id-override: listGroupAiKeys
-        post:
-            description: Create a new AI model API key for the given group.
-            operationId: createGroupAiModelKey
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            requestBody:
-                content:
-                    application/vnd.atlas.preview+json:
-                        schema:
-                            $ref: '#/components/schemas/AiModelsApiKeyCreateRequest'
-                        x-xgen-preview:
-                            public: "true"
-                        x-xgen-version: preview
-                description: A request containing the name of the new API key.
-                required: true
-            responses:
-                "201":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: Created
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Create New AI Model API Key
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/createGroupAiModelKey
-            x-xgen-operation-id-override: createGroupAiKey
-    /api/atlas/v2/groups/{groupId}/aiModelKeys/{apiKeyId}:
-        delete:
-            description: Delete an existing AI model API key in the given group.
-            operationId: deleteGroupAiModelKey
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The id of the API key to be deleted.
-                  in: path
-                  name: apiKeyId
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "204":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: No Content
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Delete Existing AI Model API Key
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/deleteGroupAiModelKey
-            x-xgen-operation-id-override: deleteGroupAiKey
-        get:
-            description: Retrieve a single AI model API key for the given group.
-            operationId: getGroupAiModelKey
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The id of the API key to be retrieved.
-                  in: path
-                  name: apiKeyId
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return Single AI Model API Key for One Group
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getGroupAiModelKey
-            x-xgen-operation-id-override: getGroupAiKey
-        patch:
-            description: Update an existing AI model API key in the given group.
-            operationId: updateGroupAiModelKey
-            parameters:
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The id of the API key to be updated.
-                  in: path
-                  name: apiKeyId
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/vnd.atlas.preview+json:
-                        schema:
-                            $ref: '#/components/schemas/AiModelsApiKeyUpdateRequest'
-                        x-xgen-preview:
-                            public: "true"
-                        x-xgen-version: preview
-                description: A request containing the new name for the API key.
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Update Existing AI Model API Key
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Project Model Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/updateGroupAiModelKey
-            x-xgen-operation-id-override: updateGroupAiKey
     /api/atlas/v2/groups/{groupId}/alertConfigs:
         get:
             description: "Returns all alert configurations for one project. These alert configurations apply to any component in the project. Alert configurations define the triggers and notification methods for alerts. \n\nThis resource remains under revision and may change."
@@ -61822,723 +60820,6 @@ paths:
             x-rolesRequirements:
                 - Project Network Access Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/updateGroupPeer
-    /api/atlas/v2/groups/{groupId}/pipelines:
-        get:
-            deprecated: true
-            description: Returns a list of Data Lake Pipelines.
-            operationId: listGroupPipelines
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                items:
-                                    $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                                type: array
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return All Data Lake Pipelines in One Project
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listGroupPipelines
-            x-xgen-operation-id-override: listPipelines
-        post:
-            deprecated: true
-            description: Creates one Data Lake Pipeline.
-            externalDocs:
-                description: Data Lake Pipelines are deprecated. Please see Data Lake Deprecation Guide.
-                url: https://dochub.mongodb.org/core/data-lake-deprecation
-            operationId: createGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-            requestBody:
-                content:
-                    application/vnd.atlas.2023-01-01+json:
-                        schema:
-                            $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                description: Creates one Data Lake Pipeline.
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Create One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/createGroupPipeline
-            x-xgen-operation-id-override: createPipeline
-            x-xgen-atlascli:
-                watcher:
-                    get:
-                        version: "2023-01-01"
-                        operation-id: getGroupPipeline
-                        params:
-                            groupId: input:groupId
-                            pipelineName: body:$.name
-                    expect:
-                        match:
-                            path: $.state
-                            values:
-                                - ACTIVE
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}:
-        delete:
-            deprecated: true
-            description: Removes one Data Lake Pipeline.
-            operationId: deleteGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Remove One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/deleteGroupPipeline
-            x-xgen-operation-id-override: deletePipeline
-            x-xgen-atlascli:
-                watcher:
-                    get:
-                        version: "2023-01-01"
-                        operation-id: getGroupPipeline
-                        params:
-                            groupId: input:groupId
-                            pipelineName: input:pipelineName
-                    expect:
-                        http-code: 404
-        get:
-            deprecated: true
-            description: Returns the details of one Data Lake Pipeline within the specified project.
-            operationId: getGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/getGroupPipeline
-            x-xgen-operation-id-override: getPipeline
-        patch:
-            deprecated: true
-            description: Updates one Data Lake Pipeline.
-            operationId: updateGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            requestBody:
-                content:
-                    application/vnd.atlas.2023-01-01+json:
-                        schema:
-                            $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                description: Updates one Data Lake Pipeline.
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "409":
-                    $ref: '#/components/responses/conflict'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Update One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/updateGroupPipeline
-            x-xgen-operation-id-override: updatePipeline
-            x-xgen-atlascli:
-                watcher:
-                    get:
-                        version: "2023-01-01"
-                        operation-id: getGroupPipeline
-                        params:
-                            groupId: input:groupId
-                            pipelineName: input:pipelineName
-                    expect:
-                        match:
-                            path: $.state
-                            values:
-                                - ACTIVE
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/availableSchedules:
-        get:
-            deprecated: true
-            description: Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
-            operationId: getGroupPipelineAvailableSchedules
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                items:
-                                    $ref: '#/components/schemas/DiskBackupApiPolicyItem'
-                                type: array
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return All Ingestion Schedules for One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/getGroupPipelineAvailableSchedules
-            x-xgen-operation-id-override: getAvailablePipelineSchedules
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/availableSnapshots:
-        get:
-            deprecated: true
-            description: Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
-            operationId: getGroupPipelineAvailableSnapshots
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/includeCount'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/pretty'
-                - description: Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
-                  in: query
-                  name: completedAfter
-                  schema:
-                    format: date-time
-                    type: string
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedBackupSnapshotView'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return All Backup Snapshots for One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/getGroupPipelineAvailableSnapshots
-            x-xgen-operation-id-override: getAvailablePipelineSnapshots
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/pause:
-        post:
-            deprecated: true
-            description: Pauses ingestion for a Data Lake Pipeline within the specified project.
-            operationId: pauseGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Pause One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/pauseGroupPipeline
-            x-xgen-method-verb-override:
-                customMethod: "True"
-            x-xgen-operation-id-override: pausePipeline
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/resume:
-        post:
-            deprecated: true
-            description: Resumes ingestion for a Data Lake Pipeline within the specified project.
-            operationId: resumeGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/DataLakeIngestionPipeline'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Resume One Data Lake Pipeline
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/resumeGroupPipeline
-            x-xgen-method-verb-override:
-                customMethod: "True"
-            x-xgen-operation-id-override: resumePipeline
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/runs:
-        get:
-            deprecated: true
-            description: Returns a list of past Data Lake Pipeline runs.
-            operationId: listGroupPipelineRuns
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/includeCount'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/pretty'
-                - description: If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.
-                  in: query
-                  name: createdBefore
-                  schema:
-                    format: date-time
-                    type: string
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedPipelineRunView'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return All Data Lake Pipeline Runs in One Project
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listGroupPipelineRuns
-            x-xgen-operation-id-override: listPipelineRuns
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/runs/{pipelineRunId}:
-        delete:
-            deprecated: true
-            description: Deletes dataset that Atlas generated during the specified pipeline run.
-            operationId: deleteGroupPipelineRun
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-                - description: Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.
-                  in: path
-                  name: pipelineRunId
-                  required: true
-                  schema:
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    type: string
-            responses:
-                "202":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/RequestAccepted'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: Accepted
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Delete One Pipeline Run Dataset
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/deleteGroupPipelineRun
-            x-xgen-operation-id-override: deletePipelineRun
-        get:
-            deprecated: true
-            description: Returns the details of one Data Lake Pipeline run within the specified project.
-            operationId: getGroupPipelineRun
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-                - description: Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.
-                  in: path
-                  name: pipelineRunId
-                  required: true
-                  schema:
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/IngestionPipelineRun'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return One Data Lake Pipeline Run
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/getGroupPipelineRun
-            x-xgen-operation-id-override: getPipelineRun
-    /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/trigger:
-        post:
-            deprecated: true
-            description: Triggers a Data Lake Pipeline ingestion of a specified snapshot.
-            operationId: triggerGroupPipeline
-            parameters:
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/groupId'
-                - $ref: '#/components/parameters/pretty'
-                - description: Human-readable label that identifies the Data Lake Pipeline.
-                  in: path
-                  name: pipelineName
-                  required: true
-                  schema:
-                    pattern: ^[^/\\ "$]{1,64}$
-                    type: string
-            requestBody:
-                content:
-                    application/vnd.atlas.2023-01-01+json:
-                        schema:
-                            $ref: '#/components/schemas/TriggerIngestionPipelineRequest'
-                description: Triggers a single ingestion run of a snapshot.
-                required: true
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.2023-01-01+json:
-                            schema:
-                                $ref: '#/components/schemas/IngestionPipelineRun'
-                            x-sunset: "2025-09-30"
-                            x-xgen-version: "2023-01-01"
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "400":
-                    $ref: '#/components/responses/badRequest'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Trigger On-Demand Snapshot Ingestion
-            tags:
-                - Data Lake Pipelines
-            x-rolesRequirements:
-                - Project Owner
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/triggerGroupPipeline
-            x-xgen-method-verb-override:
-                customMethod: "True"
-            x-xgen-operation-id-override: triggerPipeline
     /api/atlas/v2/groups/{groupId}/privateEndpoint/{cloudProvider}/endpointService:
         get:
             description: Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project.
@@ -66737,7 +65018,7 @@ paths:
             x-rolesRequirements:
                 - Organization Stream Processing Admin
                 - Project Data Access Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
                 "2026-05-07": Updated NO_PAYMENT_INFORMATION_FOUND error message to include a link for users to add a payment method when no payment info is found.
@@ -66787,7 +65068,7 @@ paths:
             x-rolesRequirements:
                 - Organization Stream Processing Admin
                 - Project Data Access Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteGroupStreamWorkspace
@@ -66845,7 +65126,7 @@ paths:
                 - Project Data Access Admin
                 - Project Data Access Read Only
                 - Project Data Access Read Write
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamWorkspace
@@ -66918,7 +65199,7 @@ paths:
             x-rolesRequirements:
                 - Organization Stream Processing Admin
                 - Project Data Access Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamWorkspace
@@ -66997,7 +65278,7 @@ paths:
                 - Project Data Access Admin
                 - Project Data Access Read Only
                 - Project Data Access Read Write
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/downloadGroupStreamAuditLogs
             x-xgen-method-verb-override:
                 customMethod: "True"
@@ -67050,7 +65331,7 @@ paths:
                 - Project Data Access Admin
                 - Project Data Access Read Only
                 - Project Data Access Read Write
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listGroupStreamConnections
@@ -67111,7 +65392,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createGroupStreamConnection
@@ -67164,7 +65445,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteGroupStreamConnection
             x-xgen-operation-id-override: deleteStreamConnection
         get:
@@ -67275,7 +65556,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamConnection
@@ -67340,7 +65621,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listGroupStreamConnectionFailoverConnections
             x-xgen-operation-id-override: listFailoverConnections
         post:
@@ -67410,7 +65691,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createGroupStreamConnectionFailoverConnection
             x-xgen-operation-id-override: createFailoverConnection
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/connections/{connectionName}/failoverConnections/{failoverConnectionId}:
@@ -67471,7 +65752,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteGroupStreamConnectionFailoverConnection
             x-xgen-operation-id-override: deleteStreamFailoverConnection
         get:
@@ -67535,7 +65816,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamConnectionFailoverConnection
             x-xgen-operation-id-override: getStreamFailoverConnection
         patch:
@@ -67606,7 +65887,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamConnectionFailoverConnection
             x-xgen-operation-id-override: updateStreamFailoverConnection
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor:
@@ -67662,7 +65943,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createGroupStreamProcessor
             x-xgen-operation-id-override: createStreamProcessor
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:
@@ -67711,7 +65992,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteGroupStreamProcessor
             x-xgen-operation-id-override: deleteStreamProcessor
         get:
@@ -67763,7 +66044,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamProcessor
             x-xgen-operation-id-override: getStreamProcessor
         patch:
@@ -67822,7 +66103,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamProcessor
             x-xgen-operation-id-override: updateStreamProcessor
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:start:
@@ -67871,7 +66152,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/startGroupStreamProcessor
             x-xgen-operation-id-override: startStreamProcessor
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:startWith:
@@ -67941,7 +66222,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/startGroupStreamProcessorWith
             x-xgen-operation-id-override: startStreamProcessorWith
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:stop:
@@ -67990,7 +66271,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/stopGroupStreamProcessor
             x-xgen-operation-id-override: stopStreamProcessor
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processors:
@@ -68040,7 +66321,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamProcessors
             x-xgen-operation-id-override: getStreamProcessors
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}:downloadOperationalLogs:
@@ -68115,7 +66396,7 @@ paths:
                 - Project Data Access Admin
                 - Project Data Access Read Only
                 - Project Data Access Read Write
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/downloadGroupStreamOperationalLogs
             x-xgen-method-verb-override:
                 customMethod: "True"
@@ -68305,7 +66586,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createGroupStreamPrivateLinkConnection
@@ -68350,7 +66631,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteGroupStreamPrivateLinkConnection
@@ -68451,7 +66732,7 @@ paths:
                 - Streams
             x-rolesRequirements:
                 - Organization Stream Processing Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateGroupStreamPrivateLinkConnection
             x-xgen-operation-id-override: updatePrivateLinkConnection
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections:
@@ -68679,7 +66960,7 @@ paths:
             x-rolesRequirements:
                 - Organization Stream Processing Admin
                 - Project Data Access Admin
-                - Project Stream Processing Owner
+                - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/withGroupStreamSampleConnections
             x-xgen-operation-id-override: withStreamSampleConnections
     /api/atlas/v2/groups/{groupId}/teams:
@@ -70166,94 +68447,6 @@ paths:
                 - Organization Read Only
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getOrgAiModelApiKey
             x-xgen-operation-id-override: getOrgModelKey
-    /api/atlas/v2/orgs/{orgId}/aiModelApiLimits:
-        get:
-            description: Retrieve AI model rate limits for the given organization.
-            operationId: listOrgAiModelApiLimits
-            parameters:
-                - $ref: '#/components/parameters/orgId'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsRateLimitsResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return AI Model Rate Limits for One Organization
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/listOrgAiModelApiLimits
-            x-xgen-operation-id-override: listOrgModelLimits
-    /api/atlas/v2/orgs/{orgId}/aiModelApiLimits/{modelGroupName}:
-        get:
-            description: Retrieve a single AI model rate limit for the given organization.
-            operationId: getOrgAiModelApiLimit
-            parameters:
-                - $ref: '#/components/parameters/orgId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The name of the model group to be retrieved.
-                  in: path
-                  name: modelGroupName
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsRateLimitResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return Single AI Model Rate Limit for One Organization
-            tags:
-                - AI Model Rate Limits
-            x-rolesRequirements:
-                - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiLimit
-            x-xgen-operation-id-override: getOrgModelLimit
     /api/atlas/v2/orgs/{orgId}/aiModelApiRateLimits:
         get:
             description: Retrieve AI model rate limits for the given organization.
@@ -70294,94 +68487,6 @@ paths:
                 - Organization Read Only
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-Rate-Limits/operation/getOrgAiModelApiRateLimits
             x-xgen-operation-id-override: getOrgModelLimits
-    /api/atlas/v2/orgs/{orgId}/aiModelKeys:
-        get:
-            description: Retrieve AI model API keys for the given organization.
-            operationId: listOrgAiModelKeys
-            parameters:
-                - $ref: '#/components/parameters/orgId'
-                - $ref: '#/components/parameters/itemsPerPage'
-                - $ref: '#/components/parameters/pageNum'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedAtlasAiModelsApiKeysResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return AI Model API Keys for One Organization
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/listOrgAiModelKeys
-            x-xgen-operation-id-override: listOrgAiKeys
-    /api/atlas/v2/orgs/{orgId}/aiModelKeys/{apiKeyId}:
-        get:
-            description: Retrieve a single AI model API key for the given organization.
-            operationId: getOrgAiModelKey
-            parameters:
-                - $ref: '#/components/parameters/orgId'
-                - $ref: '#/components/parameters/envelope'
-                - $ref: '#/components/parameters/pretty'
-                - description: The id of the API key to be retrieved.
-                  in: path
-                  name: apiKeyId
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    content:
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/AiModelsApiKeyResponse'
-                            x-xgen-preview:
-                                public: "true"
-                            x-xgen-version: preview
-                    description: OK
-                    headers:
-                        RateLimit-Limit:
-                            $ref: '#/components/headers/HeaderRateLimitLimit'
-                        RateLimit-Remaining:
-                            $ref: '#/components/headers/HeaderRateLimitRemaining'
-                "401":
-                    $ref: '#/components/responses/unauthorized'
-                "403":
-                    $ref: '#/components/responses/forbidden'
-                "404":
-                    $ref: '#/components/responses/notFound'
-                "429":
-                    $ref: '#/components/responses/tooManyRequests'
-                "500":
-                    $ref: '#/components/responses/internalServerError'
-            summary: Return Single AI Model API Key for One Organization
-            tags:
-                - AI Model API Keys
-            x-rolesRequirements:
-                - Organization Read Only
-            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AI-Model-API-Keys/operation/getOrgAiModelKey
-            x-xgen-operation-id-override: getOrgAiKey
     /api/atlas/v2/orgs/{orgId}/apiKeys:
         get:
             description: Returns all organization API keys for the specified organization. The organization API keys grant programmatic access to an organization. You can't use the API key to log into MongoDB Cloud through the console.
@@ -75008,11 +73113,6 @@ tags:
       name: Custom Database Roles
     - description: Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.
       name: Data Federation
-    - description: Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
-      externalDocs:
-        description: Data Lake Pipelines are deprecated. Please see Data Lake Deprecation Guide.
-        url: https://dochub.mongodb.org/core/data-lake-deprecation
-      name: Data Lake Pipelines
     - description: Returns, adds, edits, and removes database users.
       name: Database Users
     - description: Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.

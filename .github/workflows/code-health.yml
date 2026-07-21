@@ -15,7 +15,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
           cache: false # see https://github.com/golangci/golangci-lint-action/issues/807
@@ -45,7 +45,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - run: |
@@ -75,7 +75,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - name: Install goveralls
@@ -95,7 +95,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - name: Run check-library-owners
@@ -109,7 +109,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - name: Generate docs
@@ -136,7 +136,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - run: make devtools
@@ -180,7 +180,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - name: Generate mocks
@@ -234,7 +234,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - name: Run 'go mod tidy'
@@ -261,7 +261,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - run: ./build/ci/check-licenses.sh
@@ -274,7 +274,7 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v7.0.1
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - run: make check-templates
@@ -324,7 +324,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
       - run: |

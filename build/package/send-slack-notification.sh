@@ -22,9 +22,13 @@ fi
 
 VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 
-curl --header "Api-User:${evergreen_user:?}" \
+# Use /api/rest/v2 (not /rest/v2): the Evergreen UI host now serves the Spruce SPA
+# for /rest/v2 paths, returning index.html with HTTP 200 so the notification was
+# silently dropped. --fail makes curl exit non-zero on HTTP errors so a broken
+# endpoint fails the task instead of reporting a false SUCCESS. See CLOUDP-426805.
+curl --fail --show-error --header "Api-User:${evergreen_user:?}" \
 	--header "Api-Key:${evergreen_api_key:?}" \
-	--request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
+	--request POST "https://evergreen.mongodb.com/api/rest/v2/notifications/slack" \
 	--data '
      {
        "target" : "'"${release_slack_channel:?}"'",

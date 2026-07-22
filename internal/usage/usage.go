@@ -21,7 +21,7 @@ const (
 	Members                                  = "Number of members in the replica set."
 	Shards                                   = "Number of shards in the cluster."
 	ProcessNameAtlasCLI                      = "Unique identifier for the host of a MongoDB process in the following format: {hostname}:{port}. You can obtain a list of possible values from the 'id' field when you run the 'atlas processes list' command."
-	Since                                    = "Date and time from which the query retrieves the suggested indexes. Specify this value as the number of seconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time."
+	Since                                    = "Date and time from which the query retrieves the suggested indexes. Specify this value as the number of milliseconds that have elapsed since the UNIX epoch. If you don't set the duration option, this command returns data from the since value to the current time."
 	HostID                                   = "Unique identifier for the host of a MongoDB process."
 	Duration                                 = "Length of time in milliseconds for which you want to return results. If you specify the since option, the duration starts at the date and time specified. If you don't set the since option, this command returns data from the duration before the current time."
 	Tier                                     = "Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://dochub.mongodb.org/core/cluster-tier-atlas."

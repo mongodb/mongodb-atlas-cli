@@ -16,5 +16,8 @@ permissions: {}
 jobs:
   create-jira:
     if: github.event.label.name == 'create_jira'
+    permissions:
+      contents: read
+      pull-requests: write
     uses: mongodb/apix-action/.github/workflows/_create-jira.yaml@main
     secrets: inherit

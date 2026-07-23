@@ -1,7 +1,7 @@
 # Contributing to MongoDB Atlas CLI
 
-Thanks for your interest in contributing to MongoDB Atlas CLI,
-this document describes some guidelines necessary to participate in the community.
+Thanks for your interest in contributing to MongoDB Atlas CLI.
+This document describes some guidelines necessary to participate in the community.
 
 If you want to extend the Atlas CLI with custom functionality, take a look at the [Atlas CLI Plugin Example](https://github.com/mongodb/atlas-cli-plugin-example) to learn more about creating plugins.
 
@@ -12,13 +12,13 @@ Please don't use the GitHub issue tracker to ask questions.
 
 ## Feature Requests
 
-We welcome any feedback or feature request, to submit yours
+We welcome any feedback or feature requests. To submit yours,
 please head over to our [feedback page](https://feedback.mongodb.com/?category=7556329857711623227).
 
 ## Reporting Issues
 
 Please create a [GitHub issue](https://github.com/mongodb/mongodb-atlas-cli/issues/new?assignees=&labels=&template=bug_report.md) describing the kind of problem you're facing
-with as much detail as possible, including things like operating system or anything else may be relevant to the issue.
+with as much detail as possible, including things like operating system or anything else that may be relevant to the issue.
 
 ## Auto-close Stale Issues and Pull Requests
 

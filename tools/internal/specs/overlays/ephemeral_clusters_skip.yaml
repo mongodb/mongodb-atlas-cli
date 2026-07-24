@@ -1,0 +1,13 @@
+overlay: 1.0.0
+info:
+  title: Skip ephemeralClusters commands
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/unauth/ephemeralClusters/{clusterId}'].get
+    update:
+      x-xgen-atlascli:
+        skip: true
+  - target: $.paths['/api/atlas/v2/unauth/ephemeralClusters:create'].post
+    update:
+      x-xgen-atlascli:
+        skip: true

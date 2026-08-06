@@ -290,7 +290,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v7.0.1
       - name: Linting
-        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5
+        uses: hadolint/hadolint-action@2a66e89f53d0771bb131a7fa31f3136336094aa6
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store

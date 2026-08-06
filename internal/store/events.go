@@ -20,12 +20,12 @@ import (
 
 // ProjectEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectEvents(opts *atlasv2.ListGroupEventsApiParams) (*atlasv2.GroupPaginatedEvent, error) {
-	result, _, err := s.clientv2.EventsApi.ListGroupEventsWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.EventsAPI.ListGroupEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationEvents(opts *atlasv2.ListOrgEventsApiParams) (*atlasv2.OrgPaginatedEvent, error) {
-	result, _, err := s.clientv2.EventsApi.ListOrgEventsWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.EventsAPI.ListOrgEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }

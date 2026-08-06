@@ -20,24 +20,24 @@ import (
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlasv2.GroupMaintenanceWindow) error {
-	_, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()
+	_, err := s.clientv2.MaintenanceWindowsAPI.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()
 	return err
 }
 
 // ClearMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) ClearMaintenanceWindow(projectID string) error {
-	_, err := s.clientv2.MaintenanceWindowsApi.ResetMaintenanceWindow(s.ctx, projectID).Execute()
+	_, err := s.clientv2.MaintenanceWindowsAPI.ResetMaintenanceWindow(s.ctx, projectID).Execute()
 	return err
 }
 
 // DeferMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) DeferMaintenanceWindow(projectID string) error {
-	_, err := s.clientv2.MaintenanceWindowsApi.DeferMaintenanceWindow(s.ctx, projectID).Execute()
+	_, err := s.clientv2.MaintenanceWindowsAPI.DeferMaintenanceWindow(s.ctx, projectID).Execute()
 	return err
 }
 
 // MaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) MaintenanceWindow(projectID string) (*atlasv2.GroupMaintenanceWindow, error) {
-	resp, _, err := s.clientv2.MaintenanceWindowsApi.GetMaintenanceWindow(s.ctx, projectID).Execute()
+	resp, _, err := s.clientv2.MaintenanceWindowsAPI.GetMaintenanceWindow(s.ctx, projectID).Execute()
 	return resp, err
 }

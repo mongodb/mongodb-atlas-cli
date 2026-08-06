@@ -23,7 +23,7 @@ import (
 
 // DownloadLog encapsulates the logic to manage different cloud providers.
 func (s *Store) DownloadLog(params *atlasv2.DownloadClusterLogApiParams) (io.ReadCloser, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.DownloadClusterLogWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.DownloadClusterLogWithParams(s.ctx, params).Execute()
 	if err != nil {
 		return nil, err
 	}

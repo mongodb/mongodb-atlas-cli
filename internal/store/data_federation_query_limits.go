@@ -22,24 +22,24 @@ import (
 
 // DataFederationQueryLimits encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationQueryLimits(projectID, tenantName string) ([]atlasv2.DataFederationTenantQueryLimit, error) {
-	result, _, err := s.clientv2.DataFederationApi.ListDataFederationLimits(s.ctx, projectID, tenantName).Execute()
+	result, _, err := s.clientv2.DataFederationAPI.ListDataFederationLimits(s.ctx, projectID, tenantName).Execute()
 	return result, err
 }
 
 // DataFederationQueryLimit encapsulates the logic to manage different cloud providers.
 func (s *Store) DataFederationQueryLimit(projectID, tenantName, limitName string) (*atlasv2.DataFederationTenantQueryLimit, error) {
-	result, _, err := s.clientv2.DataFederationApi.GetDataFederationLimit(s.ctx, projectID, tenantName, limitName).Execute()
+	result, _, err := s.clientv2.DataFederationAPI.GetDataFederationLimit(s.ctx, projectID, tenantName, limitName).Execute()
 	return result, err
 }
 
 // CreateDataFederationQueryLimit encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateDataFederationQueryLimit(projectID, tenantName, limitName string, opts *atlasv2.DataFederationTenantQueryLimit) (*atlasv2.DataFederationTenantQueryLimit, error) {
-	result, _, err := s.clientv2.DataFederationApi.SetDataFederationLimit(s.ctx, projectID, tenantName, limitName, opts).Execute()
+	result, _, err := s.clientv2.DataFederationAPI.SetDataFederationLimit(s.ctx, projectID, tenantName, limitName, opts).Execute()
 	return result, err
 }
 
 // DeleteDataFederationQueryLimit encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederationQueryLimit(projectID, tenantName, limitName string) error {
-	_, err := s.clientv2.DataFederationApi.DeleteDataFederationLimit(s.ctx, projectID, tenantName, limitName).Execute()
+	_, err := s.clientv2.DataFederationAPI.DeleteDataFederationLimit(s.ctx, projectID, tenantName, limitName).Execute()
 	return err
 }

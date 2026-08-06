@@ -20,24 +20,24 @@ import (
 
 // UpdateConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.UpdateConnectedOrgConfigWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // GetConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.GetConnectedOrgConfigWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.GetConnectedOrgConfigWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // ListConnectedOrgConfigs encapsulate the logic to manage different cloud providers.
 func (s *Store) ListConnectedOrgConfigs(opts *atlasv2.ListConnectedOrgConfigsApiParams) (*atlasv2.PaginatedConnectedOrgConfigs, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.ListConnectedOrgConfigsWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.ListConnectedOrgConfigsWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // DeleteConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationAPI.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
 	return err
 }

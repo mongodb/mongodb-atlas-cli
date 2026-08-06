@@ -21,30 +21,30 @@ import (
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.
 func (s *Store) AlertConfigurations(params *atlasv2.ListAlertConfigsApiParams) (*atlasv2.PaginatedAlertConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.ListAlertConfigsWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.ListAlertConfigsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // CreateAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateAlertConfiguration(alertConfig *atlasv2.GroupAlertsConfig) (*atlasv2.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.CreateAlertConfig(s.ctx, alertConfig.GetGroupId(), alertConfig).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.CreateAlertConfig(s.ctx, alertConfig.GetGroupId(), alertConfig).Execute()
 	return result, err
 }
 
 // DeleteAlertConfiguration encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteAlertConfiguration(projectID, id string) error {
-	_, err := s.clientv2.AlertConfigurationsApi.DeleteAlertConfig(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.AlertConfigurationsAPI.DeleteAlertConfig(s.ctx, projectID, id).Execute()
 	return err
 }
 
 // MatcherFields encapsulate the logic to manage different cloud providers.
 func (s *Store) MatcherFields() ([]string, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.ListMatcherFieldNames(s.ctx).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.ListMatcherFieldNames(s.ctx).Execute()
 	return result, err
 }
 
 func (s *Store) UpdateAlertConfiguration(alertConfig *atlasv2.GroupAlertsConfig) (*atlasv2.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.UpdateAlertConfig(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId(), alertConfig).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.UpdateAlertConfig(s.ctx, alertConfig.GetGroupId(), alertConfig.GetId(), alertConfig).Execute()
 	return result, err
 }
 
@@ -53,7 +53,7 @@ func (s *Store) EnableAlertConfiguration(projectID, id string) (*atlasv2.GroupAl
 	toggle := atlasv2.AlertsToggle{
 		Enabled: pointer.Get(true),
 	}
-	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfig(s.ctx, projectID, id, &toggle).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.ToggleAlertConfig(s.ctx, projectID, id, &toggle).Execute()
 	return result, err
 }
 
@@ -62,11 +62,11 @@ func (s *Store) DisableAlertConfiguration(projectID, id string) (*atlasv2.GroupA
 	toggle := atlasv2.AlertsToggle{
 		Enabled: pointer.Get(false),
 	}
-	result, _, err := s.clientv2.AlertConfigurationsApi.ToggleAlertConfig(s.ctx, projectID, id, &toggle).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.ToggleAlertConfig(s.ctx, projectID, id, &toggle).Execute()
 	return result, err
 }
 
 func (s *Store) AlertConfiguration(projectID, id string) (*atlasv2.GroupAlertsConfig, error) {
-	result, _, err := s.clientv2.AlertConfigurationsApi.GetAlertConfig(s.ctx, projectID, id).Execute()
+	result, _, err := s.clientv2.AlertConfigurationsAPI.GetAlertConfig(s.ctx, projectID, id).Execute()
 	return result, err
 }

@@ -30,13 +30,13 @@ type ClusterDescriber interface { //nolint:iface // right now requires some refa
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
 func (s *Store) AddSampleData(groupID, clusterName string) (*atlasv2.SampleDatasetStatus, error) {
-	result, _, err := s.clientv2.ClustersApi.RequestSampleDatasetLoad(s.ctx, groupID, clusterName).Execute()
+	result, _, err := s.clientv2.ClustersAPI.RequestSampleDatasetLoad(s.ctx, groupID, clusterName).Execute()
 	return result, err
 }
 
 // SampleDataStatus encapsulate the logic to manage different cloud providers.
 func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStatus, error) {
-	result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoad(s.ctx, groupID, id).Execute()
+	result, _, err := s.clientv2.ClustersAPI.GetSampleDatasetLoad(s.ctx, groupID, id).Execute()
 	return result, err
 }
 
@@ -48,7 +48,7 @@ func (s *Store) CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescri
 
 // CreateClusterLatest uses the latest API version to create a cluster.
 func (s *Store) CreateClusterLatest(cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
-	result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+	result, _, err := s.clientv2.ClustersAPI.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
 	return result, err
 }
 
@@ -60,7 +60,7 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlasClustersPinn
 
 // UpdateClusterLatest uses the latest API version to update a cluster.
 func (s *Store) UpdateClusterLatest(projectID, name string, cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
-	result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
+	result, _, err := s.clientv2.ClustersAPI.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
 	return result, err
 }
 
@@ -102,13 +102,13 @@ func (s *Store) StartClusterLatest(projectID, name string) (*atlasv2.ClusterDesc
 
 // GetClusterAutoScalingConfig uses the latest API version to get the auto scaling configuration of a cluster.
 func (s *Store) GetClusterAutoScalingConfig(projectID, name string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error) {
-	result, _, err := s.clientv2.ClustersApi.AutoScalingConfiguration(s.ctx, projectID, name).Execute()
+	result, _, err := s.clientv2.ClustersAPI.AutoScalingConfiguration(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
 // DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
-	_, err := s.clientv2.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+	_, err := s.clientv2.ClustersAPI.DeleteCluster(s.ctx, projectID, name).Execute()
 	return err
 }
 
@@ -136,7 +136,7 @@ func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*atlasClus
 
 // LatestProjectClusters lists the clusters using the latest API version.
 func (s *Store) LatestProjectClusters(projectID string, opts *ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error) {
-	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
+	res := s.clientv2.ClustersAPI.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -152,7 +152,7 @@ func (s *Store) AtlasCluster(projectID, name string) (*atlasClustersPinned.Advan
 
 // LatestAtlasCluster uses the latest API version to get a cluster.
 func (s *Store) LatestAtlasCluster(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
-	result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+	result, _, err := s.clientv2.ClustersAPI.GetCluster(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
@@ -169,6 +169,6 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 }
 
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
-	_, err := s.clientv2.ClustersApi.RestartPrimaries(s.ctx, projectID, clusterName).Execute()
+	_, err := s.clientv2.ClustersAPI.RestartPrimaries(s.ctx, projectID, clusterName).Execute()
 	return err
 }

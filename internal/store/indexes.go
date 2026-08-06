@@ -20,6 +20,6 @@ import (
 
 // CreateIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateIndex(projectID, clusterName string, index *atlasv2.DatabaseRollingIndexRequest) error {
-	_, err := s.clientv2.RollingIndexApi.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()
+	_, err := s.clientv2.RollingIndexAPI.CreateRollingIndex(s.ctx, projectID, clusterName, index).Execute()
 	return err
 }

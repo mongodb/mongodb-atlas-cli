@@ -20,7 +20,7 @@ import (
 
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	res := s.clientv2.ProjectsApi.ListGroups(s.ctx)
+	res := s.clientv2.ProjectsAPI.ListGroups(s.ctx)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -30,7 +30,7 @@ func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error
 
 // GetOrgProjects encapsulates the logic to manage different cloud providers.
 func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
-	res := s.clientv2.OrganizationsApi.GetOrgGroups(s.ctx, orgID)
+	res := s.clientv2.OrganizationsAPI.GetOrgGroups(s.ctx, orgID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -40,36 +40,36 @@ func (s *Store) GetOrgProjects(orgID string, opts *ListOptions) (*atlasv2.Pagina
 
 // Project encapsulates the logic to manage different cloud providers.
 func (s *Store) Project(id string) (*atlasv2.Group, error) {
-	result, _, err := s.clientv2.ProjectsApi.GetGroup(s.ctx, id).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.GetGroup(s.ctx, id).Execute()
 	return result, err
 }
 
 func (s *Store) ProjectByName(name string) (*atlasv2.Group, error) {
-	result, _, err := s.clientv2.ProjectsApi.GetGroupByName(s.ctx, name).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.GetGroupByName(s.ctx, name).Execute()
 	return result, err
 }
 
 // CreateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateProject(params *atlasv2.CreateGroupApiParams) (*atlasv2.Group, error) {
-	result, _, err := s.clientv2.ProjectsApi.CreateGroupWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.CreateGroupWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // UpdateProject encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateProject(params *atlasv2.UpdateGroupApiParams) (*atlasv2.Group, error) {
-	result, _, err := s.clientv2.ProjectsApi.UpdateGroupWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.UpdateGroupWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
-	_, err := s.clientv2.ProjectsApi.DeleteGroup(s.ctx, projectID).Execute()
+	_, err := s.clientv2.ProjectsAPI.DeleteGroup(s.ctx, projectID).Execute()
 	return err
 }
 
 // ProjectUsers lists all IAM users in a project.
 func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedGroupUser, error) {
-	res := s.clientv2.MongoDBCloudUsersApi.ListGroupUsers(s.ctx, projectID)
+	res := s.clientv2.MongoDBCloudUsersAPI.ListGroupUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -79,13 +79,13 @@ func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.Pagi
 
 // DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
-	_, err := s.clientv2.MongoDBCloudUsersApi.RemoveGroupUser(s.ctx, projectID, userID).Execute()
+	_, err := s.clientv2.MongoDBCloudUsersAPI.RemoveGroupUser(s.ctx, projectID, userID).Execute()
 	return err
 }
 
 // ProjectTeams encapsulates the logic to manage different cloud providers.
 func (s *Store) ProjectTeams(projectID string, opts *ListOptions) (*atlasv2.PaginatedTeamRole, error) {
-	res := s.clientv2.TeamsApi.
+	res := s.clientv2.TeamsAPI.
 		ListGroupTeams(s.ctx, projectID)
 
 	if opts != nil {
@@ -101,13 +101,13 @@ func (s *Store) ProjectTeams(projectID string, opts *ListOptions) (*atlasv2.Pagi
 
 // AddTeamsToProject encapsulates the logic to manage different cloud providers.
 func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error) {
-	result, _, err := s.clientv2.TeamsApi.AddGroupTeams(s.ctx, projectID, &teams).Execute()
+	result, _, err := s.clientv2.TeamsAPI.AddGroupTeams(s.ctx, projectID, &teams).Execute()
 	return result, err
 }
 
 // DeleteTeamFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
-	_, err := s.clientv2.TeamsApi.RemoveGroupTeam(s.ctx, projectID, teamID).Execute()
+	_, err := s.clientv2.TeamsAPI.RemoveGroupTeam(s.ctx, projectID, teamID).Execute()
 	return err
 }
 
@@ -120,7 +120,7 @@ type MDBVersionListOptions struct {
 
 // MDBVersions encapsulates the logic to manage different cloud providers.
 func (s *Store) MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error) {
-	req := s.clientv2.ProjectsApi.GetMongoDbVersions(s.ctx, projectID)
+	req := s.clientv2.ProjectsAPI.GetMongoDbVersions(s.ctx, projectID)
 
 	if opt != nil {
 		req = req.

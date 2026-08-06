@@ -23,7 +23,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled,
 	customDNSSetting := &atlasv2.AWSCustomDNSEnabled{
 		Enabled: true,
 	}
-	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSAPI.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
 	return result, err
 }
 
@@ -32,12 +32,12 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled
 	customDNSSetting := &atlasv2.AWSCustomDNSEnabled{
 		Enabled: false,
 	}
-	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSAPI.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
 	return result, err
 }
 
 // DescribeCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled, error) {
-	result, _, err := s.clientv2.AWSClustersDNSApi.GetAwsCustomDns(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSAPI.GetAwsCustomDns(s.ctx, projectID).Execute()
 	return result, err
 }

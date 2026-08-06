@@ -20,18 +20,18 @@ import (
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateOrganizationAPIKeyAccessList(params *atlasv2.CreateOrgAccessEntryApiParams) (*atlasv2.PaginatedApiUserAccessListResponse, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateOrgAccessEntryWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysAPI.CreateOrgAccessEntryWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
-	_, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteAccessEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysAPI.DeleteAccessEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
 	return err
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeyAccessLists(params *atlasv2.ListOrgAccessEntriesApiParams) (*atlasv2.PaginatedApiUserAccessListResponse, error) {
-	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListOrgAccessEntriesWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.ProgrammaticAPIKeysAPI.ListOrgAccessEntriesWithParams(s.ctx, params).Execute()
 	return result, err
 }

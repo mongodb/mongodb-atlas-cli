@@ -20,12 +20,12 @@ import (
 
 // Process encapsulate the logic to manage different cloud providers.
 func (s *Store) Process(params *atlasv2.GetGroupProcessApiParams) (*atlasv2.ApiHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetGroupProcessWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.GetGroupProcessWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Processes encapsulate the logic to manage different cloud providers.
 func (s *Store) Processes(params *atlasv2.ListGroupProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.ListGroupProcessesWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.ListGroupProcessesWithParams(s.ctx, params).Execute()
 	return result, err
 }

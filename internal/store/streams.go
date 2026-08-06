@@ -22,32 +22,32 @@ import (
 )
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamWorkspacesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.ListStreamWorkspacesWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.StreamsAPI.ListStreamWorkspacesWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 func (s *Store) AtlasStream(projectID, name string) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.GetStreamWorkspace(s.ctx, projectID, name).Execute()
+	result, _, err := s.clientv2.StreamsAPI.GetStreamWorkspace(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
 func (s *Store) CreateStream(projectID string, processor *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.CreateStreamWorkspace(s.ctx, projectID, processor).Execute()
+	result, _, err := s.clientv2.StreamsAPI.CreateStreamWorkspace(s.ctx, projectID, processor).Execute()
 	return result, err
 }
 
 func (s *Store) DeleteStream(projectID, name string) error {
-	_, err := s.clientv2.StreamsApi.DeleteStreamWorkspace(s.ctx, projectID, name).Execute()
+	_, err := s.clientv2.StreamsAPI.DeleteStreamWorkspace(s.ctx, projectID, name).Execute()
 	return err
 }
 
 func (s *Store) UpdateStream(projectID, name string, streamsTenantUpdateRequest *atlasv2.StreamsTenantUpdateRequest) (*atlasv2.StreamsTenant, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamWorkspace(s.ctx, projectID, name, streamsTenantUpdateRequest).Execute()
+	result, _, err := s.clientv2.StreamsAPI.UpdateStreamWorkspace(s.ctx, projectID, name, streamsTenantUpdateRequest).Execute()
 	return result, err
 }
 
 func (s *Store) DownloadAuditLog(request *atlasv2.DownloadAuditLogsApiParams) (io.ReadCloser, error) {
-	result, _, err := s.clientv2.StreamsApi.DownloadAuditLogsWithParams(s.ctx, request).Execute()
+	result, _, err := s.clientv2.StreamsAPI.DownloadAuditLogsWithParams(s.ctx, request).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -59,50 +59,50 @@ func (s *Store) DownloadAuditLog(request *atlasv2.DownloadAuditLogsApiParams) (i
 
 // StreamsConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) StreamsConnections(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsConnection, error) {
-	connections, _, err := s.clientv2.StreamsApi.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
+	connections, _, err := s.clientv2.StreamsAPI.ListStreamConnections(s.ctx, projectID, tenantName).Execute()
 	return connections, err
 }
 
 // StreamConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) StreamConnection(projectID, tenantName, connectionName string) (*atlasv2.StreamsConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.GetStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
+	result, _, err := s.clientv2.StreamsAPI.GetStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
 	return result, err
 }
 
 // CreateConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateConnection(projectID, tenantName string, opts *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.CreateStreamConnection(s.ctx, projectID, tenantName, opts).Execute()
+	result, _, err := s.clientv2.StreamsAPI.CreateStreamConnection(s.ctx, projectID, tenantName, opts).Execute()
 	return result, err
 }
 
 // UpdateConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateConnection(projectID, tenantName, connectionsName string, opts *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.UpdateStreamConnection(s.ctx, projectID, tenantName, connectionsName, opts).Execute()
+	result, _, err := s.clientv2.StreamsAPI.UpdateStreamConnection(s.ctx, projectID, tenantName, connectionsName, opts).Execute()
 	return result, err
 }
 
 // DeleteConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteConnection(projectID, tenantName, connectionName string) error {
-	_, err := s.clientv2.StreamsApi.DeleteStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
+	_, err := s.clientv2.StreamsAPI.DeleteStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
 	return err
 }
 
 func (s *Store) CreatePrivateLinkEndpoint(projectID string, connection *atlasv2.StreamsPrivateLinkConnection) (*atlasv2.StreamsPrivateLinkConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.CreatePrivateLinkConnection(s.ctx, projectID, connection).Execute()
+	result, _, err := s.clientv2.StreamsAPI.CreatePrivateLinkConnection(s.ctx, projectID, connection).Execute()
 	return result, err
 }
 
 func (s *Store) ListPrivateLinkEndpoints(projectID string) (*atlasv2.PaginatedApiStreamsPrivateLink, error) {
-	result, _, err := s.clientv2.StreamsApi.ListPrivateLinkConnections(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.StreamsAPI.ListPrivateLinkConnections(s.ctx, projectID).Execute()
 	return result, err
 }
 
 func (s *Store) DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error) {
-	result, _, err := s.clientv2.StreamsApi.GetPrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
+	result, _, err := s.clientv2.StreamsAPI.GetPrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
 	return result, err
 }
 
 func (s *Store) DeletePrivateLinkEndpoint(projectID, connectionID string) error {
-	_, err := s.clientv2.StreamsApi.DeletePrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
+	_, err := s.clientv2.StreamsAPI.DeletePrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
 	return err
 }

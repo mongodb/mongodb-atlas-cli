@@ -423,7 +423,12 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
-			if err := addContentTypeToVersion(versionedContentType, versionsMap, mediaType.Extensions, false); err != nil {
+			var extensions map[string]any
+			if mediaType != nil {
+				extensions = mediaType.Extensions
+			}
+
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, extensions, false); err != nil {
 				return err
 			}
 		}
@@ -438,6 +443,10 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 	}
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
+		if mediaType == nil {
+			continue
+		}
+
 		if mediaType.Schema == nil || (mediaType.Schema.Ref == "" && mediaType.Schema.Value == nil) {
 			continue
 		}

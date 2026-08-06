@@ -130,11 +130,10 @@ func (opts *UserDelegationFlow) Run(ctx context.Context) error {
 		}
 
 		_, _ = fmt.Fprintf(opts.OutWriter, "\nTo authenticate, visit the following URL in your browser:\n\n%s\n", authURL)
-		_, _ = fmt.Fprintln(opts.OutWriter, "\nAfter you approve, your browser will redirect to a page that fails to load.")
-		_, _ = fmt.Fprintln(opts.OutWriter, "This is expected. Copy the full URL from your browser's address bar and paste it here.")
-		_, _ = fmt.Fprint(opts.OutWriter, "\nPaste the URL: ")
+		_, _ = fmt.Fprintln(opts.OutWriter, "\nAfter you approve, the page will show a code to copy.")
+		_, _ = fmt.Fprint(opts.OutWriter, "\nPaste the code here: ")
 
-		code, err = auth.ParseCodeFromRedirectURL(os.Stdin, state)
+		code, err = auth.ParsePastedCallback(os.Stdin, state)
 		if err != nil {
 			return fmt.Errorf("authorization failed: %w", err)
 		}

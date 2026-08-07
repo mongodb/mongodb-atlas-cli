@@ -123,7 +123,7 @@ func (opts *UserDelegationFlow) Run(ctx context.Context) error {
 
 	if opts.NoBrowser {
 		// Manual flow: user authorizes in their own browser and pastes the redirect URL back
-		redirectURI = auth.NoBrowserRedirectURI()
+		redirectURI = auth.NoBrowserRedirectURI
 		authURL, err := authCfg.AuthorizationURL(authorizationEndpoint, redirectURI, state, pkce)
 		if err != nil {
 			return err

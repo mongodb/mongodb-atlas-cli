@@ -15,75 +15,75 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // PrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoints(projectID, provider string) ([]atlasv2.EndpointService, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.ListPrivateEndpointService(s.ctx, projectID, provider).Execute()
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.ListPrivateEndpointService(s.ctx, projectID, provider).Execute()
 	return result, err
 }
 
 // DataLakePrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) DataLakePrivateEndpoints(params *atlasv2.ListPrivateEndpointIdsApiParams) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.ListPrivateEndpointIdsWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.DataFederationAPI.ListPrivateEndpointIdsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // PrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoint(projectID, provider, privateLinkID string) (*atlasv2.EndpointService, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.GetPrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
 	return result, err
 }
 
 // DataLakePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DataLakePrivateEndpoint(projectID, privateLinkID string) (*atlasv2.PrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.GetPrivateEndpointId(s.ctx, projectID, privateLinkID).Execute()
+	result, _, err := s.clientv2.DataFederationAPI.GetPrivateEndpointId(s.ctx, projectID, privateLinkID).Execute()
 	return result, err
 }
 
 // CreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreatePrivateEndpoint(projectID string, r *atlasv2.CloudProviderEndpointServiceRequest) (*atlasv2.EndpointService, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpointService(s.ctx, projectID, r).
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.CreatePrivateEndpointService(s.ctx, projectID, r).
 		Execute()
 	return result, err
 }
 
 // DataLakeCreatePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DataLakeCreatePrivateEndpoint(projectID string, r *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
-	result, _, err := s.clientv2.DataFederationApi.CreatePrivateEndpointId(s.ctx, projectID, r).
+	result, _, err := s.clientv2.DataFederationAPI.CreatePrivateEndpointId(s.ctx, projectID, r).
 		Execute()
 	return result, err
 }
 
 // DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
-	_, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
+	_, err := s.clientv2.PrivateEndpointServicesAPI.DeletePrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
 	return err
 }
 
 // DataLakeDeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) error {
-	_, err := s.clientv2.DataFederationApi.DeletePrivateEndpointId(s.ctx, projectID, endpointID).Execute()
+	_, err := s.clientv2.DataFederationAPI.DeletePrivateEndpointId(s.ctx, projectID, endpointID).Execute()
 	return err
 }
 
 // CreateInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID string, createRequest *atlasv2.CreateEndpointRequest) (*atlasv2.PrivateLinkEndpoint, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.CreatePrivateEndpoint(s.ctx, projectID, provider,
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.CreatePrivateEndpoint(s.ctx, projectID, provider,
 		endpointServiceID, createRequest).Execute()
 	return result, err
 }
 
 // InterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, endpointServiceID string) (*atlasv2.PrivateLinkEndpoint, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpoint(s.ctx, projectID, cloudProvider, privateEndpointID, endpointServiceID).Execute()
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.GetPrivateEndpoint(s.ctx, projectID, cloudProvider, privateEndpointID, endpointServiceID).Execute()
 	return result, err
 }
 
 // DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
-	_, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
+	_, err := s.clientv2.PrivateEndpointServicesAPI.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
 	return err
 }
 
@@ -92,13 +92,13 @@ func (s *Store) UpdateRegionalizedPrivateEndpointSetting(projectID string, enabl
 	setting := atlasv2.ProjectSettingItem{
 		Enabled: enabled,
 	}
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.
 		ToggleRegionalEndpointMode(s.ctx, projectID, &setting).Execute()
 	return result, err
 }
 
 // RegionalizedPrivateEndpointSetting encapsulates the logic to manage different cloud providers.
 func (s *Store) RegionalizedPrivateEndpointSetting(projectID string) (*atlasv2.ProjectSettingItem, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.GetRegionalEndpointMode(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.PrivateEndpointServicesAPI.GetRegionalEndpointMode(s.ctx, projectID).Execute()
 	return result, err
 }

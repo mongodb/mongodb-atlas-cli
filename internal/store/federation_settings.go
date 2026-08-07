@@ -15,11 +15,11 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // FederationSetting encapsulate the logic to manage different cloud providers.
 func (s *Store) FederationSetting(opts *atlasv2.GetFederationSettingsApiParams) (*atlasv2.OrgFederationSettings, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.GetFederationSettingsWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.GetFederationSettingsWithParams(s.ctx, opts).Execute()
 	return result, err
 }

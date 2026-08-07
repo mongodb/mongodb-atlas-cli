@@ -15,30 +15,30 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitations(params *atlasv2.ListGroupInvitesApiParams) ([]atlasv2.GroupInvitation, error) {
-	result, _, err := s.clientv2.ProjectsApi.ListGroupInvitesWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.ListGroupInvitesWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // ProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlasv2.GroupInvitation, error) {
-	result, _, err := s.clientv2.ProjectsApi.GetGroupInvite(s.ctx, groupID, invitationID).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.GetGroupInvite(s.ctx, groupID, invitationID).Execute()
 	return result, err
 }
 
 // DeleteProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
-	_, err := s.clientv2.ProjectsApi.DeleteGroupInvite(s.ctx, groupID, invitationID).Execute()
+	_, err := s.clientv2.ProjectsAPI.DeleteGroupInvite(s.ctx, groupID, invitationID).Execute()
 	return err
 }
 
 // InviteUserToProject encapsulate the logic to manage different cloud providers.
 func (s *Store) InviteUserToProject(groupID string, invitation *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error) {
-	result, _, err := s.clientv2.ProjectsApi.CreateGroupInvite(s.ctx, groupID, invitation).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.CreateGroupInvite(s.ctx, groupID, invitation).Execute()
 	return result, err
 }
 
@@ -48,10 +48,10 @@ func (s *Store) UpdateProjectInvitation(groupID, invitationID string, invitation
 		groupInvitationRequest := atlasv2.GroupInvitationUpdateRequest{
 			Roles: invitation.Roles,
 		}
-		result, _, err := s.clientv2.ProjectsApi.UpdateInviteById(s.ctx, groupID, invitationID, &groupInvitationRequest).Execute()
+		result, _, err := s.clientv2.ProjectsAPI.UpdateInviteById(s.ctx, groupID, invitationID, &groupInvitationRequest).Execute()
 		return result, err
 	}
 
-	result, _, err := s.clientv2.ProjectsApi.UpdateGroupInvites(s.ctx, groupID, invitation).Execute()
+	result, _, err := s.clientv2.ProjectsAPI.UpdateGroupInvites(s.ctx, groupID, invitation).Execute()
 	return result, err
 }

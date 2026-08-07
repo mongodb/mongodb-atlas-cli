@@ -15,41 +15,41 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // IdentityProviders encapsulate the logic to manage different cloud providers.
 func (s *Store) IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.ListIdentityProvidersWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.ListIdentityProvidersWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // IdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) IdentityProvider(opts *atlasv2.GetIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.GetIdentityProviderWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.GetIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // CreateIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateIdentityProvider(opts *atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.CreateIdentityProviderWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.CreateIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // DeleteIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteIdentityProvider(federationSettingsID string, identityProviderID string) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.DeleteIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationAPI.DeleteIdentityProvider(s.ctx, federationSettingsID, identityProviderID).Execute()
 	return err
 }
 
 // UpdateIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateIdentityProvider(opts *atlasv2.UpdateIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error) {
-	result, _, err := s.clientv2.FederatedAuthenticationApi.UpdateIdentityProviderWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FederatedAuthenticationAPI.UpdateIdentityProviderWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // RevokeJwksFromIdentityProvider encapsulate the logic to manage different cloud providers.
 func (s *Store) RevokeJwksFromIdentityProvider(federationSettingsID string, identityProviderID string) error {
-	_, err := s.clientv2.FederatedAuthenticationApi.RevokeIdentityProviderJwks(s.ctx, federationSettingsID, identityProviderID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationAPI.RevokeIdentityProviderJwks(s.ctx, federationSettingsID, identityProviderID).Execute()
 	return err
 }

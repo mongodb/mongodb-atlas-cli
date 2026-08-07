@@ -19,12 +19,12 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJobs(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
-	res := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
+	res := s.clientv2.CloudBackupsAPI.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -38,7 +38,7 @@ func (s *Store) RestoreFlexClusterJob(projectID, clusterName, restoreJobID strin
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexRestoreJobsApi.GetFlexRestoreJob(s.ctx, projectID, clusterName, restoreJobID).Execute()
+	result, _, err := s.clientv2.FlexRestoreJobsAPI.GetFlexRestoreJob(s.ctx, projectID, clusterName, restoreJobID).Execute()
 	return result, err
 }
 
@@ -48,37 +48,37 @@ func (s *Store) RestoreFlexClusterJobs(args *atlasv2.ListFlexRestoreJobsApiParam
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexRestoreJobsApi.ListFlexRestoreJobsWithParams(s.ctx, args).Execute()
+	result, _, err := s.clientv2.FlexRestoreJobsAPI.ListFlexRestoreJobsWithParams(s.ctx, args).Execute()
 	return result, err
 }
 
 // RestoreJob encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
 	return result, err
 }
 
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
 	return result, err
 }
 
 // CreateRestoreFlexClusterJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateRestoreFlexClusterJobs(projectID, clusterName string, request *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
-	result, _, err := s.clientv2.FlexRestoreJobsApi.CreateFlexRestoreJob(s.ctx, projectID, clusterName, request).Execute()
+	result, _, err := s.clientv2.FlexRestoreJobsAPI.CreateFlexRestoreJob(s.ctx, projectID, clusterName, request).Execute()
 	return result, err
 }
 
 // CreateSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.TakeSnapshots(s.ctx, projectID, clusterName, request).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.TakeSnapshots(s.ctx, projectID, clusterName, request).Execute()
 	return result, err
 }
 
 // Snapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) Snapshots(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
-	res := s.clientv2.CloudBackupsApi.ListBackupSnapshots(s.ctx, projectID, clusterName)
+	res := s.clientv2.CloudBackupsAPI.ListBackupSnapshots(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -92,7 +92,7 @@ func (s *Store) FlexClusterSnapshots(opts *atlasv2.ListFlexBackupSnapshotsApiPar
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexSnapshotsApi.ListFlexBackupSnapshotsWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FlexSnapshotsAPI.ListFlexBackupSnapshotsWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
@@ -101,7 +101,7 @@ func (s *Store) DownloadFlexClusterSnapshot(groupID, name string, flexBackupSnap
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexSnapshotsApi.DownloadFlexBackup(s.ctx, name, groupID, flexBackupSnapshotDownloadCreate20241113).Execute()
+	result, _, err := s.clientv2.FlexSnapshotsAPI.DownloadFlexBackup(s.ctx, name, groupID, flexBackupSnapshotDownloadCreate20241113).Execute()
 	return result, err
 }
 
@@ -111,25 +111,25 @@ func (s *Store) FlexClusterSnapshot(groupID, name, snapshotID string) (*atlasv2.
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexSnapshotsApi.GetFlexBackupSnapshot(s.ctx, groupID, name, snapshotID).Execute()
+	result, _, err := s.clientv2.FlexSnapshotsAPI.GetFlexBackupSnapshot(s.ctx, groupID, name, snapshotID).Execute()
 	return result, err
 }
 
 // Snapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlasv2.DiskBackupReplicaSet, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetClusterBackupSnapshot(s.ctx, projectID, clusterName, snapshotID).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.GetClusterBackupSnapshot(s.ctx, projectID, clusterName, snapshotID).Execute()
 	return result, err
 }
 
 // DeleteSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
-	_, err := s.clientv2.CloudBackupsApi.DeleteClusterBackupSnapshot(s.ctx, projectID, clusterName, snapshotID).Execute()
+	_, err := s.clientv2.CloudBackupsAPI.DeleteClusterBackupSnapshot(s.ctx, projectID, clusterName, snapshotID).Execute()
 	return err
 }
 
 // ExportJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) ExportJobs(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
-	res := s.clientv2.CloudBackupsApi.ListBackupExports(s.ctx, projectID, clusterName)
+	res := s.clientv2.CloudBackupsAPI.ListBackupExports(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -139,19 +139,19 @@ func (s *Store) ExportJobs(projectID, clusterName string, opts *ListOptions) (*a
 
 // ExportJob encapsulates the logic to manage different cloud providers.
 func (s *Store) ExportJob(projectID, clusterName, bucketID string) (*atlasv2.DiskBackupExportJob, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetBackupExport(s.ctx, projectID, clusterName, bucketID).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.GetBackupExport(s.ctx, projectID, clusterName, bucketID).Execute()
 	return result, err
 }
 
 // CreateExportJob encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.DiskBackupExportJobRequest) (*atlasv2.DiskBackupExportJob, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.CreateBackupExport(s.ctx, projectID, clusterName, job).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.CreateBackupExport(s.ctx, projectID, clusterName, job).Execute()
 	return result, err
 }
 
 // ExportBuckets encapsulates the logic to manage different cloud providers.
 func (s *Store) ExportBuckets(projectID string, opts *ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error) {
-	res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
+	res := s.clientv2.CloudBackupsAPI.ListExportBuckets(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -161,19 +161,19 @@ func (s *Store) ExportBuckets(projectID string, opts *ListOptions) (*atlasv2.Pag
 
 // CreateExportBucket encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotExportBucketRequest) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID, bucket).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.CreateExportBucket(s.ctx, projectID, bucket).Execute()
 	return result, err
 }
 
 // DeleteExportBucket encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
-	_, err := s.clientv2.CloudBackupsApi.DeleteExportBucket(s.ctx, projectID, bucketID).Execute()
+	_, err := s.clientv2.CloudBackupsAPI.DeleteExportBucket(s.ctx, projectID, bucketID).Execute()
 	return err
 }
 
 // DescribeExportBucket encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetExportBucket(s.ctx, projectID, bucketID).Execute()
+	result, _, err := s.clientv2.CloudBackupsAPI.GetExportBucket(s.ctx, projectID, bucketID).Execute()
 	return result, err
 }
 
@@ -191,6 +191,6 @@ func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlasClust
 
 // DeleteSchedule encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSchedule(projectID, clusterName string) error {
-	_, _, err := s.clientv2.CloudBackupsApi.DeleteClusterBackupSchedule(s.ctx, projectID, clusterName).Execute()
+	_, _, err := s.clientv2.CloudBackupsAPI.DeleteClusterBackupSchedule(s.ctx, projectID, clusterName).Execute()
 	return err
 }

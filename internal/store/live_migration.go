@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // CreateValidation encapsulate the logic to manage different cloud providers.
@@ -27,7 +27,7 @@ func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigr
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.ValidateLiveMigrations(s.ctx, groupID, liveMigration).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceAPI.ValidateLiveMigrations(s.ctx, groupID, liveMigration).Execute()
 	return result, err
 }
 
@@ -36,7 +36,7 @@ func (s *Store) CreateLiveMigrationCutover(groupID, liveMigrationID string) erro
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, err := s.clientv2.CloudMigrationServiceApi.CutoverMigration(s.ctx, groupID, liveMigrationID).Execute()
+	_, err := s.clientv2.CloudMigrationServiceAPI.CutoverMigration(s.ctx, groupID, liveMigrationID).Execute()
 	return err
 }
 
@@ -45,6 +45,6 @@ func (s *Store) GetValidationStatus(groupID, liveMigrationID string) (*atlasv2.L
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.GetMigrationValidateStatus(context.Background(), groupID, liveMigrationID).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceAPI.GetMigrationValidateStatus(context.Background(), groupID, liveMigrationID).Execute()
 	return result, err
 }

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // ListFlexClusters encapsulate the logic to manage different cloud providers.
@@ -27,7 +27,7 @@ func (s *Store) ListFlexClusters(opts *atlasv2.ListFlexClustersApiParams) (*atla
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.ListFlexClustersWithParams(s.ctx, opts).Execute()
+	result, _, err := s.clientv2.FlexClustersAPI.ListFlexClustersWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
@@ -37,7 +37,7 @@ func (s *Store) FlexCluster(groupID, name string) (*atlasv2.FlexClusterDescripti
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.GetFlexCluster(s.ctx, groupID, name).Execute()
+	result, _, err := s.clientv2.FlexClustersAPI.GetFlexCluster(s.ctx, groupID, name).Execute()
 	return result, err
 }
 
@@ -47,7 +47,7 @@ func (s *Store) CreateFlexCluster(groupID string, flexClusterDescriptionCreate20
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.CreateFlexCluster(s.ctx, groupID, flexClusterDescriptionCreate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersAPI.CreateFlexCluster(s.ctx, groupID, flexClusterDescriptionCreate20241113).Execute()
 	return result, err
 }
 
@@ -57,7 +57,7 @@ func (s *Store) UpdateFlexCluster(groupID, name string, flexClusterDescriptionUp
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.UpdateFlexCluster(s.ctx, groupID, name, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersAPI.UpdateFlexCluster(s.ctx, groupID, name, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }
 
@@ -67,7 +67,7 @@ func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate2
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.TenantUpgrade(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersAPI.TenantUpgrade(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }
 
@@ -77,6 +77,6 @@ func (s *Store) DeleteFlexCluster(groupID, name string) error {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	_, err := s.clientv2.FlexClustersApi.DeleteFlexCluster(s.ctx, groupID, name).Execute()
+	_, err := s.clientv2.FlexClustersAPI.DeleteFlexCluster(s.ctx, groupID, name).Execute()
 	return err
 }

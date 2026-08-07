@@ -15,17 +15,17 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // ProcessDiskMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDiskMeasurements(params *atlasv2.GetProcessDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetProcessDiskMeasurementsWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.GetProcessDiskMeasurementsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // ProcessDatabaseMeasurements encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabaseMeasurements(args *atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error) {
-	result, _, err := s.clientv2.MonitoringAndLogsApi.GetDatabaseMeasurementsWithParams(s.ctx, args).Execute()
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.GetDatabaseMeasurementsWithParams(s.ctx, args).Execute()
 	return result, err
 }

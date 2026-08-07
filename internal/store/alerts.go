@@ -15,23 +15,23 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // Alert encapsulates the logic to manage different cloud providers.
 func (s *Store) Alert(params *atlasv2.GetAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error) {
-	result, _, err := s.clientv2.AlertsApi.GetAlertWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.AlertsAPI.GetAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
 func (s *Store) Alerts(params *atlasv2.ListAlertsApiParams) (*atlasv2.PaginatedAlert, error) {
-	result, _, err := s.clientv2.AlertsApi.ListAlertsWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.AlertsAPI.ListAlertsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // AcknowledgeAlert encapsulate the logic to manage different cloud providers.
 func (s *Store) AcknowledgeAlert(params *atlasv2.AcknowledgeAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error) {
-	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.AlertsAPI.AcknowledgeAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }

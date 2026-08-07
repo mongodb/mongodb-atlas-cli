@@ -17,13 +17,13 @@ package store
 import (
 	"strconv"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // ProcessDatabases encapsulate the logic to manage different cloud providers.
 func (s *Store) ProcessDatabases(groupID, host string, port int, opts *ListOptions) (*atlasv2.PaginatedDatabase, error) {
 	process := host + ":" + strconv.Itoa(port)
-	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDatabases(s.ctx, groupID, process).
+	result, _, err := s.clientv2.MonitoringAndLogsAPI.ListDatabases(s.ctx, groupID, process).
 		PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount).Execute()
 	return result, err
 }

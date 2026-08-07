@@ -15,30 +15,30 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx, user).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersAPI.CreateUser(s.ctx, user).Execute()
 	return result, err
 }
 
 // UserByID encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByID(userID string) (*atlasv2.CloudAppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUser(s.ctx, userID).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersAPI.GetUser(s.ctx, userID).Execute()
 	return result, err
 }
 
 // UserByName encapsulates the logic to manage different cloud providers.
 func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.GetUserByName(s.ctx, username).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersAPI.GetUserByName(s.ctx, username).Execute()
 	return result, err
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationUsers(organizationID string, opts *ListOptions) (*atlasv2.PaginatedOrgUser, error) {
-	res := s.clientv2.MongoDBCloudUsersApi.ListOrgUsers(s.ctx, organizationID)
+	res := s.clientv2.MongoDBCloudUsersAPI.ListOrgUsers(s.ctx, organizationID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -48,6 +48,6 @@ func (s *Store) OrganizationUsers(organizationID string, opts *ListOptions) (*at
 
 // TeamUsers encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedOrgUser, error) {
-	result, _, err := s.clientv2.MongoDBCloudUsersApi.ListTeamUsers(s.ctx, orgID, teamID).Execute()
+	result, _, err := s.clientv2.MongoDBCloudUsersAPI.ListTeamUsers(s.ctx, orgID, teamID).Execute()
 	return result, err
 }

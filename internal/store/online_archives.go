@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // OnlineArchives encapsulate the logic to manage different cloud providers.
@@ -26,7 +26,7 @@ func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *ListOption
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.OnlineArchiveApi.ListOnlineArchives(s.ctx, projectID, clusterName).
+	result, _, err := s.clientv2.OnlineArchiveAPI.ListOnlineArchives(s.ctx, projectID, clusterName).
 		PageNum(lstOpt.PageNum).ItemsPerPage(lstOpt.ItemsPerPage).IncludeCount(lstOpt.IncludeCount).Execute()
 	return result, err
 }
@@ -36,7 +36,7 @@ func (s *Store) OnlineArchive(projectID, clusterName, archiveID string) (*atlasv
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.OnlineArchiveApi.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+	result, _, err := s.clientv2.OnlineArchiveAPI.GetOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 	return result, err
 }
 
@@ -45,7 +45,7 @@ func (s *Store) CreateOnlineArchive(projectID, clusterName string, archive *atla
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.OnlineArchiveApi.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
+	result, _, err := s.clientv2.OnlineArchiveAPI.CreateOnlineArchive(s.ctx, projectID, clusterName, archive).Execute()
 	return result, err
 }
 
@@ -54,7 +54,7 @@ func (s *Store) UpdateOnlineArchive(projectID, clusterName string, archive *atla
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.OnlineArchiveApi.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
+	result, _, err := s.clientv2.OnlineArchiveAPI.UpdateOnlineArchive(s.ctx, projectID, archive.GetId(), clusterName, archive).Execute()
 	return result, err
 }
 
@@ -63,6 +63,6 @@ func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) er
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+	_, err := s.clientv2.OnlineArchiveAPI.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 	return err
 }

@@ -16,22 +16,22 @@ package store
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
+	result, _, err := s.clientv2.DatabaseUsersAPI.CreateDatabaseUser(s.ctx, user.GroupId, user).Execute()
 	return result, err
 }
 
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
-	_, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+	_, err := s.clientv2.DatabaseUsersAPI.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
 	return err
 }
 
 func (s *Store) DatabaseUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error) {
-	res := s.clientv2.DatabaseUsersApi.ListDatabaseUsers(s.ctx, projectID)
+	res := s.clientv2.DatabaseUsersAPI.ListDatabaseUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -40,18 +40,18 @@ func (s *Store) DatabaseUsers(projectID string, opts *ListOptions) (*atlasv2.Pag
 }
 
 func (s *Store) UpdateDatabaseUser(params *atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
+	result, _, err := s.clientv2.DatabaseUsersAPI.UpdateDatabaseUserWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDatabaseUser, error) {
-	result, _, err := s.clientv2.DatabaseUsersApi.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+	result, _, err := s.clientv2.DatabaseUsersAPI.GetDatabaseUser(s.ctx, groupID, authDB, username).Execute()
 	return result, err
 }
 
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
 func (s *Store) DBUserCertificates(projectID, username string, opts *ListOptions) (*atlasv2.PaginatedUserCert, error) {
-	res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCerts(s.ctx, projectID, username)
+	res := s.clientv2.X509AuthenticationAPI.ListDatabaseUserCerts(s.ctx, projectID, username)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
 	}
@@ -64,6 +64,6 @@ func (s *Store) CreateDBUserCertificate(projectID, username string, monthsUntilE
 	userCert := &atlasv2.UserCert{
 		MonthsUntilExpiration: pointer.Get(monthsUntilExpiration),
 	}
-	cert, _, err := s.clientv2.X509AuthenticationApi.CreateDatabaseUserCert(s.ctx, projectID, username, userCert).Execute()
+	cert, _, err := s.clientv2.X509AuthenticationAPI.CreateDatabaseUserCert(s.ctx, projectID, username, userCert).Execute()
 	return cert, err
 }

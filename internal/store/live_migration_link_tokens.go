@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312021/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
 )
 
 // CreateLinkToken encapsulate the logic to manage different cloud providers.
@@ -26,7 +26,7 @@ func (s *Store) CreateLinkToken(orgID string, linkToken *atlasv2.TargetOrgReques
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	result, _, err := s.clientv2.CloudMigrationServiceApi.CreateLinkToken(s.ctx, orgID, linkToken).Execute()
+	result, _, err := s.clientv2.CloudMigrationServiceAPI.CreateLinkToken(s.ctx, orgID, linkToken).Execute()
 	return result, err
 }
 
@@ -35,6 +35,6 @@ func (s *Store) DeleteLinkToken(orgID string) error {
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, err := s.clientv2.CloudMigrationServiceApi.DeleteLinkTokens(s.ctx, orgID).Execute()
+	_, err := s.clientv2.CloudMigrationServiceAPI.DeleteLinkTokens(s.ctx, orgID).Execute()
 	return err
 }

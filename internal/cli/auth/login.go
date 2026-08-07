@@ -67,6 +67,10 @@ type TrackAsker interface {
 	TrackAskOne(survey.Prompt, any, ...survey.AskOpt) error
 }
 
+type userDelegationRunner interface {
+	Run(ctx context.Context) error
+}
+
 const (
 	userAccountAuth = "UserAccount"
 	atlasName       = "atlas"
@@ -75,9 +79,10 @@ const (
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, prompt.UserDelegationAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
-		userAccountAuth:           "(best for getting started)",
+		userAccountAuth:           "(legacy account connection)",
+		prompt.UserDelegationAuth: "(best for user accounts)",
 		prompt.ServiceAccountAuth: "(best for automation)",
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}
@@ -94,11 +99,14 @@ type LoginOpts struct {
 	PrivateAPIKey string
 	IsGov         bool
 	NoBrowser     bool
+	Discover      bool
 	authType      string
 	force         bool
 	SkipConfig    bool
 	config        LoginConfig
 	Asker         TrackAsker
+
+	userDelegationFlow userDelegationRunner
 }
 
 func (opts *LoginOpts) promptAuthType() error {
@@ -165,11 +173,25 @@ func (opts *LoginOpts) setUpCredentials(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
 		return opts.setUserAccountCredentials(ctx)
+	case prompt.UserDelegationAuth:
+		return opts.runUserDelegationFlow(ctx)
 	case prompt.ServiceAccountAuth, prompt.APIKeysAuth:
 		return opts.setProgrammaticCredentials()
 	default:
 		return errors.New("no authentication type selected")
 	}
+}
+
+func (opts *LoginOpts) runUserDelegationFlow(ctx context.Context) error {
+	if opts.userDelegationFlow == nil {
+		opts.userDelegationFlow = &UserDelegationFlow{
+			config:    config.Default(),
+			OutWriter: opts.OutWriter,
+			NoBrowser: opts.NoBrowser,
+			Discover:  opts.Discover,
+		}
+	}
+	return opts.userDelegationFlow.Run(ctx)
 }
 
 func (opts *LoginOpts) setUpAccess() {
@@ -246,6 +268,8 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
 		opts.config.SetAuthType(config.UserAccount)
+	case prompt.UserDelegationAuth:
+		opts.config.SetAuthType(config.UserDelegation)
 	case prompt.ServiceAccountAuth:
 		opts.config.SetAuthType(config.ServiceAccount)
 	case prompt.APIKeysAuth:
@@ -468,6 +492,7 @@ func LoginBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.IsGov, "gov", false, "Log in to Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.NoBrowser, "noBrowser", false, "Don't automatically open a browser session.")
+	cmd.Flags().BoolVar(&opts.Discover, "discover", false, "Force re-discovery of authorization server metadata.")
 	cmd.Flags().BoolVar(&opts.SkipConfig, "skipConfig", false, "Skip profile configuration.")
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)

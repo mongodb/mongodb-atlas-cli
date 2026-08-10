@@ -1,0 +1,47 @@
+HTTP/2.0 201 Created
+Content-Length: 1814
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 10 Aug 2026 03:06:35 GMT
+Ratelimit-Limit: 1200
+Ratelimit-Remaining: 1199
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 868
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::generateCert
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=203ac0360368239eed8f27b82e06b1be8429648c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+-----BEGIN CERTIFICATE-----
+MIIFBzCCAu+gAwIBAgIIG266g0iQSpIwDQYJKoZIhvcNAQELBQAwSTEhMB8GA1UE
+AxMYNWVmZGE2YWVhM2YyZWQyZTdkZDZjZTA1MQ4wDAYDVQQLEwVBdGxhczEUMBIG
+A1UEChMLTW9uZ29EQiBJbmMwHhcNMjYwODEwMDIwNjM1WhcNMjYxMTEwMDMwNjM1
+WjASMRAwDgYDVQQDEwd1c2VyMzg5MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIIC
+CgKCAgEAxqluygNIjRLeVhdQpTclHwVMeWTprHw9yNzE0bwHldZvzvur0swauOUU
+8wfX3/rM1DO/FMc7bcTRLn/fleG9kTfeWkr/mzGdABzNoQ8RCZnh7QeU/Hh+DEsO
+yIKza/jU3hiIOGJqL9J0RlaMs3jwBWPt+/e5GwXUyPUKdpZoESCtFvsEcvIC4jjH
+Hpi8caiK1e2NJNyeQMf93joXKB/nNgBTjdKNEkpf5OOcOpQ69JED6sNKj7BIVPop
+k7ZgBLPvvs6rBKFabfZB1NLy5jm2GxJc0AiBERX2ZPi5infCqp6PT/6gMrU60VDN
+L2wPLsHYSb4XtvCIPmaBgk+0mTuz6HfHNTx3pW41x+qBhyWgcmh/1hj0kC2qvsAV
+LRhuKxTjnTW9YHn+eW+6ZojlTgrS/uHPDBkZZLzZwQ3z6F6O+KD3f4pxr6PebWVr
+L261Y1wxx4sYTfgLVpVkWZorVTM0Zg2G+tPrN6xdWCxjDtrokg5zFOWFqtZ6Bpdw
+x7jkCurYPRKcjPpEtrsLMJNo5mNemthHD+sTmOO7ipISw7qvc1XEjV3lo6M/NchX
+WWalojDQx6mHADGdsaVJNUbN+yi8oZmtobQohRQi/cprh6Fl6yavz6hMkAuVs5ey
+kGGtcRRsw1bdGvADovA7HOPSrRuyTMCdrPQZsaUGfx8WmIt4/VkCAwEAAaMqMCgw
+DgYDVR0PAQH/BAQDAgeAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMCMA0GCSqGSIb3
+DQEBCwUAA4ICAQCyHFLxTKcYG90nZFiAj79+hxfOPP2NDWu/b6ucpjLaY6v6w0iU
+GGD+GN74A0jMZGmffIz0l5EPnI1cORZWWWORDgYxUvHWmj4ewDBbCzD9EpOdWODr
+RCjvPDoiTE7V9OPHI4DZZh9OTaL1LtWm2xLItBTZOAkG+j5A3pOe62v5hB4O5cv9
+9va1MoJudNAR6YPLyO0TGc9oLfQjYfqL4ZFY0RZooC0+LF+BXiA7mhe18eMOAGCt
+OxvLyRC4fPj76zPYGSGqBbZWXe0RJK+Sm64qQlAWbkX0hhZ0ePFd4dAJ/dQn/Rrf
+QmgaOCKfOHK1opC2YMtumemRfecZcuD/gI2lSfV3VqRQSgO4QSVlGU8py9qcwmBv
+PG2bjnongrfIlgN/FlwmRk0OidFxNTcW50iSLLTepXrOxVbJwpjymeNKN6V0rArg
+lCC6HeR7P8/e9F6uKJzLBMuCS82QY+c+JiDh4vTvnuYOV23IFGq3gSzC+o8fd0ac
+CnH26LMJx11EkQWyqQecGcrzh4LxI/Nw1JC1tXo3JTEzYz5QZsTrLxm83uh5JmtK
+TjSFAECEtsMBS/F2918UEkpJthZN5DfccazHIKBx35LX2qV4jwSwFIAIfQvvqD6i
+L6dJq5k3/+7LKmWYddSNEZBNURT9WV4uDwq6xD4lLvDkR5SvVXNF8kjaGg==
+-----END CERTIFICATE-----
+REDACTED

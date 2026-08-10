@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 1993
+Content-Type: application/vnd.atlas.2024-10-23+json;charset=utf-8
+Date: Mon, 10 Aug 2026 03:02:27 GMT
+Ratelimit-Limit: 10000
+Ratelimit-Remaining: 9999
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 1090
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20241023::createCluster
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=203ac0360368239eed8f27b82e06b1be8429648c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"adaptiveCapacity":null,"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-607.msw6aox.mongodb-dev.net"},"createDate":"2026-08-10T03:02:28Z","diskWarmingMode":"FULLY_WARMED","effectiveDatabaseEdition":"CORE","effectiveReplicationSpecs":[{"id":"6a793f442c88faeba59b94e6","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6a793f442c88faeba59b94e4","zoneName":"Zone 1"}],"encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"6a793f362c88faeba59b8a26","id":"6a793f442c88faeba59b94ec","internalClusterRole":"NONE","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f362c88faeba59b8a26/clusters/cluster-607","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f362c88faeba59b8a26/clusters/cluster-607/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f362c88faeba59b8a26/clusters/cluster-607/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.29","name":"cluster-607","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"6a793f442c88faeba59b94e6","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"6a793f442c88faeba59b94e4","zoneName":"Zone 1"}],"retainBackups":false,"rootCertType":"ISRGROOTX1","stateName":"CREATING","tags":[{"key":"env-iss","value":"e2etest-iss"}],"terminationProtectionEnabled":false,"useAwsTimeBasedSnapshotCopyForFastInitialSync":false,"versionReleaseSystem":"LTS"}

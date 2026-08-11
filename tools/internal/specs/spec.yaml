@@ -1672,21 +1672,15 @@ components:
         AiModelApiKeyCreateRequest:
             properties:
                 cloud:
-                    description: Cloud provider scope for this API key. Must be "ANY". Additional cloud values will be supported in future API versions.
+                    description: Cloud provider scope for this API key. Use "ANY" for a cloud-agnostic scope. Additional cloud values will be supported in future API versions.
                     enum:
                         - ANY
-                    example: ANY
-                    minLength: 1
-                    pattern: ANY
                     type: string
                     writeOnly: true
                 geography:
-                    description: Geography scope for this API key. Must be "ANY". Additional geography values will be supported in future API versions.
+                    description: Geography scope for this API key. Use "ANY" for a geography-agnostic scope. Additional geography values will be supported in future API versions.
                     enum:
                         - ANY
-                    example: ANY
-                    minLength: 1
-                    pattern: ANY
                     type: string
                     writeOnly: true
                 name:
@@ -11788,6 +11782,13 @@ components:
         ControlPlaneIPAddresses:
             description: List of IP addresses in the Atlas control plane.
             properties:
+                gateways:
+                    description: List of gateways, each representing a group of service-specific IP addresses that customers can add to their allow lists independently. Includes the Atlas Gateway (data plane) group when present.
+                    items:
+                        $ref: '#/components/schemas/Gateway'
+                    maxItems: 25
+                    readOnly: true
+                    type: array
                 inbound:
                     $ref: '#/components/schemas/InboundControlPlaneCloudProviderIPAddresses'
                 outbound:
@@ -22371,6 +22372,27 @@ components:
             description: Details that explain how MongoDB Cloud replicates data in one region on the specified MongoDB database.
             title: GCP Regional Replication Specifications
             type: object
+        Gateway:
+            description: Represents a service-specific gateway, such as the Atlas Gateway, with its IP addresses.
+            properties:
+                ips:
+                    $ref: '#/components/schemas/GatewayIpAddresses'
+                name:
+                    description: Name of the service that this gateway represents.
+                    readOnly: true
+                    type: string
+            title: Gateway
+            type: object
+        GatewayIpAddresses:
+            description: IP addresses for a specific gateway, organized by direction and cloud provider.
+            properties:
+                inbound:
+                    $ref: '#/components/schemas/InboundControlPlaneCloudProviderIPAddresses'
+                outbound:
+                    $ref: '#/components/schemas/OutboundControlPlaneCloudProviderIPAddresses'
+            readOnly: true
+            title: Gateway IP Addresses
+            type: object
         GcsLogIntegrationRequest:
             allOf:
                 - $ref: '#/components/schemas/LogIntegrationRequest'
@@ -25482,6 +25504,15 @@ components:
         InvoiceLineItem:
             description: One service included in this invoice.
             properties:
+                cloudProvider:
+                    description: 'Code identifying the cloud provider this line item''s usage is attributed to. Values map as follows: AWS is Amazon Web Services, GCP is Google Cloud, AZURE is Microsoft Azure, and ATLAS is other Atlas usage not tied to a specific cloud provider.'
+                    enum:
+                        - AWS
+                        - GCP
+                        - AZURE
+                        - ATLAS
+                    readOnly: true
+                    type: string
                 clusterName:
                     description: Human-readable label that identifies the cluster that incurred the charge.
                     pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
@@ -35170,6 +35201,15 @@ components:
                     description: Billing date of the line item. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     format: date-time
                     type: string
+                cloudProvider:
+                    description: 'Code identifying the cloud provider this line item''s usage is attributed to. Values map as follows: AWS is Amazon Web Services, GCP is Google Cloud, AZURE is Microsoft Azure, and ATLAS is other Atlas usage not tied to a specific cloud provider.'
+                    enum:
+                        - AWS
+                        - GCP
+                        - AZURE
+                        - ATLAS
+                    readOnly: true
+                    type: string
                 clusterName:
                     description: Cluster associated with the line item.
                     type: string
@@ -40441,6 +40481,8 @@ components:
         StreamsKafkaAuthentication:
             description: User credentials required to connect to a Kafka Cluster. Includes the authentication type, as well as the parameters for that authentication mode.
             properties:
+                aws:
+                    $ref: '#/components/schemas/StreamsAWSConnectionConfig'
                 clientId:
                     description: OIDC client identifier for authentication to the Kafka cluster.
                     type: string
@@ -40707,6 +40749,13 @@ components:
                 arn:
                     description: Amazon Resource Name (ARN). Required for AWS Provider and MSK vendor.
                     pattern: ^arn:aws:kafka
+                    type: string
+                authenticationScheme:
+                    description: Authentication mechanism to use with this private networking connection.
+                    enum:
+                        - TLS
+                        - SASL_SCRAM
+                        - IAM
                     type: string
                 azureResourceIds:
                     description: Azure Resource IDs of each availability zone for the Azure Confluent cluster.
@@ -41061,6 +41110,9 @@ components:
         StreamsStartProcessorFailover:
             description: Failover options for starting a stream processor.
             properties:
+                clearCheckpoint:
+                    description: If true, clears the checkpoint so the failover processor does not resume from it. Applies only to FORCED failover; clearing may cause duplicate or missing records in the output.
+                    type: boolean
                 dryRun:
                     description: If true, simulates the operation without making any changes.
                     type: boolean
@@ -44517,7 +44569,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: fc3d0cd3ee15dbeb0d36ecc03631786d41036a9d
+    x-xgen-sha: e79f3bb13ada125b6d9fdcd6adc511ab510d5230
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -66987,7 +67039,7 @@ paths:
                     application/vnd.atlas.2023-02-01+json:
                         schema:
                             $ref: '#/components/schemas/StreamsPrivateLinkConnection'
-                description: Details to create one Private Link connection for a project. project.
+                description: Details to create one Private Link connection for a project.
                 required: true
             responses:
                 "200":

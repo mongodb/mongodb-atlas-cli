@@ -118,8 +118,6 @@ functions:
         <<: *go_options
         env:
           <<: *go_env
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
           AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
@@ -132,6 +130,9 @@ functions:
           - notary_service_url
           - goreleaser_key
           - unstable
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
         binary: build/package/package.sh
   "rename pkg":
     - command: subprocess.exec
@@ -350,6 +351,7 @@ tasks:
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "install gh-token"
+      - func: "authenticate to ecr"
       - func: "package"
         vars:
           unstable: ${unstable}

@@ -1,4 +1,4 @@
-FROM artifactory.corp.mongodb.com/dockerhub/centos:8
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/centos:8
 
 ARG url
 ARG entrypoint

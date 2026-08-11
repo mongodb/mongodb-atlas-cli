@@ -1,4 +1,4 @@
-FROM artifactory.corp.mongodb.com/dockerhub/debian:12-slim
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/debian:12-slim
 
 ARG url
 ARG entrypoint

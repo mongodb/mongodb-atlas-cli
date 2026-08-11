@@ -75,6 +75,12 @@ for runtime in docker podman; do
   # macOS: docker resolves a default keychain helper even with none configured, so the login
   # above authenticates and then fails to store. Writing the token ourselves both stores it and
   # makes docker read from config.json from now on.
+  if ! command -v python3 > /dev/null 2>&1; then
+    # fail fast if python3 is not available to store the token
+    echo "docker login to ${ECR_REGISTRY} failed and python3 is not available to store the token"
+    exit 1
+  fi
+
   echo "docker login failed to store the token, writing it to ${docker_config} instead"
   ECR_REGISTRY="${ECR_REGISTRY}" ECR_PASSWORD="${password}" python3 - "${docker_config}" <<'PY'
 import base64, json, os, sys

@@ -195,7 +195,7 @@ functions:
           DO_NOT_TRACK: "1"
           TEST_MODE: live
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
+          LOCALDEV_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/mongodb/mongodb-atlas-local
         command: make e2e-test
   "install gotestsum":
     - command: shell.exec
@@ -238,6 +238,18 @@ functions:
       params:
         files:
           - tasks.json
+  "authenticate to ecr":
+    - command: ec2.assume_role
+      params:
+        role_arn: ${ecr_role_arn|arn:aws:iam::901841024863:role/ecr-role-evergreen-ro}
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+        binary: build/package/ecr-login.sh
   "increase inotify limits":
     - command: shell.exec
       params:
@@ -1017,6 +1029,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "authenticate to ecr"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1030,6 +1043,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "authenticate to ecr"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1043,6 +1057,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "authenticate to ecr"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1056,6 +1071,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "authenticate to ecr"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1069,6 +1085,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "authenticate to ecr"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

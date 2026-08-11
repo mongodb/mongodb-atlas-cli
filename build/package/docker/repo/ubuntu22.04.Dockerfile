@@ -1,4 +1,4 @@
-FROM artifactory.corp.mongodb.com/dockerhub/ubuntu:22.04
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/ubuntu:22.04
 
 ARG package
 ARG entrypoint

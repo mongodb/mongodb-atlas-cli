@@ -61,7 +61,7 @@ echo "Cleaning up ${user}@${host}:/cygdrive/c/Users/Administrator/msi"
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "rm -rf '/cygdrive/c/Users/Administrator/msi'"
 
 echo "Notarizing ${MSI_FILE}"
-echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+"$(dirname "${BASH_SOURCE[0]}")/ecr-login.sh"
 
 echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
 echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> .env
@@ -72,7 +72,7 @@ podman run \
 	--rm \
 	-v "$(pwd):$(pwd)" \
 	-w "$(pwd)" \
-	artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
+	901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-jsign \
 	/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a ${AUTHENTICODE_KEY_NAME} \"$MSI_FILE\""
 
 rm .env

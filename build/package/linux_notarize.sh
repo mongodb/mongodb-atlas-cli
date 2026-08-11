@@ -28,7 +28,7 @@ fi
 echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > "signing-envfile"
 echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}" >> "signing-envfile"
 
-echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
+"$(dirname "${BASH_SOURCE[0]}")/ecr-login.sh"
 
 echo "notarizing Linux binary ${artifact}"
 
@@ -37,7 +37,7 @@ podman run \
   --rm \
   -v "$(pwd)":"$(pwd)" \
   -w "$(pwd)" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg \
+  901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-gpg \
   /bin/bash -c "gpgloader && gpg --yes -v --armor -o ${artifact}.sig --detach-sign ${artifact}"
 
 rm -rf signing-envfile

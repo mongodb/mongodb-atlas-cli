@@ -107,6 +107,7 @@ func RepoTasks(c *shrub.Configuration) {
 					GitTagOnly(true).
 					Dependency(newDependency(os, serverVersion, repo)).
 					Function("clone").
+					Function("authenticate to ecr").
 					FunctionWithVars("docker build repo", map[string]string{
 						"server_version":     serverVersion,
 						"pgp_server_version": getGpgServerVersion(serverVersion),
@@ -139,9 +140,11 @@ func PostPkgTasks(c *shrub.Configuration) {
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",
 			Variant: "goreleaser_atlascli_snapshot",
-		}).Function("clone").FunctionWithVars("docker build", map[string]string{
-			"image": postPkgImg[os],
-		})
+		}).Function("clone").
+			Function("authenticate to ecr").
+			FunctionWithVars("docker build", map[string]string{
+				"image": postPkgImg[os],
+			})
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
 	}
@@ -169,6 +172,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 				Name:    "package_goreleaser",
 				Variant: "goreleaser_atlascli_snapshot",
 			}).Function("clone").
+				Function("authenticate to ecr").
 				FunctionWithVars("docker build meta", map[string]string{
 					"image":              postPkgImg[os],
 					"server_version":     sv,

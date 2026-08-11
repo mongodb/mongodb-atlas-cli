@@ -1,4 +1,4 @@
-FROM artifactory.corp.mongodb.com/dockerhub/amazonlinux:2023
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/amazonlinux:2023
 
 ARG package
 ARG entrypoint

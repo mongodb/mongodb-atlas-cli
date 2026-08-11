@@ -61,11 +61,16 @@ jobs:
     name: Sign and Publish docker image
     needs: [ build_images ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # needed to assume the DevProd Platforms ECR role via OIDC
     env:
       IMAGE_REPOSITORY: mongodb/atlas
       STAGING_IMAGE_REPOSITORY: mongodb/apix_test
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
+      ECR_REGISTRY: 901841024863.dkr.ecr.us-east-1.amazonaws.com
+      COSIGN_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-cosign:2024-10-01
       DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
     steps:
       - name: Set date
@@ -94,13 +99,15 @@ jobs:
                 "containerd-snapshotter": true
               }
             }
+      - name: Configure AWS credentials for DevProd Platforms ECR
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c
+        with:
+          role-to-assume: ${{ secrets.DEVPROD_PLATFORMS_ECR_ROLE_ARN }}
+          aws-region: us-east-1
       - name: Download cosign image
-        env:
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
         run: |
-          echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
-          docker pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "${ECR_REGISTRY}"
+          docker pull "${COSIGN_IMAGE}"
       - name: Sign docker images with cosign
         env:
           PKCS11_URI: ${{ secrets.PKCS11_URI }}
@@ -133,7 +140,7 @@ jobs:
               -v ~/.docker/config.json:/root/.docker/config.json \
               -v "$(pwd):$(pwd)" \
               -w "$(pwd)" \
-              artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-cosign:2024-10-01 \
+              "${COSIGN_IMAGE}" \
               cosign sign --key "${PKCS11_URI}" --sign-container-identity=index.docker.io/mongodb/atlas --tlog-upload=false "${IMAGE}@${DIGEST}"
           done
       - name: Push image to dockerhub public registry

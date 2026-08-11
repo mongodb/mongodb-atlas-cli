@@ -70,6 +70,7 @@ jobs:
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
       ECR_REGISTRY: 901841024863.dkr.ecr.us-east-1.amazonaws.com
+      ECR_ROLE_ARN: arn:aws:iam::901841024863:role/ecr-role-gha-ro
       COSIGN_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-cosign:2024-10-01
       DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
     steps:
@@ -102,7 +103,7 @@ jobs:
       - name: Configure AWS credentials for DevProd Platforms ECR
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c
         with:
-          role-to-assume: ${{ secrets.DEVPROD_PLATFORMS_ECR_ROLE_ARN }}
+          role-to-assume: ${{ env.ECR_ROLE_ARN }}
           aws-region: us-east-1
       - name: Download cosign image
         run: |

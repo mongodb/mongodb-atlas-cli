@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2657
+Content-Type: application/json
+Date: Mon, 10 Aug 2026 03:03:27 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::upgradeTenantCluster
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=203ac0360368239eed8f27b82e06b1be8429648c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-ehwywg9-shard-00-00.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-01.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-02.eo4fgwq.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-cnntoe-shard-0","standardSrv":"mongodb+srv://cluster-801.eo4fgwq.mongodb-dev.net"},"createDate":"2026-08-10T03:03:08Z","deleteAfterDate":"2026-08-10T15:03:08Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"6a793f5f2c88faeba59ba565","id":"6a793f6c2c88faeba59bb4cc","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a793f5f2c88faeba59ba565/clusters/cluster-801","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a793f5f2c88faeba59ba565/clusters/cluster-801/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/6a793f5f2c88faeba59ba565/clusters/cluster-801/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.29","mongoURI":"mongodb://ac-ehwywg9-shard-00-00.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-01.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-02.eo4fgwq.mongodb-dev.net:27017","mongoURIUpdated":"2026-08-10T03:03:11Z","mongoURIWithOptions":"mongodb://ac-ehwywg9-shard-00-00.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-01.eo4fgwq.mongodb-dev.net:27017,ac-ehwywg9-shard-00-02.eo4fgwq.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-cnntoe-shard-0","name":"cluster-801","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_1"},"replicationFactor":3,"replicationSpec":{"US_EAST_1":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"6a793f6c2c88faeba59bb4be","numShards":1,"regionsConfig":{"US_EAST_1":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","srvAddress":"mongodb+srv://cluster-801.eo4fgwq.mongodb-dev.net","stateName":"UPDATING","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

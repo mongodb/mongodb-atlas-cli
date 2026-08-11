@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
 Content-Length: 397
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 20 Jul 2026 03:26:38 GMT
+Date: Mon, 10 Aug 2026 03:04:29 GMT
 Ratelimit-Limit: 1200
 Ratelimit-Remaining: 1199
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 219
+X-Envoy-Upstream-Service-Time: 157
 X-Frame-Options: DENY
 X-Java-Method: ApiProjectApiUsersResource::createApiUser
 X-Java-Version: 17.0.19+10-LTS
-X-Mongodb-Service-Version: gitHash=f2dd3c1e38c46699c904f77bcdb24bc2b3b2f861; versionString=master
+X-Mongodb-Service-Version: gitHash=203ac0360368239eed8f27b82e06b1be8429648c; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"desc":"e2e-test","id":"6a5d956e62e88d96fa097956","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6a5d956e62e88d96fa097956","rel":"self"}],"privateKey":"eb5382b4-b40c-41a1-90d6-9172366d3832","publicKey":"rwsjhgob","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"}]}
+{"desc":"e2e-test","id":"6a793fbd2c88faeba59bd3b1","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6a793fbd2c88faeba59bd3b1","rel":"self"}],"privateKey":"754c8808-0ba8-4153-8eea-85daa09d408a","publicKey":"flezioeg","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"}]}

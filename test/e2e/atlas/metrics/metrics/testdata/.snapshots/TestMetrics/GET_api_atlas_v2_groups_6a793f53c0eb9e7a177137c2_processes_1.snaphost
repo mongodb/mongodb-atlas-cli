@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1853
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 10 Aug 2026 03:20:42 GMT
+Ratelimit-Limit: 300
+Ratelimit-Remaining: 299
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 104
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.19+10-LTS
+X-Mongodb-Service-Version: gitHash=203ac0360368239eed8f27b82e06b1be8429648c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f53c0eb9e7a177137c2/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2026-08-10T03:10:30Z","groupId":"6a793f53c0eb9e7a177137c2","hostname":"atlas-qgu1cy-shard-00-00.fyfn6y.mongodb-dev.net","id":"atlas-qgu1cy-shard-00-00.fyfn6y.mongodb-dev.net:27017","lastPing":"2026-08-10T03:20:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f53c0eb9e7a177137c2/processes/atlas-qgu1cy-shard-00-00.fyfn6y.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qgu1cy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-659-shard-00-00.fyfn6y.mongodb-dev.net","version":"8.0.29"},{"created":"2026-08-10T03:10:31Z","groupId":"6a793f53c0eb9e7a177137c2","hostname":"atlas-qgu1cy-shard-00-01.fyfn6y.mongodb-dev.net","id":"atlas-qgu1cy-shard-00-01.fyfn6y.mongodb-dev.net:27017","lastPing":"2026-08-10T03:20:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f53c0eb9e7a177137c2/processes/atlas-qgu1cy-shard-00-01.fyfn6y.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qgu1cy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-659-shard-00-01.fyfn6y.mongodb-dev.net","version":"8.0.29"},{"created":"2026-08-10T03:10:31Z","groupId":"6a793f53c0eb9e7a177137c2","hostname":"atlas-qgu1cy-shard-00-02.fyfn6y.mongodb-dev.net","id":"atlas-qgu1cy-shard-00-02.fyfn6y.mongodb-dev.net:27017","lastPing":"2026-08-10T03:20:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6a793f53c0eb9e7a177137c2/processes/atlas-qgu1cy-shard-00-02.fyfn6y.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-qgu1cy-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-659-shard-00-02.fyfn6y.mongodb-dev.net","version":"8.0.29"}],"totalCount":3}

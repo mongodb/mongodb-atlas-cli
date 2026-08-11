@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312022/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312023/admin"
 )
 
 // X509Configuration retrieves the current user-managed certificates for a database user.

@@ -59,6 +59,7 @@ Related Commands
 * :ref:`atlas-api-invoices-getCostExplorerUsage` - Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed.
 * :ref:`atlas-api-invoices-getInvoice` - Returns one invoice that MongoDB issued to the specified organization.
 * :ref:`atlas-api-invoices-getInvoiceCsv` - Returns one invoice that MongoDB issued to the specified organization in CSV format.
+* :ref:`atlas-api-invoices-getOrgAssociatedInvoices` - Returns a list of invoice IDs for the specified organization and month/year.
 * :ref:`atlas-api-invoices-getOrgInvoiceReport` - Returns the status and details of a previously requested invoice report.
 * :ref:`atlas-api-invoices-getSku` - Returns details about a single SKU (Stock Keeping Unit) by its identifier.
 * :ref:`atlas-api-invoices-listInvoicePending` - Returns all invoices accruing charges for the current billing cycle for the specified organization.
@@ -76,6 +77,7 @@ Related Commands
    getCostExplorerUsage </command/atlas-api-invoices-getCostExplorerUsage>
    getInvoice </command/atlas-api-invoices-getInvoice>
    getInvoiceCsv </command/atlas-api-invoices-getInvoiceCsv>
+   getOrgAssociatedInvoices </command/atlas-api-invoices-getOrgAssociatedInvoices>
    getOrgInvoiceReport </command/atlas-api-invoices-getOrgInvoiceReport>
    getSku </command/atlas-api-invoices-getSku>
    listInvoicePending </command/atlas-api-invoices-listInvoicePending>

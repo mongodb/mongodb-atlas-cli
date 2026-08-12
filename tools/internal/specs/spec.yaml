@@ -4703,9 +4703,11 @@ components:
             properties:
                 invoiceId:
                     description: Unique 24-hexadecimal digit identifier for an invoice.
+                    readOnly: true
                     type: string
                 orgId:
                     description: Unique 24-hexadecimal digit identifier for an organization.
+                    readOnly: true
                     type: string
             type: object
         AtlasClusterOutageSimulationOutageFilter:
@@ -12131,6 +12133,64 @@ components:
                     writeOnly: true
             title: GCP Forwarding Rules
             type: object
+        CreateGroupMcpConfigRequest:
+            properties:
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigName:
+                    description: Human-readable name that identifies this MCP configuration.
+                    minLength: 1
+                    type: string
+                roles:
+                    description: List of project roles to assign to this MCP configuration.
+                    externalDocs:
+                        description: Project-level Roles for Service Accounts
+                        url: https://www.mongodb.com/docs/atlas/reference/user-roles/
+                    items:
+                        type: string
+                    maxItems: 100
+                    minItems: 1
+                    type: array
+            required:
+                - mcpConfigName
+                - roles
+            type: object
+        CreateOrgMcpConfigRequest:
+            properties:
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigName:
+                    description: Human-readable name that identifies this MCP configuration.
+                    minLength: 1
+                    type: string
+                roles:
+                    description: List of organization roles to assign to this MCP configuration.
+                    items:
+                        description: Organization roles available for Service Accounts.
+                        enum:
+                            - ORG_MEMBER
+                            - ORG_READ_ONLY
+                            - ORG_BILLING_ADMIN
+                            - ORG_BILLING_READ_ONLY
+                            - ORG_STREAM_PROCESSING_ADMIN
+                            - ORG_GROUP_CREATOR
+                            - ORG_OWNER
+                        type: string
+                    maxItems: 100
+                    minItems: 1
+                    type: array
+            required:
+                - mcpConfigName
+                - roles
+            type: object
         CreateOrganizationRequest:
             properties:
                 apiKey:
@@ -19436,6 +19496,8 @@ components:
                     - ORG_DELEGATION_SETTINGS_UPDATED
                     - ORGANIZATION_VOYAGE_SETTINGS_CREATED
                     - ORGANIZATION_VOYAGE_SETTINGS_DELETED
+                    - ORG_DATA_SHARING_AI_MODELS_ENABLED
+                    - ORG_DATA_SHARING_AI_MODELS_DISABLED
                     - ORG_WAVE_ASSIGNMENT_MODE_MANUAL
                     - ORG_WAVE_ASSIGNMENT_MODE_ENV_TAG_MAPPING
                     - PROJECT_CREATED_VIA_ANIS
@@ -23204,6 +23266,71 @@ components:
                     type: integer
             required:
                 - dayOfWeek
+            type: object
+        GroupMcpConfigResponse:
+            properties:
+                clientId:
+                    description: Unique identifier for the Service Account client associated with this MCP configuration. Use this Service Account to connect to the Atlas Remote MCP.
+                    example: mdb_sa_id_1234567890abcdef12345678
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    readOnly: true
+                    type: string
+                egressClientId:
+                    description: Unique identifier for the egress Service Account client associated with this MCP configuration. This Service Account is managed by MongoDB Atlas.
+                    example: mdb_sa_id_1234567890abcdef12345678
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    readOnly: true
+                    type: string
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigId:
+                    description: Unique identifier that identifies this MCP configuration.
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    readOnly: true
+                    type: string
+                mcpConfigName:
+                    description: Human-readable name that identifies this MCP configuration.
+                    nullable: true
+                    type: string
+                roles:
+                    description: List of project roles associated with this MCP configuration.
+                    externalDocs:
+                        description: Project-level Roles for Service Accounts
+                        url: https://www.mongodb.com/docs/atlas/reference/user-roles/
+                    items:
+                        type: string
+                    maxItems: 100
+                    type: array
+            type: object
+        GroupMcpConfigUpdateRequest:
+            properties:
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration. If provided, replaces the existing IP access list.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigName:
+                    description: Updated human-readable name for this MCP configuration.
+                    maxLength: 64
+                    minLength: 1
+                    nullable: true
+                    pattern: ^[\p{L}\p{N}\-_.,' ]*$
+                    type: string
+                roles:
+                    description: List of project roles associated with this MCP configuration. If provided, replaces the existing list of roles.
+                    externalDocs:
+                        description: Project-level Roles for Service Accounts
+                        url: https://www.mongodb.com/docs/atlas/reference/user-roles/
+                    items:
+                        type: string
+                    maxItems: 100
+                    type: array
             type: object
         GroupMigrationRequest:
             properties:
@@ -31365,14 +31492,17 @@ components:
                     description: List of invoices associated with the organization for the specified period.
                     items:
                         $ref: '#/components/schemas/AssociatedInvoice'
+                    readOnly: true
                     type: array
                 month:
                     description: Two-digit number that represents the month of the associated invoices.
                     example: "01"
+                    readOnly: true
                     type: string
                 year:
                     description: Four-digit number that represents the year of the associated invoices.
                     example: "2024"
+                    readOnly: true
                     type: string
             type: object
         OrgDelegationSettingsResponse:
@@ -31520,6 +31650,8 @@ components:
                 - ORG_DELEGATION_SETTINGS_UPDATED
                 - ORGANIZATION_VOYAGE_SETTINGS_CREATED
                 - ORGANIZATION_VOYAGE_SETTINGS_DELETED
+                - ORG_DATA_SHARING_AI_MODELS_ENABLED
+                - ORG_DATA_SHARING_AI_MODELS_DISABLED
                 - ORG_WAVE_ASSIGNMENT_MODE_MANUAL
                 - ORG_WAVE_ASSIGNMENT_MODE_ENV_TAG_MAPPING
                 - PROJECT_CREATED_VIA_ANIS
@@ -31685,6 +31817,84 @@ components:
                         readOnly: true
                         type: string
                     readOnly: true
+                    type: array
+            type: object
+        OrgMcpConfigResponse:
+            properties:
+                clientId:
+                    description: Unique identifier for the Service Account client associated with this MCP configuration. Use this Service Account to connect to the Atlas Remote MCP.
+                    example: mdb_sa_id_1234567890abcdef12345678
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    readOnly: true
+                    type: string
+                egressClientId:
+                    description: Unique identifier for the egress Service Account client associated with this MCP configuration. This Service Account is managed by MongoDB Atlas.
+                    example: mdb_sa_id_1234567890abcdef12345678
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    readOnly: true
+                    type: string
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigId:
+                    description: Unique identifier that identifies this MCP configuration.
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    readOnly: true
+                    type: string
+                mcpConfigName:
+                    description: Human-readable name that identifies this MCP configuration.
+                    nullable: true
+                    type: string
+                roles:
+                    description: List of organization roles associated with this MCP configuration.
+                    items:
+                        description: Organization roles available for Service Accounts.
+                        enum:
+                            - ORG_MEMBER
+                            - ORG_READ_ONLY
+                            - ORG_BILLING_ADMIN
+                            - ORG_BILLING_READ_ONLY
+                            - ORG_STREAM_PROCESSING_ADMIN
+                            - ORG_GROUP_CREATOR
+                            - ORG_OWNER
+                        type: string
+                    maxItems: 100
+                    type: array
+            type: object
+        OrgMcpConfigUpdateRequest:
+            properties:
+                ipAccessList:
+                    description: List of IP access list entries that define allowed source addresses for this MCP configuration. If provided, replaces the existing IP access list.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                    maxItems: 200
+                    type: array
+                mcpConfigName:
+                    description: Updated human-readable name for this MCP configuration.
+                    maxLength: 64
+                    minLength: 1
+                    nullable: true
+                    pattern: ^[\p{L}\p{N}\-_.,' ]*$
+                    type: string
+                roles:
+                    description: List of organization roles associated with this MCP configuration. If provided, replaces the existing list of roles.
+                    items:
+                        description: Organization roles available for Service Accounts.
+                        enum:
+                            - ORG_MEMBER
+                            - ORG_READ_ONLY
+                            - ORG_BILLING_ADMIN
+                            - ORG_BILLING_READ_ONLY
+                            - ORG_STREAM_PROCESSING_ADMIN
+                            - ORG_GROUP_CREATOR
+                            - ORG_OWNER
+                        nullable: true
+                        type: string
+                    maxItems: 100
                     type: array
             type: object
         OrgNotification:
@@ -33845,6 +34055,32 @@ components:
             required:
                 - results
             type: object
+        PaginatedGroupMcpConfigView:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/GroupMcpConfigResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
         PaginatedGroupServiceAccounts:
             description: A list of Project Service Accounts.
             properties:
@@ -34028,6 +34264,32 @@ components:
             required:
                 - results
             type: object
+        PaginatedMcpConfigSecretView:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/ServiceAccountSecret'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
         PaginatedMetricIntegrationResponse:
             properties:
                 links:
@@ -34121,6 +34383,32 @@ components:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
                         $ref: '#/components/schemas/OrgGroup'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
+        PaginatedOrgMcpConfigView:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/OrgMcpConfigResponse'
                     readOnly: true
                     type: array
                 totalCount:
@@ -44569,7 +44857,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: e79f3bb13ada125b6d9fdcd6adc511ab510d5230
+    x-xgen-sha: 0140a42b876951aab3be419f494c238634d0d71f
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -60850,6 +61138,445 @@ paths:
             x-xgen-method-verb-override:
                 customMethod: true
             x-xgen-operation-id-override: enableManagedSlowMs
+    /api/atlas/v2/groups/{groupId}/mcpConfigs:
+        get:
+            description: Returns all MCP configurations associated with the specified project.
+            operationId: listGroupMcpConfigs
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedGroupMcpConfigView'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All MCP Configurations for One Project
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/listGroupMcpConfigs
+        post:
+            description: Creates an MCP configuration for the specified project. Returns the configuration ID and ingress credentials.
+            operationId: createGroupMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/CreateGroupMcpConfigRequest'
+                        x-xgen-version: "2025-03-12"
+                description: MCP configuration to create.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/GroupMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One MCP Configuration for One Project
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/createGroupMcpConfig
+    /api/atlas/v2/groups/{groupId}/mcpConfigs/{mcpConfigId}:
+        delete:
+            description: Deletes the MCP configuration with the specified ID for the specified project.
+            operationId: deleteGroupMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration to delete.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+                - description: Flag that indicates whether to delete the MCP configuration even if it has active secrets. If false and active secrets exist, the request returns an error. Defaults to false.
+                  in: query
+                  name: cascading
+                  schema:
+                    default: false
+                    type: boolean
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One MCP Configuration for One Project
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/deleteGroupMcpConfig
+        get:
+            description: Returns the MCP configuration with the specified ID for the specified project.
+            operationId: getGroupMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/GroupMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One MCP Configuration for One Project
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/getGroupMcpConfig
+        patch:
+            description: 'Updates the specified MCP configuration for the project. Supports partial updates: only provided fields are changed.'
+            operationId: updateGroupMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration to update.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/GroupMcpConfigUpdateRequest'
+                        x-xgen-version: "2025-03-12"
+                description: MCP configuration fields to update.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/GroupMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update One MCP Configuration for One Project
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/updateGroupMcpConfig
+    /api/atlas/v2/groups/{groupId}/mcpConfigs/{mcpConfigId}/secrets:
+        get:
+            description: Returns metadata for all secrets on the ingress service account of the specified project-level MCP configuration. Secret values are never returned.
+            operationId: listGroupMcpConfigSecrets
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedMcpConfigSecretView'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Secrets for One Project MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/listGroupMcpConfigSecrets
+            x-xgen-operation-id-override: listGroupMcpSecrets
+        post:
+            description: Creates a new secret on the ingress service account of the specified project-level MCP configuration. The plain-text secret value is returned only in this response and is never shown again.
+            operationId: createGroupMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/ServiceAccountSecretRequest'
+                        x-xgen-version: "2025-03-12"
+                description: Secret creation request.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/ServiceAccountSecret'
+                            x-xgen-version: "2025-03-12"
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One Secret for One Project MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/createGroupMcpConfigSecret
+            x-xgen-operation-id-override: createGroupMcpSecret
+    /api/atlas/v2/groups/{groupId}/mcpConfigs/{mcpConfigId}/secrets/{secretId}:
+        delete:
+            description: Deletes the specified secret from the ingress service account of the specified project-level MCP configuration.
+            operationId: deleteGroupMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies the secret.
+                  in: path
+                  name: secretId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc013
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One Secret for One Project MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/deleteGroupMcpConfigSecret
+            x-xgen-operation-id-override: deleteGroupMcpSecret
+        get:
+            description: Returns metadata for the specified secret on the ingress service account of a project-level MCP configuration. The secret value is never returned.
+            operationId: getGroupMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies the secret.
+                  in: path
+                  name: secretId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc013
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/ServiceAccountSecret'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Secret for One Project MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/getGroupMcpConfigSecret
+            x-xgen-operation-id-override: getGroupMcpSecret
     /api/atlas/v2/groups/{groupId}/metricIntegrations:
         get:
             description: Returns all metric integration configurations for the project. Optionally filter by integration type and provider type.
@@ -69446,9 +70173,14 @@ paths:
             responses:
                 "200":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/OrgAssociatedInvoiceResponse'
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
                             schema:
                                 $ref: '#/components/schemas/OrgAssociatedInvoiceResponse'
+                            x-sunset: "2026-09-16"
                             x-xgen-preview:
                                 name: invoicereporting
                             x-xgen-version: preview
@@ -70986,6 +71718,445 @@ paths:
                 customMethod: "True"
                 verb: reset
             x-xgen-operation-id-override: resetOrgMaintenanceSettings
+    /api/atlas/v2/orgs/{orgId}/mcpConfigs:
+        get:
+            description: Returns all MCP configurations associated with the specified organization.
+            operationId: listOrgMcpConfigs
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedOrgMcpConfigView'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All MCP Configurations for One Organization
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/listOrgMcpConfigs
+        post:
+            description: Creates an MCP configuration for the specified organization. Returns the configuration ID and ingress credentials.
+            operationId: createOrgMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/CreateOrgMcpConfigRequest'
+                        x-xgen-version: "2025-03-12"
+                description: MCP configuration to create.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/OrgMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One MCP Configuration for One Organization
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/createOrgMcpConfig
+    /api/atlas/v2/orgs/{orgId}/mcpConfigs/{mcpConfigId}:
+        delete:
+            description: Deletes the MCP configuration with the specified ID for the specified organization.
+            operationId: deleteOrgMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration to delete.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+                - description: Flag that indicates whether to delete the MCP configuration even if it has active secrets. If false and active secrets exist, the request returns an error. Defaults to false.
+                  in: query
+                  name: cascading
+                  schema:
+                    default: false
+                    type: boolean
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One MCP Configuration for One Organization
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/deleteOrgMcpConfig
+        get:
+            description: Returns the MCP configuration with the specified ID for the specified organization.
+            operationId: getOrgMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/OrgMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One MCP Configuration for One Organization
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/getOrgMcpConfig
+        patch:
+            description: 'Updates the specified MCP configuration for the organization. Supports partial updates: only provided fields are changed.'
+            operationId: updateOrgMcpConfig
+            parameters:
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration to update.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: b9254bc4-d6cc-4325-abf4-fb9d2a9de00a
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/OrgMcpConfigUpdateRequest'
+                        x-xgen-version: "2025-03-12"
+                description: MCP configuration fields to update.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/OrgMcpConfigResponse'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Update One MCP Configuration for One Organization
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/updateOrgMcpConfig
+    /api/atlas/v2/orgs/{orgId}/mcpConfigs/{mcpConfigId}/secrets:
+        get:
+            description: Returns metadata for all secrets on the ingress service account of the specified organization-level MCP configuration. Secret values are never returned.
+            operationId: listOrgMcpConfigSecrets
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedMcpConfigSecretView'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Secrets for One Organization MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/listOrgMcpConfigSecrets
+            x-xgen-operation-id-override: listOrgMcpSecrets
+        post:
+            description: Creates a new secret on the ingress service account of the specified organization-level MCP configuration. The plain-text secret value is returned only in this response and is never shown again.
+            operationId: createOrgMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/ServiceAccountSecretRequest'
+                        x-xgen-version: "2025-03-12"
+                description: Secret creation request.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/ServiceAccountSecret'
+                            x-xgen-version: "2025-03-12"
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One Secret for One Organization MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/createOrgMcpConfigSecret
+            x-xgen-operation-id-override: createOrgMcpSecret
+    /api/atlas/v2/orgs/{orgId}/mcpConfigs/{mcpConfigId}/secrets/{secretId}:
+        delete:
+            description: Deletes the specified secret from the ingress service account of the specified organization-level MCP configuration.
+            operationId: deleteOrgMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies the secret.
+                  in: path
+                  name: secretId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc013
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One Secret for One Organization MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/deleteOrgMcpConfigSecret
+            x-xgen-operation-id-override: deleteOrgMcpSecret
+        get:
+            description: Returns metadata for the specified secret on the ingress service account of an organization-level MCP configuration. The secret value is never returned.
+            operationId: getOrgMcpConfigSecret
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/orgId'
+                - description: Unique identifier of the MCP configuration.
+                  in: path
+                  name: mcpConfigId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc012
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies the secret.
+                  in: path
+                  name: secretId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647adeabc013
+                    pattern: ^[a-fA-F0-9]{24}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/ServiceAccountSecret'
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Secret for One Organization MCP Configuration
+            tags:
+                - Remote MCP Configurations
+            x-rolesRequirements:
+                - Organization Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Remote-MCP-Configurations/operation/getOrgMcpConfigSecret
+            x-xgen-operation-id-override: getOrgMcpSecret
     /api/atlas/v2/orgs/{orgId}/nonCompliantResources:
         get:
             description: Return all non-compliant resources for an organization.
@@ -73779,6 +74950,8 @@ tags:
         description: Atlas API Rate Limits documentation
         url: http://dochub.mongodb.org/core/atlas-api-rate-limit
       name: Rate Limiting
+    - description: Returns and manages Remote MCP configurations for organizations and projects.
+      name: Remote MCP Configurations
     - description: Configure and manage Atlas Resource Policies within your organization.
       name: Resource Policies
     - description: Creates one index to a database deployment in a rolling manner. Rolling indexes build indexes on the applicable nodes sequentially and may reduce the performance impact of an index build if your deployment's average CPU utilization exceeds (N-1)/N-10% where N is the number of CPU threads available to mongod of if the WiredTiger cache fill ratio regularly exceeds 90%. If your deployment does not meet this criteria, use the default index build. You can't create a rolling index on an `M0` free cluster or `M2/M5` shared cluster.

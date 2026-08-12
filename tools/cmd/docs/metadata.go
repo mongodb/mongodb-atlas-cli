@@ -1535,6 +1535,29 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+		},
+		Examples: nil,
+	},
+	`createGroupMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupMetricIntegration`: {
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -1952,6 +1975,25 @@ var metadata = metadatatypes.Metadata{
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`createOrgMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+		},
+		Examples: nil,
+	},
+	`createOrgMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 		},
 		Examples: nil,
@@ -3168,6 +3210,59 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteGroupMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cascading`: {
+				Usage: `Flag that indicates whether to delete the MCP configuration even if it has active secrets. If false and active secrets exist, the request returns an error. Defaults to false.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration to delete.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`mcpConfigId`: `b9254bc4-d6cc-4325-abf4-fb9d2a9de00a`,
+				},
+			},
+			},
+		},
+	},
+	`deleteGroupMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`secretId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+					`secretId`:    `32b6e34b3d91647adeabc013`,
+				},
+			},
+			},
+		},
+	},
 	`deleteGroupMetricIntegration`: {
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -3823,6 +3918,55 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`deleteOrgMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`cascading`: {
+				Usage: `Flag that indicates whether to delete the MCP configuration even if it has active secrets. If false and active secrets exist, the request returns an error. Defaults to false.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration to delete.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`mcpConfigId`: `b9254bc4-d6cc-4325-abf4-fb9d2a9de00a`,
+					`orgId`:       `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`deleteOrgMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`secretId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+					`orgId`:       `4888442a3354817a7320eb61`,
+					`secretId`:    `32b6e34b3d91647adeabc013`,
 				},
 			},
 			},
@@ -6722,6 +6866,68 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`getGroupMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`mcpConfigId`: `b9254bc4-d6cc-4325-abf4-fb9d2a9de00a`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`secretId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+					`secretId`:    `32b6e34b3d91647adeabc013`,
+				},
+			},
+			},
+		},
+	},
 	`getGroupMetricIntegration`: {
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -8052,7 +8258,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getOrgAssociatedInvoices`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`includeLinkedOrgs`: {
 				Usage: `Whether to include invoices from linked organizations. Defaults to false.`,
@@ -8335,6 +8540,64 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`mcpConfigId`: `b9254bc4-d6cc-4325-abf4-fb9d2a9de00a`,
+					`orgId`:       `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`getOrgMcpConfigSecret`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`secretId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+					`orgId`:       `4888442a3354817a7320eb61`,
+					`secretId`:    `32b6e34b3d91647adeabc013`,
 				},
 			},
 			},
@@ -10842,6 +11105,78 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupMcpConfigSecrets`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+				},
+			},
+			},
+		},
+	},
+	`listGroupMcpConfigs`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupMetricIntegrations`: {
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12159,6 +12494,74 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`orgId`: `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`listOrgMcpConfigSecrets`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`mcpConfigId`: `32b6e34b3d91647adeabc012`,
+					`orgId`:       `4888442a3354817a7320eb61`,
+				},
+			},
+			},
+		},
+	},
+	`listOrgMcpConfigs`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -14205,6 +14608,22 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`updateGroupMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration to update.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`updateGroupMetricIntegration`: {
 		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -14575,6 +14994,20 @@ var metadata = metadatatypes.Metadata{
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`orgId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateOrgMcpConfig`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`mcpConfigId`: {
+				Usage: `Unique identifier of the MCP configuration to update.`,
 			},
 			`orgId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [` + "`" + `/orgs` + "`" + `](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,

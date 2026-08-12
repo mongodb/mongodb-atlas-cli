@@ -1,0 +1,30 @@
+# synced from apix-actions/.github/workflows/dependabot-auto-merge.yaml
+name: Auto merge dependabot prs
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto merge dependabot prs
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+    - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      with:
+        config: ${{ vars.PERMISSIONS_CONFIG }}
+    - name: Approve PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh pr review "${{ github.event.pull_request.html_url }}" --approve
+    - name: Auto merge PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh pr merge "${{ github.event.pull_request.html_url }}" --auto --squash

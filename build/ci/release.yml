@@ -186,7 +186,7 @@ functions:
       type: test
       params:
         working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        silent: true
+        continue_on_err: true
         include_expansions_in_env:
           - evergreen_user
           - evergreen_api_key

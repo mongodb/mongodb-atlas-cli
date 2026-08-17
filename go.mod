@@ -49,7 +49,7 @@ require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/yuin/goldmark v1.8.5
 	github.com/zalando/go-keyring v0.2.8

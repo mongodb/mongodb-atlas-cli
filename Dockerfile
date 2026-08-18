@@ -20,12 +20,11 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-8.0.asc
 EOF
 
-RUN microdnf -y install jq yum &&\
-    yum -y update &&\
-    yum install -y mongodb-atlas &&\
-    yum clean all &&\
+RUN microdnf -y install jq &&\
+    microdnf -y update &&\
+    microdnf -y install mongodb-atlas &&\
     microdnf clean all &&\
     rm -rf /var/cache &&\
-    rpm -e --nodeps curl-minimal libcurl-minimal yum
+    rpm -e --nodeps curl-minimal libcurl-minimal
 
 CMD ["tail", "-f", "/dev/null"]

@@ -25,6 +25,7 @@ RUN microdnf -y install jq yum &&\
     yum install -y mongodb-atlas &&\
     yum clean all &&\
     microdnf clean all &&\
-    rm -rf /var/cache
+    rm -rf /var/cache &&\
+    rpm -e --nodeps curl-minimal libcurl-minimal yum
 
 CMD ["tail", "-f", "/dev/null"]

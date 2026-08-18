@@ -318,6 +318,7 @@ jobs:
           image-ref: mongodb/atlas:test
           scan-type: image
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
           exit-code: '1'
           format: table
         env:

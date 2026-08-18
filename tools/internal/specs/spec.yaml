@@ -23779,6 +23779,7 @@ components:
                     example: Bearer token123
                     format: password
                     type: string
+                    writeOnly: true
             required:
                 - name
                 - value
@@ -28394,18 +28395,24 @@ components:
                         - DELTA
                         - CUMULATIVE
                     type: string
+                authType:
+                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used.
+                    enum:
+                        - HEADER
+                    type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL. Must use HTTPS.
                     example: https://otel-collector.example.com:4318/v1/metrics
                     maxLength: 2048
                     type: string
                 headers:
-                    description: HTTP headers for authentication and configuration. Total size limit 2KB.
+                    description: HTTP headers for authentication and configuration. Total size limit 2KB. Required when `authType` is `HEADER`.
                     items:
                         $ref: '#/components/schemas/Header'
                     maxItems: 10
                     minItems: 1
                     type: array
+                    writeOnly: true
                 integrationType:
                     description: Type of metric integration. Identifies which protocol will be used for the integration. This value cannot be modified after the integration is created.
                     enum:
@@ -28416,6 +28423,8 @@ components:
                     items:
                         enum:
                             - ATLAS_STREAM_PROCESSING
+                            - MONGODB_METRICS
+                            - HARDWARE_METRICS
                         type: string
                     maxItems: 30
                     minItems: 1
@@ -28430,8 +28439,8 @@ components:
                     type: string
             required:
                 - aggregationTemporality
+                - authType
                 - endpoint
-                - headers
                 - integrationType
                 - metricSelection
                 - providerType
@@ -28446,17 +28455,23 @@ components:
                         - DELTA
                         - CUMULATIVE
                     type: string
+                authType:
+                    description: Authentication method the integration uses when exporting metrics to the endpoint.
+                    enum:
+                        - HEADER
+                    type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL.
                     example: https://otel-collector.example.com:4318/v1/metrics
                     maxLength: 2048
                     type: string
-                headers:
-                    description: HTTP headers for authentication and configuration. Header values are redacted in responses.
+                headersRedacted:
+                    description: HTTP headers for authentication and configuration. Values are redacted and never returned in plaintext.
                     items:
-                        $ref: '#/components/schemas/Header'
+                        $ref: '#/components/schemas/RedactedHeader'
                     maxItems: 10
                     minItems: 1
+                    readOnly: true
                     type: array
                 integrationType:
                     description: Type of metric integration. Identifies which protocol will be used for the integration.
@@ -28470,11 +28485,14 @@ components:
                     minLength: 24
                     readOnly: true
                     type: string
+                    x-xgen-server-computed-immutable: true
                 metricSelection:
                     description: Array of metric categories to export. Determines which types of metrics are sent to the integration.
                     items:
                         enum:
                             - ATLAS_STREAM_PROCESSING
+                            - MONGODB_METRICS
+                            - HARDWARE_METRICS
                         type: string
                     maxItems: 30
                     minItems: 1
@@ -28489,8 +28507,8 @@ components:
                     type: string
             required:
                 - aggregationTemporality
+                - authType
                 - endpoint
-                - headers
                 - integrationType
                 - metricIntegrationId
                 - metricSelection
@@ -28506,18 +28524,24 @@ components:
                         - DELTA
                         - CUMULATIVE
                     type: string
+                authType:
+                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used.
+                    enum:
+                        - HEADER
+                    type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL. Must use HTTPS.
                     example: https://otel-collector.example.com:4318/v1/metrics
                     maxLength: 2048
                     type: string
                 headers:
-                    description: HTTP headers for authentication and configuration. Total size limit 2KB.
+                    description: HTTP headers for authentication and configuration. Total size limit 2KB. Required when `authType` is `HEADER`.
                     items:
                         $ref: '#/components/schemas/Header'
                     maxItems: 10
                     minItems: 1
                     type: array
+                    writeOnly: true
                 integrationType:
                     description: Type of metric integration. Identifies which protocol will be used for the integration. This value cannot be modified after the integration is created.
                     enum:
@@ -28528,6 +28552,8 @@ components:
                     items:
                         enum:
                             - ATLAS_STREAM_PROCESSING
+                            - MONGODB_METRICS
+                            - HARDWARE_METRICS
                         type: string
                     maxItems: 30
                     minItems: 1
@@ -28542,8 +28568,8 @@ components:
                     type: string
             required:
                 - aggregationTemporality
+                - authType
                 - endpoint
-                - headers
                 - integrationType
                 - metricSelection
                 - providerType
@@ -36265,6 +36291,23 @@ components:
                     $ref: '#/components/schemas/RawMetricUnits'
             readOnly: true
             title: Raw Metric Value
+            type: object
+        RedactedHeader:
+            description: HTTP header with a redacted value.
+            properties:
+                name:
+                    description: Header name.
+                    example: Authorization
+                    readOnly: true
+                    type: string
+                value:
+                    description: Redacted header value.
+                    example: '********oken'
+                    readOnly: true
+                    type: string
+            required:
+                - name
+                - value
             type: object
         RegionSpec:
             description: Physical location where MongoDB Cloud provisions cluster nodes.
@@ -44857,7 +44900,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 0140a42b876951aab3be419f494c238634d0d71f
+    x-xgen-sha: f84b8e4346991132f70f5610809ad1b6af020975
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -50682,13 +50725,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/PaginatedApiAtlasDiskBackupDatabaseView'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasDiskBackupDatabaseView'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: snapshot-namespaces
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -50749,13 +50785,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DiskBackupDatabaseResponse'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/DiskBackupDatabaseResponse'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: snapshot-namespaces
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -50817,13 +50846,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/PaginatedApiAtlasDiskBackupCollectionView'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasDiskBackupCollectionView'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: snapshot-namespaces
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -50890,13 +50912,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/DiskBackupCollectionResponse'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/DiskBackupCollectionResponse'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: snapshot-namespaces
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -51437,13 +51452,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/PaginatedApiAtlasCollectionRestoreJobView'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasCollectionRestoreJobView'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: collection-restore-jobs
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -51489,13 +51497,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobRequest'
                         x-xgen-version: "2025-03-12"
-                    application/vnd.atlas.preview+json:
-                        schema:
-                            $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobRequest'
-                        x-sunset: "2026-08-10"
-                        x-xgen-preview:
-                            name: collection-restore-jobs
-                        x-xgen-version: preview
                 description: Creates one collection-level restore job for one cluster from the specified project.
                 required: true
             responses:
@@ -51530,38 +51531,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobResponse'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            examples:
-                                Multiple collections:
-                                    description: Multiple collections
-                                    value:
-                                        collectionSuffix: ""
-                                        collections:
-                                            - sourceNamespace: sales.orders
-                                              targetNamespace: sales.orders
-                                            - sourceNamespace: sales.customers
-                                              targetNamespace: sales.customers
-                                        createdAt: "2026-07-07T12:00:00Z"
-                                        databaseSuffix: ""
-                                        databases: []
-                                        id: 32b6e34b3d91647abb20e7b8
-                                        indexStatus:
-                                            failedCollectionCount: 0
-                                            state: IN_PROGRESS
-                                        indexStrategy: ALL
-                                        restoredDocuments: 15500
-                                        snapshotId: 6c5e8a2f9b1d4e3a7f0c1b2d
-                                        state: IN_PROGRESS
-                                        targetClusterName: targetCluster
-                                        targetGroupId: 5f3a1b2c4d5e6f7a8b9c0d1e
-                                        totalDocuments: 20000
-                                        writeStrategy: CREATE_NEW
-                            schema:
-                                $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobResponse'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: collection-restore-jobs
-                            x-xgen-version: preview
                     description: Created
                     headers:
                         RateLimit-Limit:
@@ -51643,38 +51612,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobResponse'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            examples:
-                                Multiple collections:
-                                    description: Multiple collections
-                                    value:
-                                        collectionSuffix: ""
-                                        collections:
-                                            - sourceNamespace: sales.orders
-                                              targetNamespace: sales.orders
-                                            - sourceNamespace: sales.customers
-                                              targetNamespace: sales.customers
-                                        createdAt: "2026-07-07T12:00:00Z"
-                                        databaseSuffix: ""
-                                        databases: []
-                                        id: 32b6e34b3d91647abb20e7b8
-                                        indexStatus:
-                                            failedCollectionCount: 0
-                                            state: IN_PROGRESS
-                                        indexStrategy: ALL
-                                        restoredDocuments: 15500
-                                        snapshotId: 6c5e8a2f9b1d4e3a7f0c1b2d
-                                        state: IN_PROGRESS
-                                        targetClusterName: targetCluster
-                                        targetGroupId: 5f3a1b2c4d5e6f7a8b9c0d1e
-                                        totalDocuments: 20000
-                                        writeStrategy: CREATE_NEW
-                            schema:
-                                $ref: '#/components/schemas/ApiAtlasCollectionRestoreJobResponse'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: collection-restore-jobs
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -51783,38 +51720,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/PaginatedApiAtlasCollectionRestoreCollectionStateView'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            examples:
-                                Two collection states:
-                                    description: Two collection states
-                                    value:
-                                        links:
-                                            - href: https://cloud.mongodb.com/api/atlas
-                                              rel: self
-                                        results:
-                                            - effectiveTargetNamespace: sales.orders
-                                              indexStatus:
-                                                state: SUCCESSFUL
-                                              restoredDocuments: 12000
-                                              sourceNamespace: sales.orders
-                                              state: SUCCESSFUL
-                                              targetNamespace: sales.orders
-                                              totalDocuments: 12000
-                                            - effectiveTargetNamespace: sales.customers
-                                              indexStatus:
-                                                state: IN_PROGRESS
-                                              restoredDocuments: 3500
-                                              sourceNamespace: sales.customers
-                                              state: IN_PROGRESS
-                                              targetNamespace: sales.customers
-                                              totalDocuments: 8000
-                                        totalCount: 2
-                            schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasCollectionRestoreCollectionStateView'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: collection-restore-jobs
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -51887,25 +51792,6 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/ApiAtlasCollectionRestoreCollectionStateResponse'
                             x-xgen-version: "2025-03-12"
-                        application/vnd.atlas.preview+json:
-                            examples:
-                                Single collection state:
-                                    description: Single collection state
-                                    value:
-                                        effectiveTargetNamespace: sales.orders
-                                        indexStatus:
-                                            state: SUCCESSFUL
-                                        restoredDocuments: 12000
-                                        sourceNamespace: sales.orders
-                                        state: SUCCESSFUL
-                                        targetNamespace: sales.orders
-                                        totalDocuments: 12000
-                            schema:
-                                $ref: '#/components/schemas/ApiAtlasCollectionRestoreCollectionStateResponse'
-                            x-sunset: "2026-08-10"
-                            x-xgen-preview:
-                                name: collection-restore-jobs
-                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:
@@ -61601,9 +61487,14 @@ paths:
             responses:
                 "200":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedMetricIntegrationResponse'
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
                             schema:
                                 $ref: '#/components/schemas/PaginatedMetricIntegrationResponse'
+                            x-sunset: "2026-09-14"
                             x-xgen-preview:
                                 name: metric-integrations
                                 public: "false"
@@ -61641,9 +61532,14 @@ paths:
                 - $ref: '#/components/parameters/pretty'
             requestBody:
                 content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/MetricIntegrationRequest'
+                        x-xgen-version: "2025-03-12"
                     application/vnd.atlas.preview+json:
                         schema:
                             $ref: '#/components/schemas/MetricIntegrationRequest'
+                        x-sunset: "2026-09-14"
                         x-xgen-preview:
                             name: metric-integrations
                             public: "false"
@@ -61653,9 +61549,14 @@ paths:
             responses:
                 "201":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
                             schema:
                                 $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-sunset: "2026-09-14"
                             x-xgen-preview:
                                 name: metric-integrations
                                 public: "false"
@@ -61701,7 +61602,10 @@ paths:
             responses:
                 "204":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
+                            x-sunset: "2026-09-14"
                             x-xgen-preview:
                                 name: metric-integrations
                                 public: "false"
@@ -61746,9 +61650,14 @@ paths:
             responses:
                 "200":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
                             schema:
                                 $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-sunset: "2026-09-14"
                             x-xgen-preview:
                                 name: metric-integrations
                                 public: "false"
@@ -61792,9 +61701,14 @@ paths:
                     type: string
             requestBody:
                 content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/MetricIntegrationUpdateRequest'
+                        x-xgen-version: "2025-03-12"
                     application/vnd.atlas.preview+json:
                         schema:
                             $ref: '#/components/schemas/MetricIntegrationUpdateRequest'
+                        x-sunset: "2026-09-14"
                         x-xgen-preview:
                             name: metric-integrations
                             public: "false"
@@ -61804,9 +61718,14 @@ paths:
             responses:
                 "200":
                     content:
+                        application/vnd.atlas.2025-03-12+json:
+                            schema:
+                                $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-xgen-version: "2025-03-12"
                         application/vnd.atlas.preview+json:
                             schema:
                                 $ref: '#/components/schemas/MetricIntegrationResponse'
+                            x-sunset: "2026-09-14"
                             x-xgen-preview:
                                 name: metric-integrations
                                 public: "false"

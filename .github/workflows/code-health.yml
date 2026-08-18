@@ -279,7 +279,7 @@ jobs:
           go-version-file: 'go.mod'
       - run: make check-templates
   verify_image:
-    name: Build docker image
+    name: Build and scan docker image
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
@@ -311,6 +311,18 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: mongodb/atlas:test
           file: Dockerfile
+          load: true
+      - name: Scan image for vulnerabilities
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: mongodb/atlas:test
+          scan-type: image
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          format: table
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db:1
   e2e-tests:
     runs-on: ubuntu-latest
     strategy:

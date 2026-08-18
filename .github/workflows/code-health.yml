@@ -317,8 +317,8 @@ jobs:
         with:
           image-ref: mongodb/atlas:test
           scan-type: image
+          vuln-type: os
           severity: CRITICAL,HIGH
-          ignore-unfixed: true
           exit-code: '1'
           format: table
         env:

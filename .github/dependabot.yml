@@ -24,6 +24,12 @@ updates:
       otel:
         patterns:
           - "go.opentelemetry.io/otel*"
+  - package-ecosystem: docker
+    directory: "/"
+    target-branch: master
+    schedule:
+      interval: weekly
+      day: tuesday
   - package-ecosystem: github-actions
     directory: "/"
     target-branch: master

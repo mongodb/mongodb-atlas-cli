@@ -123,7 +123,7 @@ func (opts *CreateOpts) validateAuthType() error {
 	switch config.AuthType() {
 	case config.APIKeys:
 		return opts.validateAPIKeyRequirements()
-	case config.UserAccount:
+	case config.UserAccount, config.UserDelegation:
 		return opts.validateOAuthRequirements()
 	case config.ServiceAccount:
 		return opts.validateOAuthRequirements()

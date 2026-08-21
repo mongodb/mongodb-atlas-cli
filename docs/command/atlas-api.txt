@@ -203,6 +203,7 @@ Related Commands
 * :ref:`atlas-api-ldapConfiguration` - Returns, edits, verifies, and removes LDAP configurations.
 * :ref:`atlas-api-limitDescription` - Returns User-Configurable Project Limits.
 * :ref:`atlas-api-maintenanceWindows` - Returns, edits, and removes maintenance windows.
+* :ref:`atlas-api-metricIntegrations` - Returns, creates, updates, and removes metric integration configurations for a project.
 * :ref:`atlas-api-mongoDbCloudUsers` - Returns, adds, and edits MongoDB Cloud users.
 * :ref:`atlas-api-monitoringAndLogs` - Returns database deployment monitoring and logging data.
 * :ref:`atlas-api-networkPeering` - Returns, adds, edits, and removes network peering containers and peering connections.
@@ -259,6 +260,7 @@ Related Commands
    ldapConfiguration </command/atlas-api-ldapConfiguration>
    limitDescription </command/atlas-api-limitDescription>
    maintenanceWindows </command/atlas-api-maintenanceWindows>
+   metricIntegrations </command/atlas-api-metricIntegrations>
    mongoDbCloudUsers </command/atlas-api-mongoDbCloudUsers>
    monitoringAndLogs </command/atlas-api-monitoringAndLogs>
    networkPeering </command/atlas-api-networkPeering>

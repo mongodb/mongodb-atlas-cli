@@ -28,7 +28,8 @@ RUN microdnf -y install jq &&\
     rpm -e --nodeps \
       curl-minimal libcurl-minimal libxml2 sqlite-libs \
       glib2 libarchive libgcrypt systemd-libs libsolv libnghttp2 \
-      libblkid libmount libsmartcols libuuid &&\
+      libblkid libmount libsmartcols libuuid \
+      gnupg2 krb5-libs bzip2-libs openldap sed libyaml &&\
     ! command -v curl &&\
     ! command -v yum
 

@@ -6,4 +6,5 @@
 
 # Auto-generated API command docs are not reviewed by the Docs team
 /docs/command/atlas-api-*  @mongodb/apix-devtools
+/docs/command/atlas-api.txt  @mongodb/apix-devtools
 /docs/command/includes/    @mongodb/apix-devtools

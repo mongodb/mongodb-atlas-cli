@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312023/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
 	"go.uber.org/mock/gomock"
 )
 

@@ -5,68 +5,17 @@ on:
     - cron: "0 1 * * *" # Every day at 1:00 AM
   workflow_dispatch: # Run the action manually
 jobs:
-  build_images:
-    name: Build and publish docker image to staging registry
-    runs-on: ubuntu-latest
-    env:
-      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
-      PLATFORMS: linux/amd64,linux/arm64
-    steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
-      - name: Check out code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - name: Set date
-        id: set-date
-        run: |
-          DATE=$(date +'%Y-%m-%d')
-          echo "DATE=${DATE}" >> "$GITHUB_ENV"
-      - name: 'Get latest tag'
-        id: get-latest-tag
-        uses: oprypin/find-latest-tag@6957ac556fa6d349727ecabfcaaf9f8e5ee37124
-        with:
-          repository: mongodb/mongodb-atlas-cli
-          releases-only: true
-          regex: 'atlascli*'
-      - name: Extract version
-        run: |
-          release_tag=${{ steps.get-latest-tag.outputs.tag }}
-          echo "LATEST_VERSION=${release_tag#*/}" >> "$GITHUB_ENV"
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e
-      - name: Login to Docker Hub
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
-        with:
-          username: "${{ secrets.DOCKERHUB_USER }}"
-          password: "${{ secrets.DOCKERHUB_SECRET }}"
-      - name: Build and push image to dockerhub staging registry
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
-        with:
-          context: .
-          platforms: ${{ env.PLATFORMS }}
-          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest ,
-            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} ,
-            ${{ env.STAGING_IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }}
-          file: Dockerfile
-          push: true
-      - name: Create Issue
-        if: ${{ failure() }}
-        uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
-        with:
-          labels: failed-release
-          title: Release Failure for Atlas CLI Docker Image ${{ env.LATEST_VERSION }}
-          body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-  publish_images:
-    name: Sign and Publish docker image
-    needs: [ build_images ]
+  build_and_publish_images:
+    name: Build, sign and publish docker image
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write # needed to assume the DevProd Platforms ECR role via OIDC
     env:
       IMAGE_REPOSITORY: mongodb/atlas
-      STAGING_IMAGE_REPOSITORY: mongodb/apix_test
+      LOCAL_REGISTRY: localhost:5000
+      LOCAL_REGISTRY_NAME: local-registry
+      STAGING_IMAGE_REPOSITORY: localhost:5000/mongodb/atlas
       PLATFORMS: linux/amd64,linux/arm64
       QUAY: quay.io
       ECR_REGISTRY: 901841024863.dkr.ecr.us-east-1.amazonaws.com
@@ -74,6 +23,11 @@ jobs:
       COSIGN_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-cosign:2024-10-01
       DOCKER_CLI_EXPERIMENTAL: enabled # used for enabling containerd image storage. See https://github.com/docker/setup-buildx-action/issues/257#issuecomment-1722284952
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Set date
         id: set-date
         run: |
@@ -100,6 +54,29 @@ jobs:
                 "containerd-snapshotter": true
               }
             }
+      - name: Start local staging registry
+        run: |
+          docker run -d --restart=always \
+            --name "${LOCAL_REGISTRY_NAME}" \
+            -p 5000:5000 \
+            registry:2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e
+        with:
+          driver-opts: network=host
+      - name: Build and push image to local staging registry
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
+        with:
+          context: .
+          platforms: ${{ env.PLATFORMS }}
+          tags: ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
+          file: Dockerfile
+          push: true
+      - name: Login to Docker Hub
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
+        with:
+          username: "${{ secrets.DOCKERHUB_USER }}"
+          password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Configure AWS credentials for DevProd Platforms ECR
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c
         with:
@@ -124,19 +101,20 @@ jobs:
           DIGESTS=$(docker buildx imagetools inspect "${IMAGE}" --format '{{- range .Manifest.Manifests}}{{- if eq .Platform.OS "linux" }}{{ .Digest }},{{- end }}{{- end }}{{- .Manifest.Digest }}
           ')
           echo "These are the Docker image DIGESTS: ${DIGESTS}"
-          
+
           {
            echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}"
            echo "GRS_CONFIG_USER1_PASSWORD=${GRS_PASSWORD}"
            echo "COSIGN_REPOSITORY=${SIGNATURE_REPO}"
           } >> "signing-envfile"
-          
+
           echo "${DOCKERHUB_SECRET}" | docker login --password-stdin --username "${DOCKERHUB_USER}"
           for DIGEST in $(echo "$DIGESTS" | tr ',' ' '); do
             echo "Signing ${DIGEST}"
-          
+
             docker run \
               --env-file=signing-envfile \
+              --network "container:${LOCAL_REGISTRY_NAME}" \
               --rm \
               -v ~/.docker/config.json:/root/.docker/config.json \
               -v "$(pwd):$(pwd)" \
@@ -164,6 +142,9 @@ jobs:
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }} \
             --tag ${{ env.QUAY }}/${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.IMAGE_REPOSITORY }}:latest
+      - name: Stop local staging registry
+        if: ${{ always() }}
+        run: docker rm -f "${LOCAL_REGISTRY_NAME}" || true
       - name: Create Issue
         if: ${{ failure() }}
         uses: imjohnbo/issue-bot@3188c6ce06249206709d3b1f274d0d4c5a521601
@@ -173,7 +154,7 @@ jobs:
           body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_docker_image:
     name: Verify Signature Docker Image
-    needs: [ publish_images ]
+    needs: [ build_and_publish_images ]
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: mongodb/atlas
@@ -210,7 +191,7 @@ jobs:
           body: See https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
   verify_quay_image:
     name: Verify Signature Quay Image
-    needs: [ publish_images ]
+    needs: [ build_and_publish_images ]
     runs-on: ubuntu-latest
     env:
       IMAGE_REPOSITORY: mongodb/atlas

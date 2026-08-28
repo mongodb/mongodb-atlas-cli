@@ -209,6 +209,7 @@ Related Commands
 * :ref:`atlas-api-networkPeering` - Returns, adds, edits, and removes network peering containers and peering connections.
 * :ref:`atlas-api-onlineArchive` - Returns, adds, edits, or removes an online archive.
 * :ref:`atlas-api-organizations` - Returns, adds, and edits organizational units in MongoDB Cloud.
+* :ref:`atlas-api-overloadProtectionSimulation` - Returns and starts overload protection simulations for a cluster.
 * :ref:`atlas-api-performanceAdvisor` - Returns suggested indexes and slow query data for a database deployment.
 * :ref:`atlas-api-privateEndpointServices` - Returns, adds, edits, and removes private endpoint services.
 * :ref:`atlas-api-programmaticApiKeys` - Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
@@ -266,6 +267,7 @@ Related Commands
    networkPeering </command/atlas-api-networkPeering>
    onlineArchive </command/atlas-api-onlineArchive>
    organizations </command/atlas-api-organizations>
+   overloadProtectionSimulation </command/atlas-api-overloadProtectionSimulation>
    performanceAdvisor </command/atlas-api-performanceAdvisor>
    privateEndpointServices </command/atlas-api-privateEndpointServices>
    programmaticApiKeys </command/atlas-api-programmaticApiKeys>

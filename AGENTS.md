@@ -45,7 +45,7 @@ scripts/                — Utility scripts
 
 - Commands use the [Cobra framework](https://github.com/spf13/cobra). Each command has `*Opts` struct + `Run()` method + `*Builder()` function.
 - API integration uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) via `internal/store/` interfaces.
-- New commands are registered in `internal/cli/root/atlas/builder.go`.
+- New commands are registered in `internal/cli/root/builder.go`.
 
 ## Before Submitting Changes
 

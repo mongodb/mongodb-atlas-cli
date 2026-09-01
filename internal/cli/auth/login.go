@@ -72,7 +72,7 @@ type userDelegationRunner interface {
 }
 
 const (
-	userAccountAuth = "UserAccount"
+	userAccountAuth = "UserAccount (legacy)"
 	atlasName       = "atlas"
 )
 
@@ -82,7 +82,7 @@ var (
 	authTypeOptions      = []string{userAccountAuth, prompt.UserDelegationAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
 		prompt.UserDelegationAuth: "(best for user accounts)",
-		userAccountAuth:           "legacy (deprecated)",
+		userAccountAuth:           "(deprecated)",
 		prompt.ServiceAccountAuth: "(best for automation)",
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}

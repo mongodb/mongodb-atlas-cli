@@ -61,7 +61,9 @@ func DeferBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "defer",
 		Short: "Defer scheduled maintenance for your project for one week.",
-		Long:  longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long: longDesc + `You can request a deferral only between 48 and 72 hours (2-3 days) before the scheduled maintenance; requests made outside of this window return an error. To learn more, see https://www.mongodb.com/docs/atlas/tutorial/respond-to-required-maintenance/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"output": deferTemplate,
 		},

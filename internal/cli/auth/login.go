@@ -79,7 +79,7 @@ const (
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, prompt.UserDelegationAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	authTypeOptions      = []string{prompt.UserDelegationAuth, userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	authTypeDescription  = map[string]string{
 		prompt.UserDelegationAuth: "(best for user accounts)",
 		userAccountAuth:           "(deprecated)",

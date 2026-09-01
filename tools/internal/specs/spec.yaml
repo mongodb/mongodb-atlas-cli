@@ -5368,6 +5368,17 @@ components:
                 - roleAssignments
             title: Federated Authentication Role Mapping
             type: object
+        AuthenticatedUser:
+            description: Details about the MongoDB Cloud user that this request is authenticated as.
+            nullable: true
+            properties:
+                username:
+                    description: Email address that represents the username of the MongoDB Cloud user.
+                    format: email
+                    readOnly: true
+                    type: string
+            readOnly: true
+            type: object
         AutoExportPolicyView:
             description: Policy for automatically exporting Cloud Backup Snapshots.
             properties:
@@ -41960,6 +41971,12 @@ components:
                     example: 83be55e140f493c88e7f578aae96548dd881587b
                     readOnly: true
                     type: string
+                ipAddress:
+                    description: IPv4 or IPv6 address from which you requested this response. Use this value to confirm which address IP access lists evaluate for your requests.
+                    example: 216.172.40.186
+                    pattern: ^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}|([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}$
+                    readOnly: true
+                    type: string
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
                     externalDocs:
@@ -41973,10 +41990,12 @@ components:
                     description: Flag that indicates whether someone enabled throttling on this service.
                     readOnly: true
                     type: boolean
+                user:
+                    $ref: '#/components/schemas/AuthenticatedUser'
             required:
-                - apiKey
                 - appName
                 - build
+                - ipAddress
                 - throttling
             type: object
         TargetOrg:
@@ -45056,7 +45075,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: d19cd93323a8807ccc120347bf6298b734443e59
+    x-xgen-sha: 5838ca6b2bce4c1e69826c978b07cd6ac80094a7
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

@@ -89,7 +89,7 @@ func (opts *UserDelegationFlow) discoverOrLoadMetadata(ctx context.Context, auth
 
 func (opts *UserDelegationFlow) Run(ctx context.Context) error {
 	if opts.NoBrowser {
-		return errors.New("--noBrowser is not supported for UserAccount authentication")
+		return errors.New("--noBrowser is not yet supported for this login method, use the legacy UseAccount method")
 	}
 
 	client := &http.Client{Transport: transport.Default()}

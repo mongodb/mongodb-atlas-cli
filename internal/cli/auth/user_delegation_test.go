@@ -16,6 +16,7 @@ package auth
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -140,4 +141,19 @@ func TestDiscoverOrLoadMetadata(t *testing.T) {
 			assert.Equal(t, tt.expectFetch, fetched, "expectFetch=%v fetched=%v", tt.expectFetch, fetched)
 		})
 	}
+}
+
+func TestUserDelegationFlowRunRejectsNoBrowser(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	// No expectations: the guard must reject before touching the profile or
+	// the network.
+	flow := &UserDelegationFlow{
+		config:    NewMockUserDelegationConfig(ctrl),
+		OutWriter: io.Discard,
+		NoBrowser: true,
+	}
+
+	err := flow.Run(t.Context())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "noBrowser")
 }

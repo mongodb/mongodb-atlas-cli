@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
@@ -38,6 +39,11 @@ const (
 const (
 	collectionNameAtlas = "movies"
 	databaseNameAtlas   = "sample_mflix"
+)
+
+const (
+	pauseTimeout       = 20 * time.Minute
+	pauseRetryInterval = 30 * time.Second
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
@@ -133,18 +139,33 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 
 	g.Run("Pause Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"pause",
-			clusterName,
-			"--type=ATLAS",
-			"--projectId", g.ProjectID,
-			"-P",
-			internal.ProfileName(),
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		// A freshly provisioned cluster can still report replication lag on a secondary
+		// after it reaches the IDLE state, and Atlas refuses to pause until that clears.
+		// This has been observed to take around 10 minutes.
+		var resp []byte
+		require.EventuallyWithT(t, func(c *assert.CollectT) {
+			cmd := exec.Command(cliPath,
+				deploymentEntity,
+				"pause",
+				clusterName,
+				"--type=ATLAS",
+				"--projectId", g.ProjectID,
+				"-P",
+				internal.ProfileName(),
+			)
+			cmd.Env = os.Environ()
+
+			out, err := cmd.CombinedOutput()
+			if err != nil {
+				// EventuallyWithT discards the errors it collects once the condition
+				// eventually holds, so log every rejection to keep the wait diagnosable.
+				t.Logf("pause was rejected, retrying in %s: %s", pauseRetryInterval, string(out))
+				assert.NoError(c, err, string(out))
+
+				return
+			}
+			resp = out
+		}, pauseTimeout, pauseRetryInterval)
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 

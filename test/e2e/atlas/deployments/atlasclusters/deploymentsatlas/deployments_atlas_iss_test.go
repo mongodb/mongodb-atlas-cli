@@ -124,18 +124,25 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 	})
 
 	g.Run("Pause Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			"pause",
-			clusterName,
-			"--type=ATLAS",
-			"--projectId", g.ProjectID,
-			"-P",
-			internal.ProfileName(),
-		)
-		cmd.Env = os.Environ()
-		resp, err := cmd.CombinedOutput()
-		require.NoError(t, err, string(resp))
+		// A freshly provisioned cluster can still report replication lag on a secondary
+		// after it reaches the IDLE state, and Atlas refuses to pause until that clears.
+		var resp []byte
+		require.EventuallyWithT(t, func(c *assert.CollectT) {
+			cmd := exec.Command(cliPath,
+				deploymentEntity,
+				"pause",
+				clusterName,
+				"--type=ATLAS",
+				"--projectId", g.ProjectID,
+				"-P",
+				internal.ProfileName(),
+			)
+			cmd.Env = os.Environ()
+
+			var err error
+			resp, err = cmd.CombinedOutput()
+			assert.NoError(c, err, string(resp))
+		}, pauseTimeout, pauseRetryInterval)
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 

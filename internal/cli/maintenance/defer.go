@@ -61,7 +61,9 @@ func DeferBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "defer",
 		Short: "Defer scheduled maintenance for your project for one week.",
-		Long:  longDesc + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long: longDesc + `Atlas allows deferral requests only between 48 and 72 hours (2-3 days) before the scheduled maintenance; requests made outside of this window return an error. You can defer a single project maintenance event up to two times. For more information on how to respond to maintenance, see https://www.mongodb.com/docs/atlas/tutorial/respond-to-required-maintenance/.
+
+` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Annotations: map[string]string{
 			"output": deferTemplate,
 		},

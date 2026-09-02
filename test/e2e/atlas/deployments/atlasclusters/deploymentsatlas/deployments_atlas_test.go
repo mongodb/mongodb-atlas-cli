@@ -42,7 +42,7 @@ const (
 )
 
 const (
-	pauseTimeout       = 10 * time.Minute
+	pauseTimeout       = 20 * time.Minute
 	pauseRetryInterval = 30 * time.Second
 )
 

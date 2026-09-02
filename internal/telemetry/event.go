@@ -30,10 +30,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/useragent"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"go.mongodb.org/atlas-sdk/v20250312024/detectaiagent"
 )
 
 type Event struct {
@@ -153,12 +153,12 @@ func withCI() EventOpt {
 }
 
 func withAgent() EventOpt {
-	id := useragent.AgentID()
 	return func(event Event) {
-		if id == "" {
+		agent, ok := detectaiagent.Detect()
+		if !ok {
 			return
 		}
-		event.Properties["agent_env_var"] = id
+		event.Properties["agent_env_var"] = agent.ID
 	}
 }
 
@@ -410,7 +410,7 @@ func withEventType(s string) EventOpt {
 }
 
 func withUserAgent() EventOpt {
-	userAgent := useragent.UserAgent(version.Version)
+	userAgent := config.UserAgent(version.Version)
 	return func(event Event) {
 		event.Properties["UserAgent"] = userAgent
 		event.Properties["HostName"] = config.HostName

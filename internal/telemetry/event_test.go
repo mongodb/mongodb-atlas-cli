@@ -23,7 +23,6 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/useragent"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -127,10 +126,10 @@ func TestWithOS(t *testing.T) {
 
 func TestWithUserAgent(t *testing.T) {
 	e := newEvent(withUserAgent())
-	expected := useragent.UserAgent(version.Version)
+	userAgent := config.UserAgent(version.Version)
 
 	a := assert.New(t)
-	a.Equal(expected, e.Properties["UserAgent"])
+	a.Equal(e.Properties["UserAgent"], userAgent)
 	a.Equal(e.Properties["HostName"], config.HostName)
 }
 

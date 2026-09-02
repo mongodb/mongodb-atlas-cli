@@ -76,6 +76,7 @@ func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 	if err != nil {
 		return nil, err
 	}
+	client.Transport = &userAgentTransport{base: client.Transport, userAgent: config.UserAgent(version.Version)}
 
 	configWrapper := NewAuthenticatedConfigWrapper(profile)
 	commandConverter, err := NewDefaultCommandConverter(configWrapper)

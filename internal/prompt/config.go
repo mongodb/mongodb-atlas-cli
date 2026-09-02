@@ -27,6 +27,7 @@ import (
 const (
 	ServiceAccountAuth = "ServiceAccount"
 	APIKeysAuth        = "APIKeys"
+	UserDelegationAuth = "UserAccount"
 )
 
 func NewOrgIDInput() survey.Prompt {

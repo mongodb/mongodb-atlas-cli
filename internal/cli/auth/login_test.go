@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -135,6 +136,46 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 
 	err := opts.LoginRun(ctx)
 	require.NoError(t, err)
+}
+
+type fakeUserDelegationFlow struct {
+	called bool
+}
+
+func (f *fakeUserDelegationFlow) Run(context.Context) error {
+	f.called = true
+	return nil
+}
+
+func Test_loginOpts_LoginRun_UserDelegation(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+
+	flow := &fakeUserDelegationFlow{}
+	opts := &LoginOpts{
+		config:             mockConfig,
+		Asker:              mockAsker,
+		userDelegationFlow: flow,
+	}
+	opts.OutWriter = new(bytes.Buffer)
+
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = prompt.UserDelegationAuth
+			}
+			return nil
+		})
+
+	mockConfig.EXPECT().SetAuthType(config.UserDelegation).Times(1)
+
+	opts.SkipConfig = true
+
+	err := opts.LoginRun(t.Context())
+	require.NoError(t, err)
+	assert.True(t, flow.called)
 }
 
 func TestLoginRun_APIKeys_Success(t *testing.T) {

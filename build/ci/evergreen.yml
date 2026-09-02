@@ -1375,19 +1375,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-  - name: e2e_local_deployments_macos_13
-    display_name: "E2E Local Deployments Tests (macos 13/docker)"
-    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
-    tags:
-      - localdev
-      - cron
-      - foliage_health
-    run_on:
-      - macos-13-arm64-docker
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
   - name: snyk
     display_name: Snyk
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

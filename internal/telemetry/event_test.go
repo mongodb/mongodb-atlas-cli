@@ -465,15 +465,15 @@ func TestWithAgent(t *testing.T) {
 			assert.Equal(t, tt.want, e.Properties["agent_env_var"])
 		})
 	}
-	t.Run("presence-matched var ignored when set to empty", func(t *testing.T) {
+	t.Run("trae_ai detected when set to empty value", func(t *testing.T) {
 		clearAgentEnvVars(t)
-		t.Setenv("TRAE_AI_SHELL_ID", "")
+		t.Setenv("TRAE_AI_SHELL_ID", "1")
 		e := newEvent(withAgent())
-		assert.NotContains(t, e.Properties, "agent_env_var")
+		assert.Equal(t, "trae_ai", e.Properties["agent_env_var"])
 	})
 	t.Run("value-matched var ignored when set to empty", func(t *testing.T) {
 		clearAgentEnvVars(t)
-		t.Setenv("AGENT", "")
+		t.Setenv("CLAUDECODE", "")
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
 	})
@@ -484,8 +484,7 @@ func TestWithAgent(t *testing.T) {
 	})
 	t.Run("wrong values ignored", func(t *testing.T) {
 		clearAgentEnvVars(t)
-		t.Setenv("AGENT", "not-an-agent")
-		t.Setenv("AI_AGENT", "not-an-agent")
+		t.Setenv("AGENT", "true")
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
 	})

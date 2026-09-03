@@ -17,6 +17,7 @@ package telemetry
 import (
 	"errors"
 	"fmt"
+	"os"
 	"runtime"
 	"testing"
 	"time"
@@ -403,13 +404,96 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
-func TestWithAgent(t *testing.T) {
-	// CURSOR_AGENT is the first marker the SDK checks, so it is detected
-	// regardless of any other agent markers set in the environment.
-	t.Setenv("CURSOR_AGENT", "1")
+// agentEnvVars lists the environment markers the SDK's agent detection
+// inspects. Kept here so the tests can guarantee a clean environment and catch
+// regressions in the reported agent identifiers.
+var agentEnvVars = []string{
+	"CURSOR_AGENT",
+	"CURSOR_EXTENSION_HOST_ROLE",
+	"KIMI_PLUGIN_ROOT",
+	"GEMINI_CLI",
+	"CLINE_ACTIVE",
+	"CODEX_SANDBOX",
+	"CODEX_CI",
+	"CODEX_THREAD_ID",
+	"ANTIGRAVITY_AGENT",
+	"ANTIGRAVITY_CLI_ALIAS",
+	"AUGMENT_AGENT",
+	"OPENCODE_CLIENT",
+	"OPENCODE",
+	"AGENT",
+	"AI_AGENT",
+	"CLAUDECODE",
+	"CLAUDE_CODE",
+	"COPILOT_AGENT_SESSION_ID",
+	"TRAE_AI_SHELL_ID",
+}
 
-	e := newEvent(withAgent())
-	assert.Equal(t, "cursor", e.Properties["agent_env_var"])
+func clearAgentEnvVars(t *testing.T) {
+	t.Helper()
+	for _, envVar := range agentEnvVars {
+		// t.Setenv registers restoration of the original value; os.Unsetenv
+		// then actually clears it so presence-based checks see it as unset.
+		t.Setenv(envVar, "")
+		require.NoError(t, os.Unsetenv(envVar))
+	}
+}
+
+func TestWithAgent(t *testing.T) {
+	tests := []struct {
+		name   string
+		envVar string
+		value  string
+		want   string
+	}{
+		{name: "cursor", envVar: "CURSOR_AGENT", value: "1", want: "cursor"},
+		{name: "cursor_extension_host", envVar: "CURSOR_EXTENSION_HOST_ROLE", value: "agent-exec", want: "cursor"},
+		{name: "kimi", envVar: "KIMI_PLUGIN_ROOT", value: "/tmp/kimi", want: "kimi"},
+		{name: "gemini_cli", envVar: "GEMINI_CLI", value: "1", want: "gemini_cli"},
+		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
+		{name: "codex_cli", envVar: "CODEX_SANDBOX", value: "seatbelt", want: "codex_cli"},
+		{name: "antigravity", envVar: "ANTIGRAVITY_AGENT", value: "1", want: "antigravity"},
+		{name: "augment", envVar: "AUGMENT_AGENT", value: "1", want: "auggie_cli"},
+		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
+		{name: "goose", envVar: "AGENT", value: "goose", want: "goose"},
+		{name: "amp", envVar: "AGENT", value: "amp", want: "amp"},
+		{name: "pi", envVar: "AI_AGENT", value: "pi", want: "pi"},
+		{name: "claude_code", envVar: "CLAUDECODE", value: "1", want: "claude_code"},
+		{name: "copilot", envVar: "COPILOT_AGENT_SESSION_ID", value: "session-123", want: "copilot"},
+		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name+" detected", func(t *testing.T) {
+			clearAgentEnvVars(t)
+			t.Setenv(tt.envVar, tt.value)
+			e := newEvent(withAgent())
+			assert.Equal(t, tt.want, e.Properties["agent_env_var"])
+		})
+	}
+	t.Run("presence-matched var ignored when set to empty", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("TRAE_AI_SHELL_ID", "")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+	t.Run("value-matched var ignored when set to empty", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("AGENT", "")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+	t.Run("none set", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
+	t.Run("wrong values ignored", func(t *testing.T) {
+		clearAgentEnvVars(t)
+		t.Setenv("AGENT", "not-an-agent")
+		t.Setenv("AI_AGENT", "not-an-agent")
+		e := newEvent(withAgent())
+		assert.NotContains(t, e.Properties, "agent_env_var")
+	})
 }
 
 func TestWithSearchIndexType(t *testing.T) {

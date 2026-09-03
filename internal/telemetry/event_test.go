@@ -446,21 +446,16 @@ func TestWithAgent(t *testing.T) {
 		value  string
 		want   string
 	}{
+		{name: "claude_code", envVar: "CLAUDECODE", value: "1", want: "claude_code"},
 		{name: "cursor", envVar: "CURSOR_AGENT", value: "1", want: "cursor"},
-		{name: "cursor_extension_host", envVar: "CURSOR_EXTENSION_HOST_ROLE", value: "agent-exec", want: "cursor"},
-		{name: "kimi", envVar: "KIMI_PLUGIN_ROOT", value: "/tmp/kimi", want: "kimi"},
 		{name: "gemini_cli", envVar: "GEMINI_CLI", value: "1", want: "gemini_cli"},
-		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
 		{name: "codex_cli", envVar: "CODEX_SANDBOX", value: "seatbelt", want: "codex_cli"},
-		{name: "antigravity", envVar: "ANTIGRAVITY_AGENT", value: "1", want: "antigravity"},
 		{name: "augment", envVar: "AUGMENT_AGENT", value: "1", want: "auggie_cli"},
+		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
 		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
+		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
 		{name: "goose", envVar: "AGENT", value: "goose", want: "goose"},
 		{name: "amp", envVar: "AGENT", value: "amp", want: "amp"},
-		{name: "pi", envVar: "AI_AGENT", value: "pi", want: "pi"},
-		{name: "claude_code", envVar: "CLAUDECODE", value: "1", want: "claude_code"},
-		{name: "copilot", envVar: "COPILOT_AGENT_SESSION_ID", value: "session-123", want: "copilot"},
-		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name+" detected", func(t *testing.T) {

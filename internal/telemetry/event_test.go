@@ -404,13 +404,38 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
+// agentEnvVars lists the environment markers the SDK's agent detection
+// inspects. Kept here so the tests can guarantee a clean environment and catch
+// regressions in the reported agent identifiers.
+var agentEnvVars = []string{
+	"CURSOR_AGENT",
+	"CURSOR_EXTENSION_HOST_ROLE",
+	"KIMI_PLUGIN_ROOT",
+	"GEMINI_CLI",
+	"CLINE_ACTIVE",
+	"CODEX_SANDBOX",
+	"CODEX_CI",
+	"CODEX_THREAD_ID",
+	"ANTIGRAVITY_AGENT",
+	"ANTIGRAVITY_CLI_ALIAS",
+	"AUGMENT_AGENT",
+	"OPENCODE_CLIENT",
+	"OPENCODE",
+	"AGENT",
+	"AI_AGENT",
+	"CLAUDECODE",
+	"CLAUDE_CODE",
+	"COPILOT_AGENT_SESSION_ID",
+	"TRAE_AI_SHELL_ID",
+}
+
 func clearAgentEnvVars(t *testing.T) {
 	t.Helper()
-	for _, a := range agentEnvVars {
+	for _, envVar := range agentEnvVars {
 		// t.Setenv registers restoration of the original value; os.Unsetenv
 		// then actually clears it so presence-based checks see it as unset.
-		t.Setenv(a.envVar, "")
-		require.NoError(t, os.Unsetenv(a.envVar))
+		t.Setenv(envVar, "")
+		require.NoError(t, os.Unsetenv(envVar))
 	}
 }
 
@@ -429,8 +454,8 @@ func TestWithAgent(t *testing.T) {
 		{name: "cline", envVar: "CLINE_ACTIVE", value: "true", want: "cline"},
 		{name: "opencode_client", envVar: "OPENCODE_CLIENT", value: "1", want: "opencode_client"},
 		{name: "trae_ai", envVar: "TRAE_AI_SHELL_ID", value: "session-123", want: "trae_ai"},
-		{name: "amp", envVar: "AMP_AGENT", value: "1", want: "amp"},
-		{name: "goose", envVar: "GOOSE_AGENT", value: "1", want: "goose"},
+		{name: "amp", envVar: "AGENT", value: "amp", want: "amp"},
+		{name: "goose", envVar: "AGENT", value: "goose", want: "goose"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name+" detected", func(t *testing.T) {
@@ -442,7 +467,7 @@ func TestWithAgent(t *testing.T) {
 	}
 	t.Run("trae_ai detected when set to empty value", func(t *testing.T) {
 		clearAgentEnvVars(t)
-		t.Setenv("TRAE_AI_SHELL_ID", "")
+		t.Setenv("TRAE_AI_SHELL_ID", "1")
 		e := newEvent(withAgent())
 		assert.Equal(t, "trae_ai", e.Properties["agent_env_var"])
 	})
@@ -459,8 +484,7 @@ func TestWithAgent(t *testing.T) {
 	})
 	t.Run("wrong values ignored", func(t *testing.T) {
 		clearAgentEnvVars(t)
-		t.Setenv("CLAUDECODE", "true")
-		t.Setenv("CODEX_SANDBOX", "1")
+		t.Setenv("AGENT", "true")
 		e := newEvent(withAgent())
 		assert.NotContains(t, e.Properties, "agent_env_var")
 	})

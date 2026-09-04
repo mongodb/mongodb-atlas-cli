@@ -33,6 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"go.mongodb.org/atlas-sdk/v20250312024/detectaiagent"
 )
 
 type Event struct {
@@ -151,47 +152,13 @@ func withCI() EventOpt {
 	}
 }
 
-var agentEnvVars = []struct {
-	envVar       string
-	value        string // expected value; empty matches any non-empty value
-	name         string
-	presenceOnly bool // match whenever the variable is set, regardless of value
-}{
-	{"CLAUDECODE", "1", "claude_code", false},
-	{"CURSOR_AGENT", "1", "cursor", false},
-	{"GEMINI_CLI", "1", "gemini_cli", false},
-	{"CODEX_SANDBOX", "seatbelt", "codex_cli", false},
-	{"AUGMENT_AGENT", "1", "auggie_cli", false},
-	{"CLINE_ACTIVE", "true", "cline", false},
-	{"OPENCODE_CLIENT", "1", "opencode_client", false},
-	{"TRAE_AI_SHELL_ID", "", "trae_ai", true},
-	{"AMP_AGENT", "1", "amp", false},
-	{"GOOSE_AGENT", "1", "goose", false},
-}
-
 func withAgent() EventOpt {
 	return func(event Event) {
-		for _, a := range agentEnvVars {
-			v, ok := os.LookupEnv(a.envVar)
-			if a.presenceOnly {
-				if ok {
-					event.Properties["agent_env_var"] = a.name
-					return
-				}
-				continue
-			}
-			if !ok || v == "" {
-				continue
-			}
-			if a.value != "" && v != a.value {
-				continue
-			}
-			event.Properties["agent_env_var"] = a.name
+		agent, ok := detectaiagent.Detect()
+		if !ok {
 			return
 		}
-		if _, err := os.Stat("/opt/.devin"); err == nil {
-			event.Properties["agent_env_var"] = "devin"
-		}
+		event.Properties["agent_env_var"] = agent.ID
 	}
 }
 

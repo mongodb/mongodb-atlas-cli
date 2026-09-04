@@ -19,6 +19,7 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
@@ -27,7 +28,10 @@ import (
 )
 
 const (
-	metricsEntity = "metrics"
+	metricsEntity            = "metrics"
+	databasesEntity          = "databases"
+	databaseListTimeout      = 20 * time.Minute
+	databaseListPollInterval = 15 * time.Second
 )
 
 func TestMetrics(t *testing.T) {
@@ -107,48 +111,81 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 }
 
 func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
-	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			metricsEntity,
-			"databases",
-			"list",
-			hostname,
-			"--projectId", projectID,
-			"-o=json",
-			"-P",
-			internal.ProfileName(),
-		)
+	databaseListDeadline := time.Now().Add(databaseListTimeout)
+	databaseName := ""
 
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-		var db atlasv2.PaginatedDatabase
-		require.NoError(t, json.Unmarshal(resp, &db), string(resp))
-		assert.NotEmpty(t, db.GetTotalCount())
+	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		db := waitForDatabases(t, cliPath, hostname, projectID, databaseListDeadline)
+		require.NotEmpty(t, db.GetResults())
+		databaseName = db.GetResults()[0].GetDatabaseName()
+		require.NotEmpty(t, databaseName)
 	})
 
 	g.Run("databases describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			metricsEntity,
-			"databases",
-			"describe",
-			hostname,
-			"config",
-			"--granularity=PT30M",
-			"--period=P1DT12H",
-			"--projectId", projectID,
-			"-o=json",
-			"-P",
-			internal.ProfileName(),
-		)
+		if databaseName == "" {
+			t.Skip("database list did not return a database")
+		}
 
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
+		resp, err := runDatabaseMeasurements(cliPath, hostname, projectID, databaseName)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
-		assert.NotEmpty(t, metrics.Measurements)
+		require.NotEmpty(t, metrics.GetMeasurements())
 	})
+}
+
+func waitForDatabases(t *testing.T, cliPath, hostname, projectID string, deadline time.Time) *atlasv2.PaginatedDatabase {
+	t.Helper()
+
+	var lastResponse []byte
+	for {
+		resp, err := runDatabasesList(cliPath, hostname, projectID)
+		lastResponse = resp
+		require.NoError(t, err, string(resp))
+		var db atlasv2.PaginatedDatabase
+		require.NoError(t, json.Unmarshal(resp, &db), string(resp))
+		if db.GetTotalCount() > 0 && len(db.GetResults()) > 0 {
+			return &db
+		}
+
+		if !time.Now().Before(deadline) {
+			t.Fatalf("database list did not become ready before timeout: lastResponse=%s", string(lastResponse))
+		}
+		time.Sleep(databaseListPollInterval)
+	}
+}
+
+func runDatabasesList(cliPath, hostname, projectID string) ([]byte, error) {
+	cmd := exec.Command(cliPath,
+		metricsEntity,
+		databasesEntity,
+		"list",
+		hostname,
+		"--projectId", projectID,
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
+	cmd.Env = os.Environ()
+	return internal.RunAndGetStdOut(cmd)
+}
+
+func runDatabaseMeasurements(cliPath, hostname, projectID, databaseName string) ([]byte, error) {
+	cmd := exec.Command(cliPath,
+		metricsEntity,
+		databasesEntity,
+		"describe",
+		hostname,
+		databaseName,
+		"--granularity=PT30M",
+		"--period=P1DT12H",
+		"--projectId", projectID,
+		"-o=json",
+		"-P",
+		internal.ProfileName(),
+	)
+	cmd.Env = os.Environ()
+	return internal.RunAndGetStdOut(cmd)
 }
 
 func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {

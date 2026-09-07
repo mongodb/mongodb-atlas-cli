@@ -202,6 +202,7 @@ const (
 	SampleRefreshIntervalBIConnector              = "sampleRefreshIntervalBIConnector"              // SampleRefreshIntervalBIConnector flag
 	SampleSizeBIConnector                         = "sampleSizeBIConnector"                         // SampleSizeBIConnector flag
 	IncludeDeleted                                = "includeDeleted"                                // IncludeDeleted flag
+	IncludeGlobal                                 = "includeGlobal"                                 // IncludeGlobal flag
 	AWSAccessKey                                  = "awsAccessKey"                                  // AWSAccessKey flag
 	AWSSecretKey                                  = "awsSecretKey"                                  // AWSSecretKey fag
 	ReferenceHourOfDay                            = "referenceHourOfDay"                            // ReferenceHourOfDay flag

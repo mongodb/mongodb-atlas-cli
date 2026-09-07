@@ -144,6 +144,7 @@ dbName and collection are required only for built-in roles.`
 	RoutingKey                                    = "Routing key associated with your Splunk On-Call account."
 	OrgNameFilter                                 = "Organization name to perform a case-insensitive search for."
 	OrgIncludeDeleted                             = "Flag that indicates whether to include deleted organizations in the list. This option applies only to Ops Manager organizations. You can't return deleted Atlas or Cloud Manager organizations."
+	OrgIncludeGlobal                              = "Flag that indicates whether to include organizations visible only through a global role. Applies only to internal users holding such a role; has no effect otherwise."
 	APIKeyDescription                             = "Description of the API key."
 	AtlasAPIKeyDescription                        = APIKeyDescription + " " + requiredForAtlas
 	CreateProjectAPIKeyRoles                      = "Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. For the full list of accepted values, see the Items Enum for the corresponding Atlas API endpoint: https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createprojectapikey. To learn more about project level user roles, see: https://dochub.mongodb.org/core/atlas-proj-roles." //nolint:gosec // This is just a message not a credential

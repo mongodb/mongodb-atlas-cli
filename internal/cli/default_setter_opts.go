@@ -23,7 +23,8 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api/orgsapi"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -50,12 +51,22 @@ type DefaultSetterOpts struct {
 	TelemetryEnabled         bool
 	Output                   string
 	Store                    ProjectOrgsLister
+	OrgExecutor              api.CommandExecutor
 	OutWriter                io.Writer
 	AskedOrgsOrProjects      bool
 	OnMultipleOrgsOrProjects func()
 }
 
 func (opts *DefaultSetterOpts) InitStore(ctx context.Context) error {
+	// Set before the store check so that an injected store does not skip this.
+	if opts.OrgExecutor == nil {
+		executor, err := api.NewDefaultExecutor(api.NewFormatter())
+		if err != nil {
+			return err
+		}
+		opts.OrgExecutor = executor
+	}
+
 	if opts.Store != nil {
 		return nil
 	}
@@ -107,15 +118,21 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	return ids, names, nil
 }
 
-// orgs fetches organizations, filtering by name.
-func (opts *DefaultSetterOpts) orgs(filter string) (results []atlasv2.AtlasOrganization, err error) {
+// orgs fetches organizations, filtering by name. Organizations visible only through a global
+// Atlas role are suppressed: this list feeds an interactive picker, and for users holding such
+// a role the full list spans the deployment and cannot be selected from. See CLOUDP-432111.
+func (opts *DefaultSetterOpts) orgs(ctx context.Context, filter string) (results []atlasv2.AtlasOrganization, err error) {
 	spin := newSpinner()
 	spin.Start()
 	defer spin.Stop()
-	pagination := &atlasv2.ListOrgsApiParams{Name: &filter, ItemsPerPage: pointer.Get(resultsLimit)}
-	orgs, err := opts.Store.Organizations(pagination)
+	orgs, err := orgsapi.ListOrgs(ctx, opts.OrgExecutor, orgsapi.ListOrgsOptions{
+		Name:          filter,
+		ItemsPerPage:  resultsLimit,
+		IncludeCount:  true,
+		IncludeGlobal: false,
+	})
 	if err != nil {
-		if atlasErr, ok := atlasv2.AsError(err); ok && atlasErr.GetError() == 404 {
+		if errors.Is(err, orgsapi.ErrNotFound) {
 			return nil, errNoResults
 		}
 		return nil, err
@@ -201,12 +218,12 @@ func (opts *DefaultSetterOpts) OrgExists(id string) bool {
 // AskOrg will try to construct a select based on fetched organizations.
 // If it fails or there are no organizations to show we fall back to ask for org by ID.
 // If only one organization, select it by default without prompting the user.
-func (opts *DefaultSetterOpts) AskOrg() error {
-	return opts.askOrgWithFilter("")
+func (opts *DefaultSetterOpts) AskOrg(ctx context.Context) error {
+	return opts.askOrgWithFilter(ctx, "")
 }
 
-func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
-	orgs, err := opts.orgs(filter)
+func (opts *DefaultSetterOpts) askOrgWithFilter(ctx context.Context, filter string) error {
+	orgs, err := opts.orgs(ctx, filter)
 	if err != nil {
 		applyFilter := false
 		var target *atlas.ErrorResponse
@@ -243,7 +260,7 @@ func (opts *DefaultSetterOpts) askOrgWithFilter(filter string) error {
 					_, _ = fmt.Fprintf(opts.OutWriter, "Chosen default organization: %v\n", opts.OrgID)
 					return nil
 				}
-				return opts.askOrgWithFilter(filter)
+				return opts.askOrgWithFilter(ctx, filter)
 			}
 		}
 

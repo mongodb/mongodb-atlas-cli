@@ -72,7 +72,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/signin v1.7.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cli/safeexec v1.0.0 // indirect
+	github.com/cli/safeexec v1.0.1 // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
@@ -122,7 +122,7 @@ require (
 	github.com/bodgit/plumbing v1.3.0 // indirect
 	github.com/bodgit/sevenzip v1.6.1 // indirect
 	github.com/bodgit/windows v1.0.1 // indirect
-	github.com/cli/go-gh/v2 v2.12.2
+	github.com/cli/go-gh/v2 v2.16.0
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect

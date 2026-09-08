@@ -16,9 +16,13 @@ package auth
 
 import (
 	"bytes"
+	"encoding/json"
+	"io"
+	"net/http"
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
@@ -88,17 +92,24 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(2)
 
-	expectedOrgs := &admin.PaginatedOrganization{
+	orgsBody, err := json.Marshal(&admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
 		Results: []admin.AtlasOrganization{
 			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
-	}
-	mockStore.
-		EXPECT().
-		Organizations(gomock.Any()).
-		Return(expectedOrgs, nil).
+	})
+	require.NoError(t, err)
+
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: true,
+			HTTPCode:  http.StatusOK,
+			Output:    io.NopCloser(bytes.NewReader(orgsBody)),
+		}, nil).
 		Times(1)
+	opts.OrgExecutor = mockExecutor
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
 		Results: []admin.Group{
 			{Id: pointer.Get("p1"), Name: "Project1"},

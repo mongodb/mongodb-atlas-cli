@@ -18,61 +18,56 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api/orgsapi"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
 )
 
 const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=organizations -source=list.go
-
-type OrganizationLister interface {
-	Organizations(*atlasv2.ListOrgsApiParams) (*atlasv2.PaginatedOrganization, error)
-}
-
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.ListOpts
 	cli.OutputOpts
-	store              OrganizationLister
+	executor           api.CommandExecutor
 	name               string
 	includeDeletedOrgs bool
+	includeGlobal      bool
 }
 
-func (opts *ListOpts) initStore(ctx context.Context) func() error {
+func (opts *ListOpts) initStore(_ context.Context) func() error {
 	return func() error {
 		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
+		opts.executor, err = api.NewDefaultExecutor(api.NewFormatter())
 		return err
 	}
 }
 
-func (opts *ListOpts) Run() error {
-	r, err := opts.store.Organizations(opts.newOrganizationListOptions())
+func (opts *ListOpts) Run(ctx context.Context) error {
+	r, err := orgsapi.ListOrgs(ctx, opts.executor, opts.newOrganizationListOptions())
 	if err != nil {
 		return err
 	}
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrgsApiParams {
-	params := &atlasv2.ListOrgsApiParams{
-		Name: &opts.name,
+func (opts *ListOpts) newOrganizationListOptions() orgsapi.ListOrgsOptions {
+	options := orgsapi.ListOrgsOptions{
+		Name:          opts.name,
+		IncludeGlobal: opts.includeGlobal,
 	}
 	if listOpt := opts.NewAtlasListOptions(); listOpt != nil {
-		params.PageNum = &listOpt.PageNum
-		params.ItemsPerPage = &listOpt.ItemsPerPage
-		params.IncludeCount = &listOpt.IncludeCount
+		options.PageNum = listOpt.PageNum
+		options.ItemsPerPage = listOpt.ItemsPerPage
+		options.IncludeCount = listOpt.IncludeCount
 	}
-	return params
+	return options
 }
 
 // atlas organizations(s) list --name --includeDeletedOrgs.
@@ -98,8 +93,8 @@ func ListBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
 			)
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return opts.Run()
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return opts.Run(cmd.Context())
 		},
 	}
 
@@ -107,6 +102,9 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
 	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
+	// Hidden: not part of the public API and a no-op for customers. See CLOUDP-432111.
+	cmd.Flags().BoolVar(&opts.includeGlobal, flag.IncludeGlobal, true, usage.OrgIncludeGlobal)
+	_ = cmd.Flags().MarkHidden(flag.IncludeGlobal)
 
 	opts.AddOutputOptFlags(cmd)
 

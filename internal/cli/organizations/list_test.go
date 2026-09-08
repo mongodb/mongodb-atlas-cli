@@ -15,10 +15,19 @@
 package organizations
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"io"
+	"net/http"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
 	"go.uber.org/mock/gomock"
 )
@@ -70,25 +79,48 @@ func TestList_Run(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			mockStore := NewMockOrganizationLister(ctrl)
-			listOpts := &ListOpts{store: mockStore}
+			body, err := json.Marshal(tt.expected)
+			require.NoError(t, err)
 
-			mockStore.
+			mockExecutor := api.NewMockCommandExecutor(ctrl)
+			listOpts := &ListOpts{executor: mockExecutor}
+
+			mockExecutor.
 				EXPECT().
-				Organizations(listOpts.newOrganizationListOptions()).
-				Return(tt.expected, nil).
+				ExecuteCommand(gomock.Any(), gomock.Any()).
+				Return(&api.CommandResponse{
+					IsSuccess: true,
+					HTTPCode:  http.StatusOK,
+					Output:    io.NopCloser(bytes.NewReader(body)),
+				}, nil).
 				Times(1)
 
-			if err := listOpts.Run(); err != nil {
+			if err := listOpts.Run(context.Background()); err != nil {
 				t.Fatalf("Run() unexpected error: %v", err)
 			}
 
-			err := listOpts.Print(tt.expected)
-			if err != nil {
+			if err := listOpts.Print(tt.expected); err != nil {
 				t.Fatalf("Print() unexpected error: %v", err)
 			}
 
 			test.VerifyOutputTemplate(t, listTemplate, tt.expected)
 		})
 	}
+}
+
+func TestListBuilder_IncludeGlobalFlagIsHiddenAndDefaultsToTrue(t *testing.T) {
+	cmd := ListBuilder()
+
+	f := cmd.Flags().Lookup(flag.IncludeGlobal)
+	require.NotNil(t, f, "expected an %s flag", flag.IncludeGlobal)
+	assert.True(t, f.Hidden, "%s must stay hidden", flag.IncludeGlobal)
+	assert.Equal(t, "true", f.DefValue, "%s must default to the server default", flag.IncludeGlobal)
+}
+
+func TestListOpts_NewOrganizationListOptions_DefaultsToIncludeGlobal(t *testing.T) {
+	opts := &ListOpts{includeGlobal: true}
+	assert.True(t, opts.newOrganizationListOptions().IncludeGlobal)
+
+	opts = &ListOpts{includeGlobal: false}
+	assert.False(t, opts.newOrganizationListOptions().IncludeGlobal)
 }

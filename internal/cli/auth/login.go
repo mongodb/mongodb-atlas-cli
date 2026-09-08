@@ -299,7 +299,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	}
 
 	if opts.config.OrgID() == "" || !opts.OrgExists(opts.config.OrgID()) {
-		if err := opts.AskOrg(); err != nil {
+		if err := opts.AskOrg(ctx); err != nil {
 			return err
 		}
 	}

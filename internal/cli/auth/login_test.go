@@ -16,12 +16,16 @@ package auth
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
@@ -267,13 +271,25 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 	mockConfig.EXPECT().OrgID().Return("").Times(1)
 	mockConfig.EXPECT().ProjectID().Return("").Times(1)
 
-	expectedOrgs := &admin.PaginatedOrganization{
+	orgsBody, err := json.Marshal(&admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
 		Results: []admin.AtlasOrganization{
 			{Id: pointer.Get("o1"), Name: "Org1"},
 		},
-	}
-	mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
+	})
+	require.NoError(t, err)
+
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: true,
+			HTTPCode:  http.StatusOK,
+			Output:    io.NopCloser(bytes.NewReader(orgsBody)),
+		}, nil).
+		Times(1)
+	opts.OrgExecutor = mockExecutor
+
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
 		Results: []admin.Group{
 			{Id: pointer.Get("p1"), Name: "Project1"},
@@ -292,6 +308,5 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 
 	ctx := t.Context()
-	err := opts.setUpProfile(ctx)
-	require.NoError(t, err)
+	require.NoError(t, opts.setUpProfile(ctx))
 }

@@ -15,8 +15,16 @@
 package cli
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"io"
+	"net/http"
+	"strconv"
+	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
@@ -100,18 +108,36 @@ func TestDefaultOpts_Projects(t *testing.T) {
 	})
 }
 
+// expectOrgs stubs a successful listOrgs response carrying the given payload.
+func expectOrgs(t *testing.T, executor *api.MockCommandExecutor, payload any) {
+	t.Helper()
+
+	body, err := json.Marshal(payload)
+	require.NoError(t, err)
+
+	executor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: true,
+			HTTPCode:  http.StatusOK,
+			Output:    io.NopCloser(bytes.NewReader(body)),
+		}, nil).
+		Times(1)
+}
+
 func TestDefaultOpts_Orgs(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
 
 	opts := &DefaultSetterOpts{
-		Service: "cloud",
-		Store:   mockStore,
+		Service:     "cloud",
+		OrgExecutor: mockExecutor,
 	}
+	ctx := context.Background()
+
 	t.Run("empty", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{}
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		_, err := opts.orgs("")
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{})
+		_, err := opts.orgs(ctx, "")
 		require.Error(t, err)
 	})
 	t.Run("with one org", func(t *testing.T) {
@@ -124,35 +150,77 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 			},
 			TotalCount: pointer.Get(1),
 		}
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		gotOrgs, err := opts.orgs("")
+		expectOrgs(t, mockExecutor, expectedOrgs)
+		gotOrgs, err := opts.orgs(ctx, "")
 		require.NoError(t, err)
 		assert.Equal(t, expectedOrgs.GetResults(), gotOrgs)
 	})
 
 	t.Run("with no org", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{
 			Results: []atlasv2.AtlasOrganization{},
-		}
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		_, err := opts.orgs("")
+		})
+		_, err := opts.orgs(ctx, "")
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())
 	})
 
-	t.Run("with nil org", func(t *testing.T) {
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(nil, nil).Times(1)
-		_, err := opts.orgs("")
+	t.Run("with null body", func(t *testing.T) {
+		expectOrgs(t, mockExecutor, nil)
+		_, err := opts.orgs(ctx, "")
 		require.Error(t, err)
 		require.EqualError(t, err, errNoResults.Error())
 	})
+
+	t.Run("404 maps to no results", func(t *testing.T) {
+		mockExecutor.EXPECT().
+			ExecuteCommand(gomock.Any(), gomock.Any()).
+			Return(&api.CommandResponse{
+				IsSuccess: false,
+				HTTPCode:  http.StatusNotFound,
+				Output:    io.NopCloser(strings.NewReader(`{}`)),
+			}, nil).
+			Times(1)
+		_, err := opts.orgs(ctx, "")
+		require.ErrorIs(t, err, errNoResults)
+	})
+
 	t.Run("too many orgs", func(t *testing.T) {
-		expectedOrgs := &atlasv2.PaginatedOrganization{
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{
 			Results:    []atlasv2.AtlasOrganization{},
 			TotalCount: pointer.Get(resultsLimit + 1),
-		}
-		mockStore.EXPECT().Organizations(gomock.Any()).Return(expectedOrgs, nil).Times(1)
-		_, err := opts.orgs("")
+		})
+		_, err := opts.orgs(ctx, "")
 		require.ErrorIs(t, err, errTooManyResults)
 	})
+}
+
+// The server defaults includeGlobal to true, so a regression here degrades silently.
+func TestDefaultOpts_Orgs_SuppressesGlobalOrgs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+
+	var got api.CommandRequest
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ context.Context, commandRequest api.CommandRequest) (*api.CommandResponse, error) {
+			got = commandRequest
+			return &api.CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  http.StatusOK,
+				Output:    io.NopCloser(strings.NewReader(`{"totalCount":0,"results":[]}`)),
+			}, nil
+		}).
+		Times(1)
+
+	opts := &DefaultSetterOpts{Service: "cloud", OrgExecutor: mockExecutor}
+	_, _ = opts.orgs(context.Background(), "myFilter")
+
+	httpRequest, err := api.ConvertToHTTPRequest("https://cloud.mongodb.com", got)
+	require.NoError(t, err)
+
+	query := httpRequest.URL.Query()
+	assert.Equal(t, "false", query.Get("includeGlobal"))
+	assert.Equal(t, "myFilter", query.Get("name"))
+	assert.Equal(t, strconv.Itoa(resultsLimit), query.Get("itemsPerPage"))
 }

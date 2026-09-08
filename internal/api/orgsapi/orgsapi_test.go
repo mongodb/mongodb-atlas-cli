@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -40,6 +41,28 @@ func TestFindCommand_ListOrgsExists(t *testing.T) {
 func TestFindCommand_Unknown(t *testing.T) {
 	_, err := findCommand("thisOperationDoesNotExist")
 	require.ErrorIs(t, err, ErrCommandNotFound)
+}
+
+// The generated definitions currently have len == cap, so append would reallocate even
+// without the clone. Give the input spare capacity so the clone is load bearing.
+func TestWithIncludeGlobal_DoesNotWriteIntoCallersBackingArray(t *testing.T) {
+	backing := make([]shared_api.Parameter, 2, 4)
+	backing[0] = shared_api.Parameter{Name: "name"}
+	backing[1] = shared_api.Parameter{Name: "sentinel"}
+
+	command := shared_api.Command{
+		OperationID: listOrgsOperationID,
+		RequestParameters: shared_api.RequestParameters{
+			// Length 1 with spare capacity, so an uncloned append would overwrite backing[1].
+			QueryParameters: backing[:1],
+		},
+	}
+
+	got := withIncludeGlobal(command)
+
+	require.Len(t, got.RequestParameters.QueryParameters, 2)
+	assert.Equal(t, includeGlobalParam, got.RequestParameters.QueryParameters[1].Name)
+	assert.Equal(t, "sentinel", backing[1].Name, "includeGlobal was written into the caller's backing array")
 }
 
 func TestListOrgsCommand_DoesNotMutateGlobalCommands(t *testing.T) {
@@ -135,20 +158,58 @@ func TestListOrgs(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	executor := api.NewMockCommandExecutor(ctrl)
+
+	var got api.CommandRequest
+	executor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ context.Context, commandRequest api.CommandRequest) (*api.CommandResponse, error) {
+			got = commandRequest
+			return &api.CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  http.StatusOK,
+				Output:    io.NopCloser(strings.NewReader(body)),
+			}, nil
+		}).
+		Times(1)
+
+	result, err := ListOrgs(context.Background(), executor, ListOrgsOptions{Name: "myOrg"})
+	require.NoError(t, err)
+	assert.Equal(t, 1, result.GetTotalCount())
+	require.Len(t, result.GetResults(), 1)
+	assert.Equal(t, "myOrg", result.GetResults()[0].GetName())
+
+	// Assert what ListOrgs itself put on the wire, not just what NewCommandRequest builds.
+	httpRequest, err := api.ConvertToHTTPRequest(testBaseURL, got)
+	require.NoError(t, err)
+	query := httpRequest.URL.Query()
+	assert.Equal(t, "false", query.Get(includeGlobalParam))
+	assert.Equal(t, "myOrg", query.Get("name"))
+}
+
+func TestListOrgs_NilExecutor(t *testing.T) {
+	_, err := ListOrgs(context.Background(), nil, ListOrgsOptions{})
+	require.ErrorIs(t, err, ErrMissingExecutor)
+}
+
+func TestListOrgs_MalformedBody(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	executor := api.NewMockCommandExecutor(ctrl)
 	executor.EXPECT().
 		ExecuteCommand(gomock.Any(), gomock.Any()).
 		Return(&api.CommandResponse{
 			IsSuccess: true,
 			HTTPCode:  http.StatusOK,
-			Output:    io.NopCloser(strings.NewReader(body)),
+			Output:    io.NopCloser(strings.NewReader(`{"totalCount":`)),
 		}, nil).
 		Times(1)
 
-	result, err := ListOrgs(context.Background(), executor, ListOrgsOptions{})
-	require.NoError(t, err)
-	assert.Equal(t, 1, result.GetTotalCount())
-	require.Len(t, result.GetResults(), 1)
-	assert.Equal(t, "myOrg", result.GetResults()[0].GetName())
+	_, err := ListOrgs(context.Background(), executor, ListOrgsOptions{})
+	require.Error(t, err)
+}
+
+func TestLatestVersion_NoVersions(t *testing.T) {
+	_, err := latestVersion(shared_api.Command{OperationID: listOrgsOperationID})
+	require.ErrorIs(t, err, ErrNoVersions)
 }
 
 func TestListOrgs_NotFound(t *testing.T) {

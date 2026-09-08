@@ -76,15 +76,11 @@ func findCommand(operationID string) (shared_api.Command, error) {
 	return shared_api.Command{}, fmt.Errorf("%w: %q", ErrCommandNotFound, operationID)
 }
 
-// listOrgsCommand returns a copy of the generated listOrgs command with the includeGlobal
-// parameter appended. api.Commands is global state backing the cobra tree, and copying a
-// Command only copies the slice header, so the parameters are cloned before appending.
-func listOrgsCommand() (shared_api.Command, error) {
-	command, err := findCommand(listOrgsOperationID)
-	if err != nil {
-		return shared_api.Command{}, err
-	}
-
+// withIncludeGlobal returns a copy of a command with the includeGlobal parameter appended.
+// Copying a Command only copies the slice header, so the parameters are cloned before
+// appending: without that, appending to a slice with spare capacity would write into the
+// backing array of api.Commands, which is global state backing the cobra tree.
+func withIncludeGlobal(command shared_api.Command) shared_api.Command {
 	queryParameters := slices.Clone(command.RequestParameters.QueryParameters)
 	queryParameters = append(queryParameters, shared_api.Parameter{
 		Name:        includeGlobalParam,
@@ -93,7 +89,18 @@ func listOrgsCommand() (shared_api.Command, error) {
 	})
 	command.RequestParameters.QueryParameters = queryParameters
 
-	return command, nil
+	return command
+}
+
+// listOrgsCommand returns a copy of the generated listOrgs command with the includeGlobal
+// parameter appended.
+func listOrgsCommand() (shared_api.Command, error) {
+	command, err := findCommand(listOrgsOperationID)
+	if err != nil {
+		return shared_api.Command{}, err
+	}
+
+	return withIncludeGlobal(command), nil
 }
 
 // latestVersion returns the most recent version of a command. Versions are sorted ascending

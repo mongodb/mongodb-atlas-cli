@@ -55,6 +55,12 @@ func (opts *RefresherOpts) WithFlow(f Refresher) {
 }
 
 func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
+	// This refresher only handles the UserAccount device flow; other login
+	// methods refresh their tokens elsewhere.
+	if config.AuthType() != config.UserAccount {
+		return nil
+	}
+
 	current, err := config.Token()
 	if current == nil {
 		return err

@@ -16,6 +16,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -52,6 +53,9 @@ type ConfigDeleter interface {
 	ClientSecret() string
 	AccessTokenSubject() (string, error)
 	RefreshToken() string
+	Service() string
+	AuthServerURL() string
+	AuthServerMetadata() map[string]any
 	Save() error
 }
 
@@ -67,16 +71,14 @@ type logoutOpts struct {
 	flow                      Revoker
 	keepConfig                bool
 	revokeServiceAccountToken func() error
+	revokeAuthServerToken     func(context.Context) error
 }
 
-func (opts *logoutOpts) initFlow(ctx context.Context) error {
+func (opts *logoutOpts) initFlow() error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
 	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
-	opts.revokeServiceAccountToken = func() error {
-		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
-	}
 	return err
 }
 
@@ -95,6 +97,31 @@ func revokeServiceAccountToken(ctx context.Context, clientID, clientSecret strin
 	return cfg.RevokeToken(ctx, token)
 }
 
+func revokeAuthServerToken(ctx context.Context, cfg ConfigDeleter) error {
+	metadata := cfg.AuthServerMetadata()
+	if metadata == nil {
+		return errors.New("no auth server metadata available")
+	}
+	m, ok := metadata["metadata"].(map[string]any)
+	if !ok {
+		return errors.New("invalid auth server metadata")
+	}
+	revocationEndpoint, ok := m["revocation_endpoint"].(string)
+	if !ok || revocationEndpoint == "" {
+		return errors.New("revocation_endpoint not found in auth server metadata")
+	}
+
+	client := http.DefaultClient
+	client.Transport = transport.Default()
+
+	authCfg, err := transport.FlowForAuthIssuer(cfg, client, version.Version)
+	if err != nil {
+		return err
+	}
+
+	return authCfg.RevokeAuthServerToken(ctx, revocationEndpoint, cfg.RefreshToken(), "refresh_token")
+}
+
 func (opts *logoutOpts) Run(ctx context.Context) error {
 	if !opts.Confirm {
 		return nil
@@ -105,6 +132,10 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
 		if err != nil {
 			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
+		}
+	case config.UserDelegation:
+		if err := opts.revokeAuthServerToken(ctx); err != nil {
+			_, _ = log.Warningf("Warning: unable to revoke token: %v, proceeding with logout\n", err)
 		}
 	case config.ServiceAccount:
 		if err := opts.revokeServiceAccountToken(); err != nil {
@@ -155,9 +186,18 @@ func LogoutBuilder() *cobra.Command {
 				opts.config = config.Default()
 			}
 
-			// Only initialize OAuth flow if we have OAuth-based auth
-			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
-				return opts.initFlow(cmd.Context())
+			// Wire up the revoke path for the profile's auth type.
+			switch opts.config.AuthType() {
+			case config.UserAccount:
+				return opts.initFlow()
+			case config.ServiceAccount:
+				opts.revokeServiceAccountToken = func() error {
+					return revokeServiceAccountToken(cmd.Context(), opts.config.ClientID(), opts.config.ClientSecret())
+				}
+			case config.UserDelegation:
+				opts.revokeAuthServerToken = func(ctx context.Context) error {
+					return revokeAuthServerToken(ctx, opts.config)
+				}
 			}
 
 			return nil
@@ -184,6 +224,8 @@ func LogoutBuilder() *cobra.Command {
 				}
 
 				message = logoutMessage + " with user account " + subject + "?"
+			case config.UserDelegation:
+				message = logoutMessage + "?"
 			case config.NoAuth, "":
 				message = logoutMessage + "?"
 			}

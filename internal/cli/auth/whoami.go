@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -25,14 +26,44 @@ import (
 )
 
 type whoOpts struct {
-	OutWriter   io.Writer
-	authSubject string
-	authType    string
+	OutWriter    io.Writer
+	authSubject  string
+	authType     string
+	tokenExpiry  string
+	refreshToken string
 }
 
 func (opts *whoOpts) Run() error {
+	if opts.authType == "delegation" {
+		return opts.runUserDelegation()
+	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s %s\n", opts.authSubject, opts.authType)
+	return nil
+}
 
+func (opts *whoOpts) runUserDelegation() error {
+	msg := "Connected to MongoDB Atlas"
+
+	if opts.tokenExpiry != "" {
+		if t, err := time.Parse(time.RFC3339, opts.tokenExpiry); err == nil {
+			remaining := time.Until(t).Truncate(time.Second)
+			if remaining > 0 {
+				msg += fmt.Sprintf(" (expires in %s", remaining)
+			} else {
+				msg += " (token expired"
+			}
+			if opts.refreshToken != "" {
+				msg += ", auto-refresh enabled"
+			}
+			msg += ")."
+		}
+	} else if opts.refreshToken != "" {
+		msg += " (auto-refresh enabled)."
+	} else {
+		msg += "."
+	}
+
+	_, _ = fmt.Fprintln(opts.OutWriter, msg)
 	return nil
 }
 
@@ -50,6 +81,8 @@ func authTypeAndSubject() (string, string, error) {
 			return "", "", ErrUnauthenticated
 		}
 		return "account", subject, nil
+	case config.UserDelegation:
+		return "delegation", "", nil
 	case config.NoAuth:
 		return "", "", ErrUnauthenticated
 	}
@@ -74,7 +107,8 @@ func WhoAmIBuilder() *cobra.Command {
 			if opts.authType, opts.authSubject, err = authTypeAndSubject(); err != nil {
 				return err
 			}
-
+			opts.tokenExpiry = config.TokenExpiry()
+			opts.refreshToken = config.RefreshToken()
 			return opts.Run()
 		},
 		Args: require.NoArgs,

@@ -81,6 +81,82 @@ func (c *MockConfigDeleterAccessTokenSubjectCall) DoAndReturn(f func() (string, 
 	return c
 }
 
+// AuthServerMetadata mocks base method.
+func (m *MockConfigDeleter) AuthServerMetadata() map[string]any {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthServerMetadata")
+	ret0, _ := ret[0].(map[string]any)
+	return ret0
+}
+
+// AuthServerMetadata indicates an expected call of AuthServerMetadata.
+func (mr *MockConfigDeleterMockRecorder) AuthServerMetadata() *MockConfigDeleterAuthServerMetadataCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthServerMetadata", reflect.TypeOf((*MockConfigDeleter)(nil).AuthServerMetadata))
+	return &MockConfigDeleterAuthServerMetadataCall{Call: call}
+}
+
+// MockConfigDeleterAuthServerMetadataCall wrap *gomock.Call
+type MockConfigDeleterAuthServerMetadataCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterAuthServerMetadataCall) Return(arg0 map[string]any) *MockConfigDeleterAuthServerMetadataCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterAuthServerMetadataCall) Do(f func() map[string]any) *MockConfigDeleterAuthServerMetadataCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterAuthServerMetadataCall) DoAndReturn(f func() map[string]any) *MockConfigDeleterAuthServerMetadataCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// AuthServerURL mocks base method.
+func (m *MockConfigDeleter) AuthServerURL() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthServerURL")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AuthServerURL indicates an expected call of AuthServerURL.
+func (mr *MockConfigDeleterMockRecorder) AuthServerURL() *MockConfigDeleterAuthServerURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthServerURL", reflect.TypeOf((*MockConfigDeleter)(nil).AuthServerURL))
+	return &MockConfigDeleterAuthServerURLCall{Call: call}
+}
+
+// MockConfigDeleterAuthServerURLCall wrap *gomock.Call
+type MockConfigDeleterAuthServerURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterAuthServerURLCall) Return(arg0 string) *MockConfigDeleterAuthServerURLCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterAuthServerURLCall) Do(f func() string) *MockConfigDeleterAuthServerURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterAuthServerURLCall) DoAndReturn(f func() string) *MockConfigDeleterAuthServerURLCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // AuthType mocks base method.
 func (m *MockConfigDeleter) AuthType() config.AuthMechanism {
 	m.ctrl.T.Helper()
@@ -381,6 +457,44 @@ func (c *MockConfigDeleterSaveCall) Do(f func() error) *MockConfigDeleterSaveCal
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockConfigDeleterSaveCall) DoAndReturn(f func() error) *MockConfigDeleterSaveCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// Service mocks base method.
+func (m *MockConfigDeleter) Service() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Service")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Service indicates an expected call of Service.
+func (mr *MockConfigDeleterMockRecorder) Service() *MockConfigDeleterServiceCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Service", reflect.TypeOf((*MockConfigDeleter)(nil).Service))
+	return &MockConfigDeleterServiceCall{Call: call}
+}
+
+// MockConfigDeleterServiceCall wrap *gomock.Call
+type MockConfigDeleterServiceCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterServiceCall) Return(arg0 string) *MockConfigDeleterServiceCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterServiceCall) Do(f func() string) *MockConfigDeleterServiceCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterServiceCall) DoAndReturn(f func() string) *MockConfigDeleterServiceCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

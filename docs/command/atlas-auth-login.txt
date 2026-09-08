@@ -37,6 +37,10 @@ Options
      - Type
      - Required
      - Description
+   * - --discover
+     - 
+     - false
+     - Force re-discovery of authorization server metadata.
    * - --gov
      - 
      - false

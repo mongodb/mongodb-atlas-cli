@@ -43,7 +43,7 @@ require (
 	github.com/mongodb/atlas-cli-core v0.0.0-20260903092437-898487293572
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
-	github.com/shirou/gopsutil/v4 v4.26.7
+	github.com/shirou/gopsutil/v4 v4.26.8
 	github.com/speakeasy-api/openapi-overlay v0.10.3
 	github.com/spf13/afero v1.15.0
 	github.com/spf13/cobra v1.10.2
@@ -72,7 +72,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/signin v1.7.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cli/safeexec v1.0.0 // indirect
+	github.com/cli/safeexec v1.0.1 // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
@@ -122,7 +122,7 @@ require (
 	github.com/bodgit/plumbing v1.3.0 // indirect
 	github.com/bodgit/sevenzip v1.6.1 // indirect
 	github.com/bodgit/windows v1.0.1 // indirect
-	github.com/cli/go-gh/v2 v2.12.2
+	github.com/cli/go-gh/v2 v2.16.0
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect

@@ -1,0 +1,16 @@
+[package]
+name = "atlas-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive"] }
+nutype = "0.7.0"
+openapiv3 = "2.2.0"
+openapiv3-resolve = { git = "ssh://github.com/jeroenvervaeke/openapiv3-resolve.git", version = "0.1.0" }
+serde_yaml = "0.9.34"
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["full"] }
+tracing = "0.1.44"
+tracing-subscriber = "0.3.23"

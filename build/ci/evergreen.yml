@@ -1281,19 +1281,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-  - name: e2e_local_deployments_debian11
-    display_name: "E2E Local Deployments Tests (debian 11/docker)"
-    run_on:
-      - debian11-small
-    tags:
-      - localdev
-      - cron
-      - foliage_health
-    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
   - name: e2e_local_deployments_debian12
     display_name: "E2E Local Deployments Tests (debian 12/docker)"
     run_on:

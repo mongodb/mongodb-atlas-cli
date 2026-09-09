@@ -35,8 +35,6 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"8.2": {"debian11"},
-		"8.0": {"debian11"},
 		"7.0": {"ubuntu2404"},
 		"6.0": {"ubuntu2404"},
 	}
@@ -45,7 +43,6 @@ var (
 		"suse15",
 		"centos8",
 		"rhel9",
-		"debian11",
 		"debian12",
 		"ubuntu22.04",
 		"ubuntu24.04",
@@ -57,7 +54,6 @@ var (
 		"rhel9":       "rhel9-rpm",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
-		"debian11":    "debian11-deb",
 		"debian12":    "debian12-deb",
 	}
 	newOs = map[string]string{
@@ -66,7 +62,6 @@ var (
 		"rhel9":           "rhel90",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
-		"debian11":        "debian11",
 		"debian12":        "debian12",
 		"amazonlinux2023": "amazon2023",
 	}

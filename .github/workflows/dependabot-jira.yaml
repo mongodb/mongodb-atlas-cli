@@ -1,0 +1,14 @@
+# synced from apix-actions/.github/workflows/dependabot-jira.yaml
+name: Dependabot PR automation
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions: {}
+
+jobs:
+  dependabot:
+    if: github.actor == 'dependabot[bot]'
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@002b807a2bdd00bd5ad222e363352851e17fdfd7 # main
+    secrets: inherit

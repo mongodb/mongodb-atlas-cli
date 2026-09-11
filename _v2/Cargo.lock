@@ -322,11 +322,13 @@ dependencies = [
 
 [[package]]
 name = "openapiv3-resolve"
-version = "0.1.0"
-source = "git+ssh://github.com/jeroenvervaeke/openapiv3-resolve.git#56851ea359ad587b3d51a6321563c260e40ab782"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1a2ee6d178a41bae9b712ba34235cf1b5464cad83220491a0d8bc0010f21b9e"
 dependencies = [
  "indexmap",
  "openapiv3",
+ "serde_json",
 ]
 
 [[package]]

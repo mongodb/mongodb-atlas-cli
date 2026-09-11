@@ -20,17 +20,24 @@ impl Hierarchy {
     pub fn group(&mut self, key: String) -> &mut Group {
         self.groups.entry(key).or_default()
     }
+
+    pub fn groups(&self) -> impl Iterator<Item = (&String, &Group)> {
+        self.groups.iter()
+    }
 }
 
 #[derive(Default, Debug)]
 pub struct Group {
-    group_entity: Option<String>,
     entities: BTreeMap<String, Entity>,
 }
 
 impl Group {
     pub fn entity(&mut self, key: String) -> &mut Entity {
         self.entities.entry(key).or_default()
+    }
+
+    pub fn entities(&self) -> impl Iterator<Item = (&String, &Entity)> {
+        self.entities.iter()
     }
 }
 

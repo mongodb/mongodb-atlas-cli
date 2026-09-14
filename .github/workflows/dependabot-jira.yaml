@@ -10,5 +10,5 @@ permissions: {}
 jobs:
   dependabot:
     if: github.actor == 'dependabot[bot]'
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@002b807a2bdd00bd5ad222e363352851e17fdfd7 # main
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@f7d2400a387dea2661651b14bbaf8c8f46c8bf66 # main
     secrets: inherit

@@ -4,4 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-nutype = "0.7.0"
+models = { path = "../models" }
+openapiv3-resolve = { workspace = true }
+nutype = { workspace = true }
+thiserror = { workspace = true }

@@ -64,11 +64,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "nutype",
- "openapiv3",
- "openapiv3-resolve",
  "serde_yaml",
- "thiserror",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -368,7 +364,10 @@ dependencies = [
 name = "parser"
 version = "0.1.0"
 dependencies = [
+ "models",
  "nutype",
+ "openapiv3-resolve",
+ "thiserror",
 ]
 
 [[package]]

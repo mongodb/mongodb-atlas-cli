@@ -267,6 +267,12 @@ dependencies = [
 [[package]]
 name = "models"
 version = "0.1.0"
+dependencies = [
+ "nutype",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
 
 [[package]]
 name = "nu-ansi-term"

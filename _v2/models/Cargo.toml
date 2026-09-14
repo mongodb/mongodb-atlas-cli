@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+nutype = "0.7.0"
+serde = { version = "1.0.228", features = ["derive"] }
+thiserror = "2.0.20"
+
+[dev-dependencies]
+serde_json = "1.0.150"

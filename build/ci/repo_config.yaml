@@ -89,20 +89,6 @@ repos:
     repos:
       - yum/amazon/2023/mongodb-org
 
-  - name: suse11
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - zypper/suse/11/mongodb-org
-
-  - name: suse12
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - zypper/suse/12/mongodb-org
-
   - name: suse15
     type: rpm
     edition: org
@@ -190,20 +176,6 @@ repos:
     bucket: repo.mongodb.com
     repos:
       - yum/amazon/2023/mongodb-enterprise
-
-  - name: suse11
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - zypper/suse/11/mongodb-enterprise
-
-  - name: suse12
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - zypper/suse/12/mongodb-enterprise
 
   - name: suse15
     type: rpm

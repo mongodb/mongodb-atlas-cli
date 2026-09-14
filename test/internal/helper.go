@@ -189,7 +189,7 @@ func RunAndGetStdOutWithRetry(cmd *exec.Cmd) ([]byte, error) {
 	}
 
 	return runWithRetryOnTransientError(func() *exec.Cmd {
-		next := exec.Command(cmd.Path, cmd.Args[1:]...) //nolint:gosec // same binary and args the caller already built
+		next := exec.Command(cmd.Path, cmd.Args[1:]...)
 		next.Env = cmd.Env
 		next.Dir = cmd.Dir
 		if stdin != nil {
@@ -834,13 +834,6 @@ func clustersForProject(projectID string) (atlasClustersPinned.PaginatedAdvanced
 		return clusters, fmt.Errorf("failed to parse the cluster list for project %s: %w", projectID, err)
 	}
 	return clusters, nil
-}
-
-func listClustersForProject(t *testing.T, projectID string) atlasClustersPinned.PaginatedAdvancedClusterDescription {
-	t.Helper()
-	clusters, err := clustersForProject(projectID)
-	require.NoError(t, err)
-	return clusters
 }
 
 // deleteClustersForProject deletes every cluster in a project, in parallel, and

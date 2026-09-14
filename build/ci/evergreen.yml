@@ -213,8 +213,17 @@ functions:
             URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
           fi
           # Download to a file rather than piping into tar: a retry cannot help once
-          # tar has already consumed a truncated stream.
-          curl -sfL --retry 5 --retry-delay 2 --retry-all-errors -o gotestsum.tar.gz "$URL"
+          # tar has already consumed a truncated stream. --retry-all-errors would be
+          # simpler but is not available in the curl shipped on rhel8, and plain
+          # --retry does not cover a truncated transfer, so verify the archive and
+          # retry the whole download ourselves.
+          for attempt in 1 2 3 4 5; do
+            if curl -sfL --retry 3 -o gotestsum.tar.gz "$URL" && tar tzf gotestsum.tar.gz > /dev/null 2>&1; then
+              break
+            fi
+            echo "gotestsum download attempt $attempt failed, retrying"
+            sleep "$((attempt * 2))"
+          done
           tar zxf gotestsum.tar.gz
           rm -f gotestsum.tar.gz
   "generate evergreen":

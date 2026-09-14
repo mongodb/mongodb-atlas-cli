@@ -14,3 +14,6 @@ thiserror = "2.0.20"
 tokio = { version = "1.53.1", features = ["full"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.23"
+
+[workspace]
+members = [".", "models", "parser"]

@@ -265,6 +265,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "models"
+version = "0.1.0"
+
+[[package]]
 name = "nu-ansi-term"
 version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -352,6 +356,13 @@ dependencies = [
  "redox_syscall",
  "smallvec",
  "windows-link",
+]
+
+[[package]]
+name = "parser"
+version = "0.1.0"
+dependencies = [
+ "nutype",
 ]
 
 [[package]]

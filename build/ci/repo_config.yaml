@@ -108,19 +108,6 @@ repos:
     repos:
       - apt/debian/dists/bookworm/mongodb-org
 
-  - name: ubuntu2004
-    type: deb
-    code_name: "focal"
-    edition: org
-    bucket: repo.mongodb.org
-    component: multiverse
-    architectures:
-      - amd64
-      - s390x
-      - arm64
-    repos:
-      - apt/ubuntu/dists/focal/mongodb-org
-
   - name: ubuntu2204
     type: deb
     code_name: "jammy"
@@ -195,20 +182,6 @@ repos:
       - arm64
     repos:
       - apt/debian/dists/bookworm/mongodb-enterprise
-
-  - name: ubuntu2004
-    type: deb
-    code_name: "focal"
-    edition: enterprise
-    bucket: repo.mongodb.com
-    component: multiverse
-    architectures:
-      - amd64
-      - ppc64el
-      - s390x
-      - arm64
-    repos:
-      - apt/ubuntu/dists/focal/mongodb-enterprise
 
   - name: ubuntu2204
     type: deb

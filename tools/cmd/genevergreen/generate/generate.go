@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	runOn = "ubuntu2004-small"
+	runOn = "ubuntu2204-small"
 )
 
 var (

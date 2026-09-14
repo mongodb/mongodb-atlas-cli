@@ -212,7 +212,11 @@ functions:
           else
             URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
           fi
-          curl -sfL $URL | tar zx
+          # Download to a file rather than piping into tar: a retry cannot help once
+          # tar has already consumed a truncated stream.
+          curl -sfL --retry 5 --retry-delay 2 --retry-all-errors -o gotestsum.tar.gz "$URL"
+          tar zxf gotestsum.tar.gz
+          rm -f gotestsum.tar.gz
   "generate evergreen":
     - command: subprocess.exec
       type: test

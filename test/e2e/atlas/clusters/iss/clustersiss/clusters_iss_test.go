@@ -153,7 +153,9 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
+		// The cluster has just been created, so Atlas may still reject the pause
+		// while the replica set catches up (OPERATION_INVALID_MEMBER_REPLICATION_LAG).
+		resp, err := internal.RunAndGetStdOutWithRetry(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster admin.ClusterDescription20240805

@@ -53,6 +53,10 @@ var distros = map[string]Platform{
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
+	"debian13": {
+		extension:     deb,
+		architectures: []string{x86_64, arm64},
+	},
 	"ubuntu2204": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},

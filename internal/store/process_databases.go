@@ -17,7 +17,7 @@ package store
 import (
 	"strconv"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 )
 
 // ProcessDatabases encapsulate the logic to manage different cloud providers.

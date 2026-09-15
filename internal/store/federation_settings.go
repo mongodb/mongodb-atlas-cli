@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 )
 
 // FederationSetting encapsulate the logic to manage different cloud providers.

@@ -1,11 +1,14 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, str::FromStr};
 
 use models::{
     http_verb::{Verb, VerbError},
     operation_id::{OperationId, OperationIdParseError},
-    versioned_mediatype::Version,
+    versioned_mediatype::{Version, VersionedAcceptHeader, VersionedAcceptHeaderParseError},
 };
-use openapiv3_resolve::{ResolvedOperation, ResolvedParameter, Shared};
+use openapiv3_resolve::{
+    ResolvedMediaType, ResolvedOperation, ResolvedParameter, Shared, indexmap::IndexMap,
+    openapiv3::StatusCode,
+};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -17,10 +20,7 @@ use headers::Headers;
 use url::ParameterizedUrl;
 use version::OperationVersion;
 
-use crate::operation::{
-    headers::{HeaderParameterParseError, HeadersParseError},
-    url::ParameterizedUrlParseError,
-};
+use crate::operation::{headers::HeadersParseError, url::ParameterizedUrlParseError};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Operation {
@@ -54,6 +54,10 @@ pub enum OperationParseError {
     HeadersParseError(#[from] HeadersParseError),
     #[error("Cookie parameters are not supported")]
     UnsupportedCookieParameter,
+    #[error(transparent)]
+    VersionedAcceptHeaderParseError(#[from] VersionedAcceptHeaderParseError),
+    #[error(transparent)]
+    OperationVersionParseError(#[from] OperationVersionParseError),
 }
 
 impl Operation {
@@ -92,6 +96,47 @@ impl Operation {
         let url = ParameterizedUrl::from_path_and_resolved_parameters(path, &operation.parameters)?;
         let headers = Headers::from_resolved_parameters(&operation.parameters)?;
 
+        let mut version_requests = if let Some(request_body) = operation.request_body.as_deref() {
+            Self::resolved_media_types_to_versions(&request_body.content)?
+        } else {
+            HashMap::with_capacity(0)
+        };
+
+        let mut version_responses = HashMap::<Version, HashMap<String, &ResolvedMediaType>>::new();
+
+        for (status_code, response) in &operation.responses.responses {
+            let StatusCode::Code(code) = *status_code else {
+                continue;
+            };
+
+            if code < 200 && code >= 300 {
+                continue;
+            }
+
+            let local_version_responses =
+                Self::resolved_media_types_to_versions(&response.content)?;
+
+            for (version, versioned_response) in local_version_responses {
+                for (content_type, resolved_media_type) in versioned_response {
+                    let version_response = version_responses.entry(version).or_default();
+                    version_response.insert(content_type, resolved_media_type);
+                }
+            }
+        }
+
+        let mut operation_versions = HashMap::new();
+
+        for (version, response_bodies) in version_responses {
+            let request_bodies = version_requests.remove(&version);
+            let operation_version = OperationVersion::from_version_requests_responses(
+                version,
+                request_bodies,
+                response_bodies,
+            )?;
+
+            operation_versions.insert(version, operation_version);
+        }
+
         Ok(Operation {
             description,
             operation_id,
@@ -99,23 +144,38 @@ impl Operation {
             http_verb,
             url,
             headers,
-            versions: Default::default(),
+            versions: operation_versions,
         })
     }
 
     fn reject_cookie_parameters(
         parameters: &Vec<Shared<ResolvedParameter>>,
     ) -> Result<(), OperationParseError> {
-        if parameters.iter().any(|p| {
-            matches!(
-                &**p,
-                ResolvedParameter::Cookie {
-                    ..
-                }
-            )
-        }) {
+        if parameters
+            .iter()
+            .any(|p| matches!(&**p, ResolvedParameter::Cookie { .. }))
+        {
             return Err(OperationParseError::UnsupportedCookieParameter);
         }
         Ok(())
+    }
+
+    fn resolved_media_types_to_versions<'a>(
+        content: &'a IndexMap<String, ResolvedMediaType>,
+    ) -> Result<
+        HashMap<Version, HashMap<String, &'a ResolvedMediaType>>,
+        VersionedAcceptHeaderParseError,
+    > {
+        let mut version_requests = HashMap::<Version, HashMap<String, &ResolvedMediaType>>::new();
+        for (content_type, resolved_media_type) in content.iter() {
+            let versioned_accept_header = VersionedAcceptHeader::from_str(content_type)?;
+            let version = version_requests
+                .entry(versioned_accept_header.version)
+                .or_default();
+
+            version.insert(content_type.to_owned(), resolved_media_type);
+        }
+
+        Ok(version_requests)
     }
 }

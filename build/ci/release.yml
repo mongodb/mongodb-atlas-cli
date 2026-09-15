@@ -501,7 +501,7 @@ buildvariants:
       - name: push_stable_atlascli_generate
   - name: pkg_smoke_tests_docker_atlascli
     display_name: "Post packaging smoke tests (Docker / AtlasCLI)"
-    run_on: ubuntu2004-small
+    run_on: ubuntu2204-small
     expansions:
       <<: *go_linux_version
     tasks:
@@ -518,6 +518,6 @@ buildvariants:
     expansions:
       <<: *go_linux_version
     run_on:
-      - ubuntu2004-small
+      - ubuntu2204-small
     tasks:
       - name: .smoke-test .generate .repo .atlascli

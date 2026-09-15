@@ -1,10 +1,12 @@
 mod reference_type_array;
 mod reference_type_object;
 mod reference_type_one_of;
+mod reference_type_optional;
 
 pub use reference_type_array::ReferenceTypeArray;
 pub use reference_type_object::{ReferenceTypeObject, ReferenceTypeObjectTryNewError};
 pub use reference_type_one_of::{ReferenceTypeOneOf, ReferenceTypeOneOfTryNewError};
+pub use reference_type_optional::ReferenceTypeOptional;
 
 use std::collections::HashMap;
 
@@ -17,6 +19,7 @@ use crate::datatypes::DataType;
 /// schema is combined with its siblings.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ReferenceType {
+    Optional(ReferenceTypeOptional),
     Array(ReferenceTypeArray),
     Object(ReferenceTypeObject),
     OneOf(ReferenceTypeOneOf),
@@ -34,6 +37,11 @@ pub enum ReferenceTypeTryNewError {
 }
 
 impl ReferenceType {
+    /// Infallible: [`ReferenceTypeOptional`] holds a [`DataType`], which can't be an empty string or map.
+    pub fn new_optional(data_type: DataType) -> Self {
+        Self::Optional(ReferenceTypeOptional::new(data_type))
+    }
+
     /// Infallible: [`ReferenceTypeArray`] holds a [`DataType`], which can't be an empty string or map.
     pub fn new_array(entries_type: DataType) -> Self {
         Self::Array(ReferenceTypeArray::new(entries_type))

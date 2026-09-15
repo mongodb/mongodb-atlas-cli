@@ -60,6 +60,14 @@ impl OperationVersion {
     fn resolved_media_type_to_datatype(
         _resolved_media_type: &ResolvedMediaType,
     ) -> Result<DataType, OperationVersionParseError> {
+        // Conversion rules:
+        // - AnyOf = Object with Optional fields, so AnyOf should be converted into Object with Optional
+        // - AllOf = merge into Object
+        // - OneOf exists
+        //
+        // Caveats:
+        // - important with AnyOf -> our OpenApi spec does have schemas with enum types with 1 entry that should be merged through anyOf and should become the discriminator
+        // - integer can be either double or integer based on the field `double: true`
         todo!()
     }
 }

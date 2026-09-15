@@ -8,9 +8,8 @@ use models::{
     },
 };
 use openapiv3_resolve::{
-    ResolvedMediaType, ResolvedOperation, ResolvedParameter, Shared,
-    indexmap::IndexMap,
-    openapiv3::{MediaType, StatusCode},
+    ResolvedMediaType, ResolvedOperation, ResolvedParameter, Shared, indexmap::IndexMap,
+    openapiv3::StatusCode,
 };
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -23,7 +22,10 @@ use headers::Headers;
 use url::ParameterizedUrl;
 use version::OperationVersion;
 
-use crate::operation::{headers::HeadersParseError, url::ParameterizedUrlParseError};
+use crate::operation::{
+    headers::HeadersParseError, url::ParameterizedUrlParseError,
+    version::OperationVersionParseError,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Operation {
@@ -105,7 +107,8 @@ impl Operation {
             HashMap::with_capacity(0)
         };
 
-        let mut version_responses = HashMap::<Version, HashMap<String, &ResolvedMediaType>>::new();
+        let mut version_responses =
+            HashMap::<Version, HashMap<MediaType, &ResolvedMediaType>>::new();
 
         for (status_code, response) in &operation.responses.responses {
             let StatusCode::Code(code) = *status_code else {

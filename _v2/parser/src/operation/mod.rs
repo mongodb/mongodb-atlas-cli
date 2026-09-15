@@ -3,11 +3,14 @@ use std::{collections::HashMap, str::FromStr};
 use models::{
     http_verb::{Verb, VerbError},
     operation_id::{OperationId, OperationIdParseError},
-    versioned_mediatype::{Version, VersionedAcceptHeader, VersionedAcceptHeaderParseError},
+    versioned_mediatype::{
+        MediaType, Version, VersionedAcceptHeader, VersionedAcceptHeaderParseError,
+    },
 };
 use openapiv3_resolve::{
-    ResolvedMediaType, ResolvedOperation, ResolvedParameter, Shared, indexmap::IndexMap,
-    openapiv3::StatusCode,
+    ResolvedMediaType, ResolvedOperation, ResolvedParameter, Shared,
+    indexmap::IndexMap,
+    openapiv3::{MediaType, StatusCode},
 };
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -163,17 +166,20 @@ impl Operation {
     fn resolved_media_types_to_versions<'a>(
         content: &'a IndexMap<String, ResolvedMediaType>,
     ) -> Result<
-        HashMap<Version, HashMap<String, &'a ResolvedMediaType>>,
+        HashMap<Version, HashMap<MediaType, &'a ResolvedMediaType>>,
         VersionedAcceptHeaderParseError,
     > {
-        let mut version_requests = HashMap::<Version, HashMap<String, &ResolvedMediaType>>::new();
+        let mut version_requests =
+            HashMap::<Version, HashMap<MediaType, &ResolvedMediaType>>::new();
         for (content_type, resolved_media_type) in content.iter() {
             let versioned_accept_header = VersionedAcceptHeader::from_str(content_type)?;
             let version = version_requests
                 .entry(versioned_accept_header.version)
                 .or_default();
 
-            version.insert(content_type.to_owned(), resolved_media_type);
+            let media_type = versioned_accept_header.mediatype;
+
+            version.insert(media_type, resolved_media_type);
         }
 
         Ok(version_requests)

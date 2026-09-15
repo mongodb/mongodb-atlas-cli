@@ -1,15 +1,15 @@
 use std::fmt;
 use std::str::FromStr;
 
-use super::date::VersionDateParseError;
+use serde::{Deserialize, Serialize};
+
 use super::VersionDate;
+use super::date::VersionDateParseError;
 
 /// Version part of an Atlas Admin API accept header.
 ///
 /// Variants listed in the MMS versioned API lifecycle order: preview → upcoming → stable.
-#[derive(
-    Clone, Copy, Debug, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize
-)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(into = "String", try_from = "String")]
 pub enum Version {
     Preview,
@@ -72,7 +72,10 @@ mod tests {
 
     #[test]
     fn display_matches_extension_types() {
-        assert_eq!(Version::Stable(date("2024-10-23")).to_string(), "2024-10-23");
+        assert_eq!(
+            Version::Stable(date("2024-10-23")).to_string(),
+            "2024-10-23"
+        );
         assert_eq!(
             Version::Upcoming(date("2025-09-22")).to_string(),
             "2025-09-22.upcoming"
@@ -98,7 +101,13 @@ mod tests {
 
     #[test]
     fn rejects_invalid_input() {
-        for bad in ["garbage", "preview.upcoming", "2024-13-01", "", "2024-10-23foo"] {
+        for bad in [
+            "garbage",
+            "preview.upcoming",
+            "2024-13-01",
+            "",
+            "2024-10-23foo",
+        ] {
             assert!(bad.parse::<Version>().is_err(), "should reject `{bad}`");
         }
     }

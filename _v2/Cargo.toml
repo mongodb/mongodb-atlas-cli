@@ -6,7 +6,9 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 clap = { version = "4.6.6", features = ["derive", "string"] }
-serde_yaml = "0.9.34"
+nutype = { workspace = true, features = ["serde"] }
+openapiv3 = { workspace = true }
+serde_yaml = { workspace = true }
 tokio = { version = "1.53.1", features = ["full"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.23"
@@ -15,8 +17,11 @@ tracing-subscriber = "0.3.23"
 members = [".", "models", "parser"]
 
 [workspace.dependencies]
+insta = "1.48.0"
 nutype = "0.7.0"
 openapiv3 = "2.2.0"
 openapiv3-resolve = "0.1.1"
 serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+serde_yaml = "0.9.34"
 thiserror = "2.0.20"

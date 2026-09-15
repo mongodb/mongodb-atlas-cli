@@ -5,7 +5,7 @@ use models::{
     operation_id::{OperationId, OperationIdParseError},
     versioned_mediatype::Version,
 };
-use openapiv3_resolve::{ResolvedOperation, ResolvedParameter};
+use openapiv3_resolve::{ResolvedOperation, ResolvedParameter, Shared};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -52,6 +52,8 @@ pub enum OperationParseError {
     ParameterizedUrlParseError(#[from] ParameterizedUrlParseError),
     #[error(transparent)]
     HeadersParseError(#[from] HeadersParseError),
+    #[error("Cookie parameters are not supported")]
+    UnsupportedCookieParameter,
 }
 
 impl Operation {
@@ -85,19 +87,10 @@ impl Operation {
 
         let http_verb = Verb::try_new(verb)?;
 
+        Self::reject_cookie_parameters(&operation.parameters)?;
+
         let url = ParameterizedUrl::from_path_and_resolved_parameters(path, &operation.parameters)?;
         let headers = Headers::from_resolved_parameters(&operation.parameters)?;
-
-        // TODO proper cookie error
-        for p in &operation.parameters {
-            match &**p {
-                ResolvedParameter::Cookie {
-                    parameter_data,
-                    style,
-                } => todo!(),
-                _ => {}
-            }
-        }
 
         Ok(Operation {
             description,
@@ -108,5 +101,21 @@ impl Operation {
             headers,
             versions: Default::default(),
         })
+    }
+
+    fn reject_cookie_parameters(
+        parameters: &Vec<Shared<ResolvedParameter>>,
+    ) -> Result<(), OperationParseError> {
+        if parameters.iter().any(|p| {
+            matches!(
+                &**p,
+                ResolvedParameter::Cookie {
+                    ..
+                }
+            )
+        }) {
+            return Err(OperationParseError::UnsupportedCookieParameter);
+        }
+        Ok(())
     }
 }

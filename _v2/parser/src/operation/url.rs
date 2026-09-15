@@ -1,12 +1,13 @@
 use std::collections::HashMap;
 
-use openapiv3_resolve::{ResolvedParameter, ResolvedParameterData, Shared, openapiv3::PathStyle};
+use openapiv3_resolve::{ResolvedParameter, ResolvedParameterData, Shared, openapiv3::{PathStyle, QueryStyle}};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ParameterizedUrl {
     pub parts: Vec<Part>,
+    pub query_parameters: Vec<UrlParameter>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -19,6 +20,7 @@ pub enum Part {
 pub struct UrlParameter {
     pub description: String,
     pub name: String,
+    pub required: bool,
 }
 
 #[derive(Debug, Error)]
@@ -30,13 +32,40 @@ pub enum UrlParameterParseError {
         path_style: PathStyle,
         parameter_name: String,
     },
+    #[error(
+        "Only QueryStyle::Form is supported for parameters, got '{query_style:?}' instead for {parameter_name}"
+    )]
+    InvalidQueryStyle {
+        query_style: QueryStyle,
+        parameter_name: String,
+    },
     #[error("Only required header parameters are supported, '{parameter_name}' is not required")]
     ParameterNotRequired { parameter_name: String },
+    #[error(
+        "Only 'none' or 'false' is supported for allow_empty_value, got 'true' instead for '{parameter_name}'"
+    )]
+    AllowEmptyValue { parameter_name: String },
     #[error("Description is missing")]
     MissingDescription,
 }
 
 impl UrlParameter {
+    fn from_parameter_data(
+        name: String,
+        description: Option<String>,
+        required: bool,
+    ) -> Result<Self, UrlParameterParseError> {
+        let description = description
+            .and_then(|s| (!s.is_empty()).then_some(s))
+            .ok_or(UrlParameterParseError::MissingDescription)?;
+
+        Ok(Self {
+            name,
+            description,
+            required,
+        })
+    }
+
     fn from_parameter_data_path_style(
         parameter_data: &ResolvedParameterData,
         style: &PathStyle,
@@ -54,14 +83,36 @@ impl UrlParameter {
             });
         }
 
-        let name = parameter_data.name.to_owned();
-        let description = parameter_data
-            .description
-            .clone()
-            .and_then(|s| (!s.is_empty()).then_some(s))
-            .ok_or(UrlParameterParseError::MissingDescription)?;
+        Self::from_parameter_data(
+            parameter_data.name.to_owned(),
+            parameter_data.description.clone(),
+            parameter_data.required,
+        )
+    }
 
-        Ok(Self { name, description })
+    fn from_parameter_data_query_style(
+        parameter_data: &ResolvedParameterData,
+        style: &QueryStyle,
+        allow_empty_value: Option<bool>,
+    ) -> Result<Self, UrlParameterParseError> {
+        let QueryStyle::Form = style else {
+            return Err(UrlParameterParseError::InvalidQueryStyle {
+                query_style: style.clone(),
+                parameter_name: parameter_data.name.to_owned(),
+            });
+        };
+
+        if allow_empty_value == Some(true) {
+            return Err(UrlParameterParseError::AllowEmptyValue {
+                parameter_name: parameter_data.name.to_owned(),
+            });
+        }
+
+        Self::from_parameter_data(
+            parameter_data.name.to_owned(),
+            parameter_data.description.clone(),
+            parameter_data.required,
+        )
     }
 }
 
@@ -94,6 +145,23 @@ impl ParameterizedUrl {
             })
             .collect::<Result<HashMap<String, UrlParameter>, UrlParameterParseError>>()?;
 
+        let query_parameters = parameters
+            .iter()
+            .filter_map(|p| match &**p {
+                ResolvedParameter::Query {
+                    parameter_data,
+                    style,
+                    allow_empty_value,
+                    ..
+                } => Some(UrlParameter::from_parameter_data_query_style(
+                    parameter_data,
+                    style,
+                    *allow_empty_value,
+                )),
+                _ => None,
+            })
+            .collect::<Result<Vec<UrlParameter>, UrlParameterParseError>>()?;
+
         let mut parts = Vec::new();
         for part in path.trim_start_matches('/').split('/') {
             if let Some(parameter_name) = part.strip_prefix('{').and_then(|s| s.strip_suffix('}')) {
@@ -109,7 +177,10 @@ impl ParameterizedUrl {
             }
         }
 
-        Ok(Self { parts })
+        Ok(Self {
+            parts,
+            query_parameters,
+        })
     }
 }
 
@@ -124,6 +195,53 @@ openapi: 3.0.3
 info:
   title: test
   version: "1"
+components:
+  parameters:
+    envelope:
+      description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.
+      in: query
+      name: envelope
+      schema:
+        default: false
+        type: boolean
+    federationSettingsId:
+      description: Unique 24-hexadecimal digit string that identifies your federation.
+      in: path
+      name: federationSettingsId
+      required: true
+      schema:
+        example: 55fa922fb343282757d9554e
+        pattern: ^([a-f0-9]{24})$
+        type: string
+    groupId:
+      description: |-
+        Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+        **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.
+      in: path
+      name: groupId
+      required: true
+      schema:
+        example: 32b6e34b3d91647abb20e7b8
+        pattern: ^([a-f0-9]{24})$
+        type: string
+    itemsPerPage:
+      description: Number of items that the response returns per page.
+      in: query
+      name: itemsPerPage
+      schema:
+        default: 100
+        maximum: 500
+        minimum: 1
+        type: integer
+    pageNum:
+      description: Number of the page that displays the current set of the total objects that the response returns.
+      in: query
+      name: pageNum
+      schema:
+        default: 1
+        minimum: 1
+        type: integer
 paths:
   "/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/{clusterView}/{databaseName}/{collectionName}/collStats/measurements:":
     get:
@@ -145,12 +263,91 @@ paths:
       responses:
         "200":
           description: ok
+  "/api/atlas/v2/federationSettings/{federationSettingsId}/identityProviders":
+    get:
+      parameters:
+        - $ref: '#/components/parameters/federationSettingsId'
+        - $ref: '#/components/parameters/envelope'
+        - $ref: '#/components/parameters/itemsPerPage'
+        - $ref: '#/components/parameters/pageNum'
+        - description: The protocols of the target identity providers.
+          in: query
+          name: protocol
+          schema:
+            items:
+              default: SAML
+              enum:
+                - SAML
+                - OIDC
+              type: string
+            type: array
+        - description: The types of the target identity providers.
+          in: query
+          name: idpType
+          schema:
+            items:
+              default: WORKFORCE
+              enum:
+                - WORKFORCE
+                - WORKLOAD
+              type: string
+            type: array
+      responses:
+        "200":
+          description: ok
+  "/api/atlas/v2/groups/{groupId}/streams/accountDetails":
+    get:
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/envelope'
+        - description: One of "aws", "azure" or "gcp".
+          in: query
+          name: cloudProvider
+          required: true
+          schema:
+            type: string
+        - description: The cloud provider specific region name, i.e. "US_EAST_1" for cloud provider "aws".
+          in: query
+          name: regionName
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ok
+  # Synthetic paths below: the real Atlas spec has no non-form query styles and no
+  # allowEmptyValue=true, so these are used to exercise those validation rules only.
+  "/query-style/{id}":
+    get:
+      parameters:
+        - { name: id, in: path, required: true, description: Id, schema: { type: string } }
+        - { name: filter, in: query, style: deepObject, description: Filter, schema: { type: object } }
+      responses:
+        "200":
+          description: ok
+  "/query-empty/{id}":
+    get:
+      parameters:
+        - { name: id, in: path, required: true, description: Id, schema: { type: string } }
+        - { name: emptyVal, in: query, allowEmptyValue: true, description: Empty value, schema: { type: string } }
+      responses:
+        "200":
+          description: ok
 "#;
 
     fn path_parameter(name: &str, description: &str) -> UrlParameter {
         UrlParameter {
             description: description.to_owned(),
             name: name.to_owned(),
+            required: true,
+        }
+    }
+
+    fn query_parameter(name: &str, description: &str, required: bool) -> UrlParameter {
+        UrlParameter {
+            description: description.to_owned(),
+            name: name.to_owned(),
+            required,
         }
     }
 
@@ -248,6 +445,107 @@ paths:
         assert!(matches!(
             err,
             ParameterizedUrlParseError::MissingParameter { parameter_name } if parameter_name == "missingName"
+        ));
+    }
+
+    fn query_parameter_names_and_required(url: &ParameterizedUrl) -> Vec<(String, bool)> {
+        url.query_parameters
+            .iter()
+            .map(|p| (p.name.clone(), p.required))
+            .collect()
+    }
+
+    #[test]
+    fn parses_real_required_query_parameters() {
+        let openapi: OpenAPI = serde_yaml::from_str(SPEC).unwrap();
+        let doc = ResolvedOpenAPI::try_from(&openapi).unwrap();
+
+        let path = "/api/atlas/v2/groups/{groupId}/streams/accountDetails";
+        let url = ParameterizedUrl::from_path_and_resolved_parameters(
+            path,
+            resolved_parameters(&doc, path),
+        )
+        .unwrap();
+
+        assert_eq!(
+            query_parameter_names_and_required(&url),
+            [
+                (String::from("envelope"), false),
+                (String::from("cloudProvider"), true),
+                (String::from("regionName"), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_real_optional_query_parameters() {
+        let openapi: OpenAPI = serde_yaml::from_str(SPEC).unwrap();
+        let doc = ResolvedOpenAPI::try_from(&openapi).unwrap();
+
+        let path = "/api/atlas/v2/federationSettings/{federationSettingsId}/identityProviders";
+        let url = ParameterizedUrl::from_path_and_resolved_parameters(
+            path,
+            resolved_parameters(&doc, path),
+        )
+        .unwrap();
+
+        assert_eq!(
+            query_parameter_names_and_required(&url),
+            [
+                (String::from("envelope"), false),
+                (String::from("itemsPerPage"), false),
+                (String::from("pageNum"), false),
+                (String::from("protocol"), false),
+                (String::from("idpType"), false),
+            ]
+        );
+        assert_eq!(
+            url.query_parameters[0],
+            query_parameter(
+                "envelope",
+                "Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.",
+                false,
+            )
+        );
+    }
+
+    #[test]
+    fn errors_on_non_form_query_style() {
+        let openapi: OpenAPI = serde_yaml::from_str(SPEC).unwrap();
+        let doc = ResolvedOpenAPI::try_from(&openapi).unwrap();
+
+        let path = "/query-style/{id}";
+        let err = ParameterizedUrl::from_path_and_resolved_parameters(
+            path,
+            resolved_parameters(&doc, path),
+        )
+        .unwrap_err();
+
+        assert!(matches!(
+            err,
+            ParameterizedUrlParseError::UrlParameterParseError(
+                UrlParameterParseError::InvalidQueryStyle { parameter_name, .. }
+            ) if parameter_name == "filter"
+        ));
+    }
+
+    #[test]
+    fn errors_on_allow_empty_value_true() {
+        let openapi: OpenAPI = serde_yaml::from_str(SPEC).unwrap();
+        let doc = ResolvedOpenAPI::try_from(&openapi).unwrap();
+
+        let path = "/query-empty/{id}";
+        let err = ParameterizedUrl::from_path_and_resolved_parameters(
+            path,
+            resolved_parameters(&doc, path),
+        )
+        .unwrap_err();
+
+        assert!(matches!(
+            err,
+            ParameterizedUrlParseError::UrlParameterParseError(
+                UrlParameterParseError::AllowEmptyValue { parameter_name }
+            ) if parameter_name == "emptyVal"
         ));
     }
 }

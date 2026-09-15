@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use openapiv3_resolve::{ResolvedParameter, ResolvedParameterData, Shared};
 use serde::{Deserialize, Serialize};
@@ -6,7 +6,7 @@ use thiserror::Error;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Headers {
-    pub parameters: HashMap<String, HeaderParameter>,
+    pub parameters: BTreeMap<String, HeaderParameter>,
 }
 
 #[derive(Debug, Error)]
@@ -28,7 +28,7 @@ impl Headers {
                 ),
                 _ => None,
             })
-            .collect::<Result<HashMap<String, HeaderParameter>, _>>()?;
+            .collect::<Result<BTreeMap<String, HeaderParameter>, _>>()?;
 
         Ok(Self { parameters })
     }

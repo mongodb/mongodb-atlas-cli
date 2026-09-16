@@ -1,4 +1,4 @@
-FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/ubuntu:20.04
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/debian:13-slim
 
 ARG url
 ARG entrypoint

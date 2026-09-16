@@ -17134,15 +17134,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 16),
-						Deprecated:         true,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{

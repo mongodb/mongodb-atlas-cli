@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 clap = { version = "4.6.6", features = ["derive", "string"] }
+models = { path = "models" }
 nutype = { workspace = true, features = ["serde"] }
 openapiv3 = { workspace = true }
 serde_yaml = { workspace = true }

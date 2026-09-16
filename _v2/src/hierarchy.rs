@@ -3,10 +3,7 @@ use openapiv3::OpenAPI;
 use std::collections::BTreeSet;
 use tracing::{error, info};
 
-use crate::{
-    OperationId,
-    hierarchy::{self, Hierarchy},
-};
+use models::{hierarchy::Hierarchy, operation_id::OperationId};
 
 pub fn cli_config(openapi: &OpenAPI) -> Result<Hierarchy> {
     let mut hierarchy = Hierarchy::new();
@@ -37,20 +34,18 @@ fn clusters_config(hierarchy: &mut Hierarchy, openapi: &OpenAPI) -> Result<()> {
                     }
 
                     operation.tags.contains(&clusters_str).then(|| {
-                        Ok(OperationId::try_new(
-                            operation
-                                .operation_id
-                                .as_ref()
-                                .context("operation id missing")?,
-                        )
-                        .context("invalid operation id")?)
+                        Ok(operation
+                            .operation_id
+                            .as_ref()
+                            .context("operation id missing")?
+                            .parse::<OperationId>()?)
                     })
                 })
         })
         .collect::<Result<BTreeSet<OperationId>>>()?;
 
     let mut take_operation_id = |value: &str| -> Result<OperationId> {
-        let operation_id = OperationId::try_new(value).context("operation id is valid")?;
+        let operation_id = value.parse::<OperationId>()?;
         if operation_ids.remove(&operation_id) {
             Ok(operation_id)
         } else {

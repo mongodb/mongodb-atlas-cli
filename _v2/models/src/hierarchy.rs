@@ -1,9 +1,6 @@
 use std::collections::BTreeMap;
 
-use crate::OperationId;
-
-mod config;
-pub use config::*;
+use crate::operation_id::OperationId;
 
 #[derive(Debug)]
 pub struct Hierarchy {

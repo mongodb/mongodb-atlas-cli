@@ -1,16 +1,14 @@
-use std::{borrow::Cow, ops::Deref};
+use std::{borrow::Cow, fmt::Display, ops::Deref};
 
 use anyhow::{Context, Result, bail};
 use clap::{Command, builder};
+use models::hierarchy::{Component, Entity, Hierarchy};
 use openapiv3::OpenAPI;
 use tokio::fs::read_to_string;
 
-pub use new_types::*;
-
-use crate::hierarchy::{Component, Entity, Hierarchy, cli_config};
+use crate::hierarchy::cli_config;
 
 mod hierarchy;
-mod new_types;
 
 const SPEC_PATH: &'static str = "/Users/jeroen.vervaeke/git/github.com/mongodb/mongodb-atlas-cli/tools/internal/specs/spec-with-overlays.yaml";
 
@@ -91,13 +89,11 @@ fn build_entity_subcommand(name: &str, entity: &Entity) -> Result<Command> {
 fn add_optinal_operation_id_sub_command(
     command: Command,
     name: &str,
-    operation_id: Option<impl AsRef<str>>,
+    operation_id: Option<impl Display>,
 ) -> Command {
     let Some(operation_id) = operation_id else {
         return command;
     };
-
-    let operation_id = operation_id.as_ref();
 
     command
         .subcommand(Command::new(name.to_string()).about(format!("this will call {operation_id}")))
@@ -106,7 +102,7 @@ fn add_optinal_operation_id_sub_command(
 fn add_operation_id_sub_command(
     command: Command,
     name: &str,
-    operation_id: impl AsRef<str>,
+    operation_id: impl Display,
 ) -> Command {
     add_optinal_operation_id_sub_command(command, name, Some(operation_id))
 }

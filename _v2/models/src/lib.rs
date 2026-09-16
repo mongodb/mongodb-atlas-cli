@@ -1,4 +1,5 @@
 pub mod datatypes;
+pub mod hierarchy;
 pub mod http_verb;
 pub mod operation;
 pub mod operation_id;

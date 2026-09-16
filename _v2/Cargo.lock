@@ -93,6 +93,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "models",
  "nutype",
  "openapiv3",
  "serde_yaml",

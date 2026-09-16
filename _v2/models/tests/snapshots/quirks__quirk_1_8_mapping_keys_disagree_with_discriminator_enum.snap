@@ -1,6 +1,5 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 87
+source: tests/quirks.rs
 expression: datatype
 ---
 {
@@ -10,14 +9,7 @@ expression: datatype
       "AWS": {
         "Object": {
           "properties": {
-            "ebsVolumeType": {
-              "Optional": {
-                "data_type": {
-                  "String": {}
-                }
-              }
-            },
-            "regionName": {
+            "cidrBlock": {
               "Optional": {
                 "data_type": {
                   "String": {}
@@ -27,17 +19,23 @@ expression: datatype
           }
         }
       },
-      "TENANT": {
+      "AZURE": {
         "Object": {
           "properties": {
-            "backupEnabled": {
+            "subnetId": {
               "Optional": {
                 "data_type": {
-                  "Boolean": {}
+                  "String": {}
                 }
               }
-            },
-            "regionName": {
+            }
+          }
+        }
+      },
+      "GCP": {
+        "Object": {
+          "properties": {
+            "networkName": {
               "Optional": {
                 "data_type": {
                   "String": {}

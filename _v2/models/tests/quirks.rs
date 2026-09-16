@@ -1,21 +1,20 @@
 //! Snapshot tests for the quirks documented in
 //! `auto-generation-v2/quirks` (the marimo notebook `quirks.py`).
 //!
-//! Each quirk is reproduced as a minimal OpenAPI doc under `parser/fixtures/`
+//! Each quirk is reproduced as a minimal OpenAPI doc under `models/fixtures/`
 //! and converted through the real pipeline (resolve -> Operation -> datatype).
 //! The snapshot shows the `DataType` we produce, proving the quirk is handled
 //! rather than crashing or being silently dropped.
-#![cfg(test)]
 
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
-use crate::datatypes::DataType;
-use crate::http_verb::Verb;
-use crate::versioned_mediatype::{MediaType, Version, VersionDate};
+use models::datatypes::DataType;
+use models::http_verb::Verb;
+use models::versioned_mediatype::{MediaType, Version, VersionDate};
 use openapiv3_resolve::{ResolvedOpenAPI, openapiv3::OpenAPI};
 
-use crate::{Operation, OperationVersion};
+use models::{Operation, OperationVersion};
 
 /// Converts the 200 JSON body of `GET /test` in `spec` into a [`DataType`].
 fn datatype_of(spec: &str) -> DataType {

@@ -1,16 +1,15 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 103
+source: tests/quirks.rs
 expression: datatype
 ---
 {
   "OneOf": {
-    "discriminator_field": "providerName",
+    "discriminator_field": "featureType",
     "options": {
-      "AWS": {
+      "DATA": {
         "Object": {
           "properties": {
-            "cidrBlock": {
+            "dataField": {
               "Optional": {
                 "data_type": {
                   "String": {}
@@ -20,26 +19,13 @@ expression: datatype
           }
         }
       },
-      "AZURE": {
+      "LOG": {
         "Object": {
           "properties": {
-            "subnetId": {
+            "logField": {
               "Optional": {
                 "data_type": {
-                  "String": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "GCP": {
-        "Object": {
-          "properties": {
-            "networkName": {
-              "Optional": {
-                "data_type": {
-                  "String": {}
+                  "Boolean": {}
                 }
               }
             }

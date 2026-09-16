@@ -1,6 +1,5 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 63
+source: tests/quirks.rs
 expression: datatype
 ---
 {
@@ -20,10 +19,10 @@ expression: datatype
           }
         }
       },
-      "azure": {
+      "gcp": {
         "Object": {
           "properties": {
-            "tenantId": {
+            "projectNumber": {
               "Optional": {
                 "data_type": {
                   "String": {}

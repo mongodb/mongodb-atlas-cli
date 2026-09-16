@@ -1,6 +1,5 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 71
+source: tests/quirks.rs
 expression: datatype
 ---
 {

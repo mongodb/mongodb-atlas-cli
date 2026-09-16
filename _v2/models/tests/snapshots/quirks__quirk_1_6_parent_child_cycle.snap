@@ -1,16 +1,22 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 95
+source: tests/quirks.rs
 expression: datatype
 ---
 {
   "OneOf": {
-    "discriminator_field": "cloudProvider",
+    "discriminator_field": "providerName",
     "options": {
-      "aws": {
+      "AWS": {
         "Object": {
           "properties": {
-            "awsAccountId": {
+            "ebsVolumeType": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            },
+            "regionName": {
               "Optional": {
                 "data_type": {
                   "String": {}
@@ -20,10 +26,17 @@ expression: datatype
           }
         }
       },
-      "gcp": {
+      "TENANT": {
         "Object": {
           "properties": {
-            "projectNumber": {
+            "backupEnabled": {
+              "Optional": {
+                "data_type": {
+                  "Boolean": {}
+                }
+              }
+            },
+            "regionName": {
               "Optional": {
                 "data_type": {
                   "String": {}

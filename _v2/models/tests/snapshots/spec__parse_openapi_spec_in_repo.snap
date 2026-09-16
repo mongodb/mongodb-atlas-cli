@@ -1,5 +1,5 @@
 ---
-source: models/src/spec.rs
+source: tests/spec.rs
 expression: spec
 ---
 {

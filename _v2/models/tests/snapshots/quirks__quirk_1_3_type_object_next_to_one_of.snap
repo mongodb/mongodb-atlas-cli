@@ -1,16 +1,15 @@
 ---
-source: models/src/quirks.rs
-assertion_line: 47
+source: tests/quirks.rs
 expression: datatype
 ---
 {
   "OneOf": {
-    "discriminator_field": "featureType",
+    "discriminator_field": "cloudProvider",
     "options": {
-      "DATA": {
+      "aws": {
         "Object": {
           "properties": {
-            "dataField": {
+            "awsAccountId": {
               "Optional": {
                 "data_type": {
                   "String": {}
@@ -20,13 +19,13 @@ expression: datatype
           }
         }
       },
-      "LOG": {
+      "azure": {
         "Object": {
           "properties": {
-            "logField": {
+            "tenantId": {
               "Optional": {
                 "data_type": {
-                  "Boolean": {}
+                  "String": {}
                 }
               }
             }

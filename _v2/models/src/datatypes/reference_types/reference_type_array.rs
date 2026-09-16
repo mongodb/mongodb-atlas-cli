@@ -14,4 +14,8 @@ impl ReferenceTypeArray {
             entries_type: Box::new(entries_type),
         }
     }
+
+    pub fn entries_type(&self) -> &DataType {
+        &self.entries_type
+    }
 }

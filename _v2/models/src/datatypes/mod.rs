@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::datatypes::{reference_types::ReferenceType, value_type::ValueType};
 
+pub mod json_schema;
 pub mod reference_types;
 pub mod value_type;
 

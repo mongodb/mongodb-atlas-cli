@@ -1,0 +1,2376 @@
+---
+source: models/tests/json_schema.rs
+expression: schema
+---
+{
+  "properties": {
+    "acceptDataRisksAndForceReplicaSetReconfig": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "advancedConfiguration": {
+      "properties": {
+        "customOpensslCipherConfigTls12": {
+          "items": {
+            "enum": [
+              "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+              "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+            ]
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "customOpensslCipherConfigTls13": {
+          "items": {
+            "enum": [
+              "TLS_AES_256_GCM_SHA384",
+              "TLS_CHACHA20_POLY1305_SHA256",
+              "TLS_AES_128_GCM_SHA256",
+              "TLS_AES_128_CCM_SHA256"
+            ]
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "minimumEnabledTlsProtocol": {
+          "anyOf": [
+            {
+              "enum": [
+                "TLS1_0",
+                "TLS1_1",
+                "TLS1_2",
+                "TLS1_3"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tlsCipherConfigMode": {
+          "anyOf": [
+            {
+              "enum": [
+                "CUSTOM",
+                "DEFAULT"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "autoScaling": {
+      "properties": {
+        "compute": {
+          "properties": {
+            "enabled": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "scaleDownEnabled": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "diskGBEnabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "backupEnabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "biConnector": {
+      "properties": {
+        "enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "readPreference": {
+          "anyOf": [
+            {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "ANALYTICS"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "clusterType": {
+      "anyOf": [
+        {
+          "enum": [
+            "REPLICASET",
+            "SHARDED",
+            "GEOSHARDED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "configServerManagementMode": {
+      "anyOf": [
+        {
+          "enum": [
+            "ATLAS_MANAGED",
+            "FIXED_TO_DEDICATED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "configServerType": {
+      "anyOf": [
+        {
+          "enum": [
+            "DEDICATED",
+            "EMBEDDED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "connectionStrings": {
+      "properties": {
+        "awsPrivateLink": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "awsPrivateLinkSrv": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "private": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "privateEndpoint": {
+          "items": {
+            "properties": {
+              "connectionString": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "endpoints": {
+                "items": {
+                  "properties": {
+                    "endpointId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "providerName": {
+                      "anyOf": [
+                        {
+                          "enum": [
+                            "AWS",
+                            "AZURE",
+                            "GCP"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "region": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "srvConnectionString": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "srvShardOptimizedConnectionString": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "MONGOD",
+                      "MONGOS"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "privateSrv": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "standard": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "standardSrv": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "createDate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "deleteAfterCreationHours": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "deleteAfterDate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "diskSizeGB": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "diskWarmingMode": {
+      "anyOf": [
+        {
+          "enum": [
+            "FULLY_WARMED",
+            "VISIBLE_EARLIER",
+            "ENHANCED_FULLY_WARMED"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "encryptionAtRestProvider": {
+      "anyOf": [
+        {
+          "enum": [
+            "NONE",
+            "AWS",
+            "AZURE",
+            "GCP"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "featureCompatibilityVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "featureCompatibilityVersionExpirationDate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "globalClusterSelfManagedSharding": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "groupId": {
+      "pattern": "^([a-f0-9]{24})$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "pattern": "^([a-f0-9]{24})$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "labels": {
+      "items": {
+        "properties": {
+          "key": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "links": {
+      "items": {
+        "properties": {
+          "href": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "rel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "mongoDBEmployeeAccessGrant": {
+      "properties": {
+        "expirationTime": {
+          "type": "string"
+        },
+        "grantType": {
+          "enum": [
+            "CLUSTER_DATABASE_LOGS",
+            "CLUSTER_INFRASTRUCTURE",
+            "CLUSTER_INFRASTRUCTURE_AND_APP_SERVICES_SYNC_DATA"
+          ]
+        },
+        "links": {
+          "items": {
+            "properties": {
+              "href": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rel": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "expirationTime",
+        "grantType"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "mongoDBMajorVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mongoDBVersion": {
+      "pattern": "([\\d]+\\.[\\d]+\\.[\\d]+)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mongoURI": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mongoURIUpdated": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mongoURIWithOptions": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "numShards": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "paused": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "pitEnabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "providerBackupEnabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "providerSettings": {
+      "anyOf": [
+        {
+          "discriminator": {
+            "mapping": {
+              "AWS": {
+                "properties": {
+                  "autoScaling": {
+                    "properties": {
+                      "compute": {
+                        "properties": {
+                          "maxInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M100",
+                                  "M140",
+                                  "M200",
+                                  "M300",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "R700",
+                                  "M40_NVME",
+                                  "M50_NVME",
+                                  "M60_NVME",
+                                  "M80_NVME",
+                                  "M200_NVME",
+                                  "M400_NVME",
+                                  "M30_GEN_2",
+                                  "M40_GEN_2",
+                                  "M50_GEN_2",
+                                  "M60_GEN_2",
+                                  "M80_GEN_2",
+                                  "M140_GEN_2",
+                                  "M200_GEN_2",
+                                  "M300_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50_GEN_2",
+                                  "R60_GEN_2",
+                                  "R80_GEN_2",
+                                  "R200_GEN_2",
+                                  "R300_GEN_2",
+                                  "R400_GEN_2",
+                                  "R700_GEN_2",
+                                  "M40_NVME_GEN_2",
+                                  "M50_NVME_GEN_2",
+                                  "M60_NVME_GEN_2",
+                                  "M80_NVME_GEN_2",
+                                  "M200_NVME_GEN_2",
+                                  "M400_NVME_GEN_2"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "minInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M100",
+                                  "M140",
+                                  "M200",
+                                  "M300",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "R700",
+                                  "M40_NVME",
+                                  "M50_NVME",
+                                  "M60_NVME",
+                                  "M80_NVME",
+                                  "M200_NVME",
+                                  "M400_NVME",
+                                  "M30_GEN_2",
+                                  "M40_GEN_2",
+                                  "M50_GEN_2",
+                                  "M60_GEN_2",
+                                  "M80_GEN_2",
+                                  "M140_GEN_2",
+                                  "M200_GEN_2",
+                                  "M300_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50_GEN_2",
+                                  "R60_GEN_2",
+                                  "R80_GEN_2",
+                                  "R200_GEN_2",
+                                  "R300_GEN_2",
+                                  "R400_GEN_2",
+                                  "R700_GEN_2",
+                                  "M40_NVME_GEN_2",
+                                  "M50_NVME_GEN_2",
+                                  "M60_NVME_GEN_2",
+                                  "M80_NVME_GEN_2",
+                                  "M200_NVME_GEN_2",
+                                  "M400_NVME_GEN_2"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "diskIOPS": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "encryptEBSVolume": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "instanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "M10",
+                          "M20",
+                          "M30",
+                          "M40",
+                          "M50",
+                          "M60",
+                          "M80",
+                          "M100",
+                          "M140",
+                          "M200",
+                          "M300",
+                          "R40",
+                          "R50",
+                          "R60",
+                          "R80",
+                          "R200",
+                          "R300",
+                          "R400",
+                          "R700",
+                          "M40_NVME",
+                          "M50_NVME",
+                          "M60_NVME",
+                          "M80_NVME",
+                          "M200_NVME",
+                          "M400_NVME",
+                          "M30_GEN_2",
+                          "M40_GEN_2",
+                          "M50_GEN_2",
+                          "M60_GEN_2",
+                          "M80_GEN_2",
+                          "M140_GEN_2",
+                          "M200_GEN_2",
+                          "M300_GEN_2",
+                          "R40_GEN_2",
+                          "R50_GEN_2",
+                          "R60_GEN_2",
+                          "R80_GEN_2",
+                          "R200_GEN_2",
+                          "R300_GEN_2",
+                          "R400_GEN_2",
+                          "R700_GEN_2",
+                          "M40_NVME_GEN_2",
+                          "M50_NVME_GEN_2",
+                          "M60_NVME_GEN_2",
+                          "M80_NVME_GEN_2",
+                          "M200_NVME_GEN_2",
+                          "M400_NVME_GEN_2"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "regionName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "US_GOV_WEST_1",
+                          "US_GOV_EAST_1",
+                          "US_EAST_1",
+                          "US_EAST_2",
+                          "US_WEST_1",
+                          "US_WEST_2",
+                          "CA_CENTRAL_1",
+                          "EU_NORTH_1",
+                          "EU_WEST_1",
+                          "EU_WEST_2",
+                          "EU_WEST_3",
+                          "EU_CENTRAL_1",
+                          "EU_CENTRAL_2",
+                          "AP_EAST_1",
+                          "AP_EAST_2",
+                          "AP_NORTHEAST_1",
+                          "AP_NORTHEAST_2",
+                          "AP_NORTHEAST_3",
+                          "AP_SOUTHEAST_1",
+                          "AP_SOUTHEAST_2",
+                          "AP_SOUTHEAST_3",
+                          "AP_SOUTHEAST_4",
+                          "AP_SOUTHEAST_5",
+                          "AP_SOUTHEAST_6",
+                          "AP_SOUTHEAST_7",
+                          "AP_SOUTH_1",
+                          "AP_SOUTH_2",
+                          "SA_EAST_1",
+                          "CN_NORTH_1",
+                          "CN_NORTHWEST_1",
+                          "ME_SOUTH_1",
+                          "ME_CENTRAL_1",
+                          "AF_SOUTH_1",
+                          "EU_SOUTH_1",
+                          "EU_SOUTH_2",
+                          "IL_CENTRAL_1",
+                          "CA_WEST_1",
+                          "MX_CENTRAL_1",
+                          "GLOBAL"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "volumeType": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "STANDARD",
+                          "PROVISIONED",
+                          "HIGH_PERFORMANCE"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "type": "object"
+              },
+              "AZURE": {
+                "properties": {
+                  "autoScaling": {
+                    "properties": {
+                      "compute": {
+                        "properties": {
+                          "maxInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M90",
+                                  "M200",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "M60_NVME",
+                                  "M80_NVME",
+                                  "M200_NVME",
+                                  "M300_NVME",
+                                  "M400_NVME",
+                                  "M600_NVME"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "minInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M90",
+                                  "M200",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "M60_NVME",
+                                  "M80_NVME",
+                                  "M200_NVME",
+                                  "M300_NVME",
+                                  "M400_NVME",
+                                  "M600_NVME"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "diskTypeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "P2",
+                          "P3",
+                          "P4",
+                          "P6",
+                          "P10",
+                          "P15",
+                          "P20",
+                          "P30",
+                          "P40",
+                          "P50"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "instanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "M10",
+                          "M20",
+                          "M30",
+                          "M40",
+                          "M50",
+                          "M60",
+                          "M80",
+                          "M90",
+                          "M200",
+                          "R40",
+                          "R50",
+                          "R60",
+                          "R80",
+                          "R200",
+                          "R300",
+                          "R400",
+                          "M60_NVME",
+                          "M80_NVME",
+                          "M200_NVME",
+                          "M300_NVME",
+                          "M400_NVME",
+                          "M600_NVME"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "regionName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "US_CENTRAL",
+                          "US_EAST",
+                          "US_EAST_2",
+                          "US_NORTH_CENTRAL",
+                          "US_WEST",
+                          "US_SOUTH_CENTRAL",
+                          "EUROPE_NORTH",
+                          "EUROPE_WEST",
+                          "US_WEST_CENTRAL",
+                          "US_WEST_2",
+                          "US_WEST_3",
+                          "CANADA_EAST",
+                          "CANADA_CENTRAL",
+                          "BRAZIL_SOUTH",
+                          "BRAZIL_SOUTHEAST",
+                          "AUSTRALIA_CENTRAL",
+                          "AUSTRALIA_CENTRAL_2",
+                          "AUSTRALIA_EAST",
+                          "AUSTRALIA_SOUTH_EAST",
+                          "GERMANY_WEST_CENTRAL",
+                          "GERMANY_NORTH",
+                          "SWEDEN_CENTRAL",
+                          "SWEDEN_SOUTH",
+                          "SWITZERLAND_NORTH",
+                          "SWITZERLAND_WEST",
+                          "UK_SOUTH",
+                          "UK_WEST",
+                          "NORWAY_EAST",
+                          "NORWAY_WEST",
+                          "INDIA_CENTRAL",
+                          "INDIA_SOUTH",
+                          "INDIA_WEST",
+                          "CHINA_EAST",
+                          "CHINA_NORTH",
+                          "ASIA_EAST",
+                          "JAPAN_EAST",
+                          "JAPAN_WEST",
+                          "ASIA_SOUTH_EAST",
+                          "KOREA_CENTRAL",
+                          "KOREA_SOUTH",
+                          "FRANCE_CENTRAL",
+                          "FRANCE_SOUTH",
+                          "SOUTH_AFRICA_NORTH",
+                          "SOUTH_AFRICA_WEST",
+                          "UAE_CENTRAL",
+                          "UAE_NORTH",
+                          "QATAR_CENTRAL",
+                          "POLAND_CENTRAL",
+                          "ISRAEL_CENTRAL",
+                          "ITALY_NORTH",
+                          "SPAIN_CENTRAL",
+                          "MEXICO_CENTRAL",
+                          "NEW_ZEALAND_NORTH",
+                          "US_GOV_VIRGINIA",
+                          "US_GOV_ARIZONA",
+                          "US_GOV_TEXAS"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "type": "object"
+              },
+              "FLEX": {
+                "properties": {
+                  "backingProviderName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "AWS",
+                          "GCP",
+                          "AZURE"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "instanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "FLEX"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "regionName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              },
+              "GCP": {
+                "properties": {
+                  "autoScaling": {
+                    "properties": {
+                      "compute": {
+                        "properties": {
+                          "maxInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M140",
+                                  "M200",
+                                  "M250",
+                                  "M300",
+                                  "M400",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "R600",
+                                  "M30_GEN_2",
+                                  "M40_GEN_2",
+                                  "M50_GEN_2",
+                                  "M60_GEN_2",
+                                  "M80_GEN_2",
+                                  "M140_GEN_2",
+                                  "M200_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50_GEN_2",
+                                  "R60_GEN_2",
+                                  "R80_GEN_2",
+                                  "R200_GEN_2",
+                                  "R300_GEN_2",
+                                  "R400_GEN_2"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "minInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M10",
+                                  "M20",
+                                  "M30",
+                                  "M40",
+                                  "M50",
+                                  "M60",
+                                  "M80",
+                                  "M140",
+                                  "M200",
+                                  "M250",
+                                  "M300",
+                                  "M400",
+                                  "R40",
+                                  "R50",
+                                  "R60",
+                                  "R80",
+                                  "R200",
+                                  "R300",
+                                  "R400",
+                                  "R600",
+                                  "M30_GEN_2",
+                                  "M40_GEN_2",
+                                  "M50_GEN_2",
+                                  "M60_GEN_2",
+                                  "M80_GEN_2",
+                                  "M140_GEN_2",
+                                  "M200_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50_GEN_2",
+                                  "R60_GEN_2",
+                                  "R80_GEN_2",
+                                  "R200_GEN_2",
+                                  "R300_GEN_2",
+                                  "R400_GEN_2"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "instanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "M10",
+                          "M20",
+                          "M30",
+                          "M40",
+                          "M50",
+                          "M60",
+                          "M80",
+                          "M140",
+                          "M200",
+                          "M250",
+                          "M300",
+                          "M400",
+                          "R40",
+                          "R50",
+                          "R60",
+                          "R80",
+                          "R200",
+                          "R300",
+                          "R400",
+                          "R600",
+                          "M30_GEN_2",
+                          "M40_GEN_2",
+                          "M50_GEN_2",
+                          "M60_GEN_2",
+                          "M80_GEN_2",
+                          "M140_GEN_2",
+                          "M200_GEN_2",
+                          "R40_GEN_2",
+                          "R50_GEN_2",
+                          "R60_GEN_2",
+                          "R80_GEN_2",
+                          "R200_GEN_2",
+                          "R300_GEN_2",
+                          "R400_GEN_2"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "regionName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "EASTERN_US",
+                          "EASTERN_US_AW",
+                          "US_EAST_4",
+                          "US_EAST_4_AW",
+                          "US_EAST_5",
+                          "US_EAST_5_AW",
+                          "US_WEST_2",
+                          "US_WEST_2_AW",
+                          "US_WEST_3",
+                          "US_WEST_3_AW",
+                          "US_WEST_4",
+                          "US_WEST_4_AW",
+                          "US_SOUTH_1",
+                          "US_SOUTH_1_AW",
+                          "CENTRAL_US",
+                          "CENTRAL_US_AW",
+                          "WESTERN_US",
+                          "WESTERN_US_AW",
+                          "NORTH_AMERICA_NORTHEAST_1",
+                          "NORTH_AMERICA_NORTHEAST_2",
+                          "NORTH_AMERICA_SOUTH_1",
+                          "SOUTH_AMERICA_EAST_1",
+                          "SOUTH_AMERICA_WEST_1",
+                          "WESTERN_EUROPE",
+                          "EUROPE_NORTH_1",
+                          "EUROPE_WEST_2",
+                          "EUROPE_WEST_3",
+                          "EUROPE_WEST_4",
+                          "EUROPE_WEST_6",
+                          "EUROPE_WEST_8",
+                          "EUROPE_WEST_9",
+                          "EUROPE_WEST_10",
+                          "EUROPE_WEST_12",
+                          "EUROPE_SOUTHWEST_1",
+                          "EUROPE_CENTRAL_2",
+                          "MIDDLE_EAST_CENTRAL_1",
+                          "MIDDLE_EAST_CENTRAL_2",
+                          "MIDDLE_EAST_WEST_1",
+                          "AUSTRALIA_SOUTHEAST_1",
+                          "AUSTRALIA_SOUTHEAST_2",
+                          "AFRICA_SOUTH_1",
+                          "EASTERN_ASIA_PACIFIC",
+                          "NORTHEASTERN_ASIA_PACIFIC",
+                          "SOUTHEASTERN_ASIA_PACIFIC",
+                          "ASIA_EAST_2",
+                          "ASIA_NORTHEAST_2",
+                          "ASIA_NORTHEAST_3",
+                          "ASIA_SOUTH_1",
+                          "ASIA_SOUTH_2",
+                          "ASIA_SOUTHEAST_2"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "type": "object"
+              },
+              "TENANT": {
+                "properties": {
+                  "autoScaling": {
+                    "properties": {
+                      "compute": {
+                        "properties": {
+                          "maxInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M0",
+                                  "M2",
+                                  "M5"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "minInstanceSize": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "M0",
+                                  "M2",
+                                  "M5"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "backingProviderName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "AWS",
+                          "GCP",
+                          "AZURE"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "effectiveInstanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "FLEX",
+                          "M2",
+                          "M5",
+                          "M0"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "instanceSizeName": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "M0",
+                          "M2",
+                          "M5"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "regionName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "propertyName": "providerName"
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "autoScaling": {
+                  "properties": {
+                    "compute": {
+                      "properties": {
+                        "maxInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M100",
+                                "M140",
+                                "M200",
+                                "M300",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "R700",
+                                "M40_NVME",
+                                "M50_NVME",
+                                "M60_NVME",
+                                "M80_NVME",
+                                "M200_NVME",
+                                "M400_NVME",
+                                "M30_GEN_2",
+                                "M40_GEN_2",
+                                "M50_GEN_2",
+                                "M60_GEN_2",
+                                "M80_GEN_2",
+                                "M140_GEN_2",
+                                "M200_GEN_2",
+                                "M300_GEN_2",
+                                "R40_GEN_2",
+                                "R50_GEN_2",
+                                "R60_GEN_2",
+                                "R80_GEN_2",
+                                "R200_GEN_2",
+                                "R300_GEN_2",
+                                "R400_GEN_2",
+                                "R700_GEN_2",
+                                "M40_NVME_GEN_2",
+                                "M50_NVME_GEN_2",
+                                "M60_NVME_GEN_2",
+                                "M80_NVME_GEN_2",
+                                "M200_NVME_GEN_2",
+                                "M400_NVME_GEN_2"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "minInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M100",
+                                "M140",
+                                "M200",
+                                "M300",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "R700",
+                                "M40_NVME",
+                                "M50_NVME",
+                                "M60_NVME",
+                                "M80_NVME",
+                                "M200_NVME",
+                                "M400_NVME",
+                                "M30_GEN_2",
+                                "M40_GEN_2",
+                                "M50_GEN_2",
+                                "M60_GEN_2",
+                                "M80_GEN_2",
+                                "M140_GEN_2",
+                                "M200_GEN_2",
+                                "M300_GEN_2",
+                                "R40_GEN_2",
+                                "R50_GEN_2",
+                                "R60_GEN_2",
+                                "R80_GEN_2",
+                                "R200_GEN_2",
+                                "R300_GEN_2",
+                                "R400_GEN_2",
+                                "R700_GEN_2",
+                                "M40_NVME_GEN_2",
+                                "M50_NVME_GEN_2",
+                                "M60_NVME_GEN_2",
+                                "M80_NVME_GEN_2",
+                                "M200_NVME_GEN_2",
+                                "M400_NVME_GEN_2"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "diskIOPS": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "encryptEBSVolume": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "instanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "M10",
+                        "M20",
+                        "M30",
+                        "M40",
+                        "M50",
+                        "M60",
+                        "M80",
+                        "M100",
+                        "M140",
+                        "M200",
+                        "M300",
+                        "R40",
+                        "R50",
+                        "R60",
+                        "R80",
+                        "R200",
+                        "R300",
+                        "R400",
+                        "R700",
+                        "M40_NVME",
+                        "M50_NVME",
+                        "M60_NVME",
+                        "M80_NVME",
+                        "M200_NVME",
+                        "M400_NVME",
+                        "M30_GEN_2",
+                        "M40_GEN_2",
+                        "M50_GEN_2",
+                        "M60_GEN_2",
+                        "M80_GEN_2",
+                        "M140_GEN_2",
+                        "M200_GEN_2",
+                        "M300_GEN_2",
+                        "R40_GEN_2",
+                        "R50_GEN_2",
+                        "R60_GEN_2",
+                        "R80_GEN_2",
+                        "R200_GEN_2",
+                        "R300_GEN_2",
+                        "R400_GEN_2",
+                        "R700_GEN_2",
+                        "M40_NVME_GEN_2",
+                        "M50_NVME_GEN_2",
+                        "M60_NVME_GEN_2",
+                        "M80_NVME_GEN_2",
+                        "M200_NVME_GEN_2",
+                        "M400_NVME_GEN_2"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "regionName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "US_GOV_WEST_1",
+                        "US_GOV_EAST_1",
+                        "US_EAST_1",
+                        "US_EAST_2",
+                        "US_WEST_1",
+                        "US_WEST_2",
+                        "CA_CENTRAL_1",
+                        "EU_NORTH_1",
+                        "EU_WEST_1",
+                        "EU_WEST_2",
+                        "EU_WEST_3",
+                        "EU_CENTRAL_1",
+                        "EU_CENTRAL_2",
+                        "AP_EAST_1",
+                        "AP_EAST_2",
+                        "AP_NORTHEAST_1",
+                        "AP_NORTHEAST_2",
+                        "AP_NORTHEAST_3",
+                        "AP_SOUTHEAST_1",
+                        "AP_SOUTHEAST_2",
+                        "AP_SOUTHEAST_3",
+                        "AP_SOUTHEAST_4",
+                        "AP_SOUTHEAST_5",
+                        "AP_SOUTHEAST_6",
+                        "AP_SOUTHEAST_7",
+                        "AP_SOUTH_1",
+                        "AP_SOUTH_2",
+                        "SA_EAST_1",
+                        "CN_NORTH_1",
+                        "CN_NORTHWEST_1",
+                        "ME_SOUTH_1",
+                        "ME_CENTRAL_1",
+                        "AF_SOUTH_1",
+                        "EU_SOUTH_1",
+                        "EU_SOUTH_2",
+                        "IL_CENTRAL_1",
+                        "CA_WEST_1",
+                        "MX_CENTRAL_1",
+                        "GLOBAL"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "volumeType": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "STANDARD",
+                        "PROVISIONED",
+                        "HIGH_PERFORMANCE"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "autoScaling": {
+                  "properties": {
+                    "compute": {
+                      "properties": {
+                        "maxInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M90",
+                                "M200",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "M60_NVME",
+                                "M80_NVME",
+                                "M200_NVME",
+                                "M300_NVME",
+                                "M400_NVME",
+                                "M600_NVME"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "minInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M90",
+                                "M200",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "M60_NVME",
+                                "M80_NVME",
+                                "M200_NVME",
+                                "M300_NVME",
+                                "M400_NVME",
+                                "M600_NVME"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "diskTypeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "P2",
+                        "P3",
+                        "P4",
+                        "P6",
+                        "P10",
+                        "P15",
+                        "P20",
+                        "P30",
+                        "P40",
+                        "P50"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "instanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "M10",
+                        "M20",
+                        "M30",
+                        "M40",
+                        "M50",
+                        "M60",
+                        "M80",
+                        "M90",
+                        "M200",
+                        "R40",
+                        "R50",
+                        "R60",
+                        "R80",
+                        "R200",
+                        "R300",
+                        "R400",
+                        "M60_NVME",
+                        "M80_NVME",
+                        "M200_NVME",
+                        "M300_NVME",
+                        "M400_NVME",
+                        "M600_NVME"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "regionName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "US_CENTRAL",
+                        "US_EAST",
+                        "US_EAST_2",
+                        "US_NORTH_CENTRAL",
+                        "US_WEST",
+                        "US_SOUTH_CENTRAL",
+                        "EUROPE_NORTH",
+                        "EUROPE_WEST",
+                        "US_WEST_CENTRAL",
+                        "US_WEST_2",
+                        "US_WEST_3",
+                        "CANADA_EAST",
+                        "CANADA_CENTRAL",
+                        "BRAZIL_SOUTH",
+                        "BRAZIL_SOUTHEAST",
+                        "AUSTRALIA_CENTRAL",
+                        "AUSTRALIA_CENTRAL_2",
+                        "AUSTRALIA_EAST",
+                        "AUSTRALIA_SOUTH_EAST",
+                        "GERMANY_WEST_CENTRAL",
+                        "GERMANY_NORTH",
+                        "SWEDEN_CENTRAL",
+                        "SWEDEN_SOUTH",
+                        "SWITZERLAND_NORTH",
+                        "SWITZERLAND_WEST",
+                        "UK_SOUTH",
+                        "UK_WEST",
+                        "NORWAY_EAST",
+                        "NORWAY_WEST",
+                        "INDIA_CENTRAL",
+                        "INDIA_SOUTH",
+                        "INDIA_WEST",
+                        "CHINA_EAST",
+                        "CHINA_NORTH",
+                        "ASIA_EAST",
+                        "JAPAN_EAST",
+                        "JAPAN_WEST",
+                        "ASIA_SOUTH_EAST",
+                        "KOREA_CENTRAL",
+                        "KOREA_SOUTH",
+                        "FRANCE_CENTRAL",
+                        "FRANCE_SOUTH",
+                        "SOUTH_AFRICA_NORTH",
+                        "SOUTH_AFRICA_WEST",
+                        "UAE_CENTRAL",
+                        "UAE_NORTH",
+                        "QATAR_CENTRAL",
+                        "POLAND_CENTRAL",
+                        "ISRAEL_CENTRAL",
+                        "ITALY_NORTH",
+                        "SPAIN_CENTRAL",
+                        "MEXICO_CENTRAL",
+                        "NEW_ZEALAND_NORTH",
+                        "US_GOV_VIRGINIA",
+                        "US_GOV_ARIZONA",
+                        "US_GOV_TEXAS"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "backingProviderName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "AWS",
+                        "GCP",
+                        "AZURE"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "instanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "FLEX"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "regionName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "autoScaling": {
+                  "properties": {
+                    "compute": {
+                      "properties": {
+                        "maxInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M140",
+                                "M200",
+                                "M250",
+                                "M300",
+                                "M400",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "R600",
+                                "M30_GEN_2",
+                                "M40_GEN_2",
+                                "M50_GEN_2",
+                                "M60_GEN_2",
+                                "M80_GEN_2",
+                                "M140_GEN_2",
+                                "M200_GEN_2",
+                                "R40_GEN_2",
+                                "R50_GEN_2",
+                                "R60_GEN_2",
+                                "R80_GEN_2",
+                                "R200_GEN_2",
+                                "R300_GEN_2",
+                                "R400_GEN_2"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "minInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M10",
+                                "M20",
+                                "M30",
+                                "M40",
+                                "M50",
+                                "M60",
+                                "M80",
+                                "M140",
+                                "M200",
+                                "M250",
+                                "M300",
+                                "M400",
+                                "R40",
+                                "R50",
+                                "R60",
+                                "R80",
+                                "R200",
+                                "R300",
+                                "R400",
+                                "R600",
+                                "M30_GEN_2",
+                                "M40_GEN_2",
+                                "M50_GEN_2",
+                                "M60_GEN_2",
+                                "M80_GEN_2",
+                                "M140_GEN_2",
+                                "M200_GEN_2",
+                                "R40_GEN_2",
+                                "R50_GEN_2",
+                                "R60_GEN_2",
+                                "R80_GEN_2",
+                                "R200_GEN_2",
+                                "R300_GEN_2",
+                                "R400_GEN_2"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "instanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "M10",
+                        "M20",
+                        "M30",
+                        "M40",
+                        "M50",
+                        "M60",
+                        "M80",
+                        "M140",
+                        "M200",
+                        "M250",
+                        "M300",
+                        "M400",
+                        "R40",
+                        "R50",
+                        "R60",
+                        "R80",
+                        "R200",
+                        "R300",
+                        "R400",
+                        "R600",
+                        "M30_GEN_2",
+                        "M40_GEN_2",
+                        "M50_GEN_2",
+                        "M60_GEN_2",
+                        "M80_GEN_2",
+                        "M140_GEN_2",
+                        "M200_GEN_2",
+                        "R40_GEN_2",
+                        "R50_GEN_2",
+                        "R60_GEN_2",
+                        "R80_GEN_2",
+                        "R200_GEN_2",
+                        "R300_GEN_2",
+                        "R400_GEN_2"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "regionName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "EASTERN_US",
+                        "EASTERN_US_AW",
+                        "US_EAST_4",
+                        "US_EAST_4_AW",
+                        "US_EAST_5",
+                        "US_EAST_5_AW",
+                        "US_WEST_2",
+                        "US_WEST_2_AW",
+                        "US_WEST_3",
+                        "US_WEST_3_AW",
+                        "US_WEST_4",
+                        "US_WEST_4_AW",
+                        "US_SOUTH_1",
+                        "US_SOUTH_1_AW",
+                        "CENTRAL_US",
+                        "CENTRAL_US_AW",
+                        "WESTERN_US",
+                        "WESTERN_US_AW",
+                        "NORTH_AMERICA_NORTHEAST_1",
+                        "NORTH_AMERICA_NORTHEAST_2",
+                        "NORTH_AMERICA_SOUTH_1",
+                        "SOUTH_AMERICA_EAST_1",
+                        "SOUTH_AMERICA_WEST_1",
+                        "WESTERN_EUROPE",
+                        "EUROPE_NORTH_1",
+                        "EUROPE_WEST_2",
+                        "EUROPE_WEST_3",
+                        "EUROPE_WEST_4",
+                        "EUROPE_WEST_6",
+                        "EUROPE_WEST_8",
+                        "EUROPE_WEST_9",
+                        "EUROPE_WEST_10",
+                        "EUROPE_WEST_12",
+                        "EUROPE_SOUTHWEST_1",
+                        "EUROPE_CENTRAL_2",
+                        "MIDDLE_EAST_CENTRAL_1",
+                        "MIDDLE_EAST_CENTRAL_2",
+                        "MIDDLE_EAST_WEST_1",
+                        "AUSTRALIA_SOUTHEAST_1",
+                        "AUSTRALIA_SOUTHEAST_2",
+                        "AFRICA_SOUTH_1",
+                        "EASTERN_ASIA_PACIFIC",
+                        "NORTHEASTERN_ASIA_PACIFIC",
+                        "SOUTHEASTERN_ASIA_PACIFIC",
+                        "ASIA_EAST_2",
+                        "ASIA_NORTHEAST_2",
+                        "ASIA_NORTHEAST_3",
+                        "ASIA_SOUTH_1",
+                        "ASIA_SOUTH_2",
+                        "ASIA_SOUTHEAST_2"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "autoScaling": {
+                  "properties": {
+                    "compute": {
+                      "properties": {
+                        "maxInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M0",
+                                "M2",
+                                "M5"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "minInstanceSize": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "M0",
+                                "M2",
+                                "M5"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "backingProviderName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "AWS",
+                        "GCP",
+                        "AZURE"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "effectiveInstanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "FLEX",
+                        "M2",
+                        "M5",
+                        "M0"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "instanceSizeName": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "M0",
+                        "M2",
+                        "M5"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "regionName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replicaSetScalingStrategy": {
+      "anyOf": [
+        {
+          "enum": [
+            "SEQUENTIAL",
+            "WORKLOAD_TYPE",
+            "NODE_TYPE"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replicationFactor": {
+      "anyOf": [
+        {
+          "enum": [
+            "3",
+            "5",
+            "7"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replicationSpec": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "replicationSpecs": {
+      "items": {
+        "properties": {
+          "id": {
+            "pattern": "^([a-f0-9]{24})$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "numShards": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "regionsConfig": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "zoneName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "rootCertType": {
+      "anyOf": [
+        {
+          "enum": [
+            "ISRGROOTX1"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "srvAddress": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stateName": {
+      "anyOf": [
+        {
+          "enum": [
+            "IDLE",
+            "CREATING",
+            "UPDATING",
+            "DELETING",
+            "REPAIRING"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tags": {
+      "items": {
+        "properties": {
+          "key": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "terminationProtectionEnabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "versionReleaseSystem": {
+      "anyOf": [
+        {
+          "enum": [
+            "LTS",
+            "CONTINUOUS"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "type": "object"
+}

@@ -22,6 +22,14 @@ pub enum ReferenceTypeOneOfTryNewError {
 }
 
 impl ReferenceTypeOneOf {
+    pub fn discriminator_field(&self) -> &str {
+        &self.discriminator_field
+    }
+
+    pub fn options(&self) -> &BTreeMap<String, ReferenceType> {
+        &self.options
+    }
+
     pub fn try_new(
         discriminator_field: String,
         options: BTreeMap<String, ReferenceType>,

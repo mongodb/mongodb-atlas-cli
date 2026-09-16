@@ -18,6 +18,7 @@ members = [".", "models", "parser"]
 
 [workspace.dependencies]
 insta = "1.48.0"
+jsonschema = "0.56"
 nutype = "0.7.0"
 openapiv3 = "2.2.0"
 openapiv3-resolve = "0.2.0"

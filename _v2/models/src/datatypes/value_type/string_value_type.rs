@@ -10,6 +10,10 @@ impl ValueTypeString {
     pub fn new(validation: Option<ValueTypeStringValidation>) -> Self {
         Self { validation }
     }
+
+    pub fn validation(&self) -> &Option<ValueTypeStringValidation> {
+        &self.validation
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -78,7 +82,7 @@ mod tests {
     fn secret_access_key_has_no_validation() {
         let v = ValueTypeString { validation: None };
         let json = serde_json::to_string(&v).unwrap();
-        assert_eq!(json, r#"{"validation":null}"#);
+        assert_eq!(json, r#"{}"#);
         assert_eq!(serde_json::from_str::<ValueTypeString>(&json).unwrap(), v);
     }
 

@@ -4,9 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+jsonschema = { workspace = true }
 nutype = { workspace = true, features = ["serde"] }
 serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 thiserror = { workspace = true }
 
 [dev-dependencies]
+insta = { workspace = true, features = ["json"] }
+openapiv3-resolve = { workspace = true }
+parser = { path = "../parser" }
 serde_json = { workspace = true }
+serde_yaml = { workspace = true }

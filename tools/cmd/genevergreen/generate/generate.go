@@ -159,7 +159,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 
 	for _, os := range oses {
 		if os == "debian13" {
-			continue // TODO fix me after CLOUDP-446573
+			continue // TODO fix me after CLOUDP-446594
 		}
 
 		for _, sv := range serverVersions {

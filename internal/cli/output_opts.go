@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// test
 package cli
 
 import (
@@ -117,7 +116,7 @@ func isNil(o any) bool {
 	}
 	ot := reflect.TypeOf(o)
 	otk := ot.Kind()
-	switch otk { //nolint:exhaustive // only nilable kinds matter here
+	switch otk { // only nilable kinds matter here
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Chan, reflect.Pointer, reflect.UnsafePointer, reflect.Interface:
 		return reflect.ValueOf(o).IsNil()
 	default:
@@ -131,13 +130,13 @@ func isOrPtrToSliceOrArray(o any) bool {
 		return false
 	}
 	otk := ot.Kind()
-	switch otk { //nolint:exhaustive // only slice/array/pointer kinds matter here
+	switch otk { // only slice/array/pointer kinds matter here
 	case reflect.Array, reflect.Slice:
 		return true
 	case reflect.Pointer:
 		opt := reflect.PointerTo(ot)
 		optk := opt.Kind()
-		switch optk { //nolint:exhaustive // only slice/array kinds matter here
+		switch optk { // only slice/array kinds matter here
 		case reflect.Array, reflect.Slice:
 			return true
 		}

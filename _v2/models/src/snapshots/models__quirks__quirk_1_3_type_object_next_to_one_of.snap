@@ -1,16 +1,16 @@
 ---
-source: parser/src/quirks.rs
-assertion_line: 103
+source: models/src/quirks.rs
+assertion_line: 63
 expression: datatype
 ---
 {
   "OneOf": {
-    "discriminator_field": "providerName",
+    "discriminator_field": "cloudProvider",
     "options": {
-      "AWS": {
+      "aws": {
         "Object": {
           "properties": {
-            "cidrBlock": {
+            "awsAccountId": {
               "Optional": {
                 "data_type": {
                   "String": {}
@@ -20,23 +20,10 @@ expression: datatype
           }
         }
       },
-      "AZURE": {
+      "azure": {
         "Object": {
           "properties": {
-            "subnetId": {
-              "Optional": {
-                "data_type": {
-                  "String": {}
-                }
-              }
-            }
-          }
-        }
-      },
-      "GCP": {
-        "Object": {
-          "properties": {
-            "networkName": {
+            "tenantId": {
               "Optional": {
                 "data_type": {
                   "String": {}

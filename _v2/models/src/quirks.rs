@@ -10,9 +10,9 @@
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
-use models::datatypes::DataType;
-use models::http_verb::Verb;
-use models::versioned_mediatype::{MediaType, Version, VersionDate};
+use crate::datatypes::DataType;
+use crate::http_verb::Verb;
+use crate::versioned_mediatype::{MediaType, Version, VersionDate};
 use openapiv3_resolve::{ResolvedOpenAPI, openapiv3::OpenAPI};
 
 use crate::{Operation, OperationVersion};

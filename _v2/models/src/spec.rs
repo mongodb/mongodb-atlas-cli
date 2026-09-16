@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use models::operation_id::OperationId;
+use crate::operation_id::OperationId;
 use openapiv3_resolve::ResolvedOpenAPI;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;

@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, str::FromStr};
 
-use models::{
+use crate::{
     http_verb::{Verb, VerbError},
     operation_id::{OperationId, OperationIdParseError},
     versioned_mediatype::{

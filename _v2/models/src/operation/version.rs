@@ -1,12 +1,12 @@
 use std::collections::{BTreeMap, HashSet};
 
-use models::datatypes::DataType;
-use models::datatypes::reference_types::ReferenceType;
-use models::datatypes::value_type::{
+use crate::datatypes::DataType;
+use crate::datatypes::reference_types::ReferenceType;
+use crate::datatypes::value_type::{
     ValueType, ValueTypeBoolean, ValueTypeDouble, ValueTypeEnum, ValueTypeInteger, ValueTypeString,
     ValueTypeStringValidation,
 };
-use models::versioned_mediatype::{MediaType, Version};
+use crate::versioned_mediatype::{MediaType, Version};
 use openapiv3_resolve::{
     NestedSchema, ResolvedDiscriminator, ResolvedMediaType, ResolvedSchema, ResolvedSchemaKind,
     ResolvedType, indexmap::IndexMap,
@@ -53,7 +53,7 @@ pub enum OperationVersionParseError {
     #[error("Unsupported schema kind")]
     UnsupportedSchemaKind,
     #[error(transparent)]
-    ReferenceTypeTryNewError(#[from] models::datatypes::reference_types::ReferenceTypeTryNewError),
+    ReferenceTypeTryNewError(#[from] crate::datatypes::reference_types::ReferenceTypeTryNewError),
 }
 
 impl OperationVersion {

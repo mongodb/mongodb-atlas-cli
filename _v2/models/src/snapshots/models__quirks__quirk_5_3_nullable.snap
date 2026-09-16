@@ -1,5 +1,5 @@
 ---
-source: parser/src/quirks.rs
+source: models/src/quirks.rs
 assertion_line: 139
 expression: datatype
 ---

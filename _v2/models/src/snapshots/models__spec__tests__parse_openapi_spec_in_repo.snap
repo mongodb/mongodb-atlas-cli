@@ -1,5 +1,5 @@
 ---
-source: parser/src/spec.rs
+source: models/src/spec.rs
 expression: spec
 ---
 {

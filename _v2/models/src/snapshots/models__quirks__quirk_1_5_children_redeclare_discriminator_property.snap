@@ -1,6 +1,6 @@
 ---
-source: parser/src/quirks.rs
-assertion_line: 119
+source: models/src/quirks.rs
+assertion_line: 79
 expression: datatype
 ---
 {
@@ -11,11 +11,7 @@ expression: datatype
         "Object": {
           "properties": {
             "criteria": {
-              "Optional": {
-                "data_type": {
-                  "String": {}
-                }
-              }
+              "String": {}
             }
           }
         }

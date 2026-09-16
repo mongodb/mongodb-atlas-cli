@@ -1,7 +1,7 @@
 //! Integration test for [`models::datatypes::DataType::to_json_schema`]
 //! against the real Atlas Admin API spec.
 //!
-//! The `parser` dev-dependency turns the repo's OpenAPI spec into
+//! The `models` crate parses the repo's OpenAPI spec into
 //! [`DataType`]s (single source of truth for the conversion), then this crate
 //! snapshots the JSON Schemas it produces. Lives here so the snapshot sits in
 //! the crate under test, next to the code.
@@ -22,7 +22,7 @@ fn create_group_cluster_json_schemas() {
         openapiv3_resolve::ResolvedOpenAPI::try_from(&openapi_spec)
             .expect("all references are valid");
     let spec =
-        parser::Spec::from_resolved_openapi_spec(&resolved_openapi_spec).expect("parsing succeeds");
+        models::Spec::from_resolved_openapi_spec(&resolved_openapi_spec).expect("parsing succeeds");
 
     let operation_id: OperationId = "createGroupCluster".parse().unwrap();
     let operation = spec.operations.get(&operation_id).expect("operation exists");

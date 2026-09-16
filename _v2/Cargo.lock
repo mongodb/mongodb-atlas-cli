@@ -1020,7 +1020,6 @@ dependencies = [
  "jsonschema",
  "nutype",
  "openapiv3-resolve",
- "parser",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -1205,19 +1204,6 @@ dependencies = [
  "redox_syscall",
  "smallvec",
  "windows-link",
-]
-
-[[package]]
-name = "parser"
-version = "0.1.0"
-dependencies = [
- "insta",
- "models",
- "nutype",
- "openapiv3-resolve",
- "serde",
- "serde_yaml",
- "thiserror",
 ]
 
 [[package]]

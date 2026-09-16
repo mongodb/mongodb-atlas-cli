@@ -62,7 +62,7 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newMaintenanceWindow() *atlasv2.GroupMaintenanceWindow {
 	return &atlasv2.GroupMaintenanceWindow{
-		DayOfWeek: opts.dayOfWeek,
+		DayOfWeek: &opts.dayOfWeek,
 		HourOfDay: &opts.hourOfDay,
 		StartASAP: &opts.startASAP,
 	}

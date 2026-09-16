@@ -41,3 +41,23 @@ func TestUpdateOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }
+
+func TestUpdateOpts_newMaintenanceWindow(t *testing.T) {
+	updateOpts := &UpdateOpts{
+		dayOfWeek: 1,
+		hourOfDay: 2,
+		startASAP: true,
+	}
+
+	window := updateOpts.newMaintenanceWindow()
+
+	if window.DayOfWeek == nil || *window.DayOfWeek != 1 {
+		t.Errorf("newMaintenanceWindow() DayOfWeek = %v, want 1", window.DayOfWeek)
+	}
+	if window.HourOfDay == nil || *window.HourOfDay != 2 {
+		t.Errorf("newMaintenanceWindow() HourOfDay = %v, want 2", window.HourOfDay)
+	}
+	if window.StartASAP == nil || !*window.StartASAP {
+		t.Errorf("newMaintenanceWindow() StartASAP = %v, want true", window.StartASAP)
+	}
+}

@@ -8,7 +8,7 @@ pub use reference_type_object::{ReferenceTypeObject, ReferenceTypeObjectTryNewEr
 pub use reference_type_one_of::{ReferenceTypeOneOf, ReferenceTypeOneOfTryNewError};
 pub use reference_type_optional::ReferenceTypeOptional;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -48,14 +48,14 @@ impl ReferenceType {
     }
 
     pub fn try_new_object(
-        properties: HashMap<String, DataType>,
+        properties: BTreeMap<String, DataType>,
     ) -> Result<Self, ReferenceTypeTryNewError> {
         Ok(Self::Object(ReferenceTypeObject::try_new(properties)?))
     }
 
     pub fn try_new_one_of(
         discriminator_field: String,
-        options: HashMap<String, ReferenceType>,
+        options: BTreeMap<String, ReferenceType>,
     ) -> Result<Self, ReferenceTypeTryNewError> {
         Ok(Self::OneOf(ReferenceTypeOneOf::try_new(
             discriminator_field,

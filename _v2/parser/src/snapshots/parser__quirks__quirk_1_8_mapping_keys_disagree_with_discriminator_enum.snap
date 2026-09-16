@@ -1,0 +1,51 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 103
+expression: datatype
+---
+{
+  "OneOf": {
+    "discriminator_field": "providerName",
+    "options": {
+      "AWS": {
+        "Object": {
+          "properties": {
+            "cidrBlock": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "AZURE": {
+        "Object": {
+          "properties": {
+            "subnetId": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "GCP": {
+        "Object": {
+          "properties": {
+            "networkName": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

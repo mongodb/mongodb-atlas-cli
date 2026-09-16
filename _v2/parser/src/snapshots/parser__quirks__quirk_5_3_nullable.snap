@@ -1,0 +1,22 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 139
+expression: datatype
+---
+{
+  "Object": {
+    "properties": {
+      "supportedRemoteRegions": {
+        "Optional": {
+          "data_type": {
+            "Array": {
+              "entries_type": {
+                "String": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

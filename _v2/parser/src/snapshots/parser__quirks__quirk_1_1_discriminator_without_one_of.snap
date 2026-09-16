@@ -1,0 +1,38 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 47
+expression: datatype
+---
+{
+  "OneOf": {
+    "discriminator_field": "featureType",
+    "options": {
+      "DATA": {
+        "Object": {
+          "properties": {
+            "dataField": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "LOG": {
+        "Object": {
+          "properties": {
+            "logField": {
+              "Optional": {
+                "data_type": {
+                  "Boolean": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

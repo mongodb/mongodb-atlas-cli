@@ -1,0 +1,40 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 111
+expression: datatype
+---
+{
+  "Array": {
+    "entries_type": {
+      "OneOf": {
+        "discriminator_field": "type",
+        "options": {
+          "asciiFolding": {
+            "Object": {
+              "properties": {
+                "regularExpression": {
+                  "Optional": {
+                    "data_type": {
+                      "String": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "englishPossessive": {
+            "Object": {
+              "properties": {
+                "type": {
+                  "Enum": [
+                    "englishPossessive"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

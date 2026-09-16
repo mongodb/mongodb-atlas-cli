@@ -1,0 +1,58 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      discriminator:
+        mapping:
+          AWS: '#/components/schemas/AWSContainer'
+          AZURE: '#/components/schemas/AzureContainer'
+          GCP: '#/components/schemas/GCPContainer'
+        propertyName: providerName
+      oneOf:
+        - $ref: '#/components/schemas/AzureContainer'
+        - $ref: '#/components/schemas/GCPContainer'
+        - $ref: '#/components/schemas/AWSContainer'
+      properties:
+        providerName:
+          type: string
+          enum: [AWS, GCP, AZURE, TENANT, SERVERLESS]
+      type: object
+    AWSContainer:
+      properties:
+        providerName:
+          type: string
+          enum: [AWS]
+        cidrBlock:
+          type: string
+      type: object
+    AzureContainer:
+      properties:
+        providerName:
+          type: string
+          enum: [AZURE]
+        subnetId:
+          type: string
+      type: object
+    GCPContainer:
+      properties:
+        providerName:
+          type: string
+          enum: [GCP]
+        networkName:
+          type: string
+      type: object

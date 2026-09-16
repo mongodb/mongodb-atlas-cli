@@ -2,13 +2,27 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ValueTypeString {
+    #[serde(skip_serializing_if = "Option::is_none")]
     validation: Option<ValueTypeStringValidation>,
+}
+
+impl ValueTypeString {
+    pub fn new(validation: Option<ValueTypeStringValidation>) -> Self {
+        Self { validation }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ValueTypeStringValidation {
-    Length { min: Option<u32>, max: Option<u32> },
-    Regex { regex: String },
+    Length {
+        #[serde(skip_serializing_if = "Option::is_none")]
+        min: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        max: Option<u32>,
+    },
+    Regex {
+        regex: String,
+    },
 }
 
 #[cfg(test)]
@@ -71,10 +85,8 @@ mod tests {
     /// A `minLength`-only constraint leaves `max` empty.
     #[test]
     fn length_validation_optional_bounds() {
-        let v: ValueTypeString = serde_json::from_str(
-            r#"{"validation":{"Length":{"min":1,"max":null}}}"#,
-        )
-        .unwrap();
+        let v: ValueTypeString =
+            serde_json::from_str(r#"{"validation":{"Length":{"min":1,"max":null}}}"#).unwrap();
         assert_eq!(
             v.validation,
             Some(ValueTypeStringValidation::Length {

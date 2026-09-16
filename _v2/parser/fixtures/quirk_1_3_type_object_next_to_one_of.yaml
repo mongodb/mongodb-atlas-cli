@@ -1,0 +1,42 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      discriminator:
+        mapping:
+          aws: '#/components/schemas/AWSAccountDetails'
+          azure: '#/components/schemas/AzureAccountDetails'
+        propertyName: cloudProvider
+      oneOf:
+        - $ref: '#/components/schemas/AWSAccountDetails'
+        - $ref: '#/components/schemas/AzureAccountDetails'
+      type: object
+    AWSAccountDetails:
+      properties:
+        cloudProvider:
+          type: string
+        awsAccountId:
+          type: string
+      type: object
+    AzureAccountDetails:
+      properties:
+        cloudProvider:
+          type: string
+        tenantId:
+          type: string
+      type: object

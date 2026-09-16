@@ -1,0 +1,26 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      oneOf:
+        - enum: [US_EAST_1, US_WEST_1]
+          title: AWS Regions
+          type: string
+        - enum: [eastus, westus]
+          title: Azure Regions
+          type: string

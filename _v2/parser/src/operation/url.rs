@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use openapiv3_resolve::{ResolvedParameter, ResolvedParameterData, Shared, openapiv3::{PathStyle, QueryStyle}};
 use serde::{Deserialize, Serialize};
@@ -143,7 +143,7 @@ impl ParameterizedUrl {
                 ),
                 _ => None,
             })
-            .collect::<Result<HashMap<String, UrlParameter>, UrlParameterParseError>>()?;
+            .collect::<Result<BTreeMap<String, UrlParameter>, UrlParameterParseError>>()?;
 
         let query_parameters = parameters
             .iter()

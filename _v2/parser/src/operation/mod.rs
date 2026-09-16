@@ -1,4 +1,4 @@
-use std::{collections::HashMap, str::FromStr};
+use std::{collections::BTreeMap, str::FromStr};
 
 use models::{
     http_verb::{Verb, VerbError},
@@ -31,12 +31,13 @@ use crate::operation::{
 pub struct Operation {
     pub description: String,
     pub operation_id: OperationId,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub operation_id_override: Option<OperationId>,
     pub http_verb: Verb,
     pub url: ParameterizedUrl,
     pub headers: Headers,
 
-    pub versions: HashMap<Version, OperationVersion>,
+    pub versions: BTreeMap<Version, OperationVersion>,
 }
 
 #[derive(Debug, Error)]
@@ -104,18 +105,18 @@ impl Operation {
         let mut version_requests = if let Some(request_body) = operation.request_body.as_deref() {
             Self::resolved_media_types_to_versions(&request_body.content)?
         } else {
-            HashMap::with_capacity(0)
+            BTreeMap::new()
         };
 
         let mut version_responses =
-            HashMap::<Version, HashMap<MediaType, &ResolvedMediaType>>::new();
+            BTreeMap::<Version, BTreeMap<MediaType, &ResolvedMediaType>>::new();
 
         for (status_code, response) in &operation.responses.responses {
             let StatusCode::Code(code) = *status_code else {
                 continue;
             };
 
-            if code < 200 && code >= 300 {
+            if !(200..=299).contains(&code) {
                 continue;
             }
 
@@ -130,7 +131,7 @@ impl Operation {
             }
         }
 
-        let mut operation_versions = HashMap::new();
+        let mut operation_versions = BTreeMap::new();
 
         for (version, response_bodies) in version_responses {
             let request_bodies = version_requests.remove(&version);
@@ -169,13 +170,18 @@ impl Operation {
     fn resolved_media_types_to_versions<'a>(
         content: &'a IndexMap<String, ResolvedMediaType>,
     ) -> Result<
-        HashMap<Version, HashMap<MediaType, &'a ResolvedMediaType>>,
+        BTreeMap<Version, BTreeMap<MediaType, &'a ResolvedMediaType>>,
         VersionedAcceptHeaderParseError,
     > {
         let mut version_requests =
-            HashMap::<Version, HashMap<MediaType, &ResolvedMediaType>>::new();
+            BTreeMap::<Version, BTreeMap<MediaType, &ResolvedMediaType>>::new();
         for (content_type, resolved_media_type) in content.iter() {
-            let versioned_accept_header = VersionedAcceptHeader::from_str(content_type)?;
+            let Ok(versioned_accept_header) = VersionedAcceptHeader::from_str(content_type) else {
+                // Legacy content types (e.g. `application/json`) have no
+                // version to attribute an OperationVersion to.
+                eprintln!("Skipping content type without a version: {content_type}");
+                continue;
+            };
             let version = version_requests
                 .entry(versioned_accept_header.version)
                 .or_default();

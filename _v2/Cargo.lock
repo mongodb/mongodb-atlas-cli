@@ -383,9 +383,9 @@ dependencies = [
 
 [[package]]
 name = "openapiv3-resolve"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1a2ee6d178a41bae9b712ba34235cf1b5464cad83220491a0d8bc0010f21b9e"
+checksum = "e9a0e40a9dc8564409fb74893f595f4f1713710de928c001868e0410b134829d"
 dependencies = [
  "indexmap",
  "openapiv3",

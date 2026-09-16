@@ -1,0 +1,13 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 71
+expression: datatype
+---
+{
+  "Enum": [
+    "FRANKFURT_DEU",
+    "SYDNEY_AUS",
+    "eastus",
+    "westus"
+  ]
+}

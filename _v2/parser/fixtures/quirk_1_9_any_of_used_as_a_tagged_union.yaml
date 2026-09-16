@@ -1,0 +1,40 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/tokenFilterasciiFolding'
+          - $ref: '#/components/schemas/TokenFilterEnglishPossessive'
+    tokenFilterasciiFolding:
+      properties:
+        type:
+          type: string
+          enum: [asciiFolding]
+        regularExpression:
+          type: string
+      required: [type]
+      type: object
+    TokenFilterEnglishPossessive:
+      properties:
+        type:
+          type: string
+          enum: [englishPossessive]
+      required: [type]
+      type: object

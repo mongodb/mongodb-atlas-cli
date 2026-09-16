@@ -9,7 +9,7 @@ use super::date::VersionDateParseError;
 /// Version part of an Atlas Admin API accept header.
 ///
 /// Variants listed in the MMS versioned API lifecycle order: preview → upcoming → stable.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(into = "String", try_from = "String")]
 pub enum Version {
     Preview,

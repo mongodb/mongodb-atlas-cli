@@ -1,0 +1,38 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 63
+expression: datatype
+---
+{
+  "OneOf": {
+    "discriminator_field": "cloudProvider",
+    "options": {
+      "aws": {
+        "Object": {
+          "properties": {
+            "awsAccountId": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "azure": {
+        "Object": {
+          "properties": {
+            "tenantId": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

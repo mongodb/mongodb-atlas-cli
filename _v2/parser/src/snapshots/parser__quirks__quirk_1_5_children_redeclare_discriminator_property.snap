@@ -1,0 +1,21 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 79
+expression: datatype
+---
+{
+  "OneOf": {
+    "discriminator_field": "type",
+    "options": {
+      "TRANSITION_DATA": {
+        "Object": {
+          "properties": {
+            "criteria": {
+              "String": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

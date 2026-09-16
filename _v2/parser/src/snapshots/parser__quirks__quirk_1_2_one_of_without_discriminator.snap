@@ -1,0 +1,28 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 55
+expression: datatype
+---
+{
+  "Object": {
+    "properties": {
+      "common": {
+        "String": {}
+      },
+      "onlyA": {
+        "Optional": {
+          "data_type": {
+            "Integer": {}
+          }
+        }
+      },
+      "onlyB": {
+        "Optional": {
+          "data_type": {
+            "Boolean": {}
+          }
+        }
+      }
+    }
+  }
+}

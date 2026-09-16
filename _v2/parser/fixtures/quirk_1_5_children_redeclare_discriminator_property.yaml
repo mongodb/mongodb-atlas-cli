@@ -1,0 +1,41 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      description: action
+      discriminator:
+        mapping:
+          TRANSITION_DATA: '#/components/schemas/ApiTransitionDataAction'
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiTransitionDataAction'
+      properties:
+        type:
+          type: string
+      type: object
+    ApiTransitionDataAction:
+      allOf:
+        - $ref: '#/components/schemas/Quirk'
+        - properties:
+            type:
+              type: string
+              enum: [TRANSITION_DATA]
+            criteria:
+              type: string
+          required: [type, criteria]
+          type: object

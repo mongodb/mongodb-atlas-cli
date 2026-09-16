@@ -1,0 +1,52 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 87
+expression: datatype
+---
+{
+  "OneOf": {
+    "discriminator_field": "providerName",
+    "options": {
+      "AWS": {
+        "Object": {
+          "properties": {
+            "ebsVolumeType": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            },
+            "regionName": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "TENANT": {
+        "Object": {
+          "properties": {
+            "backupEnabled": {
+              "Optional": {
+                "data_type": {
+                  "Boolean": {}
+                }
+              }
+            },
+            "regionName": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

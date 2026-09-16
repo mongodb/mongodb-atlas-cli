@@ -1,0 +1,16 @@
+---
+source: parser/src/quirks.rs
+assertion_line: 125
+expression: datatype
+---
+{
+  "Object": {
+    "properties": {
+      "mode": {
+        "Enum": [
+          "AVERAGE"
+        ]
+      }
+    }
+  }
+}

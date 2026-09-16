@@ -1,0 +1,43 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      discriminator:
+        mapping:
+          DATA: '#/components/schemas/DataChild'
+          LOG: '#/components/schemas/LogChild'
+        propertyName: featureType
+      properties:
+        featureType:
+          type: string
+          enum: [DATA, LOG]
+      type: object
+    DataChild:
+      allOf:
+        - $ref: '#/components/schemas/Quirk'
+        - properties:
+            dataField:
+              type: string
+          type: object
+    LogChild:
+      allOf:
+        - $ref: '#/components/schemas/Quirk'
+        - properties:
+            logField:
+              type: boolean
+          type: object

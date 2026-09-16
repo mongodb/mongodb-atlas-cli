@@ -1,0 +1,39 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    get:
+      description: quirk under test
+      operationId: quirkOp
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Quirk'
+components:
+  schemas:
+    Quirk:
+      oneOf:
+        - $ref: '#/components/schemas/ObjA'
+        - $ref: '#/components/schemas/ObjB'
+      type: object
+    ObjA:
+      properties:
+        common:
+          type: string
+        onlyA:
+          type: integer
+      required: [common]
+      type: object
+    ObjB:
+      properties:
+        common:
+          type: string
+        onlyB:
+          type: boolean
+      required: [common]
+      type: object

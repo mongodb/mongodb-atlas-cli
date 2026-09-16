@@ -325,7 +325,7 @@ jobs:
         run: |
           echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         id: create
         if: steps.find.outputs.found == 'false'
         with:
@@ -399,13 +399,13 @@ jobs:
           fetch-depth: 0
       - name: Find JIRA ticket
         id: find
-        uses: mongodb/apix-action/find-jira@v14
+        uses: mongodb/apix-action/find-jira@v16
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Failed to update test snapshots"
       - name: Comment JIRA ticket
         if: steps.find.outputs.found == 'true'
-        uses: mongodb/apix-action/comment-jira@v14
+        uses: mongodb/apix-action/comment-jira@v16
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find.outputs.issue-key }}
@@ -413,7 +413,7 @@ jobs:
             Another attempt to update test snapshots failed.
             Check github actions logs for more details at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v14
+        uses: mongodb/apix-action/create-jira@v16
         id: create
         if: steps.find.outputs.found == 'false'
         with:

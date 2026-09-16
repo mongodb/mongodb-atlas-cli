@@ -1,4 +1,4 @@
-FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/ubuntu:20.04
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/debian:13-slim
 
 ARG package
 ARG entrypoint
@@ -18,7 +18,7 @@ RUN set -eux; \
 		apt-get install -y --no-install-recommends procps; \
 	fi; \
 	curl -L https://www.mongodb.org/static/pgp/server-${pgp_server_version}.asc | apt-key add -; \
-	echo "deb [ arch=amd64,arm64 ] ${mongo_repo}/apt/ubuntu focal/${mongo_package}/${server_version} multiverse" | tee /etc/apt/sources.list.d/${mongo_package}-${server_version}.list; \
+	echo "deb [ arch=amd64,arm64 ] ${mongo_repo}/apt/debian trixie/${mongo_package}/${server_version} main" | tee /etc/apt/sources.list.d/${mongo_package}-${server_version}.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends ${package}; \
 	rm -rf /var/lib/apt/lists/*

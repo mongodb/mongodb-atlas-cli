@@ -48,21 +48,12 @@ pub struct Entity {
     pub read: Option<OperationId>,
     pub update: Option<OperationId>,
     pub delete: Option<OperationId>,
-    pub list: List,
+    pub list: Option<OperationId>,
 
     pub actions: BTreeMap<String, OperationId>,
 
     // components
     pub components: BTreeMap<String, Component>,
-
-    // children
-    pub children: BTreeMap<String, Entity>,
-}
-
-#[derive(Default, Debug)]
-pub struct List {
-    pub all: Option<OperationId>,
-    pub filtered: BTreeMap<String, OperationId>,
 }
 
 impl Entity {

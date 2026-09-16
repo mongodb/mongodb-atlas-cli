@@ -62,7 +62,7 @@ fn build_entity_subcommand(name: &str, entity: &Entity) -> Result<Command> {
     command = add_optinal_operation_id_sub_command(command, "create", entity.create.as_ref());
     command = add_optinal_operation_id_sub_command(command, "delete", entity.delete.as_ref());
     command = add_optinal_operation_id_sub_command(command, "get", entity.read.as_ref());
-    command = add_optinal_operation_id_sub_command(command, "list", entity.list.all.as_ref());
+    command = add_optinal_operation_id_sub_command(command, "list", entity.list.as_ref());
     command = add_optinal_operation_id_sub_command(command, "update", entity.update.as_ref());
 
     // Actions

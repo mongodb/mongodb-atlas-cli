@@ -64,11 +64,7 @@ fn clusters_config(hierarchy: &mut Hierarchy, openapi: &OpenAPI) -> Result<()> {
     cluster.read = take_operation_id_option("getGroupCluster")?;
     cluster.update = take_operation_id_option("updateGroupCluster")?;
     cluster.delete = take_operation_id_option("deleteGroupCluster")?;
-    cluster.list.all = take_operation_id_option("listClusterDetails")?;
-    cluster.list.filtered.insert(
-        "project".to_string(),
-        take_operation_id("listGroupClusters")?,
-    );
+    cluster.list = take_operation_id_option("listClusterDetails")?;
 
     cluster.actions.insert(
         "status".to_string(),

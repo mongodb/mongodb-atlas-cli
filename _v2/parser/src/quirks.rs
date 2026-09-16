@@ -7,13 +7,15 @@
 //! rather than crashing or being silently dropped.
 #![cfg(test)]
 
+use std::collections::BTreeMap;
 use std::str::FromStr;
 
 use models::datatypes::DataType;
+use models::http_verb::Verb;
 use models::versioned_mediatype::{MediaType, Version, VersionDate};
 use openapiv3_resolve::{ResolvedOpenAPI, openapiv3::OpenAPI};
 
-use crate::Operation;
+use crate::{Operation, OperationVersion};
 
 /// Converts the 200 JSON body of `GET /test` in `spec` into a [`DataType`].
 fn datatype_of(spec: &str) -> DataType {
@@ -143,4 +145,28 @@ fn quirk_5_3_nullable() {
 fn quirk_5_4_free_form_object() {
     let datatype = datatype_of(include_str!("../fixtures/quirk_5_4_free_form_object.yaml"));
     insta::assert_json_snapshot!(datatype);
+}
+
+/// Quirk 5.2: one schema for request and response, `readOnly`/`writeOnly`
+/// doing the splitting. The request body drops `readOnly` fields (and keeps
+/// `writeOnly`); the response drops `writeOnly` and keeps the rest, required
+/// or not.
+#[test]
+fn quirk_5_2_request_response_readonly_split() {
+    let spec = include_str!("../fixtures/quirk_5_2_request_response_readonly_split.yaml");
+    let openapi: OpenAPI = serde_yaml::from_str(spec).expect("valid openapi yaml");
+    let resolved = ResolvedOpenAPI::try_from(&openapi).expect("resolves");
+    let item = resolved.paths().paths.get("/test").expect("path /test");
+    let version = Version::Stable(VersionDate::from_str("2023-01-01").unwrap());
+    let versions: BTreeMap<Verb, OperationVersion> = item
+        .iter()
+        .map(|(verb, operation)| {
+            let operation =
+                Operation::from_path_verb_and_resolved_operation("/test", verb, operation)
+                    .expect("operation parses");
+            let operation_version = operation.versions.get(&version).expect("version");
+            (Verb::try_new(verb).expect("valid verb"), operation_version.clone())
+        })
+        .collect();
+    insta::assert_json_snapshot!(versions);
 }

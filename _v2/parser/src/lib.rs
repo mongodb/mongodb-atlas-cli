@@ -3,5 +3,5 @@ mod operation;
 mod quirks;
 mod spec;
 
-pub use operation::{Operation, OperationParseError};
+pub use operation::{ConversionOptions, Operation, OperationParseError, OperationVersion};
 pub use spec::{Spec, SpecParseError};

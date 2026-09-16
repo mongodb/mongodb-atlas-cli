@@ -27,6 +27,17 @@ pub struct OperationVersion {
     pub response_bodies: BTreeMap<MediaType, DataType>,
 }
 
+/// Options that change how a resolved media type is converted to a datatype.
+#[derive(Debug, Default)]
+pub struct ConversionOptions {
+    /// Drop `readOnly` fields. OpenAPI reuses one schema for request and
+    /// response, with `readOnly` marking server-filled fields that must not be
+    /// sent in a request (quirk 5.2).
+    pub drop_readonly_fields: bool,
+    /// Drop `writeOnly` fields; a response never carries them (quirk 5.2).
+    pub drop_writeonly_fields: bool,
+}
+
 #[derive(Debug, Error)]
 pub enum OperationVersionParseError {
     #[error("Media type has no schema")]
@@ -54,9 +65,15 @@ impl OperationVersion {
         // Parse the JSON request body
         let request_body_datatype = if let Some(request_bodies) = request_bodies {
             match request_bodies.get(&MediaType::Json) {
-                Some(resolved_media_type) if resolved_media_type.schema.is_some() => {
-                    Some(Self::resolved_media_type_to_datatype(resolved_media_type)?)
-                }
+                Some(resolved_media_type) if resolved_media_type.schema.is_some() => Some(
+                    Self::resolved_media_type_to_datatype(
+                        resolved_media_type,
+                        &ConversionOptions {
+                            drop_readonly_fields: true,
+                            ..Default::default()
+                        },
+                    )?,
+                ),
                 Some(_) => {
                     eprintln!("Skipping JSON request body without a schema");
                     None
@@ -79,7 +96,13 @@ impl OperationVersion {
                 eprintln!("Skipping response media type without a schema: {media_type:?}");
                 continue;
             }
-            let data_type = Self::resolved_media_type_to_datatype(resolved_media_type)?;
+            let data_type = Self::resolved_media_type_to_datatype(
+                resolved_media_type,
+                &ConversionOptions {
+                    drop_writeonly_fields: true,
+                    ..Default::default()
+                },
+            )?;
             response_bodies_datatypes.insert(media_type, data_type);
         }
 
@@ -92,13 +115,14 @@ impl OperationVersion {
 
     fn resolved_media_type_to_datatype(
         resolved_media_type: &ResolvedMediaType,
+        options: &ConversionOptions,
     ) -> Result<DataType, OperationVersionParseError> {
         let schema = resolved_media_type
             .schema
             .as_ref()
             .ok_or(OperationVersionParseError::MissingSchema)?;
         let mut visited = HashSet::new();
-        Self::resolved_schema_to_datatype(schema, &mut visited)
+        Self::resolved_schema_to_datatype(schema, options, &mut visited)
     }
 
     /// Converts a resolved schema into a [`DataType`].
@@ -118,6 +142,7 @@ impl OperationVersion {
     /// - a `nullable` schema is wrapped in [`ReferenceType::Optional`]
     fn resolved_schema_to_datatype(
         schema: &ResolvedSchema,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         let pointer = (schema as *const ResolvedSchema) as usize;
@@ -130,15 +155,21 @@ impl OperationVersion {
         let datatype = if let Some(discriminator) = &schema.schema_data.discriminator
             && !discriminator.mapping.is_empty()
         {
-            Self::union_from_discriminator(discriminator, visited)?
+            Self::union_from_discriminator(discriminator, options, visited)?
         } else {
             match &schema.schema_kind {
-                ResolvedSchemaKind::Any(any) => Self::resolved_any_schema_to_datatype(any, visited),
-                ResolvedSchemaKind::Type(typ) => Self::resolved_type_to_datatype(typ, visited),
-                ResolvedSchemaKind::OneOf { one_of } => Self::one_of_to_datatype(one_of, visited),
-                ResolvedSchemaKind::AnyOf { any_of } => Self::any_of_to_datatype(any_of, visited),
+                ResolvedSchemaKind::Any(any) => {
+                    Self::resolved_any_schema_to_datatype(any, options, visited)
+                }
+                ResolvedSchemaKind::Type(typ) => Self::resolved_type_to_datatype(typ, options, visited),
+                ResolvedSchemaKind::OneOf { one_of } => {
+                    Self::one_of_to_datatype(one_of, options, visited)
+                }
+                ResolvedSchemaKind::AnyOf { any_of } => {
+                    Self::any_of_to_datatype(any_of, options, visited)
+                }
                 ResolvedSchemaKind::AllOf { all_of } => {
-                    Self::merge_objects_to_datatype(all_of, visited)
+                    Self::merge_objects_to_datatype(all_of, options, visited)
                 }
                 ResolvedSchemaKind::Not { .. } => {
                     Err(OperationVersionParseError::UnsupportedSchemaKind)
@@ -157,21 +188,22 @@ impl OperationVersion {
 
     fn resolved_any_schema_to_datatype(
         any: &openapiv3_resolve::ResolvedAnySchema,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         // `SchemaKind::Any` absorbs `oneOf`, `anyOf`, `allOf`, `properties`,
         // `enumeration` and `items` into one bag, so decide in priority order.
         if !any.one_of.is_empty() {
-            return Self::one_of_to_datatype(&any.one_of, visited);
+            return Self::one_of_to_datatype(&any.one_of, options, visited);
         }
         if !any.any_of.is_empty() {
-            return Self::any_of_to_datatype(&any.any_of, visited);
+            return Self::any_of_to_datatype(&any.any_of, options, visited);
         }
         if !any.all_of.is_empty() {
-            return Self::merge_objects_to_datatype(&any.all_of, visited);
+            return Self::merge_objects_to_datatype(&any.all_of, options, visited);
         }
         if !any.properties.is_empty() {
-            return Self::object_to_datatype(&any.properties, &any.required, visited);
+            return Self::object_to_datatype(&any.properties, &any.required, options, visited);
         }
         if !any.enumeration.is_empty() {
             return Self::enum_values_to_datatype(
@@ -194,7 +226,7 @@ impl OperationVersion {
             Some("number") => Ok(DataType::ValueType(ValueType::Double(ValueTypeDouble {}))),
             Some("boolean") => Ok(DataType::ValueType(ValueType::Boolean(ValueTypeBoolean {}))),
             Some("array") => match &any.items {
-                Some(items) => Self::items_to_datatype(items, visited),
+                Some(items) => Self::items_to_datatype(items, options, visited),
                 None => Err(OperationVersionParseError::MissingArrayItems),
             },
             // Free-form object (`type: object` alone) or a map
@@ -206,6 +238,7 @@ impl OperationVersion {
 
     fn resolved_type_to_datatype(
         typ: &ResolvedType,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         match typ {
@@ -251,10 +284,10 @@ impl OperationVersion {
                 ValueType::Boolean(ValueTypeBoolean {}),
             ),
             ResolvedType::Object(object) => {
-                Self::object_to_datatype(&object.properties, &object.required, visited)
+                Self::object_to_datatype(&object.properties, &object.required, options, visited)
             }
             ResolvedType::Array(array) => match &array.items {
-                Some(items) => Self::items_to_datatype(items, visited),
+                Some(items) => Self::items_to_datatype(items, options, visited),
                 None => Err(OperationVersionParseError::MissingArrayItems),
             },
         }
@@ -281,15 +314,16 @@ impl OperationVersion {
     /// way to tell them apart, quirk 1.2).
     fn one_of_to_datatype(
         one_of: &[NestedSchema],
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         if let Some(enumeration) = Self::merge_enumerations(one_of) {
             return Ok(enumeration);
         }
-        if let Some((field, options)) = Self::derive_discriminator(one_of) {
-            return Self::union_from_discriminated(field, options, visited);
+        if let Some((field, mapping)) = Self::derive_discriminator(one_of) {
+            return Self::union_from_discriminated(field, mapping, options, visited);
         }
-        Self::merge_objects_to_datatype(one_of, visited)
+        Self::merge_objects_to_datatype(one_of, options, visited)
     }
 
     /// [`ResolvedSchemaKind::AnyOf`]: alternatives carrying a single-value enum
@@ -297,27 +331,29 @@ impl OperationVersion {
     /// with optional fields.
     fn any_of_to_datatype(
         any_of: &[NestedSchema],
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         if let Some(enumeration) = Self::merge_enumerations(any_of) {
             return Ok(enumeration);
         }
-        if let Some((field, options)) = Self::derive_discriminator(any_of) {
-            return Self::union_from_discriminated(field, options, visited);
+        if let Some((field, mapping)) = Self::derive_discriminator(any_of) {
+            return Self::union_from_discriminated(field, mapping, options, visited);
         }
-        Self::merge_objects_to_datatype(any_of, visited)
+        Self::merge_objects_to_datatype(any_of, options, visited)
     }
 
     fn union_from_discriminator(
         discriminator: &ResolvedDiscriminator,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         let field = discriminator.property_name.clone();
-        let options = discriminator
+        let mapping = discriminator
             .mapping
             .iter()
             .map(|(value, nested)| (value.clone(), nested));
-        Self::union_from_discriminated(field, options, visited)
+        Self::union_from_discriminated(field, mapping, options, visited)
     }
 
     /// Builds a [`ReferenceType::OneOf`] from a discriminator field and its
@@ -327,12 +363,13 @@ impl OperationVersion {
     /// the discriminator already carries it, so it is dropped from the option.
     fn union_from_discriminated<'a>(
         discriminator_field: String,
-        options: impl IntoIterator<Item = (String, &'a NestedSchema)>,
+        mapping: impl IntoIterator<Item = (String, &'a NestedSchema)>,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         let mut option_types = BTreeMap::new();
-        for (value, nested) in options {
-            let reference = match Self::resolved_schema_to_datatype(&nested.get(), visited)? {
+        for (value, nested) in mapping {
+            let reference = match Self::resolved_schema_to_datatype(&nested.get(), options, visited)? {
                 DataType::ReferenceType(reference) => reference,
                 DataType::ValueType(_) => {
                     return Err(OperationVersionParseError::UnionOptionNotReference(value));
@@ -379,9 +416,10 @@ impl OperationVersion {
 
     fn items_to_datatype(
         items: &NestedSchema,
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
-        let entries_type = Self::resolved_schema_to_datatype(&items.get(), visited)?;
+        let entries_type = Self::resolved_schema_to_datatype(&items.get(), options, visited)?;
         Ok(DataType::ReferenceType(ReferenceType::new_array(
             entries_type,
         )))
@@ -390,9 +428,10 @@ impl OperationVersion {
     fn object_to_datatype(
         properties: &IndexMap<String, NestedSchema>,
         required: &[String],
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
-        let property_types = Self::property_types(properties, required, visited)?;
+        let property_types = Self::property_types(properties, required, options, visited)?;
         Ok(DataType::ReferenceType(ReferenceType::try_new_object(
             property_types,
         )?))
@@ -401,13 +440,17 @@ impl OperationVersion {
     fn property_types(
         properties: &IndexMap<String, NestedSchema>,
         required: &[String],
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<BTreeMap<String, DataType>, OperationVersionParseError> {
         let required = required.iter().cloned().collect::<HashSet<_>>();
         let mut property_types = BTreeMap::new();
         for (name, nested) in properties {
             let schema = nested.get();
-            let mut datatype = Self::resolved_schema_to_datatype(&schema, visited)?;
+            if Self::should_drop_property(&schema, options) {
+                continue;
+            }
+            let mut datatype = Self::resolved_schema_to_datatype(&schema, options, visited)?;
             let optional = !required.contains(name);
             if optional {
                 datatype = Self::wrap_optional(datatype);
@@ -421,11 +464,12 @@ impl OperationVersion {
     /// or an `anyOf`/`oneOf` without a discriminable field).
     fn merge_objects_to_datatype(
         alternatives: &[NestedSchema],
+        options: &ConversionOptions,
         visited: &mut HashSet<usize>,
     ) -> Result<DataType, OperationVersionParseError> {
         let mut property_types = BTreeMap::new();
         for alternative in alternatives {
-            Self::collect_object_properties(&alternative.get(), &mut property_types, visited)?;
+            Self::collect_object_properties(&alternative.get(), options, &mut property_types, visited)?;
         }
         Ok(DataType::ReferenceType(ReferenceType::try_new_object(
             property_types,
@@ -437,6 +481,7 @@ impl OperationVersion {
     /// is itself a union contributes the union's shared properties only.
     fn collect_object_properties(
         schema: &ResolvedSchema,
+        options: &ConversionOptions,
         property_types: &mut BTreeMap<String, DataType>,
         visited: &mut HashSet<usize>,
     ) -> Result<(), OperationVersionParseError> {
@@ -444,13 +489,14 @@ impl OperationVersion {
             ResolvedSchemaKind::Type(ResolvedType::Object(object)) => Self::collect_properties(
                 &object.properties,
                 &object.required,
+                options,
                 property_types,
                 visited,
             ),
             ResolvedSchemaKind::Any(any) if !any.all_of.is_empty() => {
                 for nested in &any.all_of {
                     if !nested.is_recursive() {
-                        Self::collect_object_properties(&nested.get(), property_types, visited)?;
+                        Self::collect_object_properties(&nested.get(), options, property_types, visited)?;
                     }
                 }
                 Ok(())
@@ -458,7 +504,13 @@ impl OperationVersion {
             ResolvedSchemaKind::Any(any)
                 if !any.properties.is_empty() && any.one_of.is_empty() && any.any_of.is_empty() =>
             {
-                Self::collect_properties(&any.properties, &any.required, property_types, visited)
+                Self::collect_properties(
+                    &any.properties,
+                    &any.required,
+                    options,
+                    property_types,
+                    visited,
+                )
             }
             ResolvedSchemaKind::Any(any) if !any.one_of.is_empty() || !any.any_of.is_empty() => {
                 // A union's shared properties describe the base type; its
@@ -467,6 +519,7 @@ impl OperationVersion {
                     Self::collect_properties(
                         &any.properties,
                         &any.required,
+                        options,
                         property_types,
                         visited,
                     )?;
@@ -480,19 +533,30 @@ impl OperationVersion {
     fn collect_properties(
         properties: &IndexMap<String, NestedSchema>,
         required: &[String],
+        options: &ConversionOptions,
         property_types: &mut BTreeMap<String, DataType>,
         visited: &mut HashSet<usize>,
     ) -> Result<(), OperationVersionParseError> {
         let required = required.iter().cloned().collect::<HashSet<_>>();
         for (name, nested) in properties {
             let schema = nested.get();
-            let mut datatype = Self::resolved_schema_to_datatype(&schema, visited)?;
+            if Self::should_drop_property(&schema, options) {
+                continue;
+            }
+            let mut datatype = Self::resolved_schema_to_datatype(&schema, options, visited)?;
             if schema.schema_data.nullable || !required.contains(name) {
                 datatype = Self::wrap_optional(datatype);
             }
             property_types.insert(name.clone(), datatype);
         }
         Ok(())
+    }
+
+    /// Whether a property is dropped for the current direction: `readOnly`
+    /// fields from a request, `writeOnly` fields from a response (quirk 5.2).
+    fn should_drop_property(schema: &ResolvedSchema, options: &ConversionOptions) -> bool {
+        (options.drop_readonly_fields && schema.schema_data.read_only)
+            || (options.drop_writeonly_fields && schema.schema_data.write_only)
     }
 
     /// An object with no properties: a free-form `type: object`, a map

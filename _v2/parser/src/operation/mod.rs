@@ -20,7 +20,7 @@ mod version;
 
 use headers::Headers;
 use url::ParameterizedUrl;
-use version::OperationVersion;
+pub use version::{ConversionOptions, OperationVersion};
 
 use crate::operation::{
     headers::HeadersParseError, url::ParameterizedUrlParseError,

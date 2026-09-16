@@ -1,0 +1,66 @@
+---
+source: parser/src/quirks.rs
+expression: versions
+---
+{
+  "GET": {
+    "version": "2023-01-01",
+    "response_bodies": {
+      "json": {
+        "Object": {
+          "properties": {
+            "createDate": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            },
+            "id": {
+              "String": {}
+            },
+            "name": {
+              "String": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "POST": {
+    "version": "2023-01-01",
+    "request_body": {
+      "Object": {
+        "properties": {
+          "name": {
+            "String": {}
+          },
+          "password": {
+            "String": {}
+          }
+        }
+      }
+    },
+    "response_bodies": {
+      "json": {
+        "Object": {
+          "properties": {
+            "createDate": {
+              "Optional": {
+                "data_type": {
+                  "String": {}
+                }
+              }
+            },
+            "id": {
+              "String": {}
+            },
+            "name": {
+              "String": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

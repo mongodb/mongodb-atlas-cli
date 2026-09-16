@@ -1,0 +1,52 @@
+openapi: 3.0.1
+info:
+  title: quirk
+  version: "1"
+paths:
+  /test:
+    post:
+      description: request drops readOnly fields, response keeps them
+      operationId: postQuirk
+      requestBody:
+        required: true
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+      responses:
+        "202":
+          description: accepted
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+    get:
+      description: response keeps readOnly fields
+      operationId: getQuirk
+      responses:
+        "200":
+          description: ok
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+components:
+  schemas:
+    Cluster:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        createDate:
+          type: string
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+        - id
+        - name
+        - password

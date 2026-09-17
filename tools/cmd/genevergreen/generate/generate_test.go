@@ -96,7 +96,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 25)
+	assert.Len(t, c.Tasks, 22)
 }
 
 func TestRepoTasks(t *testing.T) {

@@ -161,6 +161,10 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
+		if os == "debian13" {
+			continue // TODO fix me after CLOUDP-446594
+		}
+
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue

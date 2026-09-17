@@ -1,0 +1,18 @@
+[package]
+name = "atlas-cli-codegen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+models = { path = "../models" }
+openapiv3 = { workspace = true }
+openapiv3-resolve = { workspace = true }
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+serde_yaml = { workspace = true }
+syn = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+insta = { workspace = true, features = ["json"] }
+prettyplease = "0.2"

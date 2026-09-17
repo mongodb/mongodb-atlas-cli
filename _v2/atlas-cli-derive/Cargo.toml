@@ -1,0 +1,12 @@
+[package]
+name = "atlas-cli-derive"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+atlas-cli-codegen = { path = "../atlas-cli-codegen" }
+proc-macro2 = { workspace = true }
+syn = { workspace = true }

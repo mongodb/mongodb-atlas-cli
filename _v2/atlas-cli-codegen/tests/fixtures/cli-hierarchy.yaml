@@ -1,0 +1,18 @@
+groups:
+  Clusters:
+    description: Cluster operations, grouped.
+    entities:
+      Cluster:
+        description: Manage your clusters.
+        create: createGroupCluster
+        update: updateGroupCluster
+  Cloud Backups:
+    entities:
+      CompliancePolicy:
+        description: Backup compliance policy.
+        read: getGroupBackupCompliancePolicy
+      Cluster:
+        components:
+          Schedule:
+            description: Backup schedules.
+            read: startGroupClusterBackup

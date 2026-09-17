@@ -1,0 +1,381 @@
+---
+source: atlas-cli-codegen/tests/emit.rs
+expression: generated_source()
+---
+#[derive(Debug, ::clap::Subcommand)]
+pub enum CliSubCommands {
+    ///Manage your Atlas CLI cloud backups
+    CloudBackups(CloudBackupsCommand),
+    ///Cluster operations, grouped.
+    Clusters(ClustersCommand),
+}
+impl Cli {
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        match self.sub_command {
+            CliSubCommands::CloudBackups(c) => {
+                match c.sub_command {
+                    CloudBackupsSubcommands::Cluster(b) => {
+                        match b.sub_command {
+                            CloudBackupsClusterSubcommands::Schedule(d) => {
+                                match d.sub_command {
+                                    CloudBackupsClusterScheduleSubcommands::Read(probe) => {
+                                        probe.execute().await
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    CloudBackupsSubcommands::CompliancePolicy(b) => {
+                        match b.sub_command {
+                            CloudBackupsCompliancePolicySubcommands::Read(probe) => {
+                                probe.execute().await
+                            }
+                        }
+                    }
+                }
+            }
+            CliSubCommands::Clusters(c) => {
+                match c.sub_command {
+                    ClustersSubcommands::Create(probe) => probe.execute().await,
+                    ClustersSubcommands::Update(probe) => probe.execute().await,
+                }
+            }
+        }
+    }
+}
+#[derive(Debug, ::clap::Args)]
+pub struct CloudBackupsCommand {
+    #[clap(subcommand)]
+    sub_command: CloudBackupsSubcommands,
+}
+#[derive(Debug, ::clap::Subcommand)]
+pub enum CloudBackupsSubcommands {
+    ///Manage your Atlas CLI cluster
+    Cluster(CloudBackupsClusterCommand),
+    ///Backup compliance policy.
+    CompliancePolicy(CloudBackupsCompliancePolicyCommand),
+}
+#[derive(Debug, ::clap::Args)]
+pub struct CloudBackupsClusterCommand {
+    #[clap(subcommand)]
+    sub_command: CloudBackupsClusterSubcommands,
+}
+#[derive(Debug, ::clap::Subcommand)]
+pub enum CloudBackupsClusterSubcommands {
+    ///Backup schedules.
+    Schedule(CloudBackupsClusterScheduleCommand),
+}
+#[derive(Debug, ::clap::Args)]
+pub struct CloudBackupsClusterScheduleCommand {
+    #[clap(subcommand)]
+    sub_command: CloudBackupsClusterScheduleSubcommands,
+}
+#[derive(Debug, ::clap::Subcommand)]
+pub enum CloudBackupsClusterScheduleSubcommands {
+    ///Starts a backup for the specified cluster in the specified project.
+    Read(StartGroupClusterBackupProbe),
+}
+#[derive(Debug, ::clap::Args)]
+pub struct CloudBackupsCompliancePolicyCommand {
+    #[clap(subcommand)]
+    sub_command: CloudBackupsCompliancePolicySubcommands,
+}
+#[derive(Debug, ::clap::Subcommand)]
+pub enum CloudBackupsCompliancePolicySubcommands {
+    ///Returns the Backup Compliance Policy settings with the specified project.
+    Read(GetGroupBackupCompliancePolicyProbe),
+}
+#[derive(Debug, ::clap::Args)]
+pub struct ClustersCommand {
+    #[clap(subcommand)]
+    sub_command: ClustersSubcommands,
+}
+#[derive(Debug, ::clap::Subcommand)]
+pub enum ClustersSubcommands {
+    ///Creates one cluster in the specified project.
+    ///
+    ///Clusters contain a group of hosts that maintain the same data set.
+    Create(CreateGroupClusterProbe),
+    ///Updates one cluster in the specified project.
+    Update(UpdateGroupClusterProbe),
+}
+#[derive(Debug, ::clap::Args)]
+#[command(disable_help_flag = true)]
+pub struct StartGroupClusterBackupProbe {
+    #[arg(long, value_enum, default_value_t = StartGroupClusterBackupVersion::V20241023)]
+    version: StartGroupClusterBackupVersion,
+    /// Raw args for the selected version's command, captured verbatim.
+    #[arg(allow_hyphen_values = true)]
+    rest: Vec<String>,
+}
+#[derive(Clone, Copy, Debug, ::clap::ValueEnum)]
+pub enum StartGroupClusterBackupVersion {
+    V20230101,
+    V20241023,
+}
+impl StartGroupClusterBackupProbe {
+    /// Re-parse the captured raw args against the version-specific command.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        match self.version {
+            StartGroupClusterBackupVersion::V20230101 => {
+                let args = ::std::iter::once("read".to_owned()).chain(self.rest);
+                let cmd = StartGroupClusterBackupV20230101::parse_from(args);
+                cmd.execute().await
+            }
+            StartGroupClusterBackupVersion::V20241023 => {
+                let args = ::std::iter::once("read".to_owned()).chain(self.rest);
+                let cmd = StartGroupClusterBackupV20241023::parse_from(args);
+                cmd.execute().await
+            }
+        }
+    }
+}
+///Starts a backup for the specified cluster in the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20230101.
+#[derive(Debug, ::clap::Parser)]
+pub struct StartGroupClusterBackupV20230101 {
+    #[arg(long, value_enum, default_value_t = StartGroupClusterBackupVersion::V20230101)]
+    version: StartGroupClusterBackupVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+    ///Human-readable label that identifies the cluster.
+    #[arg(long)]
+    clusterName: String,
+}
+impl StartGroupClusterBackupV20230101 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+///Starts a backup for the specified cluster in the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20241023.
+#[derive(Debug, ::clap::Parser)]
+pub struct StartGroupClusterBackupV20241023 {
+    #[arg(long, value_enum, default_value_t = StartGroupClusterBackupVersion::V20241023)]
+    version: StartGroupClusterBackupVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+    ///Human-readable label that identifies the cluster.
+    #[arg(long)]
+    clusterName: String,
+}
+impl StartGroupClusterBackupV20241023 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+#[derive(Debug, ::clap::Args)]
+#[command(disable_help_flag = true)]
+pub struct GetGroupBackupCompliancePolicyProbe {
+    #[arg(
+        long,
+        value_enum,
+        default_value_t = GetGroupBackupCompliancePolicyVersion::V20231001
+    )]
+    version: GetGroupBackupCompliancePolicyVersion,
+    /// Raw args for the selected version's command, captured verbatim.
+    #[arg(allow_hyphen_values = true)]
+    rest: Vec<String>,
+}
+#[derive(Clone, Copy, Debug, ::clap::ValueEnum)]
+pub enum GetGroupBackupCompliancePolicyVersion {
+    V20230101,
+    V20231001,
+}
+impl GetGroupBackupCompliancePolicyProbe {
+    /// Re-parse the captured raw args against the version-specific command.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        match self.version {
+            GetGroupBackupCompliancePolicyVersion::V20230101 => {
+                let args = ::std::iter::once("read".to_owned()).chain(self.rest);
+                let cmd = GetGroupBackupCompliancePolicyV20230101::parse_from(args);
+                cmd.execute().await
+            }
+            GetGroupBackupCompliancePolicyVersion::V20231001 => {
+                let args = ::std::iter::once("read".to_owned()).chain(self.rest);
+                let cmd = GetGroupBackupCompliancePolicyV20231001::parse_from(args);
+                cmd.execute().await
+            }
+        }
+    }
+}
+///Returns the Backup Compliance Policy settings with the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20230101.
+#[derive(Debug, ::clap::Parser)]
+pub struct GetGroupBackupCompliancePolicyV20230101 {
+    #[arg(
+        long,
+        value_enum,
+        default_value_t = GetGroupBackupCompliancePolicyVersion::V20230101
+    )]
+    version: GetGroupBackupCompliancePolicyVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+}
+impl GetGroupBackupCompliancePolicyV20230101 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+///Returns the Backup Compliance Policy settings with the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20231001.
+#[derive(Debug, ::clap::Parser)]
+pub struct GetGroupBackupCompliancePolicyV20231001 {
+    #[arg(
+        long,
+        value_enum,
+        default_value_t = GetGroupBackupCompliancePolicyVersion::V20231001
+    )]
+    version: GetGroupBackupCompliancePolicyVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+}
+impl GetGroupBackupCompliancePolicyV20231001 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+#[derive(Debug, ::clap::Args)]
+#[command(disable_help_flag = true)]
+pub struct CreateGroupClusterProbe {
+    #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20241023)]
+    version: CreateGroupClusterVersion,
+    /// Raw args for the selected version's command, captured verbatim.
+    #[arg(allow_hyphen_values = true)]
+    rest: Vec<String>,
+}
+#[derive(Clone, Copy, Debug, ::clap::ValueEnum)]
+pub enum CreateGroupClusterVersion {
+    V20230101,
+    V20241023,
+}
+impl CreateGroupClusterProbe {
+    /// Re-parse the captured raw args against the version-specific command.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        match self.version {
+            CreateGroupClusterVersion::V20230101 => {
+                let args = ::std::iter::once("create".to_owned()).chain(self.rest);
+                let cmd = CreateGroupClusterV20230101::parse_from(args);
+                cmd.execute().await
+            }
+            CreateGroupClusterVersion::V20241023 => {
+                let args = ::std::iter::once("create".to_owned()).chain(self.rest);
+                let cmd = CreateGroupClusterV20241023::parse_from(args);
+                cmd.execute().await
+            }
+        }
+    }
+}
+///Creates one cluster in the specified project.
+///
+///Clusters contain a group of hosts that maintain the same data set.
+///
+///Flags differ per API version (--version). This help describes version V20230101.
+#[derive(Debug, ::clap::Parser)]
+pub struct CreateGroupClusterV20230101 {
+    #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20230101)]
+    version: CreateGroupClusterVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+    ///Flag that indicates whether the response body should be pretty printed.
+    #[arg(long)]
+    pretty: Option<String>,
+}
+impl CreateGroupClusterV20230101 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+///Creates one cluster in the specified project.
+///
+///Clusters contain a group of hosts that maintain the same data set.
+///
+///Flags differ per API version (--version). This help describes version V20241023.
+#[derive(Debug, ::clap::Parser)]
+pub struct CreateGroupClusterV20241023 {
+    #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20241023)]
+    version: CreateGroupClusterVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+    ///Flag that indicates whether the response body should be pretty printed.
+    #[arg(long)]
+    pretty: Option<String>,
+}
+impl CreateGroupClusterV20241023 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+#[derive(Debug, ::clap::Args)]
+#[command(disable_help_flag = true)]
+pub struct UpdateGroupClusterProbe {
+    #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20241023)]
+    version: UpdateGroupClusterVersion,
+    /// Raw args for the selected version's command, captured verbatim.
+    #[arg(allow_hyphen_values = true)]
+    rest: Vec<String>,
+}
+#[derive(Clone, Copy, Debug, ::clap::ValueEnum)]
+pub enum UpdateGroupClusterVersion {
+    V20230101,
+    V20241023,
+}
+impl UpdateGroupClusterProbe {
+    /// Re-parse the captured raw args against the version-specific command.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        match self.version {
+            UpdateGroupClusterVersion::V20230101 => {
+                let args = ::std::iter::once("update".to_owned()).chain(self.rest);
+                let cmd = UpdateGroupClusterV20230101::parse_from(args);
+                cmd.execute().await
+            }
+            UpdateGroupClusterVersion::V20241023 => {
+                let args = ::std::iter::once("update".to_owned()).chain(self.rest);
+                let cmd = UpdateGroupClusterV20241023::parse_from(args);
+                cmd.execute().await
+            }
+        }
+    }
+}
+///Updates one cluster in the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20230101.
+#[derive(Debug, ::clap::Parser)]
+pub struct UpdateGroupClusterV20230101 {
+    #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20230101)]
+    version: UpdateGroupClusterVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+}
+impl UpdateGroupClusterV20230101 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}
+///Updates one cluster in the specified project.
+///
+///Flags differ per API version (--version). This help describes version V20241023.
+#[derive(Debug, ::clap::Parser)]
+pub struct UpdateGroupClusterV20241023 {
+    #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20241023)]
+    version: UpdateGroupClusterVersion,
+    ///Unique 24-hexadecimal digit string that identifies your project.
+    #[arg(long)]
+    groupId: String,
+}
+impl UpdateGroupClusterV20241023 {
+    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        todo!()
+    }
+}

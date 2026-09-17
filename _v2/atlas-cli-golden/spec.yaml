@@ -1,0 +1,1664 @@
+openapi: 3.0.3
+info:
+  title: atlas-cli-golden
+  version: '1'
+paths:
+  # Deliberately ignored: referenced nowhere in hierarchy.yaml, listed in
+  # `excluded_operation_ids` on the derived Cli struct.
+  /api/atlas/v2/groups:
+    post:
+      description: Creates one project.
+      operationId: createGroup
+      tags:
+      - Organizations
+      parameters:
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/backup/exportBuckets:
+    post:
+      description: Creates a Snapshot Export Bucket for an AWS S3 Bucket, Azure Blob Storage Container, or Google Cloud Storage
+        Bucket. Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket, Azure Blob
+        Storage Container, or Google Cloud Storage Bucket.
+      operationId: createGroupBackupExportBucket
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: &id001
+          default: false
+          type: boolean
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: &id002
+          example: 32b6e34b3d91647abb20e7b8
+          pattern: ^([a-f0-9]{24})$
+          type: string
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: &id003
+          default: false
+          externalDocs:
+            description: Prettyprint
+            url: https://en.wikipedia.org/wiki/Prettyprint
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-05-30+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+    get:
+      description: Returns all Export Buckets associated with the specified Project.
+      operationId: listGroupBackupExportBuckets
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: &id004
+          default: true
+          type: boolean
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: &id005
+          default: 100
+          maximum: 500
+          minimum: 1
+          type: integer
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: &id006
+          default: 1
+          minimum: 1
+          type: integer
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters:
+    post:
+      description: 'Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same
+        data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database
+        deployments. This feature is not available for serverless clusters.
+
+
+        Please note that using an `instanceSize` of M2 or M5 will create a Flex cluster instead. Support for the `instanceSize`
+        of M2 or M5 will be discontinued in January 2026. We recommend using the Create Flex Cluster API for such configurations
+        moving forward.'
+      operationId: createGroupCluster
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Controls how hardware specification fields are returned in the response after cluster creation. When
+          set to true, returns the original client-specified values and provides separate effective fields showing current
+          operational values. When false (default), hardware specification fields show current operational values directly.
+          Primarily used for autoscaling compatibility.
+        in: header
+        name: Use-Effective-Instance-Fields
+        schema:
+          default: false
+          type: boolean
+      - description: Controls how `replicationSpecs` fields are returned in the response. When set to `true`, stores the client's
+          view of `replicationSpecs` and returns it in `replicationSpecs`, while the actual cluster state (including auto-scaled
+          hardware and auto-added shards) is returned in `effectiveReplicationSpecs`. When `false` (default), `replicationSpecs`
+          contains the actual cluster state.
+        in: header
+        name: Use-Effective-Fields-Replication-Specs
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2023-02-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-10-23+json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-10-23+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/backup/exportBuckets/{exportBucketId}:
+    delete:
+      description: Deletes an Export Bucket. Auto export must be disabled on all clusters in this Project exporting to this
+        Export Bucket before revoking access.
+      operationId: deleteGroupBackupExportBucket
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Unique 24-hexadecimal character string that identifies the Export Bucket.
+        in: path
+        name: exportBucketId
+        required: true
+        schema:
+          example: 32b6e34b3d91647abb20e7b8
+          pattern: ^([a-f0-9]{24})$
+          type: string
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+    get:
+      description: Returns one Export Bucket associated with the specified Project.
+      operationId: getGroupBackupExportBucket
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Unique 24-hexadecimal character string that identifies the Export Bucket.
+        in: path
+        name: exportBucketId
+        required: true
+        schema:
+          example: 32b6e34b3d91647abb20e7b8
+          pattern: ^([a-f0-9]{24})$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+    patch:
+      description: Updates the private networking settings for one snapshot export bucket in the specified project.
+      operationId: updateGroupBackupExportBucket
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Unique 24-hexadecimal character string that identifies the snapshot export bucket.
+        in: path
+        name: exportBucketId
+        required: true
+        schema:
+          example: 32b6e34b3d91647abb20e7b8
+          pattern: ^([a-f0-9]{24})$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2024-05-30+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:
+    delete:
+      description: 'Removes one cluster from the specified project. The cluster must have termination protection disabled
+        in order to be deleted. This feature is not available for serverless clusters.
+
+
+        This endpoint can also be used on Flex clusters that were created using the [Create Cluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster)
+        endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the Delete
+        Flex Cluster endpoint for Flex clusters instead.'
+      operationId: deleteGroupCluster
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+        examples:
+          delete_cluster:
+            value: '[your-cluster-name]'
+      - description: Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster.
+        in: query
+        name: retainBackups
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-02-01+json:
+            schema:
+              type: object
+      responses:
+        '202':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                type: object
+    get:
+      description: 'Returns the details for one cluster in the specified project. Clusters contain a group of hosts that maintain
+        the same data set. The response includes clusters with asymmetrically-sized shards. This feature is not available
+        for serverless clusters.
+
+
+        This endpoint can also be used on Flex clusters that were created using the [Create Cluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster)
+        endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the Get
+        Flex Cluster endpoint for Flex clusters instead.'
+      operationId: getGroupCluster
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies this cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+        examples:
+          get_cluster:
+            value: '[your-cluster-name]'
+      - description: Controls how hardware specification fields are returned in the response. When set to true, returns the
+          original client-specified values and provides separate effective fields showing current operational values. When
+          false (default), hardware specification fields show current operational values directly. Primarily used for autoscaling
+          compatibility.
+        in: header
+        name: Use-Effective-Instance-Fields
+        schema:
+          default: false
+          type: boolean
+      - description: Controls how `replicationSpecs` are returned in the response. When set to `true`, returns the client-specified
+          view in `replicationSpecs` and the actual cluster state in `effectiveReplicationSpecs`. When `false` (default),
+          `replicationSpecs` contains the actual cluster state.
+        in: header
+        name: Use-Effective-Fields-Replication-Specs
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+    patch:
+      description: 'Updates the details for one cluster in the specified project. Clusters contain a group of hosts that maintain
+        the same data set. This resource can update clusters with asymmetrically-sized shards. To update a cluster''s termination
+        protection, the requesting Service Account or API Key must have the Project Owner role. For all other updates, the
+        requesting Service Account or API Key must have the Project Cluster Manager role, the Project Cluster Resilience Tester
+        role, or the Project Replica Set Manager role. You can''t modify a paused cluster (`paused : true`). You must call
+        this endpoint to set `paused : false`. After this endpoint responds with `paused : false`, you can call it again with
+        the changes you want to make to the cluster. This feature is not available for serverless clusters.'
+      operationId: updateGroupCluster
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+        examples:
+          update_cluster:
+            value: '[your-cluster-name]'
+      - description: 'Controls how hardware specification fields are returned in the response after cluster updates. When
+          set to true, returns the original client-specified values and provides separate effective fields showing current
+          operational values. When false (default), hardware specification fields show current operational values directly.
+          Note: When using this header with autoscaling enabled, MongoDB ignores `replicationSpecs` changes during updates.
+          To intentionally override the `replicationSpecs`, disable this header.'
+        in: header
+        name: Use-Effective-Instance-Fields
+        schema:
+          default: false
+          type: boolean
+      - description: Controls how `replicationSpecs` fields are returned in the response. When set to `true`, stores the client's
+          view of `replicationSpecs` and returns it in `replicationSpecs`, while the actual cluster state (including auto-scaled
+          hardware and auto-added shards) is returned in `effectiveReplicationSpecs`. When `false` (default), `replicationSpecs`
+          contains the actual cluster state.
+        in: header
+        name: Use-Effective-Fields-Replication-Specs
+        schema:
+          default: false
+          type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2023-02-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-10-23+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-10-23+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/backupCompliancePolicy:
+    delete:
+      description: Disables the Backup Compliance Policy settings with the specified project. As a prerequisite, a support
+        ticket needs to be file first, instructions in https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/.
+      operationId: disableGroupBackupCompliancePolicy
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2024-11-13+json:
+              schema:
+                type: object
+    get:
+      description: Returns the Backup Compliance Policy settings with the specified project.
+      operationId: getGroupBackupCompliancePolicy
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-10-01+json:
+              schema:
+                type: object
+    put:
+      description: Updates the Backup Compliance Policy settings for the specified project.
+      operationId: updateGroupBackupCompliancePolicy
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Flag that indicates whether to overwrite non complying backup policies with the new data protection settings
+          or not.
+        in: query
+        name: overwriteBackupPolicies
+        schema:
+          default: true
+          type: boolean
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2023-10-01+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-10-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/schedule:
+    get:
+      description: Returns the cloud backup schedule for the specified cluster within the specified project. This schedule
+        defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots.
+      operationId: getGroupClusterBackupSchedule
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+    patch:
+      description: Updates the cloud backup schedule for one cluster within the specified project. This schedule defines when
+        MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots.
+      operationId: updateGroupClusterBackupSchedule
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs:
+    get:
+      description: Returns the advanced configuration details for one cluster in the specified project. Clusters contain a
+        group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index
+        and oplog limits, and other database settings. This feature isn't available for `M0` free clusters, `M2` and `M5`
+        shared-tier clusters, flex clusters, or serverless clusters.
+      operationId: getGroupClusterProcessArgs
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+    patch:
+      description: Updates the advanced configuration details for one cluster in the specified project. Clusters contain a
+        group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index
+        and oplog limits, and other database settings. This feature isn't available for `M0` free clusters, `M2` and `M5`
+        shared-tier clusters, flex clusters, or serverless clusters.
+      operationId: updateGroupClusterProcessArgs
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/sqlInterface:
+    get:
+      description: Returns the current SQL Interface status, either ON or OFF, for the specified cluster. If no status is
+        configured, this resource returns OFF. The response also indicates whether SQL Interface is supported for this cluster.
+      operationId: getGroupClusterSqlInterface
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.preview+json:
+              schema:
+                type: object
+    patch:
+      description: Enables or disables the SQL Interface for the specified cluster by setting its status to ON or OFF. Returns
+        a conflict if SQL Interface can't be enabled for this cluster or project.
+      operationId: updateGroupClusterSqlInterface
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.preview+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.preview+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/status:
+    get:
+      description: Returns the status of all changes that you made to the specified cluster in the specified project. Use
+        this resource to check the progress MongoDB Cloud has made in processing your changes. The response does not include
+        the deployment of new dedicated clusters.
+      operationId: getGroupClusterStatus
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{sampleDatasetId}:
+    get:
+      description: Checks the progress of loading the sample dataset into one cluster.
+      operationId: getGroupSampleDatasetLoad
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Unique 24-hexadecimal digit string that identifies the loaded sample dataset.
+        in: path
+        name: sampleDatasetId
+        required: true
+        schema:
+          pattern: ^([a-f0-9]{24})$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:grantMongoDBEmployeeAccess:
+    post:
+      description: Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
+      operationId: grantGroupClusterMongoDbEmployeeAccess
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies this cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2024-08-05+json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+  /api/atlas/v2/clusters:
+    get:
+      description: Returns the details for all clusters in all projects to which you have access. Clusters contain a group
+        of hosts that maintain the same data set. The response does not include multi-cloud clusters.
+      operationId: listClusterDetails
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: *id004
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: *id005
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: *id006
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots:
+    get:
+      description: Returns all snapshots of one cluster from the specified project.
+      operationId: listGroupClusterBackupSnapshots
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: *id004
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: *id005
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: *id006
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      - description: Desired point in time, expressed as the number of seconds that have elapsed since the UNIX epoch. If
+          specified, returns the closest snapshot created before that point in time. Mutually exclusive with `oplogTs` and
+          `oplogInc`.
+        in: query
+        name: pointInTimeUtcSeconds
+        schema:
+          format: int64
+          type: integer
+      - description: Oplog timestamp that represents the desired point in time. This is the first part of an Oplog timestamp.
+          Must be used with `oplogInc`. Mutually exclusive with `pointInTimeUtcSeconds`.
+        in: query
+        name: oplogTs
+        schema:
+          format: int64
+          type: integer
+      - description: Oplog operation number that represents the desired point in time. This is the second part of an Oplog
+          timestamp. Must be used with `oplogTs`. Mutually exclusive with `pointInTimeUtcSeconds`.
+        in: query
+        name: oplogInc
+        schema:
+          format: int64
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+    post:
+      description: Takes one on-demand snapshot for the specified cluster. Atlas takes on-demand snapshots immediately and
+        scheduled snapshots at regular intervals. If an on-demand snapshot with a status of `queued` or `inProgress` exists,
+        before taking another snapshot, wait until Atlas completes processing the previously taken on-demand snapshot.
+      operationId: takeGroupClusterBackupSnapshots
+      tags:
+      - Cloud Backups
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/provider/regions:
+    get:
+      description: Returns the list of regions available for the specified cloud provider at the specified tier.
+      operationId: listGroupClusterProviderRegions
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: *id004
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: *id005
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: *id006
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return
+          only tiers and regions that support multi-cloud clusters.
+        in: query
+        name: providers
+        schema:
+          items:
+            type: string
+          type: array
+      - description: Cluster tier for which to retrieve the regions.
+        in: query
+        name: tier
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:pinFeatureCompatibilityVersion:
+    post:
+      description: Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration
+        date. If an FCV pin already exists for the cluster, calling this method will only update the expiration date of the
+        existing pin and will not re-pin the FCV.
+      operationId: pinGroupClusterFeatureCompatibilityVersion
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies this cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2024-05-30+json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{name}:
+    post:
+      description: Requests loading the MongoDB sample dataset into the specified cluster.
+      operationId: requestGroupSampleDatasetLoad
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies the cluster into which you load the sample dataset.
+        in: path
+        name: name
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '201':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restartPrimaries:
+    post:
+      description: Starts a failover test for the specified cluster in the specified project. Clusters contain a group of
+        hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster's
+        primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary.
+      operationId: restartGroupClusterPrimaries
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies the cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:revokeMongoDBEmployeeAccess:
+    post:
+      description: Revokes a previously granted MongoDB employee cluster access.
+      operationId: revokeGroupClusterMongoDbEmployeeAccess
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - description: Human-readable label that identifies this cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:unpinFeatureCompatibilityVersion:
+    post:
+      description: Unpins the current fixed Feature Compatibility Version (FCV). This feature is not available for clusters
+        on rapid release.
+      operationId: unpinGroupClusterFeatureCompatibilityVersion
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - description: Human-readable label that identifies this cluster.
+        in: path
+        name: clusterName
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
+          type: string
+      responses:
+        '204':
+          description: OK
+          content:
+            application/vnd.atlas.2024-05-30+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade:
+    post:
+      description: "Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project. Each project\
+        \ supports up to 25 clusters. \n\nThis endpoint can also be used to upgrade Flex clusters that were created using\
+        \ the [Create Cluster](https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster)\
+        \ API or former M2/M5 clusters that have been migrated to Flex clusters, using `instanceSizeName` to “M2” or “M5”\
+        \ until January 2026. This functionality will be available until January 22, 2026, after which it will only be available\
+        \ for M0 clusters. Please use the Upgrade Flex Cluster endpoint instead."
+      operationId: upgradeGroupClusterTenantUpgrade
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/clusterConfigurations:validate:
+    post:
+      description: Checks if the given cluster configuration is valid and ready to be used to create or edit a cluster.
+      operationId: validateGroupClusterConfigurations
+      tags:
+      - Clusters
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      requestBody:
+        content:
+          application/vnd.atlas.2025-03-12+json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2025-03-12+json:
+              schema:
+                type: object

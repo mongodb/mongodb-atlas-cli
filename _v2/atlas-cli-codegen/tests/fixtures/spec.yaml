@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: codegen-test
+  version: "1"
+components:
+  schemas:
+    Cluster:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+paths:
+  /api/atlas/v2/groups/{groupId}/clusters:
+    post:
+      description: |-
+        Creates one cluster in the specified project.
+
+        Clusters contain a group of hosts that maintain the same data set.
+      operationId: createGroupCluster
+      tags:
+        - Clusters
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: Unique 24-hexadecimal digit string that identifies your project.
+          schema:
+            type: string
+        - name: pretty
+          in: query
+          description: Flag that indicates whether the response body should be pretty printed.
+          schema:
+            type: boolean
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/vnd.atlas.2024-10-23+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.atlas.2024-10-23+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+    patch:
+      description: Updates one cluster in the specified project.
+      operationId: updateGroupCluster
+      tags:
+        - Clusters
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: Unique 24-hexadecimal digit string that identifies your project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/vnd.atlas.2024-10-23+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.atlas.2024-10-23+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+  /api/atlas/v2/groups/{groupId}/backup/compliancePolicy:
+    get:
+      description: Returns the Backup Compliance Policy settings with the specified project.
+      operationId: getGroupBackupCompliancePolicy
+      tags:
+        - Cloud Backups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: Unique 24-hexadecimal digit string that identifies your project.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.atlas.2023-10-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+  /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup:
+    post:
+      description: Starts a backup for the specified cluster in the specified project.
+      operationId: startGroupClusterBackup
+      tags:
+        - Cloud Backups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: Unique 24-hexadecimal digit string that identifies your project.
+          schema:
+            type: string
+        - name: clusterName
+          in: path
+          required: true
+          description: Human-readable label that identifies the cluster.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.atlas.2024-10-23+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'

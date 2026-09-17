@@ -10,12 +10,12 @@ models = { path = "models" }
 nutype = { workspace = true, features = ["serde"] }
 openapiv3 = { workspace = true }
 serde_yaml = { workspace = true }
-tokio = { version = "1.53.1", features = ["full"] }
+tokio = { workspace = true, features = ["full"] }
 tracing = "0.1.44"
 tracing-subscriber = "0.3.23"
 
 [workspace]
-members = [".", "models", "target-generated-code"]
+members = [".", "models", "target-generated-code", "atlas-cli-codegen", "atlas-cli-derive", "atlas-cli-golden"]
 
 [workspace.dependencies]
 clap = { version = "4.6.6", features = ["derive", "string"] }
@@ -24,7 +24,11 @@ jsonschema = "0.56"
 nutype = "0.7.0"
 openapiv3 = "2.2.0"
 openapiv3-resolve = "0.2.0"
+proc-macro2 = "1.0"
+quote = "1.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
 serde_yaml = "0.9.34"
+syn = { version = "2.0", features = ["full", "extra-traits", "proc-macro"] }
 thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["full"] }

@@ -1,0 +1,9 @@
+[package]
+name = "atlas-cli-golden"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+atlas-cli-derive = { path = "../atlas-cli-derive" }
+clap = { workspace = true }
+tokio = { workspace = true, features = ["full"] }

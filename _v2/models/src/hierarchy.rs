@@ -1,9 +1,17 @@
 use std::collections::BTreeMap;
 
+use serde::{Deserialize, Serialize};
+
 use crate::operation_id::OperationId;
 
-#[derive(Debug)]
+/// The CLI hierarchy: group -> entities -> operations.
+///
+/// `Deserialize` lets a manual `cli.yaml` drive code generation instead of
+/// inferring the structure from the spec (see `/atlas-cli-codegen`).
+#[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Hierarchy {
+    #[serde(default)]
     groups: BTreeMap<String, Group>,
 }
 
@@ -23,8 +31,12 @@ impl Hierarchy {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Group {
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
     entities: BTreeMap<String, Entity>,
 }
 
@@ -38,8 +50,11 @@ impl Group {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Entity {
+    #[serde(default)]
+    pub description: Option<String>,
     // crudl
     pub create: Option<OperationId>,
     pub read: Option<OperationId>,
@@ -47,9 +62,11 @@ pub struct Entity {
     pub delete: Option<OperationId>,
     pub list: Option<OperationId>,
 
+    #[serde(default)]
     pub actions: BTreeMap<String, OperationId>,
 
     // components
+    #[serde(default)]
     pub components: BTreeMap<String, Component>,
 }
 
@@ -71,10 +88,14 @@ impl Entity {
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Component {
+    #[serde(default)]
+    pub description: Option<String>,
     pub read: Option<OperationId>,
     pub update: Option<OperationId>,
 
+    #[serde(default)]
     pub actions: BTreeMap<String, OperationId>,
 }

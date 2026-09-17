@@ -1,0 +1,66 @@
+# Manual CLI hierarchy: group -> entity -> operation slots.
+# Mirrors models::hierarchy::Hierarchy. Operation ids are spec operationIds.
+groups:
+  Clusters:
+    description: Manage your Atlas clusters.
+    entities:
+      Cluster:
+        description: Manage cluster lifecycle and configurations.
+        create: createGroupCluster
+        read: getGroupCluster
+        update: updateGroupCluster
+        delete: deleteGroupCluster
+        list: listClusterDetails
+        actions:
+          status: getGroupClusterStatus
+          restartPrimaries: restartGroupClusterPrimaries
+          validateConfiguration: validateGroupClusterConfigurations
+          upgradeToFlexCluster: upgradeGroupClusterTenantUpgrade
+          listProviderRegions: listGroupClusterProviderRegions
+        components:
+          MongoDBEmployeeAccess:
+            description: Grant and revoke MongoDB employee access to your cluster.
+            actions:
+              grant: grantGroupClusterMongoDbEmployeeAccess
+              revoke: revokeGroupClusterMongoDbEmployeeAccess
+          FeatureCompatibilityVersion:
+            description: Pin and unpin the MongoDB feature compatibility version.
+            actions:
+              pin: pinGroupClusterFeatureCompatibilityVersion
+              unpin: unpinGroupClusterFeatureCompatibilityVersion
+          AdvancedConfigurationOptions:
+            description: Read and update your cluster's advanced configuration.
+            read: getGroupClusterProcessArgs
+            update: updateGroupClusterProcessArgs
+          SqlInterface:
+            description: Manage the SQL interface for your cluster.
+            read: getGroupClusterSqlInterface
+            update: updateGroupClusterSqlInterface
+          SampleDataset:
+            description: Load sample data into your cluster.
+            actions:
+              progress: getGroupSampleDatasetLoad
+              request: requestGroupSampleDatasetLoad
+  Cloud Backups:
+    description: Manage cloud backups and their policies.
+    entities:
+      CompliancePolicy:
+        description: Manage your backup compliance policy.
+        read: getGroupBackupCompliancePolicy
+        update: updateGroupBackupCompliancePolicy
+        actions:
+          disable: disableGroupBackupCompliancePolicy
+      ExportBuckets:
+        description: Manage cloud backup export buckets.
+        create: createGroupBackupExportBucket
+        read: getGroupBackupExportBucket
+        update: updateGroupBackupExportBucket
+        delete: deleteGroupBackupExportBucket
+        list: listGroupBackupExportBuckets
+      Backup Snapshots:
+        description: Manage cloud backup snapshots and schedules.
+        actions:
+          listSnapshots: listGroupClusterBackupSnapshots
+          takeSnapshot: takeGroupClusterBackupSnapshots
+          getSchedule: getGroupClusterBackupSchedule
+          updateSchedule: updateGroupClusterBackupSchedule

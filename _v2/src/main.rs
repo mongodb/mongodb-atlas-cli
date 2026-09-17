@@ -1,7 +1,7 @@
-use std::{borrow::Cow, fmt::Display, ops::Deref};
+use std::fmt::Display;
 
 use anyhow::{Context, Result, bail};
-use clap::{Command, builder};
+use clap::Command;
 use models::hierarchy::{Component, Entity, Hierarchy};
 use openapiv3::OpenAPI;
 use tokio::fs::read_to_string;

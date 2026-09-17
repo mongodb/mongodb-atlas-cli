@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 clap = { workspace = true, features = ["derive"] }
+tokio = { workspace = true, features = ["full"] }

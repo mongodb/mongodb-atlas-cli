@@ -1,3 +1,5 @@
+use std::process::ExitCode;
+
 use clap::Parser;
 
 #[derive(Debug, clap::Parser)]
@@ -7,13 +9,13 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub fn execute(self) {
+    pub async fn execute(self) -> Result<(), ExitCode> {
         match self.sub_command {
             CliSubCommands::Clusters(c) => match c.sub_command {
-                ClustersSubcommands::Create(probe) => probe.execute(),
-                ClustersSubcommands::Update => println!("update not implemented"),
+                ClustersSubcommands::Create(probe) => probe.execute().await,
+                ClustersSubcommands::Update => todo!(),
             },
-            CliSubCommands::Backup(b) => println!("{b:#?}"),
+            CliSubCommands::Backup(_b) => todo!(),
         }
     }
 }
@@ -53,17 +55,17 @@ pub struct CreateGroupClusterProbe {
 
 impl CreateGroupClusterProbe {
     /// Re-parse the captured raw args against the version-specific command.
-    pub fn execute(self) {
+    pub async fn execute(self) -> Result<(), ExitCode> {
         match self.version {
             CreateGroupClusterVersion::V20260901 => {
                 let args = std::iter::once("clusters create".to_owned()).chain(self.rest);
                 let cmd = CreateGroupClusterV20260901::parse_from(args);
-                println!("{cmd:#?}");
+                cmd.execute().await
             }
             CreateGroupClusterVersion::V20250101 => {
                 let args = std::iter::once("clusters create".to_owned()).chain(self.rest);
                 let cmd = CreateGroupClusterV20250101::parse_from(args);
-                println!("{cmd:#?}");
+                cmd.execute().await
             }
         }
     }
@@ -90,6 +92,12 @@ pub struct CreateGroupClusterV20260901 {
     debug: bool,
 }
 
+impl CreateGroupClusterV20260901 {
+    pub async fn execute(&self) -> Result<(), ExitCode> {
+        todo!()
+    }
+}
+
 /// Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. This feature is not available for serverless clusters.
 ///
 // Please note that using an `instanceSize` of M2 or M5 will create a Flex cluster instead. Support for the `instanceSize` of M2 or M5 will be discontinued in January 2026. We recommend using the Create Flex Cluster API for such configurations moving forward.
@@ -99,6 +107,12 @@ pub struct CreateGroupClusterV20260901 {
 pub struct CreateGroupClusterV20250101 {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20260901)]
     version: CreateGroupClusterVersion,
+}
+
+impl CreateGroupClusterV20250101 {
+    pub async fn execute(&self) -> Result<(), ExitCode> {
+        todo!()
+    }
 }
 
 #[derive(Debug, clap::Args)]
@@ -131,10 +145,22 @@ pub struct CreateBackupV20260902 {
     version: CreateBackupVersionVersion,
 }
 
+impl CreateBackupV20260902 {
+    pub async fn execute(&self) -> Result<(), ExitCode> {
+        todo!()
+    }
+}
+
 #[derive(Debug, clap::Args)]
 pub struct CreateBackupV20260802 {
     #[arg(long, value_enum, default_value_t = CreateBackupVersionVersion::V20260902)]
     version: CreateBackupVersionVersion,
+}
+
+impl CreateBackupV20260802 {
+    pub async fn execute(&self) -> Result<(), ExitCode> {
+        todo!()
+    }
 }
 
 #[cfg(test)]

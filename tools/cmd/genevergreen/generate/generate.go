@@ -161,7 +161,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		if os == "debian13" {
+		if os == "debian13" || os == "rhel10" {
 			continue // TODO fix me after CLOUDP-446594
 		}
 

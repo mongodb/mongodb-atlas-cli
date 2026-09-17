@@ -128,7 +128,13 @@ func TestCleanup(t *testing.T) {
 
 			t.Run("delete all clusters", func(t *testing.T) {
 				t.Parallel()
-				deleteAllClustersForProject(t, cliPath, projectID)
+				failed, err := deleteClustersForProject(t, projectID)
+				if err != nil {
+					t.Errorf("could not list clusters in project %s: %v", projectID, err)
+				}
+				if len(failed) > 0 {
+					t.Errorf("failed to delete %d clusters in project %s: %v", len(failed), projectID, failed)
+				}
 			})
 			t.Run("delete data federations", func(t *testing.T) {
 				t.Parallel()

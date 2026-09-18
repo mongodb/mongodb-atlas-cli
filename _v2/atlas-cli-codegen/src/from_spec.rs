@@ -129,11 +129,27 @@ fn entity_operations(
         let Some(op_id) = op_id else {
             continue;
         };
-        push_operation(&mut out, slot, op_id, operations, excluded, referenced)?;
+        push_operation(
+            &mut out,
+            slot,
+            OperationKind::Crud,
+            op_id,
+            operations,
+            excluded,
+            referenced,
+        )?;
     }
 
     for (action, op_id) in &entity.actions {
-        push_operation(&mut out, action, op_id, operations, excluded, referenced)?;
+        push_operation(
+            &mut out,
+            action,
+            OperationKind::Action,
+            op_id,
+            operations,
+            excluded,
+            referenced,
+        )?;
     }
 
     Ok(out)
@@ -149,13 +165,37 @@ fn component_operations(
 ) -> Result<Vec<GeneratedOperation>, CodegenError> {
     let mut out = Vec::new();
     if let Some(op_id) = component.read.as_ref() {
-        push_operation(&mut out, "read", op_id, operations, excluded, referenced)?;
+        push_operation(
+            &mut out,
+            "read",
+            OperationKind::Crud,
+            op_id,
+            operations,
+            excluded,
+            referenced,
+        )?;
     }
     if let Some(op_id) = component.update.as_ref() {
-        push_operation(&mut out, "update", op_id, operations, excluded, referenced)?;
+        push_operation(
+            &mut out,
+            "update",
+            OperationKind::Crud,
+            op_id,
+            operations,
+            excluded,
+            referenced,
+        )?;
     }
     for (action, op_id) in &component.actions {
-        push_operation(&mut out, action, op_id, operations, excluded, referenced)?;
+        push_operation(
+            &mut out,
+            action,
+            OperationKind::Action,
+            op_id,
+            operations,
+            excluded,
+            referenced,
+        )?;
     }
     Ok(out)
 }
@@ -163,6 +203,7 @@ fn component_operations(
 fn push_operation(
     out: &mut Vec<GeneratedOperation>,
     slot: &str,
+    kind: OperationKind,
     op_id: &OperationId,
     operations: &BTreeMap<OperationId, models::Operation>,
     excluded: &BTreeSet<String>,
@@ -224,6 +265,7 @@ fn push_operation(
     out.push(GeneratedOperation {
         variant_name,
         description: operation.description.clone(),
+        kind,
         probe_ident: format!("{probe_base}Probe"),
         version_enum_ident: format!("{probe_base}Version"),
         versions,

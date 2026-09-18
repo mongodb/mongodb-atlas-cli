@@ -106,6 +106,7 @@ dependencies = [
 name = "atlas-cli-codegen"
 version = "0.1.0"
 dependencies = [
+ "heck",
  "insta",
  "models",
  "openapiv3",
@@ -131,6 +132,7 @@ dependencies = [
 name = "atlas-cli-golden"
 version = "0.1.0"
 dependencies = [
+ "anstyle",
  "atlas-cli-derive",
  "clap",
  "tokio",

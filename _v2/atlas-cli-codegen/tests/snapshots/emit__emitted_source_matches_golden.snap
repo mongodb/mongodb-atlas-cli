@@ -43,7 +43,195 @@ impl Cli {
         }
     }
 }
+#[allow(dead_code, reason = "renderers are wired into clap derive")]
+pub(crate) mod __atlas_cli_help {
+    use ::clap::builder::StyledStr;
+    pub(crate) fn cloud_backups_help() -> StyledStr {
+        render(
+            "Manage your Atlas CLI cloud backups",
+            &["cloud-backups"],
+            &[
+                (
+                    "Entities",
+                    &[
+                        ("cluster", "Manage your Atlas CLI cluster"),
+                        ("compliance-policy", "Backup compliance policy"),
+                    ],
+                ),
+                (
+                    "Help",
+                    &[
+                        (
+                            "help",
+                            "Print this message or the help of the given subcommand(s)",
+                        ),
+                    ],
+                ),
+            ],
+        )
+    }
+    pub(crate) fn cloud_backups_cluster_help() -> StyledStr {
+        render(
+            "Manage your Atlas CLI cluster",
+            &["cloud-backups", "cluster"],
+            &[
+                ("Components", &[("schedule", "Backup schedules")]),
+                (
+                    "Help",
+                    &[
+                        (
+                            "help",
+                            "Print this message or the help of the given subcommand(s)",
+                        ),
+                    ],
+                ),
+            ],
+        )
+    }
+    pub(crate) fn cloud_backups_cluster_schedule_help() -> StyledStr {
+        render(
+            "Backup schedules",
+            &["cloud-backups", "cluster", "schedule"],
+            &[
+                (
+                    "Operations",
+                    &[
+                        (
+                            "read",
+                            "Starts a backup for the specified cluster in the specified project",
+                        ),
+                    ],
+                ),
+                (
+                    "Help",
+                    &[
+                        (
+                            "help",
+                            "Print this message or the help of the given subcommand(s)",
+                        ),
+                    ],
+                ),
+            ],
+        )
+    }
+    pub(crate) fn cloud_backups_compliance_policy_help() -> StyledStr {
+        render(
+            "Backup compliance policy",
+            &["cloud-backups", "compliance-policy"],
+            &[
+                (
+                    "Operations",
+                    &[
+                        (
+                            "read",
+                            "Returns the Backup Compliance Policy settings with the specified project",
+                        ),
+                    ],
+                ),
+                (
+                    "Help",
+                    &[
+                        (
+                            "help",
+                            "Print this message or the help of the given subcommand(s)",
+                        ),
+                    ],
+                ),
+            ],
+        )
+    }
+    pub(crate) fn clusters_help() -> StyledStr {
+        render(
+            "Cluster operations, grouped",
+            &["clusters"],
+            &[
+                (
+                    "Operations",
+                    &[
+                        ("create", "Creates one cluster in the specified project"),
+                        ("update", "Updates one cluster in the specified project"),
+                    ],
+                ),
+                (
+                    "Help",
+                    &[
+                        (
+                            "help",
+                            "Print this message or the help of the given subcommand(s)",
+                        ),
+                    ],
+                ),
+            ],
+        )
+    }
+    fn heading_style() -> ::anstyle::Style {
+        ::anstyle::Style::new().bold().underline()
+    }
+    fn literal_style() -> ::anstyle::Style {
+        ::anstyle::Style::new().bold()
+    }
+    fn bin_name() -> String {
+        std::env::args_os()
+            .next()
+            .and_then(|arg| {
+                std::path::Path::new(&arg)
+                    .file_name()
+                    .map(|name| name.to_string_lossy().into_owned())
+            })
+            .unwrap_or_else(|| "atlas-cli".to_owned())
+    }
+    /// `Operations`/`Actions`/`Components`/`Entities`/`Help` sections
+    /// styled like clap, plus usage and options.
+    fn render(
+        about: &str,
+        path: &[&str],
+        sections: &[(&str, &[(&str, &str)])],
+    ) -> StyledStr {
+        let heading = heading_style().render().to_string();
+        let literal = literal_style().render().to_string();
+        let reset = literal_style().render_reset().to_string();
+        let mut out = StyledStr::new();
+        if !about.is_empty() {
+            out.push_str(about);
+            out.push_str("\n\n");
+        }
+        out.push_str(&format!("{heading}Usage:{reset} "));
+        let mut usage = bin_name();
+        for segment in path {
+            usage.push(' ');
+            usage.push_str(segment);
+        }
+        out.push_str(&format!("{literal}{usage}{reset} <COMMAND>\n\n"));
+        let max_name = sections
+            .iter()
+            .flat_map(|(_, entries)| entries.iter())
+            .map(|(name, _)| name.chars().count())
+            .max()
+            .unwrap_or(0);
+        for (offset, (heading_text, entries)) in sections.iter().enumerate() {
+            if offset > 0 {
+                out.push_str("\n");
+            }
+            out.push_str(&format!("{heading}{heading_text}:{reset}\n"));
+            for (name, about) in *entries {
+                out.push_str(&format!("  {literal}{name}{reset}"));
+                out.push_str(
+                    &" ".repeat(max_name.saturating_sub(name.chars().count()) + 2),
+                );
+                out.push_str(about);
+                out.push_str("\n");
+            }
+        }
+        out.push_str("\n");
+        out.push_str(&format!("{heading}Options:{reset}\n"));
+        out.push_str(
+            &format!("  {literal}-h{reset}, {literal}--help{reset}  Print help\n"),
+        );
+        out
+    }
+}
 #[derive(Debug, ::clap::Args)]
+#[command(override_help = __atlas_cli_help::cloud_backups_help())]
 pub struct CloudBackupsCommand {
     #[clap(subcommand)]
     sub_command: CloudBackupsSubcommands,
@@ -56,6 +244,7 @@ pub enum CloudBackupsSubcommands {
     CompliancePolicy(CloudBackupsCompliancePolicyCommand),
 }
 #[derive(Debug, ::clap::Args)]
+#[command(override_help = __atlas_cli_help::cloud_backups_cluster_help())]
 pub struct CloudBackupsClusterCommand {
     #[clap(subcommand)]
     sub_command: CloudBackupsClusterSubcommands,
@@ -66,6 +255,7 @@ pub enum CloudBackupsClusterSubcommands {
     Schedule(CloudBackupsClusterScheduleCommand),
 }
 #[derive(Debug, ::clap::Args)]
+#[command(override_help = __atlas_cli_help::cloud_backups_cluster_schedule_help())]
 pub struct CloudBackupsClusterScheduleCommand {
     #[clap(subcommand)]
     sub_command: CloudBackupsClusterScheduleSubcommands,
@@ -76,6 +266,7 @@ pub enum CloudBackupsClusterScheduleSubcommands {
     Read(StartGroupClusterBackupProbe),
 }
 #[derive(Debug, ::clap::Args)]
+#[command(override_help = __atlas_cli_help::cloud_backups_compliance_policy_help())]
 pub struct CloudBackupsCompliancePolicyCommand {
     #[clap(subcommand)]
     sub_command: CloudBackupsCompliancePolicySubcommands,
@@ -86,6 +277,7 @@ pub enum CloudBackupsCompliancePolicySubcommands {
     Read(GetGroupBackupCompliancePolicyProbe),
 }
 #[derive(Debug, ::clap::Args)]
+#[command(override_help = __atlas_cli_help::clusters_help())]
 pub struct ClustersCommand {
     #[clap(subcommand)]
     sub_command: ClustersSubcommands,

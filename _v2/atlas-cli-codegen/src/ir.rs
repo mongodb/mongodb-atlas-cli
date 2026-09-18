@@ -53,6 +53,14 @@ pub struct GeneratedComponent {
     pub operations: Vec<GeneratedOperation>,
 }
 
+/// How an operation is categorized in help output: CRUD lifecycle verbs
+/// (`create`/`read`/`update`/`delete`/`list`) vs custom actions.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum OperationKind {
+    Crud,
+    Action,
+}
+
 /// One operation, expanded into a probe + version enum + a struct per version.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GeneratedOperation {
@@ -60,6 +68,8 @@ pub struct GeneratedOperation {
     pub variant_name: String,
     /// First line of the operation description, used as the doc comment.
     pub description: String,
+    /// Which help section this operation lands in.
+    pub kind: OperationKind,
     /// e.g. `"CreateGroupClusterProbe"`.
     pub probe_ident: String,
     /// e.g. `"CreateGroupClusterVersion"`.

@@ -16,10 +16,330 @@ fn execute_ret() -> TokenStream {
     quote! { ::std::result::Result<(), ::std::process::ExitCode> }
 }
 
+/// One line in a help section: the subcommand name and its short about text,
+/// mirroring what clap would display for the same docs.
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct HelpEntry {
+    name: String,
+    about: String,
+}
+
+/// The `help` subcommand clap auto-adds, rendered under its own heading.
+fn help_section() -> (String, Vec<HelpEntry>) {
+    (
+        "Help".to_owned(),
+        vec![HelpEntry {
+            name: "help".to_owned(),
+            about: "Print this message or the help of the given subcommand(s)".to_owned(),
+        }],
+    )
+}
+
+/// What clap displays for a doc comment in a section: first paragraph,
+/// trimmed, one trailing `.` removed (clap's `remove_period`).
+fn help_about(text: &str) -> String {
+    let first_paragraph = text.trim().split("\n\n").next().unwrap_or(text).trim();
+    if first_paragraph.ends_with('.') && !first_paragraph.ends_with("..") {
+        first_paragraph[..first_paragraph.len() - 1].to_owned()
+    } else {
+        first_paragraph.to_owned()
+    }
+}
+
+/// `(name, about)` for one operation: subcommand name + first-sentence about.
+fn operation_entry(operation: &GeneratedOperation) -> HelpEntry {
+    let (about, _) = split_first_sentence(&operation.description);
+    HelpEntry {
+        name: kebab_case(&operation.variant_name),
+        about: help_about(&about),
+    }
+}
+
+/// `(name, about)` for a component or entity subcommand.
+fn named_entry(name: &str, doc: &str) -> HelpEntry {
+    HelpEntry {
+        name: kebab_case(name),
+        about: help_about(doc),
+    }
+}
+
+/// `Operations`/`Actions` sections for a command's direct operations. Empty
+/// categories are skipped; entries are sorted like clap sorts subcommands.
+fn operation_sections(operations: &[GeneratedOperation]) -> Vec<(String, Vec<HelpEntry>)> {
+    let sorted = |kind: OperationKind| {
+        let mut entries: Vec<HelpEntry> = operations
+            .iter()
+            .filter(|op| op.kind == kind)
+            .map(operation_entry)
+            .collect();
+        entries.sort_by(|a, b| a.name.cmp(&b.name));
+        entries
+    };
+    let mut sections = Vec::new();
+    let crud = sorted(OperationKind::Crud);
+    if !crud.is_empty() {
+        sections.push(("Operations".to_owned(), crud));
+    }
+    let actions = sorted(OperationKind::Action);
+    if !actions.is_empty() {
+        sections.push(("Actions".to_owned(), actions));
+    }
+    sections
+}
+
+/// Full section list for one entity's command: operations, components, help.
+fn entity_sections(entity: &GeneratedEntity) -> Vec<(String, Vec<HelpEntry>)> {
+    let mut sections = operation_sections(&entity.operations);
+    let mut components: Vec<HelpEntry> = entity
+        .components
+        .iter()
+        .map(|component| {
+            named_entry(
+                &component.ident,
+                &help_text(&component.description, || {
+                    format!("Manage your Atlas CLI {}", kebab_case(&component.id))
+                }),
+            )
+        })
+        .collect();
+    components.sort_by(|a, b| a.name.cmp(&b.name));
+    if !components.is_empty() {
+        sections.push(("Components".to_owned(), components));
+    }
+    sections.push(help_section());
+    sections
+}
+
+/// Sections for one component's command: operations (`read`/`update`/actions),
+/// then help.
+fn component_sections(component: &GeneratedComponent) -> Vec<(String, Vec<HelpEntry>)> {
+    let mut sections = operation_sections(&component.operations);
+    sections.push(help_section());
+    sections
+}
+
+/// `Entities` + `help` sections for a multi-entity group command.
+fn group_sections(group: &GeneratedGroup) -> Vec<(String, Vec<HelpEntry>)> {
+    let mut entities: Vec<HelpEntry> = group
+        .entities
+        .iter()
+        .map(|entity| {
+            named_entry(
+                &entity.ident,
+                &help_text(&entity.description, || {
+                    format!("Manage your Atlas CLI {}", kebab_case(&entity.id))
+                }),
+            )
+        })
+        .collect();
+    entities.sort_by(|a, b| a.name.cmp(&b.name));
+    vec![("Entities".to_owned(), entities), help_section()]
+}
+
+/// A help-override renderer for one generated command.
+struct HelpNode {
+    /// `render_<path snake>_help`, the generated fn name inside the help module.
+    fn_ident: Ident,
+    /// The command's own about line (already display-processed).
+    about: String,
+    /// Kebab-cased path from the CLI root to this command, for the usage line.
+    path: Vec<String>,
+    /// Help sections in render order.
+    sections: Vec<(String, Vec<HelpEntry>)>,
+}
+
+/// `cloud-backups`, `compliance-policy` -> `render_cloud_backups_compliance_policy_help`.
+fn help_fn_ident(path: &[String]) -> Ident {
+    let mut name = path.join("-").replace('-', "_");
+    name.push_str("_help");
+    ident(&name)
+}
+
+/// `#[command(override_help = __atlas_cli_help::render_<path>_help())]` for a
+/// generated command struct, so its help renders sectioned instead of clap's
+/// single `Commands:` block.
+fn help_override_attr(path: &[String]) -> TokenStream {
+    let renderer = help_fn_ident(path);
+    quote! { #[command(override_help = __atlas_cli_help::#renderer())] }
+}
+
+fn node_name(nodes: &mut Vec<HelpNode>, path: &[String], about: String, sections: Vec<(String, Vec<HelpEntry>)>) {
+    nodes.push(HelpNode {
+        fn_ident: help_fn_ident(path),
+        about,
+        path: path.to_vec(),
+        sections,
+    });
+}
+
+fn help_nodes(cli: &GeneratedCli) -> Vec<HelpNode> {
+    let mut nodes = Vec::new();
+    for group in &cli.groups {
+        let group_path = vec![kebab_case(&group.name)];
+        let group_about = help_about(&help_text(&group.description, || {
+            format!("Manage your Atlas CLI {}", group.name.to_lowercase())
+        }));
+        if group.entities.len() == 1 {
+            // Flattened: the group command IS the entity command.
+            node_name(
+                &mut nodes,
+                &group_path,
+                group_about,
+                entity_sections(&group.entities[0]),
+            );
+        } else {
+            node_name(
+                &mut nodes,
+                &group_path,
+                group_about,
+                group_sections(group),
+            );
+        }
+        for entity in &group.entities {
+            // A flattened group has no entity level: components hang straight
+            // off the group command, so their path skips the entity segment.
+            let component_base: Vec<String> = if group.entities.len() == 1 {
+                group_path.clone()
+            } else {
+                vec![group_path[0].clone(), kebab_case(&entity.id)]
+            };
+            if group.entities.len() > 1 {
+                node_name(
+                    &mut nodes,
+                    &component_base,
+                    help_about(&help_text(&entity.description, || {
+                        format!("Manage your Atlas CLI {}", kebab_case(&entity.id))
+                    })),
+                    entity_sections(entity),
+                );
+            }
+            for component in &entity.components {
+                let mut component_path = component_base.clone();
+                component_path.push(kebab_case(&component.id));
+                node_name(
+                    &mut nodes,
+                    &component_path,
+                    help_about(&help_text(&component.description, || {
+                        format!("Manage your Atlas CLI {}", kebab_case(&component.id))
+                    })),
+                    component_sections(component),
+                );
+            }
+        }
+    }
+    nodes
+}
+
+fn section_tokens(sections: &[(String, Vec<HelpEntry>)]) -> Vec<TokenStream> {
+    sections
+        .iter()
+        .map(|(heading, entries)| {
+            let entries_tok = entries.iter().map(|entry| {
+                let name = &entry.name;
+                let about = &entry.about;
+                quote! { (#name, #about) }
+            });
+            quote! { (#heading, &[#(#entries_tok),*]) }
+        })
+        .collect()
+}
+
+/// The `anstyle` renderer + one wrapper fn per overridden command.
+fn help_module(nodes: &[HelpNode]) -> TokenStream {
+    let wrappers = nodes.iter().map(|node| {
+        let fn_ident = &node.fn_ident;
+        let about = &node.about;
+        let path = &node.path;
+        let sections = section_tokens(&node.sections);
+        quote! {
+            pub(crate) fn #fn_ident() -> StyledStr {
+                render(#about, &[#(#path),*], &[#(#sections),*])
+            }
+        }
+    });
+    let module = quote! {
+        #[allow(dead_code, reason = "renderers are wired into clap derive")]
+        pub(crate) mod __atlas_cli_help {
+            use ::clap::builder::StyledStr;
+
+            #(#wrappers)*
+
+            fn heading_style() -> ::anstyle::Style {
+                ::anstyle::Style::new().bold().underline()
+            }
+
+            fn literal_style() -> ::anstyle::Style {
+                ::anstyle::Style::new().bold()
+            }
+
+            fn bin_name() -> String {
+                std::env::args_os()
+                    .next()
+                    .and_then(|arg| {
+                        std::path::Path::new(&arg)
+                            .file_name()
+                            .map(|name| name.to_string_lossy().into_owned())
+                    })
+                    .unwrap_or_else(|| "atlas-cli".to_owned())
+            }
+
+            /// `Operations`/`Actions`/`Components`/`Entities`/`Help` sections
+            /// styled like clap, plus usage and options.
+            fn render(about: &str, path: &[&str], sections: &[(&str, &[(&str, &str)])]) -> StyledStr {
+                let heading = heading_style().render().to_string();
+                let literal = literal_style().render().to_string();
+                let reset = literal_style().render_reset().to_string();
+
+                let mut out = StyledStr::new();
+                if !about.is_empty() {
+                    out.push_str(about);
+                    out.push_str("\n\n");
+                }
+
+                out.push_str(&format!("{heading}Usage:{reset} "));
+                let mut usage = bin_name();
+                for segment in path {
+                    usage.push(' ');
+                    usage.push_str(segment);
+                }
+                out.push_str(&format!("{literal}{usage}{reset} <COMMAND>\n\n"));
+
+                let max_name = sections
+                    .iter()
+                    .flat_map(|(_, entries)| entries.iter())
+                    .map(|(name, _)| name.chars().count())
+                    .max()
+                    .unwrap_or(0);
+
+                for (offset, (heading_text, entries)) in sections.iter().enumerate() {
+                    if offset > 0 {
+                        out.push_str("\n");
+                    }
+                    out.push_str(&format!("{heading}{heading_text}:{reset}\n"));
+                    for (name, about) in *entries {
+                        out.push_str(&format!("  {literal}{name}{reset}"));
+                        out.push_str(&" ".repeat(max_name.saturating_sub(name.chars().count()) + 2));
+                        out.push_str(about);
+                        out.push_str("\n");
+                    }
+                }
+
+                out.push_str("\n");
+                out.push_str(&format!("{heading}Options:{reset}\n"));
+                out.push_str(&format!("  {literal}-h{reset}, {literal}--help{reset}  Print help\n"));
+
+                out
+            }
+        }
+    };
+    module
+}
+
 pub fn to_tokens(cli: &GeneratedCli) -> TokenStream {
     let cli_subcommands = cli_subcommands(cli);
     let cli_execute = cli_execute(cli);
     let groups = cli.groups.iter().map(group);
+    let help = help_module(&help_nodes(cli));
 
     let operations = cli
         .groups
@@ -35,6 +355,7 @@ pub fn to_tokens(cli: &GeneratedCli) -> TokenStream {
     quote! {
         #cli_subcommands
         #cli_execute
+        #help
         #(#groups)*
         #(#operations)*
     }
@@ -168,9 +489,11 @@ fn op_arms(operations: &[GeneratedOperation], subcommand_enum: &Ident) -> Vec<To
 fn group(group: &GeneratedGroup) -> TokenStream {
     let group_command = command_ident(&group.ident);
     let group_enum = subcommand_enum_ident(&group.ident);
+    let group_help_attr = help_override_attr(&[kebab_case(&group.name)]);
 
     let group_struct = quote! {
         #[derive(Debug, ::clap::Args)]
+        #group_help_attr
         pub struct #group_command {
             #[clap(subcommand)]
             sub_command: #group_enum,
@@ -215,8 +538,11 @@ fn group(group: &GeneratedGroup) -> TokenStream {
         let entities = group.entities.iter().map(|entity| {
             let entity_command = entity_command_ident(&group.ident, &entity.ident);
             let entity_enum = entity_subcommand_enum_ident(&group.ident, &entity.ident);
+            let entity_help_attr =
+                help_override_attr(&[kebab_case(&group.name), kebab_case(&entity.id)]);
             let entity_struct = quote! {
                 #[derive(Debug, ::clap::Args)]
+                #entity_help_attr
                 pub struct #entity_command {
                     #[clap(subcommand)]
                     sub_command: #entity_enum,
@@ -273,8 +599,14 @@ fn component_commands(group: &GeneratedGroup, entity: &GeneratedEntity) -> Vec<T
                 component_command_ident(&group.ident, &entity.ident, &component.ident);
             let component_enum =
                 component_subcommand_enum_ident(&group.ident, &entity.ident, &component.ident);
+            let mut component_path = vec![kebab_case(&group.name), kebab_case(&component.id)];
+            if group.entities.len() > 1 {
+                component_path.insert(1, kebab_case(&entity.id));
+            }
+            let component_help_attr = help_override_attr(&component_path);
             let component_struct = quote! {
                 #[derive(Debug, ::clap::Args)]
+                #component_help_attr
                 pub struct #component_command {
                     #[clap(subcommand)]
                     sub_command: #component_enum,
@@ -466,29 +798,18 @@ fn cmd_name(operation: &GeneratedOperation) -> String {
     operation.variant_name.to_lowercase()
 }
 
-/// `CompliancePolicy` and `Backup Snapshots` -> `compliance-policy`, `backup-snapshots` (help text only).
+/// `CompliancePolicy` and `Backup Snapshots` -> `compliance-policy`,
+/// `backup-snapshots`. Mirrors clap's subcommand naming (`heck::ToKebabCase`),
+/// so section names and usage paths match the real subcommand names exactly
+/// (e.g. `MongoDBEmployeeAccess` -> `mongo-db-employee-access`).
 fn kebab_case(name: &str) -> String {
-    let mut raw = String::new();
-    for (i, c) in name.chars().enumerate() {
-        if c.is_ascii_alphanumeric() {
-            if c.is_ascii_uppercase() && i > 0 {
-                raw.push('-');
-            }
-            raw.push(c.to_ascii_lowercase());
-        } else {
-            raw.push('-');
-        }
+    use heck::ToKebabCase;
+    let out = name.to_kebab_case();
+    if out.is_empty() {
+        "_".to_owned()
+    } else {
+        out
     }
-    let mut out = String::new();
-    let mut previous_dash = false;
-    for c in raw.chars() {
-        if c == '-' && previous_dash {
-            continue;
-        }
-        previous_dash = c == '-';
-        out.push(c);
-    }
-    out.trim_matches('-').to_owned()
 }
 
 fn flag_field(flag: &GeneratedFlag) -> TokenStream {
@@ -514,7 +835,10 @@ fn flag_field(flag: &GeneratedFlag) -> TokenStream {
 
 #[cfg(test)]
 mod tests {
-    use super::split_first_sentence;
+    use super::{
+        help_about, operation_sections, split_first_sentence, HelpEntry,
+    };
+    use crate::ir::{GeneratedComponent, GeneratedEntity, GeneratedOperation, OperationKind};
 
     #[test]
     fn splits_on_first_period_followed_by_space() {
@@ -544,5 +868,105 @@ mod tests {
         let (about, rest) = split_first_sentence("Creates one cluster");
         assert_eq!(about, "Creates one cluster");
         assert!(rest.is_none());
+    }
+
+    fn op(name: &str, kind: OperationKind) -> GeneratedOperation {
+        GeneratedOperation {
+            variant_name: name.to_owned(),
+            description: format!("{name} a thing."),
+            probe_ident: String::new(),
+            version_enum_ident: String::new(),
+            versions: Vec::new(),
+            flags: Vec::new(),
+            kind,
+        }
+    }
+
+    fn component(id: &str) -> GeneratedComponent {
+        GeneratedComponent {
+            id: id.to_owned(),
+            ident: id.to_owned(),
+            description: Some(format!("Manage {}.", id.to_lowercase())),
+            operations: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn help_about_strips_one_trailing_period() {
+        assert_eq!(help_about("Creates one cluster."), "Creates one cluster");
+        assert_eq!(help_about("Read and update your cluster's advanced configuration."), "Read and update your cluster's advanced configuration");
+    }
+
+    #[test]
+    fn help_about_keeps_double_periods_and_plain_text() {
+        assert_eq!(help_about("Wait..."), "Wait...");
+        assert_eq!(help_about("No trailing dot"), "No trailing dot");
+    }
+
+    #[test]
+    fn operation_sections_splits_crud_from_actions_sorted() {
+        let ops = vec![
+            op("Read", OperationKind::Crud),
+            op("RestartPrimaries", OperationKind::Action),
+            op("Create", OperationKind::Crud),
+            op("Status", OperationKind::Action),
+        ];
+        assert_eq!(
+            operation_sections(&ops),
+            vec![
+                ("Operations".to_owned(), vec![
+                    HelpEntry { name: "create".to_owned(), about: "Create a thing".to_owned() },
+                    HelpEntry { name: "read".to_owned(), about: "Read a thing".to_owned() },
+                ]),
+                ("Actions".to_owned(), vec![
+                    HelpEntry { name: "restart-primaries".to_owned(), about: "RestartPrimaries a thing".to_owned() },
+                    HelpEntry { name: "status".to_owned(), about: "Status a thing".to_owned() },
+                ]),
+            ]
+        );
+    }
+
+    #[test]
+    fn operation_sections_skips_empty_categories() {
+        let only_actions = vec![op("Status", OperationKind::Action)];
+        assert_eq!(operation_sections(&only_actions).len(), 1);
+        assert_eq!(operation_sections(&only_actions)[0].0, "Actions");
+
+        let only_crud = vec![op("Create", OperationKind::Crud)];
+        assert_eq!(operation_sections(&only_crud)[0].0, "Operations");
+    }
+
+    #[test]
+    fn entity_sections_appends_components_and_help() {
+        let entity = GeneratedEntity {
+            id: "Cluster".to_owned(),
+            ident: "Cluster".to_owned(),
+            description: Some("Manage clusters.".to_owned()),
+            operations: vec![op("Create", OperationKind::Crud)],
+            components: vec![component("AdvancedConfigurationOptions")],
+        };
+        let sections = super::entity_sections(&entity);
+        let headings: Vec<&String> = sections.iter().map(|(h, _)| h).collect();
+        assert_eq!(headings, vec!["Operations", "Components", "Help"]);
+        let components = &sections[1].1;
+        assert_eq!(
+            components,
+            &[HelpEntry { name: "advanced-configuration-options".to_owned(), about: "Manage advancedconfigurationoptions".to_owned() }]
+        );
+        assert_eq!(sections[2].1[0].name, "help");
+    }
+
+    #[test]
+    fn group_with_no_components_skips_components_section() {
+        let entity = GeneratedEntity {
+            id: "CompliancePolicy".to_owned(),
+            ident: "CompliancePolicy".to_owned(),
+            description: None,
+            operations: vec![op("Read", OperationKind::Crud), op("Disable", OperationKind::Action)],
+            components: Vec::new(),
+        };
+        let sections = super::entity_sections(&entity);
+        let headings: Vec<&String> = sections.iter().map(|(h, _)| h).collect();
+        assert_eq!(headings, vec!["Operations", "Actions", "Help"]);
     }
 }

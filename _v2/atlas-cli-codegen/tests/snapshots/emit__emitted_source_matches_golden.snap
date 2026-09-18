@@ -325,7 +325,7 @@ impl StartGroupClusterBackupProbe {
 ///Starts a backup for the specified cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct StartGroupClusterBackupV20230101 {
     #[arg(long, value_enum, default_value_t = StartGroupClusterBackupVersion::V20230101)]
     version: StartGroupClusterBackupVersion,
@@ -337,14 +337,73 @@ pub struct StartGroupClusterBackupV20230101 {
     clusterName: String,
 }
 impl StartGroupClusterBackupV20230101 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for StartGroupClusterBackupV20230101 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::POST
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup"
+                .to_owned();
+            url = url.replace("groupId", &self.groupId);
+            url = url.replace("clusterName", &self.clusterName);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "POST", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2023u32 as u16,
+                1u32 as u8,
+                1u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 ///Starts a backup for the specified cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20241023.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct StartGroupClusterBackupV20241023 {
     #[arg(long, value_enum, default_value_t = StartGroupClusterBackupVersion::V20241023)]
     version: StartGroupClusterBackupVersion,
@@ -356,8 +415,67 @@ pub struct StartGroupClusterBackupV20241023 {
     clusterName: String,
 }
 impl StartGroupClusterBackupV20241023 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for StartGroupClusterBackupV20241023 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::POST
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup"
+                .to_owned();
+            url = url.replace("groupId", &self.groupId);
+            url = url.replace("clusterName", &self.clusterName);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "POST", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2024u32 as u16,
+                10u32 as u8,
+                23u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 #[derive(Debug, ::clap::Args)]
@@ -398,7 +516,7 @@ impl GetGroupBackupCompliancePolicyProbe {
 ///Returns the Backup Compliance Policy settings with the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct GetGroupBackupCompliancePolicyV20230101 {
     #[arg(
         long,
@@ -411,14 +529,72 @@ pub struct GetGroupBackupCompliancePolicyV20230101 {
     groupId: String,
 }
 impl GetGroupBackupCompliancePolicyV20230101 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for GetGroupBackupCompliancePolicyV20230101 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::GET
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/backup/compliancePolicy"
+                .to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "GET", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2023u32 as u16,
+                1u32 as u8,
+                1u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 ///Returns the Backup Compliance Policy settings with the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20231001.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct GetGroupBackupCompliancePolicyV20231001 {
     #[arg(
         long,
@@ -431,8 +607,66 @@ pub struct GetGroupBackupCompliancePolicyV20231001 {
     groupId: String,
 }
 impl GetGroupBackupCompliancePolicyV20231001 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for GetGroupBackupCompliancePolicyV20231001 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::GET
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/backup/compliancePolicy"
+                .to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "GET", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2023u32 as u16,
+                10u32 as u8,
+                1u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 #[derive(Debug, ::clap::Args)]
@@ -471,7 +705,7 @@ impl CreateGroupClusterProbe {
 ///Clusters contain a group of hosts that maintain the same data set.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct CreateGroupClusterV20230101 {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20230101)]
     version: CreateGroupClusterVersion,
@@ -493,8 +727,68 @@ pub struct CreateGroupClusterV20230101 {
     region: Option<String>,
 }
 impl CreateGroupClusterV20230101 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20230101 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::POST
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if let Some(value) = &self.pretty {
+                params.push(::std::format!("{}={}", "pretty", value));
+            }
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "POST", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2023u32 as u16,
+                1u32 as u8,
+                1u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 ///Creates one cluster in the specified project.
@@ -502,7 +796,7 @@ impl CreateGroupClusterV20230101 {
 ///Clusters contain a group of hosts that maintain the same data set.
 ///
 ///Flags differ per API version (--version). This help describes version V20241023.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct CreateGroupClusterV20241023 {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20241023)]
     version: CreateGroupClusterVersion,
@@ -524,8 +818,68 @@ pub struct CreateGroupClusterV20241023 {
     region: Option<String>,
 }
 impl CreateGroupClusterV20241023 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20241023 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::POST
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if let Some(value) = &self.pretty {
+                params.push(::std::format!("{}={}", "pretty", value));
+            }
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "POST", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2024u32 as u16,
+                10u32 as u8,
+                23u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 #[derive(Debug, ::clap::Args)]
@@ -562,7 +916,7 @@ impl UpdateGroupClusterProbe {
 ///Updates one cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct UpdateGroupClusterV20230101 {
     #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20230101)]
     version: UpdateGroupClusterVersion,
@@ -581,14 +935,71 @@ pub struct UpdateGroupClusterV20230101 {
     region: Option<String>,
 }
 impl UpdateGroupClusterV20230101 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20230101 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::PATCH
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "PATCH", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2023u32 as u16,
+                1u32 as u8,
+                1u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }
 ///Updates one cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20241023.
-#[derive(Debug, ::clap::Parser)]
+#[derive(Debug, Clone, ::clap::Parser)]
 pub struct UpdateGroupClusterV20241023 {
     #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20241023)]
     version: UpdateGroupClusterVersion,
@@ -607,7 +1018,64 @@ pub struct UpdateGroupClusterV20241023 {
     region: Option<String>,
 }
 impl UpdateGroupClusterV20241023 {
-    pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
-        todo!()
+    /// Run the operation through the atlas client and print the
+    /// JSON response; exit non-zero on any error.
+    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        ::tracing::debug!(args = ? self, "executing atlas operation");
+        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        let response = client
+            .execute(self)
+            .await
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
+        println!(
+            "{}", ::serde_json::to_string_pretty(& response).map_err(| error | {
+            eprintln!("{error}"); ::std::process::ExitCode::FAILURE }) ?
+        );
+        Ok(())
+    }
+}
+impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20241023 {
+    type Response = ::serde_json::Value;
+    fn method(&self) -> ::http::Method {
+        ::http::Method::PATCH
+    }
+    fn url(&self) -> String {
+        {
+            let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
+            url = url.replace("groupId", &self.groupId);
+            let mut params = ::std::vec::Vec::new();
+            if !params.is_empty() {
+                url.push('?');
+                url.push_str(&params.join("&"));
+            }
+            ::tracing::debug!(method = "PATCH", url = % url, "atlas request");
+            url
+        }
+    }
+    fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+        {
+            let version = ::mongodb_atlas_cli::atlas::Version::date(
+                2024u32 as u16,
+                10u32 as u8,
+                23u32 as u8,
+            );
+            ::tracing::debug!(% version, "atlas request version");
+            version
+        }
+    }
+    fn parse_response(
+        bytes: ::bytes::Bytes,
+    ) -> ::std::result::Result<
+        Self::Response,
+        ::mongodb_atlas_cli::atlas::OperationError,
+    > {
+        ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
     }
 }

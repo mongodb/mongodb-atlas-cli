@@ -750,9 +750,10 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
             version.variant_ident
         );
         let doc_attrs = description_doc_attrs_with_note(&operation.description, help_doc);
+        let op_impl = operation_impl(operation, version);
         quote! {
             #(#doc_attrs)*
-            #[derive(Debug, ::clap::Parser)]
+            #[derive(Debug, Clone, ::clap::Parser)]
             pub struct #struct_ident {
                 #[arg(long, value_enum, default_value_t = #version_enum::#variant)]
                 version: #version_enum,
@@ -760,10 +761,33 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
             }
 
             impl #struct_ident {
-                pub async fn execute(&self) -> #ret {
-                    todo!()
+                /// Run the operation through the atlas client and print the
+                /// JSON response; exit non-zero on any error.
+                pub async fn execute(self) -> #ret {
+                    ::tracing::debug!(args = ?self, "executing atlas operation");
+                    let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+                        .map_err(|error| {
+                            eprintln!("{error}");
+                            ::std::process::ExitCode::FAILURE
+                        })?;
+                    // ponytail: request bodies are not emitted yet; GET
+                    // operations (list/read/delete) carry no body.
+                    let response = client.execute(self).await.map_err(|error| {
+                        eprintln!("{error}");
+                        ::std::process::ExitCode::FAILURE
+                    })?;
+                    println!(
+                        "{}",
+                        ::serde_json::to_string_pretty(&response).map_err(|error| {
+                            eprintln!("{error}");
+                            ::std::process::ExitCode::FAILURE
+                        })?
+                    );
+                    Ok(())
                 }
             }
+
+            #op_impl
         }
     });
 
@@ -773,6 +797,113 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
         #probe_impl
         #(#version_structs)*
     }
+}
+
+/// `impl Operation` for one version struct: fixed method + URL template with
+/// the struct's flags substituted in + this version's api version.
+fn operation_impl(operation: &GeneratedOperation, version: &GeneratedVersion) -> TokenStream {
+    let struct_ident = ident(&version.struct_ident);
+    let method = method_value(&operation.method);
+    let url = url_method(operation);
+    let api_version = version_value(&version.api_version);
+    quote! {
+        impl ::mongodb_atlas_cli::atlas::Operation for #struct_ident {
+            type Response = ::serde_json::Value;
+
+            fn method(&self) -> ::http::Method {
+                #method
+            }
+
+            fn url(&self) -> String {
+                #url
+            }
+
+            fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
+                #api_version
+            }
+
+            fn parse_response(
+                bytes: ::bytes::Bytes,
+            ) -> ::std::result::Result<Self::Response, ::mongodb_atlas_cli::atlas::OperationError>
+            {
+                ::serde_json::from_slice(&bytes).map_err(::std::convert::Into::into)
+            }
+        }
+    }
+}
+
+fn method_value(method: &str) -> TokenStream {
+    match method {
+        "GET" => quote! { ::http::Method::GET },
+        "POST" => quote! { ::http::Method::POST },
+        "PUT" => quote! { ::http::Method::PUT },
+        "DELETE" => quote! { ::http::Method::DELETE },
+        "PATCH" => quote! { ::http::Method::PATCH },
+        "HEAD" => quote! { ::http::Method::HEAD },
+        _ => quote! { ::http::Method::from_bytes(#method).expect("configured HTTP method") },
+    }
+}
+
+fn version_value(api_version: &ApiVersion) -> TokenStream {
+    let version = match api_version {
+        ApiVersion::Stable(year, month, day) => quote! {
+            ::mongodb_atlas_cli::atlas::Version::date(#year as u16, #month as u8, #day as u8)
+        },
+        ApiVersion::Upcoming(year, month, day) => quote! {
+            ::mongodb_atlas_cli::atlas::Version::upcoming(#year as u16, #month as u8, #day as u8)
+        },
+        ApiVersion::Preview => quote! { ::mongodb_atlas_cli::atlas::Version::preview() },
+    };
+    quote! {{
+        let version = #version;
+        ::tracing::debug!(%version, "atlas request version");
+        version
+    }}
+}
+
+/// Build the request URL: substitute `{pathParam}` placeholders from the
+/// template, then append `?name=value` for every set query parameter.
+fn url_method(operation: &GeneratedOperation) -> TokenStream {
+    let method = &operation.method;
+    let template = &operation.url_template;
+    let replaces = operation.flags.iter().filter(|f| f.location == FlagLocation::Path).map(|f| {
+        let name = &f.name;
+        let field = ident(&f.ident);
+        quote! { url = url.replace(#name, &self.#field); }
+    });
+    let query_pushes = operation
+        .flags
+        .iter()
+        .filter(|f| f.location == FlagLocation::Query)
+        .map(|f| {
+            let name = &f.name;
+            let field = ident(&f.ident);
+            if f.list {
+                quote! {
+                    for value in &self.#field {
+                        params.push(::std::format!("{}={}", #name, value));
+                    }
+                }
+            } else {
+                quote! {
+                    if let Some(value) = &self.#field {
+                        params.push(::std::format!("{}={}", #name, value));
+                    }
+                }
+            }
+        });
+    quote! {{
+        let mut url = #template.to_owned();
+        #(#replaces)*
+        let mut params = ::std::vec::Vec::new();
+        #(#query_pushes)*
+        if !params.is_empty() {
+            url.push('?');
+            url.push_str(&params.join("&"));
+        }
+        ::tracing::debug!(method = #method, url = %url, "atlas request");
+        url
+    }}
 }
 
 fn dispatch_arms(operation: &GeneratedOperation, version_enum: &Ident) -> Vec<TokenStream> {
@@ -879,6 +1010,8 @@ mod tests {
             versions: Vec::new(),
             flags: Vec::new(),
             kind,
+            method: "GET".to_owned(),
+            url_template: "/api/atlas/v2/ping".to_owned(),
         }
     }
 

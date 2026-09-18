@@ -137,16 +137,20 @@ fn flags_from_parameters_with_optionality() {
         create.flags,
         vec![
             GeneratedFlag {
+                name: "groupId".to_owned(),
                 ident: "groupId".to_owned(),
                 description: "Unique 24-hexadecimal digit string that identifies your project.".to_owned(),
                 required: true,
                 list: false,
+                location: atlas_cli_codegen::FlagLocation::Path,
             },
             GeneratedFlag {
+                name: "pretty".to_owned(),
                 ident: "pretty".to_owned(),
                 description: "Flag that indicates whether the response body should be pretty printed.".to_owned(),
                 required: false,
                 list: false,
+                location: atlas_cli_codegen::FlagLocation::Query,
             },
         ]
     );
@@ -162,39 +166,22 @@ fn body_flags_derived_from_request_body_flattened() {
     let cli = cli(default_options());
     let create = operation(entity(group(&cli, "Clusters"), "Cluster"), "Create");
 
+    let body_flag = |name: &str, ident: &str, required: bool, list: bool| GeneratedFlag {
+        name: name.to_owned(),
+        ident: ident.to_owned(),
+        description: String::new(),
+        required,
+        list,
+        location: atlas_cli_codegen::FlagLocation::Body,
+    };
     assert_eq!(
         create.versions[0].body_flags,
         vec![
-            GeneratedFlag {
-                ident: "name".to_owned(),
-                description: String::new(),
-                required: true,
-                list: false,
-            },
-            GeneratedFlag {
-                ident: "person_first_name".to_owned(),
-                description: String::new(),
-                required: false,
-                list: false,
-            },
-            GeneratedFlag {
-                ident: "person_last_name".to_owned(),
-                description: String::new(),
-                required: false,
-                list: false,
-            },
-            GeneratedFlag {
-                ident: "providers".to_owned(),
-                description: String::new(),
-                required: false,
-                list: true,
-            },
-            GeneratedFlag {
-                ident: "region".to_owned(),
-                description: String::new(),
-                required: false,
-                list: false,
-            },
+            body_flag("name", "name", true, false),
+            body_flag("person.first_name", "person_first_name", false, false),
+            body_flag("person.last_name", "person_last_name", false, false),
+            body_flag("providers", "providers", false, true),
+            body_flag("region", "region", false, false),
         ]
     );
 }

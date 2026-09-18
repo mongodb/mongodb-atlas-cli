@@ -40,6 +40,14 @@ pub struct Operation {
     pub versions: BTreeMap<Version, OperationVersion>,
 }
 
+/// Where a parameter lands in the HTTP request.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ParamIn {
+    Path,
+    Query,
+    Header,
+}
+
 #[derive(Debug, Error)]
 pub enum OperationParseError {
     #[error("Description is missing")]
@@ -159,21 +167,58 @@ impl Operation {
     /// URL order, then query parameters in declaration order, then header
     /// parameters sorted by name. Each is `(name, description, required)`.
     pub fn parameters(&self) -> impl Iterator<Item = (&str, &str, bool)> {
+        self.located_parameters()
+            .map(|(_, name, description, required)| (name, description, required))
+    }
+
+    /// All parameters tagged with where they go in a request. Mirror of
+    /// [`Self::parameters`] with the location prefixed.
+    pub fn located_parameters(&self) -> impl Iterator<Item = (ParamIn, &str, &str, bool)> {
         let path = self.url.parts.iter().filter_map(|part| match part {
-            Part::Parameter(p) => Some((p.name.as_str(), p.description.as_str(), p.required)),
+            Part::Parameter(p) => Some((
+                ParamIn::Path,
+                p.name.as_str(),
+                p.description.as_str(),
+                p.required,
+            )),
             Part::Const(_) => None,
         });
-        let query = self
-            .url
-            .query_parameters
-            .iter()
-            .map(|p| (p.name.as_str(), p.description.as_str(), p.required));
-        let header = self
-            .headers
-            .parameters
-            .values()
-            .map(|p| (p.name.as_str(), p.description.as_str(), p.required));
+        let query = self.url.query_parameters.iter().map(|p| {
+            (
+                ParamIn::Query,
+                p.name.as_str(),
+                p.description.as_str(),
+                p.required,
+            )
+        });
+        let header = self.headers.parameters.values().map(|p| {
+            (
+                ParamIn::Header,
+                p.name.as_str(),
+                p.description.as_str(),
+                p.required,
+            )
+        });
         path.chain(query).chain(header)
+    }
+
+    /// The URL path with `{parameterName}` placeholders, e.g.
+    /// `/api/atlas/v2/groups/{groupId}/clusters`. Each path segment is joined
+    /// with `/`, matching the original spec path.
+    pub fn url_template(&self) -> String {
+        let mut out = String::new();
+        for part in &self.url.parts {
+            out.push('/');
+            match part {
+                Part::Const(segment) => out.push_str(segment),
+                Part::Parameter(p) => {
+                    out.push('{');
+                    out.push_str(&p.name);
+                    out.push('}');
+                }
+            }
+        }
+        out
     }
 
     fn reject_cookie_parameters(

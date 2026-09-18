@@ -78,6 +78,11 @@ pub struct GeneratedOperation {
     pub versions: Vec<GeneratedVersion>,
     /// Path/query/header parameters. Shared by every version struct.
     pub flags: Vec<GeneratedFlag>,
+    /// HTTP method, e.g. `"GET"`.
+    pub method: String,
+    /// URL path with `{parameterName}` placeholders, e.g.
+    /// `/api/atlas/v2/groups/{groupId}/clusters`.
+    pub url_template: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -90,13 +95,36 @@ pub struct GeneratedVersion {
     /// shape can change between versions). Empty when the body is absent or
     /// not a supported simple shape.
     pub body_flags: Vec<GeneratedFlag>,
+    /// The atlas API version this variant maps to.
+    pub api_version: ApiVersion,
+}
+
+/// What the HTTP request looks like for one API version of an operation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ApiVersion {
+    Stable(u32, u32, u32),
+    Upcoming(u32, u32, u32),
+    Preview,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GeneratedFlag {
+    /// Original OpenAPI parameter name, e.g. `"groupId"`.
+    pub name: String,
+    /// Struct field identifier derived from the name.
     pub ident: String,
     pub description: String,
     pub required: bool,
     /// Repeated flag: `--tag a --tag b` -> `Vec<String>`.
     pub list: bool,
+    /// Where the parameter lands in a request.
+    pub location: FlagLocation,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FlagLocation {
+    Path,
+    Query,
+    Header,
+    Body,
 }

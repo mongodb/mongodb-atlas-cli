@@ -10,6 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use models::datatypes::DataType;
 use models::datatypes::reference_types::ReferenceType;
 use models::hierarchy::{Entity, Hierarchy};
+use models::operation::ParamIn;
 use models::operation_id::OperationId;
 use openapiv3::OpenAPI;
 use openapiv3_resolve::ResolvedOpenAPI;
@@ -226,12 +227,18 @@ fn push_operation(
     }
 
     let operation_flags = operation
-        .parameters()
-        .map(|(name, description, required)| GeneratedFlag {
+        .located_parameters()
+        .map(|(location, name, description, required)| GeneratedFlag {
+            name: name.to_owned(),
             ident: flag_ident(name),
             description: description.to_owned(),
             required,
             list: false,
+            location: match location {
+                ParamIn::Path => FlagLocation::Path,
+                ParamIn::Query => FlagLocation::Query,
+                ParamIn::Header => FlagLocation::Header,
+            },
         })
         .collect();
 
@@ -242,12 +249,26 @@ fn push_operation(
         .versions
         .iter()
         .map(|(version, operation_version)| {
-            let variant_ident = match version {
-                models::versioned_mediatype::Version::Stable(date)
-                | models::versioned_mediatype::Version::Upcoming(date) => {
-                    format!("V{}", date.to_string().replace('-', ""))
+            let (variant_ident, api_version) = match version {
+                models::versioned_mediatype::Version::Stable(date) => (
+                    format!("V{}", date.to_string().replace('-', "")),
+                    ApiVersion::Stable(
+                        u32::from(date.year),
+                        u32::from(date.month),
+                        u32::from(date.day),
+                    ),
+                ),
+                models::versioned_mediatype::Version::Upcoming(date) => (
+                    format!("V{}", date.to_string().replace('-', "")),
+                    ApiVersion::Upcoming(
+                        u32::from(date.year),
+                        u32::from(date.month),
+                        u32::from(date.day),
+                    ),
+                ),
+                models::versioned_mediatype::Version::Preview => {
+                    ("Preview".to_owned(), ApiVersion::Preview)
                 }
-                models::versioned_mediatype::Version::Preview => "Preview".to_owned(),
             };
             let body_flags = operation_version
                 .request_body
@@ -258,6 +279,7 @@ fn push_operation(
                 struct_ident: format!("{probe_base}{variant_ident}"),
                 variant_ident,
                 body_flags,
+                api_version,
             }
         })
         .collect();
@@ -270,6 +292,8 @@ fn push_operation(
         version_enum_ident: format!("{probe_base}Version"),
         versions,
         flags: operation_flags,
+        method: operation.http_verb.to_string(),
+        url_template: operation.url_template(),
     });
     Ok(())
 }
@@ -281,6 +305,17 @@ fn push_operation(
 /// `--person-first-name`). Unsupported leaves (arrays of objects, oneOf,
 /// nested arrays, ...) are skipped individually with a warning; the supported
 /// leaves still generate flags.
+fn body_flag(name: &str, required: bool, list: bool) -> GeneratedFlag {
+    GeneratedFlag {
+        name: name.to_owned(),
+        ident: flag_ident(name),
+        description: String::new(),
+        required,
+        list,
+        location: FlagLocation::Body,
+    }
+}
+
 fn request_body_flags(body: &DataType) -> Vec<GeneratedFlag> {
     let body = match body {
         DataType::ReferenceType(ReferenceType::Optional(optional)) => optional.data_type(),
@@ -307,23 +342,13 @@ fn request_body_flags_for_property(
     required: bool,
 ) {
     match datatype {
-        DataType::ValueType(_) => flags.push(GeneratedFlag {
-            ident: flag_ident(name),
-            description: String::new(),
-            required,
-            list: false,
-        }),
+        DataType::ValueType(_) => flags.push(body_flag(name, required, false)),
         DataType::ReferenceType(ReferenceType::Optional(optional)) => {
             request_body_flags_for_property(flags, name, optional.data_type(), false);
         }
         DataType::ReferenceType(ReferenceType::Array(array)) => match array.entries_type() {
             // ponytail: arrays of objects are unsupported by design.
-            DataType::ValueType(_) => flags.push(GeneratedFlag {
-                ident: flag_ident(name),
-                description: String::new(),
-                required,
-                list: true,
-            }),
+            DataType::ValueType(_) => flags.push(body_flag(name, required, true)),
             _ => eprintln!(
                 "Skipping request body flag `{name}`: only arrays of value types are supported"
             ),
@@ -415,11 +440,19 @@ mod tests {
     }
 
     fn flag(ident: &str, required: bool, list: bool) -> GeneratedFlag {
+        dot_flag(ident, ident, required, list)
+    }
+
+    /// A flag whose OpenAPI name differs from its (mangled) field ident, e.g.
+    /// the flattened `person.first_name` property.
+    fn dot_flag(name: &str, ident: &str, required: bool, list: bool) -> GeneratedFlag {
         GeneratedFlag {
+            name: name.to_owned(),
             ident: ident.to_owned(),
             description: String::new(),
             required,
             list,
+            location: FlagLocation::Body,
         }
     }
 
@@ -455,7 +488,10 @@ mod tests {
         )]));
         assert_eq!(
             request_body_flags(&body),
-            vec![flag("person_first_name", true, false), flag("person_last_name", false, false)]
+            vec![
+                dot_flag("person.first_name", "person_first_name", true, false),
+                dot_flag("person.last_name", "person_last_name", false, false),
+            ]
         );
     }
 
@@ -465,7 +501,10 @@ mod tests {
             "person".into(),
             optional(object(BTreeMap::from([("first_name".into(), str_ty())]))),
         )]));
-        assert_eq!(request_body_flags(&body), vec![flag("person_first_name", false, false)]);
+        assert_eq!(
+            request_body_flags(&body),
+            vec![dot_flag("person.first_name", "person_first_name", false, false)]
+        );
     }
 
     #[test]

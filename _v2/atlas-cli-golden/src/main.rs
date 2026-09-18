@@ -18,6 +18,8 @@ pub struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<(), ExitCode> {
+    tracing_subscriber::fmt::init();
+
     let command = Cli::parse();
 
     command.execute().await
@@ -26,6 +28,17 @@ async fn main() -> Result<(), ExitCode> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn clusters_list_generated_operation_is_a_get_on_the_clusters_url() {
+        use mongodb_atlas_cli::atlas::Operation;
+
+        let op = ListClusterDetailsV20230101::parse_from(["clusters list", "--pretty", "true"]);
+
+        assert_eq!(op.method(), http::Method::GET);
+        assert_eq!(op.url(), "/api/atlas/v2/clusters?pretty=true");
+        assert!(op.version().to_string().contains("2023-01-01"));
+    }
 
     #[test]
     fn cli_parses_clusters_create_with_version_and_body_flags() {

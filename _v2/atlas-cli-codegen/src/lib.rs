@@ -17,8 +17,8 @@ pub mod ir;
 pub use emit::to_tokens;
 pub use from_spec::from_config;
 pub use ir::{
-    GeneratedCli, GeneratedComponent, GeneratedEntity, GeneratedFlag, GeneratedGroup,
-    GeneratedOperation, GeneratedVersion,
+    ApiVersion, FlagLocation, GeneratedCli, GeneratedComponent, GeneratedEntity, GeneratedFlag,
+    GeneratedGroup, GeneratedOperation, GeneratedVersion,
 };
 
 /// Knobs for the `#[atlas_cli(...)]` attribute on the derived `Cli` struct.

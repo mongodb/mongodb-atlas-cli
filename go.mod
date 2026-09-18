@@ -55,7 +55,7 @@ require (
 	github.com/zalando/go-keyring v0.2.8
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312024 v20250312024.0.0
+	go.mongodb.org/atlas-sdk/v20250312025 v20250312025.0.0
 	go.mongodb.org/mongo-driver v1.17.10
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.41.0
@@ -89,6 +89,7 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0 // indirect
+	go.mongodb.org/atlas-sdk/v20250312024 v20250312024.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/otel v1.44.0 // indirect
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect

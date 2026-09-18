@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=maintenance -source=update.go
@@ -62,7 +62,7 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newMaintenanceWindow() *atlasv2.GroupMaintenanceWindow {
 	return &atlasv2.GroupMaintenanceWindow{
-		DayOfWeek: opts.dayOfWeek,
+		DayOfWeek: &opts.dayOfWeek,
 		HourOfDay: &opts.hourOfDay,
 		StartASAP: &opts.startASAP,
 	}

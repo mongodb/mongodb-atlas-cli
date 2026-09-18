@@ -33,7 +33,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"go.mongodb.org/atlas-sdk/v20250312024/detectaiagent"
+	"go.mongodb.org/atlas-sdk/v20250312025/detectaiagent"
 )
 
 type Event struct {

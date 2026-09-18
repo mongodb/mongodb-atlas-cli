@@ -17,6 +17,8 @@ package maintenance
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -28,12 +30,17 @@ func TestUpdateOpts_Run(t *testing.T) {
 		store:     mockStore,
 		hourOfDay: 2,
 		dayOfWeek: 1,
+		startASAP: true,
 	}
 	updateOpts.ProjectID = "21321323343243243"
 
 	mockStore.
 		EXPECT().
-		UpdateMaintenanceWindow(updateOpts.ConfigProjectID(), updateOpts.newMaintenanceWindow()).
+		UpdateMaintenanceWindow("21321323343243243", &atlasv2.GroupMaintenanceWindow{
+			DayOfWeek: pointer.Get(1),
+			HourOfDay: pointer.Get(2),
+			StartASAP: pointer.Get(true),
+		}).
 		Return(nil).
 		Times(1)
 

@@ -59,6 +59,23 @@ fn emitted_source_wires_up_request_bodies() {
     assert!(source.contains("person_first_name: Option<String>"));
 }
 
+fn struct_source<'a>(source: &'a str, name: &str) -> &'a str {
+    let start = source.find(name).unwrap_or_else(|| panic!("{name} in output")) + name.len();
+    let body = &source[start..];
+    let end = body.find("\n}").expect("struct body ends");
+    &body[..end]
+}
+
+#[test]
+fn emitted_source_gates_help_file_on_request_bodies() {
+    let source = generated_source();
+    // Operations with a request body short-circuit `--help-file` on the probe
+    // (before required flags are validated) and print the request-body schema.
+    assert!(struct_source(&source, "pub struct CreateGroupClusterProbe").contains("help_file: bool"));
+    // Bodyless operations (GET) get no `--help-file` anywhere.
+    assert!(!struct_source(&source, "pub struct GetGroupBackupCompliancePolicyProbe").contains("help_file"));
+}
+
 #[test]
 fn emitted_source_keeps_bodyless_versions_cloneable() {
     let source = generated_source();

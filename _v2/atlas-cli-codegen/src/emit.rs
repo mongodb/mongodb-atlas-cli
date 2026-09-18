@@ -709,12 +709,28 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
     let version_enum = ident(&operation.version_enum_ident);
     let default = ident(&latest.variant_ident);
 
+    // `--help-file` short-circuits at the probe (before re-parsing against the
+    // version struct and its required flags), so `clusters create --help-file`
+    // prints the request-body schema without demanding `--group-id`. Gate it on
+    // the operation carrying a request body in any version.
+    let any_body = operation.versions.iter().any(|version| version.body_schema.is_some());
+    let help_file_field = if any_body {
+        quote! {
+            /// Print the JSON Schema the `--file` flag expects for the selected --version, then exit.
+            #[arg(long)]
+            help_file: bool,
+        }
+    } else {
+        TokenStream::new()
+    };
     let probe_struct = quote! {
         #[derive(Debug, ::clap::Args)]
         #[command(disable_help_flag = true)]
         pub struct #probe {
             #[arg(long, value_enum, default_value_t = #version_enum::#default)]
             version: #version_enum,
+
+            #help_file_field
 
             /// Raw args for the selected version's command, captured verbatim.
             #[arg(allow_hyphen_values = true)]
@@ -734,13 +750,42 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
     };
 
     let dispatch = dispatch_arms(operation, &version_enum);
+    let execute_block = if any_body {
+        // The schema lives once, as a const on each version struct; the probe
+        // picks the selected version's and hands it to the shared printer.
+        let schema_arms = operation.versions.iter().map(|version| {
+            let variant = ident(&version.variant_ident);
+            let struct_ident = ident(&version.struct_ident);
+            if version.body_schema.is_some() {
+                quote! { #version_enum::#variant => Some(#struct_ident::BODY_SCHEMA), }
+            } else {
+                quote! { #version_enum::#variant => None, }
+            }
+        });
+        quote! {
+            if self.help_file {
+                let schema = match self.version {
+                    #(#schema_arms)*
+                };
+                crate::__atlas_cli_body::print_schema(schema);
+                return Ok(());
+            }
+            match self.version {
+                #(#dispatch)*
+            }
+        }
+    } else {
+        quote! {
+            match self.version {
+                #(#dispatch)*
+            }
+        }
+    };
     let probe_impl = quote! {
         impl #probe {
             /// Re-parse the captured raw args against the version-specific command.
             pub async fn execute(self) -> #ret {
-                match self.version {
-                    #(#dispatch)*
-                }
+                #execute_block
             }
         }
     };
@@ -775,7 +820,7 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
                     version: #version_enum,
                     #(#fields)*
 
-                    /// Read the request body from a JSON file, or `-` for stdin.
+                    /// Read the request body from a JSON file, or `-` for stdin. Use --help-file to print the JSON Schema the request body must match.
                     #[arg(long)]
                     file: Option<::clio::Input>,
 
@@ -784,6 +829,8 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
                 }
 
                 impl #struct_ident {
+                    const BODY_SCHEMA: &str = #schema_lit;
+
                     /// Run the operation through the atlas client and print
                     /// the JSON response; exit non-zero on any error.
                     pub async fn execute(mut self) -> #ret {
@@ -815,10 +862,9 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
                     /// flat body flags (never both), validated against the
                     /// version's JSON Schema.
                     fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
-                        const BODY_SCHEMA: &str = #schema_lit;
                         crate::__atlas_cli_body::build_body(
                             self.file.as_mut(),
-                            Some(BODY_SCHEMA),
+                            Some(Self::BODY_SCHEMA),
                             #has_flags,
                             |object| {
                                 #(#inserts)*
@@ -1147,6 +1193,17 @@ fn body_module() -> TokenStream {
         pub(crate) mod __atlas_cli_body {
             use ::bytes::Bytes;
             use ::serde_json::{Map, Value};
+
+            /// Print the JSON Schema a `--file` request body must match, on one
+            /// line as stored. `None` means the selected API version carries no
+            /// request body. Emitted for `--help-file`.
+            pub(crate) fn print_schema(schema: Option<&str>) {
+                let Some(schema) = schema else {
+                    println!("This API version has no request body.");
+                    return;
+                };
+                println!("{schema}");
+            }
 
             /// Build the request body for one version struct.
             ///

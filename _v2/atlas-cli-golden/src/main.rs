@@ -197,6 +197,46 @@ mod tests {
     }
 
     #[test]
+    fn help_file_parses_without_required_args() {
+        // `--help-file` short-circuits at the probe, before the version
+        // struct re-parse demands `--group-id`.
+        let cli = Cli::parse_from(["cli", "clusters", "create", "--help-file"]);
+        let CliSubCommands::Clusters(clusters) = cli.sub_command else {
+            panic!("expected clusters subcommand");
+        };
+        let ClustersSubcommands::Create(probe) = clusters.sub_command else {
+            panic!("expected create subcommand");
+        };
+        assert!(probe.help_file);
+        assert!(probe.rest.is_empty());
+    }
+
+    #[test]
+    fn help_file_prints_the_request_body_schema() {
+        // The schema the probe prints for the selected version is the version
+        // struct's BODY_SCHEMA: valid object JSON that --file input must match.
+        let schema: serde_json::Value =
+            serde_json::from_str(CreateGroupClusterV20241023::BODY_SCHEMA).unwrap();
+        assert_eq!(schema["type"], "object");
+        assert!(schema["properties"]["name"].is_object());
+    }
+
+    #[test]
+    fn bodyless_commands_have_no_help_file_flag() {
+        // list carries no request body: its probe defines no --help-file, so
+        // the probe's allow_hyphen_values rest capture takes the token (and
+        // the version re-parse later rejects it as unknown).
+        let cli = Cli::parse_from(["cli", "clusters", "list", "--help-file"]);
+        let CliSubCommands::Clusters(clusters) = cli.sub_command else {
+            panic!("expected clusters subcommand");
+        };
+        let ClustersSubcommands::List(probe) = clusters.sub_command else {
+            panic!("expected list subcommand");
+        };
+        assert_eq!(probe.rest, vec!["--help-file".to_owned()]);
+    }
+
+    #[test]
     fn prepare_body_rejects_missing_required_fields() {
         let mut cmd = UpdateGroupBackupCompliancePolicyV20231001::parse_from([
             "compliance-policy update",

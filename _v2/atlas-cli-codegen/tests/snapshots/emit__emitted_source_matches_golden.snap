@@ -1,5 +1,6 @@
 ---
 source: atlas-cli-codegen/tests/emit.rs
+assertion_line: 25
 expression: generated_source()
 ---
 #[derive(Debug, ::clap::Subcommand)]
@@ -237,6 +238,16 @@ pub(crate) mod __atlas_cli_help {
 pub(crate) mod __atlas_cli_body {
     use ::bytes::Bytes;
     use ::serde_json::{Map, Value};
+    /// Print the JSON Schema a `--file` request body must match, on one
+    /// line as stored. `None` means the selected API version carries no
+    /// request body. Emitted for `--help-file`.
+    pub(crate) fn print_schema(schema: Option<&str>) {
+        let Some(schema) = schema else {
+            println!("This API version has no request body.");
+            return;
+        };
+        println!("{schema}");
+    }
     /// Build the request body for one version struct.
     ///
     /// Exactly one of the file/stdin input or the flat body flags may
@@ -768,6 +779,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for GetGroupBackupCompliancePolicyV20
 pub struct CreateGroupClusterProbe {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20241023)]
     version: CreateGroupClusterVersion,
+    /// Print the JSON Schema the `--file` flag expects for the selected --version, then exit.
+    #[arg(long)]
+    help_file: bool,
     /// Raw args for the selected version's command, captured verbatim.
     #[arg(allow_hyphen_values = true)]
     rest: Vec<String>,
@@ -780,6 +794,18 @@ pub enum CreateGroupClusterVersion {
 impl CreateGroupClusterProbe {
     /// Re-parse the captured raw args against the version-specific command.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        if self.help_file {
+            let schema = match self.version {
+                CreateGroupClusterVersion::V20230101 => {
+                    Some(CreateGroupClusterV20230101::BODY_SCHEMA)
+                }
+                CreateGroupClusterVersion::V20241023 => {
+                    Some(CreateGroupClusterV20241023::BODY_SCHEMA)
+                }
+            };
+            crate::__atlas_cli_body::print_schema(schema);
+            return Ok(());
+        }
         match self.version {
             CreateGroupClusterVersion::V20230101 => {
                 let args = ::std::iter::once("create".to_owned()).chain(self.rest);
@@ -819,13 +845,14 @@ pub struct CreateGroupClusterV20230101 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
-    /// Read the request body from a JSON file, or `-` for stdin.
+    /// Read the request body from a JSON file, or `-` for stdin. Use --help-file to print the JSON Schema the request body must match.
     #[arg(long)]
     file: Option<::clio::Input>,
     #[arg(skip)]
     body: Option<::bytes::Bytes>,
 }
 impl CreateGroupClusterV20230101 {
+    const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
     /// Run the operation through the atlas client and print
     /// the JSON response; exit non-zero on any error.
     pub async fn execute(
@@ -860,10 +887,9 @@ impl CreateGroupClusterV20230101 {
     /// flat body flags (never both), validated against the
     /// version's JSON Schema.
     fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
-        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
         crate::__atlas_cli_body::build_body(
             self.file.as_mut(),
-            Some(BODY_SCHEMA),
+            Some(Self::BODY_SCHEMA),
             self.name.is_some() || self.person_first_name.is_some()
                 || self.person_last_name.is_some() || self.providers.is_some()
                 || self.region.is_some(),
@@ -976,13 +1002,14 @@ pub struct CreateGroupClusterV20241023 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
-    /// Read the request body from a JSON file, or `-` for stdin.
+    /// Read the request body from a JSON file, or `-` for stdin. Use --help-file to print the JSON Schema the request body must match.
     #[arg(long)]
     file: Option<::clio::Input>,
     #[arg(skip)]
     body: Option<::bytes::Bytes>,
 }
 impl CreateGroupClusterV20241023 {
+    const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
     /// Run the operation through the atlas client and print
     /// the JSON response; exit non-zero on any error.
     pub async fn execute(
@@ -1017,10 +1044,9 @@ impl CreateGroupClusterV20241023 {
     /// flat body flags (never both), validated against the
     /// version's JSON Schema.
     fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
-        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
         crate::__atlas_cli_body::build_body(
             self.file.as_mut(),
-            Some(BODY_SCHEMA),
+            Some(Self::BODY_SCHEMA),
             self.name.is_some() || self.person_first_name.is_some()
                 || self.person_last_name.is_some() || self.providers.is_some()
                 || self.region.is_some(),
@@ -1113,6 +1139,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20241023 {
 pub struct UpdateGroupClusterProbe {
     #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20241023)]
     version: UpdateGroupClusterVersion,
+    /// Print the JSON Schema the `--file` flag expects for the selected --version, then exit.
+    #[arg(long)]
+    help_file: bool,
     /// Raw args for the selected version's command, captured verbatim.
     #[arg(allow_hyphen_values = true)]
     rest: Vec<String>,
@@ -1125,6 +1154,18 @@ pub enum UpdateGroupClusterVersion {
 impl UpdateGroupClusterProbe {
     /// Re-parse the captured raw args against the version-specific command.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+        if self.help_file {
+            let schema = match self.version {
+                UpdateGroupClusterVersion::V20230101 => {
+                    Some(UpdateGroupClusterV20230101::BODY_SCHEMA)
+                }
+                UpdateGroupClusterVersion::V20241023 => {
+                    Some(UpdateGroupClusterV20241023::BODY_SCHEMA)
+                }
+            };
+            crate::__atlas_cli_body::print_schema(schema);
+            return Ok(());
+        }
         match self.version {
             UpdateGroupClusterVersion::V20230101 => {
                 let args = ::std::iter::once("update".to_owned()).chain(self.rest);
@@ -1159,13 +1200,14 @@ pub struct UpdateGroupClusterV20230101 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
-    /// Read the request body from a JSON file, or `-` for stdin.
+    /// Read the request body from a JSON file, or `-` for stdin. Use --help-file to print the JSON Schema the request body must match.
     #[arg(long)]
     file: Option<::clio::Input>,
     #[arg(skip)]
     body: Option<::bytes::Bytes>,
 }
 impl UpdateGroupClusterV20230101 {
+    const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
     /// Run the operation through the atlas client and print
     /// the JSON response; exit non-zero on any error.
     pub async fn execute(
@@ -1200,10 +1242,9 @@ impl UpdateGroupClusterV20230101 {
     /// flat body flags (never both), validated against the
     /// version's JSON Schema.
     fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
-        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
         crate::__atlas_cli_body::build_body(
             self.file.as_mut(),
-            Some(BODY_SCHEMA),
+            Some(Self::BODY_SCHEMA),
             self.name.is_some() || self.person_first_name.is_some()
                 || self.person_last_name.is_some() || self.providers.is_some()
                 || self.region.is_some(),
@@ -1308,13 +1349,14 @@ pub struct UpdateGroupClusterV20241023 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
-    /// Read the request body from a JSON file, or `-` for stdin.
+    /// Read the request body from a JSON file, or `-` for stdin. Use --help-file to print the JSON Schema the request body must match.
     #[arg(long)]
     file: Option<::clio::Input>,
     #[arg(skip)]
     body: Option<::bytes::Bytes>,
 }
 impl UpdateGroupClusterV20241023 {
+    const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
     /// Run the operation through the atlas client and print
     /// the JSON response; exit non-zero on any error.
     pub async fn execute(
@@ -1349,10 +1391,9 @@ impl UpdateGroupClusterV20241023 {
     /// flat body flags (never both), validated against the
     /// version's JSON Schema.
     fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
-        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
         crate::__atlas_cli_body::build_body(
             self.file.as_mut(),
-            Some(BODY_SCHEMA),
+            Some(Self::BODY_SCHEMA),
             self.name.is_some() || self.person_first_name.is_some()
                 || self.person_last_name.is_some() || self.providers.is_some()
                 || self.region.is_some(),

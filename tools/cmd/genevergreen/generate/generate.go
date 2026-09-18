@@ -35,8 +35,9 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"7.0": {"ubuntu2404"},
-		"6.0": {"ubuntu2404", "debian13", "rhel10"},
+		"8.2": {"ubuntu2604"},
+		"7.0": {"ubuntu2404", "ubuntu2604"},
+		"6.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"},
 	}
 
 	oses = []string{
@@ -48,6 +49,7 @@ var (
 		"debian13",
 		"ubuntu22.04",
 		"ubuntu24.04",
+		"ubuntu26.04",
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
@@ -57,6 +59,7 @@ var (
 		"rhel10":      "rhel10-rpm",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
+		"ubuntu26.04": "ubuntu26.04-deb",
 		"debian12":    "debian12-deb",
 		"debian13":    "debian13-deb",
 	}
@@ -67,6 +70,7 @@ var (
 		"rhel10":          "rhel10",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
+		"ubuntu26.04":     "ubuntu2604",
 		"debian12":        "debian12",
 		"debian13":        "debian13",
 		"amazonlinux2023": "amazon2023",
@@ -161,7 +165,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		if os == "debian13" || os == "rhel10" {
+		if os == "debian13" || os == "rhel10" || os == "ubuntu26.04" {
 			continue // TODO fix me after CLOUDP-446594
 		}
 

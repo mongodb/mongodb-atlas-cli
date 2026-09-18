@@ -99,8 +99,8 @@ func generateFile(name, version string) error {
 		Platform: []*Platform{
 			newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
 			newPlatform(version, "arm64", "linux", "Linux (arm64)", []string{"tar.gz"}),
-			newPlatform(version, "x86_64", "linux", "Debian 12, 13 / Ubuntu 22.04, 24.04 (x86_64)", []string{"deb"}),
-			newPlatform(version, "arm64", "linux", "Debian 12, 13 / Ubuntu 22.04, 24.04 (arm64)", []string{"deb"}),
+			newPlatform(version, "x86_64", "linux", "Debian 12, 13 / Ubuntu 22.04, 24.04, 26.04 (x86_64)", []string{"deb"}),
+			newPlatform(version, "arm64", "linux", "Debian 12, 13 / Ubuntu 22.04, 24.04, 26.04 (arm64)", []string{"deb"}),
 			newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 8, 9, 10 / SUSE 15 / Amazon Linux 2023 (x86_64)", []string{"rpm"}),
 			newPlatform(version, "arm64", "linux", "Red Hat + CentOS 8, 9, 10 / SUSE 15 / Amazon Linux 2023 (arm64)", []string{"rpm"}),
 			newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"msi", "zip"}),

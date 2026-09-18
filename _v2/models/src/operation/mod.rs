@@ -19,7 +19,7 @@ mod url;
 mod version;
 
 use headers::Headers;
-use url::ParameterizedUrl;
+use url::{ParameterizedUrl, Part};
 pub use version::{ConversionOptions, OperationVersion};
 
 use crate::operation::{
@@ -153,6 +153,27 @@ impl Operation {
             headers,
             versions: operation_versions,
         })
+    }
+
+    /// All path, query and header parameters in flag order: path parameters in
+    /// URL order, then query parameters in declaration order, then header
+    /// parameters sorted by name. Each is `(name, description, required)`.
+    pub fn parameters(&self) -> impl Iterator<Item = (&str, &str, bool)> {
+        let path = self.url.parts.iter().filter_map(|part| match part {
+            Part::Parameter(p) => Some((p.name.as_str(), p.description.as_str(), p.required)),
+            Part::Const(_) => None,
+        });
+        let query = self
+            .url
+            .query_parameters
+            .iter()
+            .map(|p| (p.name.as_str(), p.description.as_str(), p.required));
+        let header = self
+            .headers
+            .parameters
+            .values()
+            .map(|p| (p.name.as_str(), p.description.as_str(), p.required));
+        path.chain(query).chain(header)
     }
 
     fn reject_cookie_parameters(

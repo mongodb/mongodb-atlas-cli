@@ -10,7 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use models::hierarchy::{Entity, Hierarchy};
 use models::operation_id::OperationId;
 use openapiv3::OpenAPI;
-use openapiv3_resolve::{ResolvedOpenAPI, ResolvedParameter};
+use openapiv3_resolve::ResolvedOpenAPI;
 
 use crate::ir::*;
 use crate::{CodegenError, CodegenOptions};
@@ -38,33 +38,6 @@ fn build(
 ) -> Result<GeneratedCli, CodegenError> {
     let parsed = models::Spec::from_resolved_openapi_spec(spec)?;
 
-    // Per-operation raw parameters (path/query/header), used for flag
-    // generation. Kept keyed by the spec operationId string.
-    let mut flags: BTreeMap<String, Vec<GeneratedFlag>> = BTreeMap::new();
-    for (_path, item) in spec.paths().paths.iter() {
-        for (_verb, operation) in item.iter() {
-            let Some(op_id) = operation.operation_id.as_deref() else {
-                continue;
-            };
-            let operation_flags = operation
-                .parameters
-                .iter()
-                .filter_map(|p| match &**p {
-                    ResolvedParameter::Cookie { .. } => None,
-                    _ => {
-                        let data = p.parameter_data();
-                        Some(GeneratedFlag {
-                            ident: flag_ident(&data.name),
-                            description: data.description.clone().unwrap_or_default(),
-                            required: data.required,
-                        })
-                    }
-                })
-                .collect();
-            flags.insert(op_id.to_owned(), operation_flags);
-        }
-    }
-
     // Every operation must be covered by the hierarchy or explicitly
     // excluded; tracks which ids the hierarchy references.
     let mut referenced = BTreeSet::new();
@@ -76,7 +49,6 @@ fn build(
             let operations = entity_operations(
                 entity,
                 &parsed.operations,
-                &flags,
                 &options.excluded_operation_ids,
                 &mut referenced,
             )?;
@@ -85,7 +57,6 @@ fn build(
                 let component_operations = component_operations(
                     component,
                     &parsed.operations,
-                    &flags,
                     &options.excluded_operation_ids,
                     &mut referenced,
                 )?;
@@ -141,7 +112,6 @@ fn build(
 fn entity_operations(
     entity: &Entity,
     operations: &BTreeMap<OperationId, models::Operation>,
-    flags: &BTreeMap<String, Vec<GeneratedFlag>>,
     excluded: &BTreeSet<String>,
     referenced: &mut BTreeSet<String>,
 ) -> Result<Vec<GeneratedOperation>, CodegenError> {
@@ -157,11 +127,11 @@ fn entity_operations(
         let Some(op_id) = op_id else {
             continue;
         };
-        push_operation(&mut out, slot, op_id, operations, flags, excluded, referenced)?;
+        push_operation(&mut out, slot, op_id, operations, excluded, referenced)?;
     }
 
     for (action, op_id) in &entity.actions {
-        push_operation(&mut out, action, op_id, operations, flags, excluded, referenced)?;
+        push_operation(&mut out, action, op_id, operations, excluded, referenced)?;
     }
 
     Ok(out)
@@ -172,19 +142,18 @@ fn entity_operations(
 fn component_operations(
     component: &models::hierarchy::Component,
     operations: &BTreeMap<OperationId, models::Operation>,
-    flags: &BTreeMap<String, Vec<GeneratedFlag>>,
     excluded: &BTreeSet<String>,
     referenced: &mut BTreeSet<String>,
 ) -> Result<Vec<GeneratedOperation>, CodegenError> {
     let mut out = Vec::new();
     if let Some(op_id) = component.read.as_ref() {
-        push_operation(&mut out, "read", op_id, operations, flags, excluded, referenced)?;
+        push_operation(&mut out, "read", op_id, operations, excluded, referenced)?;
     }
     if let Some(op_id) = component.update.as_ref() {
-        push_operation(&mut out, "update", op_id, operations, flags, excluded, referenced)?;
+        push_operation(&mut out, "update", op_id, operations, excluded, referenced)?;
     }
     for (action, op_id) in &component.actions {
-        push_operation(&mut out, action, op_id, operations, flags, excluded, referenced)?;
+        push_operation(&mut out, action, op_id, operations, excluded, referenced)?;
     }
     Ok(out)
 }
@@ -194,7 +163,6 @@ fn push_operation(
     slot: &str,
     op_id: &OperationId,
     operations: &BTreeMap<OperationId, models::Operation>,
-    flags: &BTreeMap<String, Vec<GeneratedFlag>>,
     excluded: &BTreeSet<String>,
     referenced: &mut BTreeSet<String>,
 ) -> Result<(), CodegenError> {
@@ -208,12 +176,20 @@ fn push_operation(
             op_id: op_id_string.clone(),
         })?;
     referenced.insert(op_id_string.clone());
-    let operation_flags = flags.get(&op_id_string).cloned().unwrap_or_default();
 
     if operation.versions.is_empty() {
         eprintln!("Skipping operation `{op_id_string}`: no versioned media types");
         return Ok(());
     }
+
+    let operation_flags = operation
+        .parameters()
+        .map(|(name, description, required)| GeneratedFlag {
+            ident: flag_ident(name),
+            description: description.to_owned(),
+            required,
+        })
+        .collect();
 
     let variant_name = ident_of(slot);
 

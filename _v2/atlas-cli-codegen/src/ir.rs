@@ -1,6 +1,6 @@
 //! Intermediate representation of the generated CLI.
 //!
-//! Produced by [`from_spec::from_resolved_openapi`], consumed by
+//! Produced by [`from_spec::from_config`], consumed by
 //! [`emit::to_tokens`]. Kept free of proc-macro machinery so it is easy to
 //! test (`Spec` -> IR).
 

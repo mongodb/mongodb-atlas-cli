@@ -143,6 +143,7 @@ fn flags_from_parameters_with_optionality() {
                 required: true,
                 list: false,
                 location: atlas_cli_codegen::FlagLocation::Path,
+                value_kind: atlas_cli_codegen::FlagValueKind::String,
             },
             GeneratedFlag {
                 name: "pretty".to_owned(),
@@ -151,6 +152,7 @@ fn flags_from_parameters_with_optionality() {
                 required: false,
                 list: false,
                 location: atlas_cli_codegen::FlagLocation::Query,
+                value_kind: atlas_cli_codegen::FlagValueKind::String,
             },
         ]
     );
@@ -173,6 +175,7 @@ fn body_flags_derived_from_request_body_flattened() {
         required,
         list,
         location: atlas_cli_codegen::FlagLocation::Body,
+        value_kind: atlas_cli_codegen::FlagValueKind::String,
     };
     assert_eq!(
         create.versions[0].body_flags,
@@ -184,6 +187,22 @@ fn body_flags_derived_from_request_body_flattened() {
             body_flag("region", "region", false, false),
         ]
     );
+}
+
+#[test]
+fn body_schema_is_embedded_only_when_a_request_body_exists() {
+    let cli = cli(default_options());
+    let create = operation(entity(group(&cli, "Clusters"), "Cluster"), "Create");
+    assert!(create.versions[0].body_schema.is_some());
+    // The embedded schema is the stringified JSON Schema of the object body.
+    assert!(create.versions[0].body_schema.as_deref().unwrap().starts_with('{'));
+
+    // startGroupClusterBackup is a POST with no request body in the fixture.
+    let schedule = &entity(group(&cli, "CloudBackups"), "Cluster").components[0];
+    let start = &schedule.operations[0];
+    assert_eq!(start.method, "POST");
+    assert!(start.versions[0].body_schema.is_none());
+    assert!(start.versions[0].body_flags.is_empty());
 }
 
 #[test]

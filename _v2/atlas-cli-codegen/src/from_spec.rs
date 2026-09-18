@@ -9,6 +9,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use models::datatypes::DataType;
 use models::datatypes::reference_types::ReferenceType;
+use models::datatypes::value_type::ValueType;
 use models::hierarchy::{Entity, Hierarchy};
 use models::operation::ParamIn;
 use models::operation_id::OperationId;
@@ -222,7 +223,7 @@ fn push_operation(
     referenced.insert(op_id_string.clone());
 
     if operation.versions.is_empty() {
-        eprintln!("Skipping operation `{op_id_string}`: no versioned media types");
+        tracing::trace!(op_id = %op_id_string, "skipping operation: no versioned media types");
         return Ok(());
     }
 
@@ -239,6 +240,7 @@ fn push_operation(
                 ParamIn::Query => FlagLocation::Query,
                 ParamIn::Header => FlagLocation::Header,
             },
+            value_kind: FlagValueKind::String,
         })
         .collect();
 
@@ -275,10 +277,15 @@ fn push_operation(
                 .as_ref()
                 .map(request_body_flags)
                 .unwrap_or_default();
+            let body_schema = operation_version
+                .request_body
+                .as_ref()
+                .map(|body| body.to_json_schema().to_string());
             GeneratedVersion {
                 struct_ident: format!("{probe_base}{variant_ident}"),
                 variant_ident,
                 body_flags,
+                body_schema,
                 api_version,
             }
         })
@@ -298,6 +305,17 @@ fn push_operation(
     Ok(())
 }
 
+/// The JSON scalar kind of a value type: what `serde_json::json!(...)` should
+/// produce when the flag is turned into a request body.
+fn value_kind(value_type: &ValueType) -> FlagValueKind {
+    match value_type {
+        ValueType::Boolean(_) => FlagValueKind::Boolean,
+        ValueType::Integer(_) => FlagValueKind::Integer,
+        ValueType::Double(_) => FlagValueKind::Double,
+        ValueType::String(_) | ValueType::Enum(_) => FlagValueKind::String,
+    }
+}
+
 /// Request body -> flat flags.
 ///
 /// Only supports simple bodies: an object whose leaves are value types or
@@ -305,7 +323,7 @@ fn push_operation(
 /// `--person-first-name`). Unsupported leaves (arrays of objects, oneOf,
 /// nested arrays, ...) are skipped individually with a warning; the supported
 /// leaves still generate flags.
-fn body_flag(name: &str, required: bool, list: bool) -> GeneratedFlag {
+fn body_flag(name: &str, required: bool, list: bool, value_kind: FlagValueKind) -> GeneratedFlag {
     GeneratedFlag {
         name: name.to_owned(),
         ident: flag_ident(name),
@@ -313,6 +331,7 @@ fn body_flag(name: &str, required: bool, list: bool) -> GeneratedFlag {
         required,
         list,
         location: FlagLocation::Body,
+        value_kind,
     }
 }
 
@@ -322,7 +341,7 @@ fn request_body_flags(body: &DataType) -> Vec<GeneratedFlag> {
         body => body,
     };
     let DataType::ReferenceType(ReferenceType::Object(object)) = body else {
-        eprintln!("Skipping request body flags: unsupported body shape");
+        tracing::trace!("skipping request body flags: unsupported body shape");
         return Vec::new();
     };
     let mut flags = Vec::new();
@@ -342,15 +361,20 @@ fn request_body_flags_for_property(
     required: bool,
 ) {
     match datatype {
-        DataType::ValueType(_) => flags.push(body_flag(name, required, false)),
+        DataType::ValueType(value_type) => {
+            flags.push(body_flag(name, required, false, value_kind(value_type)));
+        }
         DataType::ReferenceType(ReferenceType::Optional(optional)) => {
             request_body_flags_for_property(flags, name, optional.data_type(), false);
         }
         DataType::ReferenceType(ReferenceType::Array(array)) => match array.entries_type() {
             // ponytail: arrays of objects are unsupported by design.
-            DataType::ValueType(_) => flags.push(body_flag(name, required, true)),
-            _ => eprintln!(
-                "Skipping request body flag `{name}`: only arrays of value types are supported"
+            DataType::ValueType(value_type) => {
+                flags.push(body_flag(name, required, true, value_kind(value_type)));
+            }
+            _ => tracing::trace!(
+                flag = name,
+                "skipping request body flag: only arrays of value types are supported"
             ),
         },
         DataType::ReferenceType(ReferenceType::Object(object)) => {
@@ -363,8 +387,9 @@ fn request_body_flags_for_property(
                 );
             }
         }
-        DataType::ReferenceType(ReferenceType::OneOf(_)) => eprintln!(
-            "Skipping request body flag `{name}`: unions are not supported"
+        DataType::ReferenceType(ReferenceType::OneOf(_)) => tracing::trace!(
+            flag = name,
+            "skipping request body flag: unions are not supported"
         ),
     }
 }
@@ -440,12 +465,18 @@ mod tests {
     }
 
     fn flag(ident: &str, required: bool, list: bool) -> GeneratedFlag {
-        dot_flag(ident, ident, required, list)
+        dot_flag(ident, ident, required, list, FlagValueKind::String)
     }
 
     /// A flag whose OpenAPI name differs from its (mangled) field ident, e.g.
     /// the flattened `person.first_name` property.
-    fn dot_flag(name: &str, ident: &str, required: bool, list: bool) -> GeneratedFlag {
+    fn dot_flag(
+        name: &str,
+        ident: &str,
+        required: bool,
+        list: bool,
+        value_kind: FlagValueKind,
+    ) -> GeneratedFlag {
         GeneratedFlag {
             name: name.to_owned(),
             ident: ident.to_owned(),
@@ -453,6 +484,7 @@ mod tests {
             required,
             list,
             location: FlagLocation::Body,
+            value_kind,
         }
     }
 
@@ -489,8 +521,8 @@ mod tests {
         assert_eq!(
             request_body_flags(&body),
             vec![
-                dot_flag("person.first_name", "person_first_name", true, false),
-                dot_flag("person.last_name", "person_last_name", false, false),
+                dot_flag("person.first_name", "person_first_name", true, false, FlagValueKind::String),
+                dot_flag("person.last_name", "person_last_name", false, false, FlagValueKind::String),
             ]
         );
     }
@@ -503,7 +535,7 @@ mod tests {
         )]));
         assert_eq!(
             request_body_flags(&body),
-            vec![dot_flag("person.first_name", "person_first_name", false, false)]
+            vec![dot_flag("person.first_name", "person_first_name", false, false, FlagValueKind::String)]
         );
     }
 
@@ -526,6 +558,45 @@ mod tests {
         assert_eq!(
             request_body_flags(&DataType::ReferenceType(ReferenceType::new_array(str_ty()))),
             vec![]
+        );
+    }
+
+    fn typed(value_type: ValueType) -> DataType {
+        DataType::ValueType(value_type)
+    }
+
+    #[test]
+    fn value_kinds_follow_the_leaf_type() {
+        use models::datatypes::value_type::{
+            ValueTypeBoolean, ValueTypeDouble, ValueTypeInteger,
+        };
+        let body = object(BTreeMap::from([
+            ("enabled".into(), typed(ValueType::Boolean(ValueTypeBoolean {}))),
+            ("port".into(), typed(ValueType::Integer(ValueTypeInteger {}))),
+            ("ratio".into(), typed(ValueType::Double(ValueTypeDouble {}))),
+        ]));
+        assert_eq!(
+            request_body_flags(&body),
+            vec![
+                dot_flag("enabled", "enabled", true, false, FlagValueKind::Boolean),
+                dot_flag("port", "port", true, false, FlagValueKind::Integer),
+                dot_flag("ratio", "ratio", true, false, FlagValueKind::Double),
+            ]
+        );
+    }
+
+    #[test]
+    fn value_kind_of_array_entries_is_carried() {
+        use models::datatypes::value_type::ValueTypeInteger;
+        let body = object(BTreeMap::from([(
+            "ports".into(),
+            DataType::ReferenceType(ReferenceType::new_array(typed(ValueType::Integer(
+                ValueTypeInteger {},
+            )))),
+        )]));
+        assert_eq!(
+            request_body_flags(&body),
+            vec![dot_flag("ports", "ports", true, true, FlagValueKind::Integer)]
         );
     }
 }

@@ -41,6 +41,21 @@ mod tests {
     }
 
     #[test]
+    fn path_parameters_lose_their_curly_braces() {
+        use mongodb_atlas_cli::atlas::Operation;
+
+        let op = GetGroupBackupCompliancePolicyV20230101::parse_from([
+            "compliance-policy read",
+            "--group-id",
+            "65d609455c11505db4a12c76",
+        ]);
+        assert_eq!(
+            op.url(),
+            "/api/atlas/v2/groups/65d609455c11505db4a12c76/backupCompliancePolicy"
+        );
+    }
+
+    #[test]
     fn cli_parses_clusters_create_with_version_and_body_flags() {
         let cli = Cli::parse_from([
             "cli",
@@ -143,5 +158,129 @@ mod tests {
             probe.rest,
             vec!["--group-id", "32b6e34b3d91647abb20e7b8", "--cluster-name", "myCluster"]
         );
+    }
+
+    use std::io::Write;
+
+    /// Write a request-body fixture to the temp dir so clio's parser accepts
+    /// the path at parse time.
+    fn temp_json(label: &str, body: &str) -> std::path::PathBuf {
+        let path = std::env::temp_dir()
+            .join(format!("atlas-cli-golden-{label}-{}.json", std::process::id()));
+        let mut file = std::fs::File::create(&path).unwrap();
+        file.write_all(body.as_bytes()).unwrap();
+        path
+    }
+
+    #[test]
+    fn prepare_body_builds_json_from_body_flags() {
+        let mut cmd = UpdateGroupBackupCompliancePolicyV20231001::parse_from([
+            "compliance-policy update",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+            "--authorized-email",
+            "grace@example.com",
+            "--authorized-user-first-name",
+            "Grace",
+            "--authorized-user-last-name",
+            "Hopper",
+            "--copy-protection-enabled",
+            "--restore-window-days",
+            "7",
+        ]);
+        let bytes = cmd.prepare_body().unwrap().unwrap();
+        let body: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+        assert_eq!(body["authorizedEmail"], "grace@example.com");
+        // Real JSON scalars come off the typed flags, not strings.
+        assert_eq!(body["copyProtectionEnabled"], true);
+        assert_eq!(body["restoreWindowDays"], 7);
+    }
+
+    #[test]
+    fn prepare_body_rejects_missing_required_fields() {
+        let mut cmd = UpdateGroupBackupCompliancePolicyV20231001::parse_from([
+            "compliance-policy update",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+            "--authorized-email",
+            "grace@example.com",
+            "--copy-protection-enabled",
+        ]);
+        let error = cmd.prepare_body().unwrap_err();
+        assert!(error.contains("required"), "unexpected: {error}");
+    }
+
+    #[test]
+    fn prepare_body_rejects_file_combined_with_flags() {
+        let path = temp_json(
+            "xor",
+            r#"{"authorizedEmail":"a@b.c","authorizedUserFirstName":"Ada","authorizedUserLastName":"Lovelace"}"#,
+        );
+        let mut cmd = UpdateGroupBackupCompliancePolicyV20231001::parse_from([
+            "compliance-policy update",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+            "--file",
+            path.to_str().unwrap(),
+            "--authorized-email",
+            "grace@example.com",
+        ]);
+        let error = cmd.prepare_body().unwrap_err();
+        std::fs::remove_file(path).ok();
+        assert!(error.contains("not both"), "unexpected: {error}");
+    }
+
+    #[test]
+    fn prepare_body_reads_and_validates_file() {
+        let path = temp_json(
+            "read",
+            r#"{"authorizedEmail":"a@b.c","authorizedUserFirstName":"Ada","authorizedUserLastName":"Lovelace"}"#,
+        );
+        let mut cmd = UpdateGroupBackupCompliancePolicyV20231001::parse_from([
+            "compliance-policy update",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+            "--file",
+            path.to_str().unwrap(),
+        ]);
+        let body = cmd.prepare_body().unwrap().unwrap();
+        std::fs::remove_file(path).ok();
+        assert!(body.starts_with(br#"{"authorizedEmail""#));
+    }
+
+    #[test]
+    fn prepare_body_rejects_schema_invalid_file() {
+        let path = temp_json("invalid", r#"{"cloudProvider":"KUBERNETES"}"#);
+        let mut cmd = CreateGroupBackupExportBucketV20230101::parse_from([
+            "export-buckets create",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+            "--file",
+            path.to_str().unwrap(),
+        ]);
+        let error = cmd.prepare_body().unwrap_err();
+        std::fs::remove_file(path).ok();
+        assert!(error.contains("invalid"), "unexpected: {error}");
+    }
+
+    #[test]
+    fn prepare_body_returns_empty_byte_for_bodyless_version() {
+        use mongodb_atlas_cli::atlas::Operation;
+        let cmd = ListClusterDetailsV20230101::parse_from(["clusters list"]);
+        // No request body: no --file, nothing to prepare, nothing to send.
+        assert_eq!(cmd.request_body(), bytes::Bytes::new());
+    }
+
+    /// An unsupported-shape body (oneOf export bucket request) has no flat
+    /// flags: --file is the only way in, and omitting it is an error.
+    #[test]
+    fn complex_body_requires_file() {
+        let mut cmd = CreateGroupBackupExportBucketV20240530::parse_from([
+            "export-buckets create",
+            "--group-id",
+            "32b6e34b3d91647abb20e7b8",
+        ]);
+        let error = cmd.prepare_body().unwrap_err();
+        assert!(error.contains("request body is required"), "unexpected: {error}");
     }
 }

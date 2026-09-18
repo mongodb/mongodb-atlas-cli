@@ -95,6 +95,10 @@ pub struct GeneratedVersion {
     /// shape can change between versions). Empty when the body is absent or
     /// not a supported simple shape.
     pub body_flags: Vec<GeneratedFlag>,
+    /// The JSON Schema (`serde_json::Value`, stringified) of this version's
+    /// request body, used to validate `--file`/stdin input and flag-built
+    /// bodies. `None` when this version has no request body.
+    pub body_schema: Option<String>,
     /// The atlas API version this variant maps to.
     pub api_version: ApiVersion,
 }
@@ -119,6 +123,18 @@ pub struct GeneratedFlag {
     pub list: bool,
     /// Where the parameter lands in a request.
     pub location: FlagLocation,
+    /// JSON scalar kind of a flat body flag, so flag-built bodies carry the
+    /// right JSON types (`copyProtectionEnabled` -> `true`, not `"true"`).
+    pub value_kind: FlagValueKind,
+}
+
+/// The JSON scalar kind of a flat body flag's leaf value type.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FlagValueKind {
+    String,
+    Integer,
+    Double,
+    Boolean,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -230,6 +230,100 @@ pub(crate) mod __atlas_cli_help {
         out
     }
 }
+/// Shared request-body construction for generated version structs:
+/// `--file`/stdin XOR flat body flags, validated against the version's
+/// JSON Schema before the request goes out.
+#[allow(dead_code, reason = "wired into generated prepare_body impls")]
+pub(crate) mod __atlas_cli_body {
+    use ::bytes::Bytes;
+    use ::serde_json::{Map, Value};
+    /// Build the request body for one version struct.
+    ///
+    /// Exactly one of the file/stdin input or the flat body flags may
+    /// be set; providing both is an error. When `schema` is given the
+    /// body is validated against it first. Returns `None` for versions
+    /// that carry no request body (never reached from generated code).
+    pub(crate) fn build_body(
+        file: Option<&mut ::clio::Input>,
+        schema: Option<&str>,
+        has_flags: bool,
+        build: impl FnOnce(&mut Map<String, Value>),
+    ) -> Result<Option<Bytes>, String> {
+        if file.is_some() && has_flags {
+            return Err(
+                "pass either `--file` or request-body flags, not both".to_owned(),
+            );
+        }
+        if let Some(input) = file {
+            return read_body(input, schema);
+        }
+        if has_flags {
+            let mut object = Map::new();
+            build(&mut object);
+            let body = Value::Object(object);
+            validate(schema, &body)?;
+            return ::serde_json::to_vec(&body)
+                .map(Bytes::from)
+                .map(Some)
+                .map_err(|error| error.to_string());
+        }
+        if schema.is_some() {
+            return Err(
+                "a request body is required: pass `--file` (or `-` for stdin) or at least one request-body flag"
+                    .to_owned(),
+            );
+        }
+        Ok(None)
+    }
+    fn read_body(
+        input: &mut ::clio::Input,
+        schema: Option<&str>,
+    ) -> Result<Option<Bytes>, String> {
+        use ::std::io::Read;
+        let mut text = String::new();
+        input
+            .read_to_string(&mut text)
+            .map_err(|error| format!("cannot read request body: {error}"))?;
+        let value: Value = ::serde_json::from_str(&text)
+            .map_err(|error| format!("request body is not valid JSON: {error}"))?;
+        validate(schema, &value)?;
+        Ok(Some(Bytes::from(text)))
+    }
+    fn validate(schema: Option<&str>, value: &Value) -> Result<(), String> {
+        let Some(schema) = schema else {
+            return Ok(());
+        };
+        let schema: Value = ::serde_json::from_str(schema)
+            .map_err(|error| format!("invalid request body schema: {error}"))?;
+        let validator = ::jsonschema::validator_for(&schema)
+            .map_err(|error| format!("invalid request body schema: {error}"))?;
+        validator
+            .validate(value)
+            .map_err(|error| format!("request body is invalid: {error}"))?;
+        Ok(())
+    }
+    /// Insert `value` at the nested `dotted` JSON path, creating
+    /// intermediate objects: `insert(map, "person.first_name", ..)`
+    /// sets `{"person": {"first_name": ..}}`.
+    pub(crate) fn insert(object: &mut Map<String, Value>, dotted: &str, value: Value) {
+        let mut parts = dotted.split('.');
+        let Some(head) = parts.next() else {
+            return;
+        };
+        let Some(next) = parts.next() else {
+            object.insert(head.to_owned(), value);
+            return;
+        };
+        let tail = ::std::iter::once(next).chain(parts).collect::<Vec<_>>().join(".");
+        let nested = object
+            .entry(head.to_owned())
+            .or_insert_with(|| Value::Object(Map::new()));
+        let Value::Object(nested) = nested else {
+            return;
+        };
+        insert(nested, &tail, value);
+    }
+}
 #[derive(Debug, ::clap::Args)]
 #[command(override_help = __atlas_cli_help::cloud_backups_help())]
 pub struct CloudBackupsCommand {
@@ -337,8 +431,8 @@ pub struct StartGroupClusterBackupV20230101 {
     clusterName: String,
 }
 impl StartGroupClusterBackupV20230101 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
@@ -369,8 +463,8 @@ impl ::mongodb_atlas_cli::atlas::Operation for StartGroupClusterBackupV20230101 
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup"
                 .to_owned();
-            url = url.replace("groupId", &self.groupId);
-            url = url.replace("clusterName", &self.clusterName);
+            url = url.replace("{groupId}", &self.groupId);
+            url = url.replace("{clusterName}", &self.clusterName);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -415,8 +509,8 @@ pub struct StartGroupClusterBackupV20241023 {
     clusterName: String,
 }
 impl StartGroupClusterBackupV20241023 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
@@ -447,8 +541,8 @@ impl ::mongodb_atlas_cli::atlas::Operation for StartGroupClusterBackupV20241023 
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup"
                 .to_owned();
-            url = url.replace("groupId", &self.groupId);
-            url = url.replace("clusterName", &self.clusterName);
+            url = url.replace("{groupId}", &self.groupId);
+            url = url.replace("{clusterName}", &self.clusterName);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -529,8 +623,8 @@ pub struct GetGroupBackupCompliancePolicyV20230101 {
     groupId: String,
 }
 impl GetGroupBackupCompliancePolicyV20230101 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
@@ -561,7 +655,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for GetGroupBackupCompliancePolicyV20
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/backup/compliancePolicy"
                 .to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -607,8 +701,8 @@ pub struct GetGroupBackupCompliancePolicyV20231001 {
     groupId: String,
 }
 impl GetGroupBackupCompliancePolicyV20231001 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
     pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
@@ -639,7 +733,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for GetGroupBackupCompliancePolicyV20
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/backup/compliancePolicy"
                 .to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -705,7 +799,7 @@ impl CreateGroupClusterProbe {
 ///Clusters contain a group of hosts that maintain the same data set.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, Clone, ::clap::Parser)]
+#[derive(Debug, ::clap::Parser)]
 pub struct CreateGroupClusterV20230101 {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20230101)]
     version: CreateGroupClusterVersion,
@@ -716,7 +810,7 @@ pub struct CreateGroupClusterV20230101 {
     #[arg(long)]
     pretty: Option<String>,
     #[arg(long)]
-    name: String,
+    name: Option<String>,
     #[arg(long)]
     person_first_name: Option<String>,
     #[arg(long)]
@@ -725,12 +819,25 @@ pub struct CreateGroupClusterV20230101 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
+    /// Read the request body from a JSON file, or `-` for stdin.
+    #[arg(long)]
+    file: Option<::clio::Input>,
+    #[arg(skip)]
+    body: Option<::bytes::Bytes>,
 }
 impl CreateGroupClusterV20230101 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
-    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
+    pub async fn execute(
+        mut self,
+    ) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
+        self.body = self
+            .prepare_body()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
             .map_err(|error| {
                 eprintln!("{error}");
@@ -749,6 +856,56 @@ impl CreateGroupClusterV20230101 {
         );
         Ok(())
     }
+    /// Build the request body from `--file`/stdin or from the
+    /// flat body flags (never both), validated against the
+    /// version's JSON Schema.
+    fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
+        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
+        crate::__atlas_cli_body::build_body(
+            self.file.as_mut(),
+            Some(BODY_SCHEMA),
+            self.name.is_some() || self.person_first_name.is_some()
+                || self.person_last_name.is_some() || self.providers.is_some()
+                || self.region.is_some(),
+            |object| {
+                if let Some(value) = &self.name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_first_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.first_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_last_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.last_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.providers {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "providers",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.region {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "region",
+                        ::serde_json::json!(value),
+                    );
+                }
+            },
+        )
+    }
 }
 impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20230101 {
     type Response = ::serde_json::Value;
@@ -758,7 +915,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20230101 {
     fn url(&self) -> String {
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if let Some(value) = &self.pretty {
                 params.push(::std::format!("{}={}", "pretty", value));
@@ -782,6 +939,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20230101 {
             version
         }
     }
+    fn request_body(&self) -> ::bytes::Bytes {
+        self.body.clone().unwrap_or_default()
+    }
     fn parse_response(
         bytes: ::bytes::Bytes,
     ) -> ::std::result::Result<
@@ -796,7 +956,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20230101 {
 ///Clusters contain a group of hosts that maintain the same data set.
 ///
 ///Flags differ per API version (--version). This help describes version V20241023.
-#[derive(Debug, Clone, ::clap::Parser)]
+#[derive(Debug, ::clap::Parser)]
 pub struct CreateGroupClusterV20241023 {
     #[arg(long, value_enum, default_value_t = CreateGroupClusterVersion::V20241023)]
     version: CreateGroupClusterVersion,
@@ -807,7 +967,7 @@ pub struct CreateGroupClusterV20241023 {
     #[arg(long)]
     pretty: Option<String>,
     #[arg(long)]
-    name: String,
+    name: Option<String>,
     #[arg(long)]
     person_first_name: Option<String>,
     #[arg(long)]
@@ -816,12 +976,25 @@ pub struct CreateGroupClusterV20241023 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
+    /// Read the request body from a JSON file, or `-` for stdin.
+    #[arg(long)]
+    file: Option<::clio::Input>,
+    #[arg(skip)]
+    body: Option<::bytes::Bytes>,
 }
 impl CreateGroupClusterV20241023 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
-    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
+    pub async fn execute(
+        mut self,
+    ) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
+        self.body = self
+            .prepare_body()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
             .map_err(|error| {
                 eprintln!("{error}");
@@ -840,6 +1013,56 @@ impl CreateGroupClusterV20241023 {
         );
         Ok(())
     }
+    /// Build the request body from `--file`/stdin or from the
+    /// flat body flags (never both), validated against the
+    /// version's JSON Schema.
+    fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
+        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
+        crate::__atlas_cli_body::build_body(
+            self.file.as_mut(),
+            Some(BODY_SCHEMA),
+            self.name.is_some() || self.person_first_name.is_some()
+                || self.person_last_name.is_some() || self.providers.is_some()
+                || self.region.is_some(),
+            |object| {
+                if let Some(value) = &self.name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_first_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.first_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_last_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.last_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.providers {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "providers",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.region {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "region",
+                        ::serde_json::json!(value),
+                    );
+                }
+            },
+        )
+    }
 }
 impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20241023 {
     type Response = ::serde_json::Value;
@@ -849,7 +1072,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20241023 {
     fn url(&self) -> String {
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if let Some(value) = &self.pretty {
                 params.push(::std::format!("{}={}", "pretty", value));
@@ -872,6 +1095,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for CreateGroupClusterV20241023 {
             ::tracing::debug!(% version, "atlas request version");
             version
         }
+    }
+    fn request_body(&self) -> ::bytes::Bytes {
+        self.body.clone().unwrap_or_default()
     }
     fn parse_response(
         bytes: ::bytes::Bytes,
@@ -916,7 +1142,7 @@ impl UpdateGroupClusterProbe {
 ///Updates one cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20230101.
-#[derive(Debug, Clone, ::clap::Parser)]
+#[derive(Debug, ::clap::Parser)]
 pub struct UpdateGroupClusterV20230101 {
     #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20230101)]
     version: UpdateGroupClusterVersion,
@@ -924,7 +1150,7 @@ pub struct UpdateGroupClusterV20230101 {
     #[arg(long)]
     groupId: String,
     #[arg(long)]
-    name: String,
+    name: Option<String>,
     #[arg(long)]
     person_first_name: Option<String>,
     #[arg(long)]
@@ -933,12 +1159,25 @@ pub struct UpdateGroupClusterV20230101 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
+    /// Read the request body from a JSON file, or `-` for stdin.
+    #[arg(long)]
+    file: Option<::clio::Input>,
+    #[arg(skip)]
+    body: Option<::bytes::Bytes>,
 }
 impl UpdateGroupClusterV20230101 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
-    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
+    pub async fn execute(
+        mut self,
+    ) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
+        self.body = self
+            .prepare_body()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
             .map_err(|error| {
                 eprintln!("{error}");
@@ -957,6 +1196,56 @@ impl UpdateGroupClusterV20230101 {
         );
         Ok(())
     }
+    /// Build the request body from `--file`/stdin or from the
+    /// flat body flags (never both), validated against the
+    /// version's JSON Schema.
+    fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
+        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
+        crate::__atlas_cli_body::build_body(
+            self.file.as_mut(),
+            Some(BODY_SCHEMA),
+            self.name.is_some() || self.person_first_name.is_some()
+                || self.person_last_name.is_some() || self.providers.is_some()
+                || self.region.is_some(),
+            |object| {
+                if let Some(value) = &self.name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_first_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.first_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_last_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.last_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.providers {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "providers",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.region {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "region",
+                        ::serde_json::json!(value),
+                    );
+                }
+            },
+        )
+    }
 }
 impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20230101 {
     type Response = ::serde_json::Value;
@@ -966,7 +1255,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20230101 {
     fn url(&self) -> String {
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -987,6 +1276,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20230101 {
             version
         }
     }
+    fn request_body(&self) -> ::bytes::Bytes {
+        self.body.clone().unwrap_or_default()
+    }
     fn parse_response(
         bytes: ::bytes::Bytes,
     ) -> ::std::result::Result<
@@ -999,7 +1291,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20230101 {
 ///Updates one cluster in the specified project.
 ///
 ///Flags differ per API version (--version). This help describes version V20241023.
-#[derive(Debug, Clone, ::clap::Parser)]
+#[derive(Debug, ::clap::Parser)]
 pub struct UpdateGroupClusterV20241023 {
     #[arg(long, value_enum, default_value_t = UpdateGroupClusterVersion::V20241023)]
     version: UpdateGroupClusterVersion,
@@ -1007,7 +1299,7 @@ pub struct UpdateGroupClusterV20241023 {
     #[arg(long)]
     groupId: String,
     #[arg(long)]
-    name: String,
+    name: Option<String>,
     #[arg(long)]
     person_first_name: Option<String>,
     #[arg(long)]
@@ -1016,12 +1308,25 @@ pub struct UpdateGroupClusterV20241023 {
     providers: Option<Vec<String>>,
     #[arg(long)]
     region: Option<String>,
+    /// Read the request body from a JSON file, or `-` for stdin.
+    #[arg(long)]
+    file: Option<::clio::Input>,
+    #[arg(skip)]
+    body: Option<::bytes::Bytes>,
 }
 impl UpdateGroupClusterV20241023 {
-    /// Run the operation through the atlas client and print the
-    /// JSON response; exit non-zero on any error.
-    pub async fn execute(self) -> ::std::result::Result<(), ::std::process::ExitCode> {
+    /// Run the operation through the atlas client and print
+    /// the JSON response; exit non-zero on any error.
+    pub async fn execute(
+        mut self,
+    ) -> ::std::result::Result<(), ::std::process::ExitCode> {
         ::tracing::debug!(args = ? self, "executing atlas operation");
+        self.body = self
+            .prepare_body()
+            .map_err(|error| {
+                eprintln!("{error}");
+                ::std::process::ExitCode::FAILURE
+            })?;
         let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
             .map_err(|error| {
                 eprintln!("{error}");
@@ -1040,6 +1345,56 @@ impl UpdateGroupClusterV20241023 {
         );
         Ok(())
     }
+    /// Build the request body from `--file`/stdin or from the
+    /// flat body flags (never both), validated against the
+    /// version's JSON Schema.
+    fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
+        const BODY_SCHEMA: &str = "{\"properties\":{\"name\":{\"type\":\"string\"},\"person\":{\"properties\":{\"first_name\":{\"type\":[\"string\",\"null\"]},\"last_name\":{\"type\":[\"string\",\"null\"]}},\"type\":[\"object\",\"null\"]},\"providers\":{\"items\":{\"type\":\"string\"},\"type\":[\"array\",\"null\"]},\"region\":{\"type\":[\"string\",\"null\"]}},\"required\":[\"name\"],\"type\":\"object\"}";
+        crate::__atlas_cli_body::build_body(
+            self.file.as_mut(),
+            Some(BODY_SCHEMA),
+            self.name.is_some() || self.person_first_name.is_some()
+                || self.person_last_name.is_some() || self.providers.is_some()
+                || self.region.is_some(),
+            |object| {
+                if let Some(value) = &self.name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_first_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.first_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.person_last_name {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "person.last_name",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.providers {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "providers",
+                        ::serde_json::json!(value),
+                    );
+                }
+                if let Some(value) = &self.region {
+                    crate::__atlas_cli_body::insert(
+                        object,
+                        "region",
+                        ::serde_json::json!(value),
+                    );
+                }
+            },
+        )
+    }
 }
 impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20241023 {
     type Response = ::serde_json::Value;
@@ -1049,7 +1404,7 @@ impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20241023 {
     fn url(&self) -> String {
         {
             let mut url = "/api/atlas/v2/groups/{groupId}/clusters".to_owned();
-            url = url.replace("groupId", &self.groupId);
+            url = url.replace("{groupId}", &self.groupId);
             let mut params = ::std::vec::Vec::new();
             if !params.is_empty() {
                 url.push('?');
@@ -1069,6 +1424,9 @@ impl ::mongodb_atlas_cli::atlas::Operation for UpdateGroupClusterV20241023 {
             ::tracing::debug!(% version, "atlas request version");
             version
         }
+    }
+    fn request_body(&self) -> ::bytes::Bytes {
+        self.body.clone().unwrap_or_default()
     }
     fn parse_response(
         bytes: ::bytes::Bytes,

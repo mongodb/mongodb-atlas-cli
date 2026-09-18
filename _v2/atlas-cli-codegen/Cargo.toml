@@ -13,6 +13,7 @@ quote = { workspace = true }
 serde_yaml = { workspace = true }
 syn = { workspace = true }
 thiserror = { workspace = true }
+tracing = "0.1.44"
 
 [dev-dependencies]
 insta = { workspace = true, features = ["json"] }

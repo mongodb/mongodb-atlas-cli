@@ -8,7 +8,9 @@ anstyle = { workspace = true }
 atlas-cli-derive = { path = "../atlas-cli-derive" }
 bytes = "1.11.1"
 clap = { workspace = true }
+clio = { workspace = true, features = ["clap-parse"] }
 http = "1.4.1"
+jsonschema = { workspace = true }
 mongodb-atlas-cli = { path = "../../../../jeroenvervaeke/mongodb-atlas-cli-ng" }
 serde_json = { workspace = true }
 tokio = { workspace = true, features = ["full"] }

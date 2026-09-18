@@ -7,7 +7,7 @@
 
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
-use syn::Ident;
+use syn::{Ident, LitStr};
 
 use crate::ir::*;
 
@@ -350,12 +350,20 @@ pub fn to_tokens(cli: &GeneratedCli) -> TokenStream {
                 .iter()
                 .chain(e.components.iter().flat_map(|c| c.operations.iter()))
         })
-        .map(operation);
+        .collect::<Vec<_>>();
+    let any_body = operations
+        .iter()
+        .any(|op| op.versions.iter().any(|version| version.body_schema.is_some()));
+    let body = any_body
+        .then(body_module)
+        .unwrap_or_default();
+    let operations = operations.into_iter().map(operation);
 
     quote! {
         #cli_subcommands
         #cli_execute
         #help
+        #body
         #(#groups)*
         #(#operations)*
     }
@@ -751,43 +759,114 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
         );
         let doc_attrs = description_doc_attrs_with_note(&operation.description, help_doc);
         let op_impl = operation_impl(operation, version);
-        quote! {
-            #(#doc_attrs)*
-            #[derive(Debug, Clone, ::clap::Parser)]
-            pub struct #struct_ident {
-                #[arg(long, value_enum, default_value_t = #version_enum::#variant)]
-                version: #version_enum,
-                #(#fields)*
-            }
+        if let Some(schema) = &version.body_schema {
+            // Versions with a request body take it from --file/stdin XOR the
+            // flat body flags; clio::Input is not Clone so these structs lose
+            // the Clone derive. The prepared body rides in a clap-skipped
+            // field, filled in by execute() before the client runs.
+            let schema_lit = LitStr::new(schema, Span::call_site());
+            let inserts = version.body_flags.iter().map(body_flag_insert);
+            let has_flags = has_flags_expr(&version.body_flags);
+            quote! {
+                #(#doc_attrs)*
+                #[derive(Debug, ::clap::Parser)]
+                pub struct #struct_ident {
+                    #[arg(long, value_enum, default_value_t = #version_enum::#variant)]
+                    version: #version_enum,
+                    #(#fields)*
 
-            impl #struct_ident {
-                /// Run the operation through the atlas client and print the
-                /// JSON response; exit non-zero on any error.
-                pub async fn execute(self) -> #ret {
-                    ::tracing::debug!(args = ?self, "executing atlas operation");
-                    let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
-                        .map_err(|error| {
+                    /// Read the request body from a JSON file, or `-` for stdin.
+                    #[arg(long)]
+                    file: Option<::clio::Input>,
+
+                    #[arg(skip)]
+                    body: Option<::bytes::Bytes>,
+                }
+
+                impl #struct_ident {
+                    /// Run the operation through the atlas client and print
+                    /// the JSON response; exit non-zero on any error.
+                    pub async fn execute(mut self) -> #ret {
+                        ::tracing::debug!(args = ?self, "executing atlas operation");
+                        self.body = self.prepare_body().map_err(|error| {
                             eprintln!("{error}");
                             ::std::process::ExitCode::FAILURE
                         })?;
-                    // ponytail: request bodies are not emitted yet; GET
-                    // operations (list/read/delete) carry no body.
-                    let response = client.execute(self).await.map_err(|error| {
-                        eprintln!("{error}");
-                        ::std::process::ExitCode::FAILURE
-                    })?;
-                    println!(
-                        "{}",
-                        ::serde_json::to_string_pretty(&response).map_err(|error| {
+                        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+                            .map_err(|error| {
+                                eprintln!("{error}");
+                                ::std::process::ExitCode::FAILURE
+                            })?;
+                        let response = client.execute(self).await.map_err(|error| {
                             eprintln!("{error}");
                             ::std::process::ExitCode::FAILURE
-                        })?
-                    );
-                    Ok(())
-                }
-            }
+                        })?;
+                        println!(
+                            "{}",
+                            ::serde_json::to_string_pretty(&response).map_err(|error| {
+                                eprintln!("{error}");
+                                ::std::process::ExitCode::FAILURE
+                            })?
+                        );
+                        Ok(())
+                    }
 
-            #op_impl
+                    /// Build the request body from `--file`/stdin or from the
+                    /// flat body flags (never both), validated against the
+                    /// version's JSON Schema.
+                    fn prepare_body(&mut self) -> ::std::result::Result<Option<::bytes::Bytes>, String> {
+                        const BODY_SCHEMA: &str = #schema_lit;
+                        crate::__atlas_cli_body::build_body(
+                            self.file.as_mut(),
+                            Some(BODY_SCHEMA),
+                            #has_flags,
+                            |object| {
+                                #(#inserts)*
+                            },
+                        )
+                    }
+                }
+
+                #op_impl
+            }
+        } else {
+            // No request body: no --file, no prepared-body state.
+            quote! {
+                #(#doc_attrs)*
+                #[derive(Debug, Clone, ::clap::Parser)]
+                pub struct #struct_ident {
+                    #[arg(long, value_enum, default_value_t = #version_enum::#variant)]
+                    version: #version_enum,
+                    #(#fields)*
+                }
+
+                impl #struct_ident {
+                    /// Run the operation through the atlas client and print
+                    /// the JSON response; exit non-zero on any error.
+                    pub async fn execute(self) -> #ret {
+                        ::tracing::debug!(args = ?self, "executing atlas operation");
+                        let client = ::mongodb_atlas_cli::atlas::client::AtlasClient::from_defaults()
+                            .map_err(|error| {
+                                eprintln!("{error}");
+                                ::std::process::ExitCode::FAILURE
+                            })?;
+                        let response = client.execute(self).await.map_err(|error| {
+                            eprintln!("{error}");
+                            ::std::process::ExitCode::FAILURE
+                        })?;
+                        println!(
+                            "{}",
+                            ::serde_json::to_string_pretty(&response).map_err(|error| {
+                                eprintln!("{error}");
+                                ::std::process::ExitCode::FAILURE
+                            })?
+                        );
+                        Ok(())
+                    }
+                }
+
+                #op_impl
+            }
         }
     });
 
@@ -800,12 +879,23 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
 }
 
 /// `impl Operation` for one version struct: fixed method + URL template with
-/// the struct's flags substituted in + this version's api version.
+/// the struct's flags substituted in + this version's api version. Versions
+/// with a request body report the body `execute()` prepared into the skipped
+/// `body` field.
 fn operation_impl(operation: &GeneratedOperation, version: &GeneratedVersion) -> TokenStream {
     let struct_ident = ident(&version.struct_ident);
     let method = method_value(&operation.method);
     let url = url_method(operation);
     let api_version = version_value(&version.api_version);
+    let request_body = if version.body_schema.is_some() {
+        quote! {
+            fn request_body(&self) -> ::bytes::Bytes {
+                self.body.clone().unwrap_or_default()
+            }
+        }
+    } else {
+        TokenStream::new()
+    };
     quote! {
         impl ::mongodb_atlas_cli::atlas::Operation for #struct_ident {
             type Response = ::serde_json::Value;
@@ -821,6 +911,8 @@ fn operation_impl(operation: &GeneratedOperation, version: &GeneratedVersion) ->
             fn version(&self) -> ::mongodb_atlas_cli::atlas::Version {
                 #api_version
             }
+
+            #request_body
 
             fn parse_response(
                 bytes: ::bytes::Bytes,
@@ -867,9 +959,11 @@ fn url_method(operation: &GeneratedOperation) -> TokenStream {
     let method = &operation.method;
     let template = &operation.url_template;
     let replaces = operation.flags.iter().filter(|f| f.location == FlagLocation::Path).map(|f| {
-        let name = &f.name;
+        // The template holds `{parameterName}`; replace the whole placeholder
+        // so no empty curly braces reach the wire.
+        let placeholder = format!("{{{}}}", f.name);
         let field = ident(&f.ident);
-        quote! { url = url.replace(#name, &self.#field); }
+        quote! { url = url.replace(#placeholder, &self.#field); }
     });
     let query_pushes = operation
         .flags
@@ -951,6 +1045,39 @@ fn flag_field(flag: &GeneratedFlag) -> TokenStream {
     } else {
         quote! { #[doc = #description] }
     };
+
+    // Body flags are always optional with a value type matching the schema
+    // leaf, so "flag set" means "user intent" (the `--file` XOR check) and
+    // flag-built JSON carries the right scalar types. Required-ness is
+    // enforced by the request-body schema at `prepare_body` time.
+    if flag.location == FlagLocation::Body {
+        let kind_ty = match flag.value_kind {
+            FlagValueKind::String => quote! { String },
+            FlagValueKind::Integer => quote! { i64 },
+            FlagValueKind::Double => quote! { f64 },
+            FlagValueKind::Boolean => quote! { bool },
+        };
+        // clap's derive only infers repeated args (Append action) from a bare
+        // `Vec`, not a fully-qualified `::std::vec::Vec`.
+        let field_ty = if flag.list {
+            quote! { Option<Vec<#kind_ty>> }
+        } else {
+            quote! { Option<#kind_ty> }
+        };
+        // Boolean body flags toggle on (`--copy-protection-enabled`); clap's
+        // default for Option<bool> is a Set action that demands a value.
+        let arg_attr = if flag.value_kind == FlagValueKind::Boolean && !flag.list {
+            quote! { #[arg(long, action = ::clap::ArgAction::SetTrue)] }
+        } else {
+            quote! { #[arg(long)] }
+        };
+        return quote! {
+            #doc_attr
+            #arg_attr
+            #field_ident: #field_ty,
+        };
+    }
+
     let ty = match (flag.required, flag.list) {
         (true, true) => quote! { Vec<String> },
         (true, false) => quote! { String },
@@ -961,6 +1088,154 @@ fn flag_field(flag: &GeneratedFlag) -> TokenStream {
         #doc_attr
         #[arg(long)]
         #field_ident: #ty,
+    }
+}
+
+/// Whether any body flag is set: `self.a.is_some() || self.b.is_some()`, or
+/// just `false` when the version has no flat flags (an unsupported-shape body
+/// that can only be supplied via `--file`/stdin).
+///
+/// Boolean flags are enable-only toggles (`SetTrue`, clap fills absent ones
+/// with `Some(false)`), so only `Some(true)` counts as intent.
+fn has_flags_expr(flags: &[GeneratedFlag]) -> TokenStream {
+    if flags.is_empty() {
+        return quote! { false };
+    }
+    let exprs = flags.iter().map(|flag| {
+        let field = ident(&flag.ident);
+        if flag.location == FlagLocation::Body && flag.value_kind == FlagValueKind::Boolean && !flag.list
+        {
+            quote! { self.#field == Some(true) }
+        } else {
+            quote! { self.#field.is_some() }
+        }
+    });
+    quote! { #(#exprs)||* }
+}
+
+/// Insert one set body flag into the request-body object, keyed by its dotted
+/// JSON path (`advancedConfiguration.minimumEnabledTlsProtocol` nests two
+/// levels deep). Boolean toggles emit `true` only.
+fn body_flag_insert(flag: &GeneratedFlag) -> TokenStream {
+    let field = ident(&flag.ident);
+    let name = &flag.name;
+    if flag.location == FlagLocation::Body && flag.value_kind == FlagValueKind::Boolean && !flag.list
+    {
+        quote! {
+            if self.#field == Some(true) {
+                crate::__atlas_cli_body::insert(object, #name, ::serde_json::Value::Bool(true));
+            }
+        }
+    } else {
+        quote! {
+            if let Some(value) = &self.#field {
+                crate::__atlas_cli_body::insert(object, #name, ::serde_json::json!(value));
+            }
+        }
+    }
+}
+
+/// The shared request-body builder emitted once per generated CLI, wired into
+/// every `prepare_body`. Kept out of the per-version structs so the
+/// read/validate/XOR logic exists in exactly one place.
+fn body_module() -> TokenStream {
+    quote! {
+        /// Shared request-body construction for generated version structs:
+        /// `--file`/stdin XOR flat body flags, validated against the version's
+        /// JSON Schema before the request goes out.
+        #[allow(dead_code, reason = "wired into generated prepare_body impls")]
+        pub(crate) mod __atlas_cli_body {
+            use ::bytes::Bytes;
+            use ::serde_json::{Map, Value};
+
+            /// Build the request body for one version struct.
+            ///
+            /// Exactly one of the file/stdin input or the flat body flags may
+            /// be set; providing both is an error. When `schema` is given the
+            /// body is validated against it first. Returns `None` for versions
+            /// that carry no request body (never reached from generated code).
+            pub(crate) fn build_body(
+                file: Option<&mut ::clio::Input>,
+                schema: Option<&str>,
+                has_flags: bool,
+                build: impl FnOnce(&mut Map<String, Value>),
+            ) -> Result<Option<Bytes>, String> {
+                if file.is_some() && has_flags {
+                    return Err(
+                        "pass either `--file` or request-body flags, not both".to_owned(),
+                    );
+                }
+                if let Some(input) = file {
+                    return read_body(input, schema);
+                }
+                if has_flags {
+                    let mut object = Map::new();
+                    build(&mut object);
+                    let body = Value::Object(object);
+                    validate(schema, &body)?;
+                    return ::serde_json::to_vec(&body)
+                        .map(Bytes::from)
+                        .map(Some)
+                        .map_err(|error| error.to_string());
+                }
+                if schema.is_some() {
+                    return Err("a request body is required: pass `--file` (or `-` for stdin) or at least one request-body flag"
+                        .to_owned());
+                }
+                Ok(None)
+            }
+
+            fn read_body(
+                input: &mut ::clio::Input,
+                schema: Option<&str>,
+            ) -> Result<Option<Bytes>, String> {
+                use ::std::io::Read;
+                let mut text = String::new();
+                input
+                    .read_to_string(&mut text)
+                    .map_err(|error| format!("cannot read request body: {error}"))?;
+                let value: Value = ::serde_json::from_str(&text)
+                    .map_err(|error| format!("request body is not valid JSON: {error}"))?;
+                validate(schema, &value)?;
+                Ok(Some(Bytes::from(text)))
+            }
+
+            fn validate(schema: Option<&str>, value: &Value) -> Result<(), String> {
+                let Some(schema) = schema else {
+                    return Ok(());
+                };
+                let schema: Value = ::serde_json::from_str(schema)
+                    .map_err(|error| format!("invalid request body schema: {error}"))?;
+                let validator = ::jsonschema::validator_for(&schema)
+                    .map_err(|error| format!("invalid request body schema: {error}"))?;
+                validator
+                    .validate(value)
+                    .map_err(|error| format!("request body is invalid: {error}"))?;
+                Ok(())
+            }
+
+            /// Insert `value` at the nested `dotted` JSON path, creating
+            /// intermediate objects: `insert(map, "person.first_name", ..)`
+            /// sets `{"person": {"first_name": ..}}`.
+            pub(crate) fn insert(object: &mut Map<String, Value>, dotted: &str, value: Value) {
+                let mut parts = dotted.split('.');
+                let Some(head) = parts.next() else {
+                    return;
+                };
+                let Some(next) = parts.next() else {
+                    object.insert(head.to_owned(), value);
+                    return;
+                };
+                let tail = ::std::iter::once(next).chain(parts).collect::<Vec<_>>().join(".");
+                let nested = object
+                    .entry(head.to_owned())
+                    .or_insert_with(|| Value::Object(Map::new()));
+                let Value::Object(nested) = nested else {
+                    return;
+                };
+                insert(nested, &tail, value);
+            }
+        }
     }
 }
 

@@ -7,6 +7,8 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use models::datatypes::DataType;
+use models::datatypes::reference_types::ReferenceType;
 use models::hierarchy::{Entity, Hierarchy};
 use models::operation_id::OperationId;
 use openapiv3::OpenAPI;
@@ -188,6 +190,7 @@ fn push_operation(
             ident: flag_ident(name),
             description: description.to_owned(),
             required,
+            list: false,
         })
         .collect();
 
@@ -196,8 +199,8 @@ fn push_operation(
     let probe_base = pascal_case_of(op_id);
     let versions = operation
         .versions
-        .keys()
-        .map(|version| {
+        .iter()
+        .map(|(version, operation_version)| {
             let variant_ident = match version {
                 models::versioned_mediatype::Version::Stable(date)
                 | models::versioned_mediatype::Version::Upcoming(date) => {
@@ -205,9 +208,15 @@ fn push_operation(
                 }
                 models::versioned_mediatype::Version::Preview => "Preview".to_owned(),
             };
+            let body_flags = operation_version
+                .request_body
+                .as_ref()
+                .map(request_body_flags)
+                .unwrap_or_default();
             GeneratedVersion {
                 struct_ident: format!("{probe_base}{variant_ident}"),
                 variant_ident,
+                body_flags,
             }
         })
         .collect();
@@ -221,6 +230,76 @@ fn push_operation(
         flags: operation_flags,
     });
     Ok(())
+}
+
+/// Request body -> flat flags.
+///
+/// Only supports simple bodies: an object whose leaves are value types or
+/// arrays of value types. Objects are flattened (`person.first_name` ->
+/// `--person-first-name`). Unsupported leaves (arrays of objects, oneOf,
+/// nested arrays, ...) are skipped individually with a warning; the supported
+/// leaves still generate flags.
+fn request_body_flags(body: &DataType) -> Vec<GeneratedFlag> {
+    let body = match body {
+        DataType::ReferenceType(ReferenceType::Optional(optional)) => optional.data_type(),
+        body => body,
+    };
+    let DataType::ReferenceType(ReferenceType::Object(object)) = body else {
+        eprintln!("Skipping request body flags: unsupported body shape");
+        return Vec::new();
+    };
+    let mut flags = Vec::new();
+    for (name, property) in object.properties() {
+        request_body_flags_for_property(&mut flags, name, property, true);
+    }
+    flags
+}
+
+/// Collect the flat flags under `name`. `required` is inherited from the
+/// enclosing (already-unwrapped) property: an optional property makes every
+/// deeper leaf optional. Unsupported leaves are skipped, keep the rest.
+fn request_body_flags_for_property(
+    flags: &mut Vec<GeneratedFlag>,
+    name: &str,
+    datatype: &DataType,
+    required: bool,
+) {
+    match datatype {
+        DataType::ValueType(_) => flags.push(GeneratedFlag {
+            ident: flag_ident(name),
+            description: String::new(),
+            required,
+            list: false,
+        }),
+        DataType::ReferenceType(ReferenceType::Optional(optional)) => {
+            request_body_flags_for_property(flags, name, optional.data_type(), false);
+        }
+        DataType::ReferenceType(ReferenceType::Array(array)) => match array.entries_type() {
+            // ponytail: arrays of objects are unsupported by design.
+            DataType::ValueType(_) => flags.push(GeneratedFlag {
+                ident: flag_ident(name),
+                description: String::new(),
+                required,
+                list: true,
+            }),
+            _ => eprintln!(
+                "Skipping request body flag `{name}`: only arrays of value types are supported"
+            ),
+        },
+        DataType::ReferenceType(ReferenceType::Object(object)) => {
+            for (sub_name, sub_type) in object.properties() {
+                request_body_flags_for_property(
+                    flags,
+                    &format!("{name}.{sub_name}"),
+                    sub_type,
+                    required,
+                );
+            }
+        }
+        DataType::ReferenceType(ReferenceType::OneOf(_)) => eprintln!(
+            "Skipping request body flag `{name}`: unions are not supported"
+        ),
+    }
 }
 
 /// PascalCase of the whole operation id: verb capitalized + every noun.
@@ -275,3 +354,97 @@ const KEYWORDS: &[&str] = &[
     "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true",
     "try", "type", "unsafe", "use", "where", "while",
 ];
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use models::datatypes::value_type::{ValueType, ValueTypeString};
+
+    fn str_ty() -> DataType {
+        DataType::ValueType(ValueType::String(ValueTypeString::new(None)))
+    }
+
+    fn object(props: BTreeMap<String, DataType>) -> DataType {
+        DataType::ReferenceType(ReferenceType::try_new_object(props).unwrap())
+    }
+
+    fn optional(datatype: DataType) -> DataType {
+        DataType::ReferenceType(ReferenceType::new_optional(datatype))
+    }
+
+    fn flag(ident: &str, required: bool, list: bool) -> GeneratedFlag {
+        GeneratedFlag {
+            ident: ident.to_owned(),
+            description: String::new(),
+            required,
+            list,
+        }
+    }
+
+    #[test]
+    fn keeps_required_and_optional_scalars() {
+        let body = object(BTreeMap::from([
+            ("name".into(), str_ty()),
+            ("region".into(), optional(str_ty())),
+        ]));
+        assert_eq!(
+            request_body_flags(&body),
+            vec![flag("name", true, false), flag("region", false, false)]
+        );
+    }
+
+    #[test]
+    fn array_of_value_types_is_a_list_flag() {
+        let body = object(BTreeMap::from([(
+            "providers".into(),
+            DataType::ReferenceType(ReferenceType::new_array(str_ty())),
+        )]));
+        assert_eq!(request_body_flags(&body), vec![flag("providers", true, true)]);
+    }
+
+    #[test]
+    fn flattens_object_properties() {
+        let body = object(BTreeMap::from([(
+            "person".into(),
+            object(BTreeMap::from([
+                ("first_name".into(), str_ty()),
+                ("last_name".into(), optional(str_ty())),
+            ])),
+        )]));
+        assert_eq!(
+            request_body_flags(&body),
+            vec![flag("person_first_name", true, false), flag("person_last_name", false, false)]
+        );
+    }
+
+    #[test]
+    fn optional_property_makes_flattened_leaves_optional() {
+        let body = object(BTreeMap::from([(
+            "person".into(),
+            optional(object(BTreeMap::from([("first_name".into(), str_ty())]))),
+        )]));
+        assert_eq!(request_body_flags(&body), vec![flag("person_first_name", false, false)]);
+    }
+
+    #[test]
+    fn skips_unsupported_leaves_keeps_supported_ones() {
+        let body = object(BTreeMap::from([
+            ("name".into(), str_ty()),
+            // Array of objects: unsupported, skipped.
+            (
+                "tags".into(),
+                DataType::ReferenceType(ReferenceType::new_array(object(BTreeMap::new()))),
+            ),
+        ]));
+        assert_eq!(request_body_flags(&body), vec![flag("name", true, false)]);
+    }
+
+    #[test]
+    fn skips_non_object_bodies() {
+        assert_eq!(request_body_flags(&str_ty()), vec![]);
+        assert_eq!(
+            request_body_flags(&DataType::ReferenceType(ReferenceType::new_array(str_ty()))),
+            vec![]
+        );
+    }
+}

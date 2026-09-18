@@ -28,7 +28,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn cli_parses_clusters_create_with_version() {
+    fn cli_parses_clusters_create_with_version_and_body_flags() {
         let cli = Cli::parse_from([
             "cli",
             "clusters",
@@ -37,6 +37,10 @@ mod tests {
             "v20241023",
             "--group-id",
             "32b6e34b3d91647abb20e7b8",
+            "--name",
+            "myCluster",
+            "--advanced-configuration-minimum-enabled-tls-protocol",
+            "TLS1_2",
         ]);
 
         let CliSubCommands::Clusters(clusters) = cli.sub_command else {
@@ -45,12 +49,29 @@ mod tests {
         let ClustersSubcommands::Create(probe) = clusters.sub_command else {
             panic!("expected create subcommand");
         };
-        assert_eq!(probe.rest, vec!["--group-id", "32b6e34b3d91647abb20e7b8"]);
+        assert_eq!(
+            probe.rest,
+            vec![
+                "--group-id",
+                "32b6e34b3d91647abb20e7b8",
+                "--name",
+                "myCluster",
+                "--advanced-configuration-minimum-enabled-tls-protocol",
+                "TLS1_2",
+            ]
+        );
 
+        // Body flags are per-version: re-parse against the selected version's
+        // struct and confirm the request-body flags landed.
         let fwd = CreateGroupClusterV20241023::parse_from(
             std::iter::once("clusters create".to_owned()).chain(probe.rest),
         );
         assert_eq!(fwd.groupId, "32b6e34b3d91647abb20e7b8");
+        assert_eq!(fwd.name.as_deref(), Some("myCluster"));
+        assert_eq!(
+            fwd.advancedConfiguration_minimumEnabledTlsProtocol.as_deref(),
+            Some("TLS1_2")
+        );
     }
 
     #[test]

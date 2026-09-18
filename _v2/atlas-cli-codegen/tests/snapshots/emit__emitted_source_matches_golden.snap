@@ -289,6 +289,16 @@ pub struct CreateGroupClusterV20230101 {
     ///Flag that indicates whether the response body should be pretty printed.
     #[arg(long)]
     pretty: Option<String>,
+    #[arg(long)]
+    name: String,
+    #[arg(long)]
+    person_first_name: Option<String>,
+    #[arg(long)]
+    person_last_name: Option<String>,
+    #[arg(long)]
+    providers: Option<Vec<String>>,
+    #[arg(long)]
+    region: Option<String>,
 }
 impl CreateGroupClusterV20230101 {
     pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
@@ -310,6 +320,16 @@ pub struct CreateGroupClusterV20241023 {
     ///Flag that indicates whether the response body should be pretty printed.
     #[arg(long)]
     pretty: Option<String>,
+    #[arg(long)]
+    name: String,
+    #[arg(long)]
+    person_first_name: Option<String>,
+    #[arg(long)]
+    person_last_name: Option<String>,
+    #[arg(long)]
+    providers: Option<Vec<String>>,
+    #[arg(long)]
+    region: Option<String>,
 }
 impl CreateGroupClusterV20241023 {
     pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
@@ -357,6 +377,16 @@ pub struct UpdateGroupClusterV20230101 {
     ///Unique 24-hexadecimal digit string that identifies your project.
     #[arg(long)]
     groupId: String,
+    #[arg(long)]
+    name: String,
+    #[arg(long)]
+    person_first_name: Option<String>,
+    #[arg(long)]
+    person_last_name: Option<String>,
+    #[arg(long)]
+    providers: Option<Vec<String>>,
+    #[arg(long)]
+    region: Option<String>,
 }
 impl UpdateGroupClusterV20230101 {
     pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {
@@ -373,6 +403,16 @@ pub struct UpdateGroupClusterV20241023 {
     ///Unique 24-hexadecimal digit string that identifies your project.
     #[arg(long)]
     groupId: String,
+    #[arg(long)]
+    name: String,
+    #[arg(long)]
+    person_first_name: Option<String>,
+    #[arg(long)]
+    person_last_name: Option<String>,
+    #[arg(long)]
+    providers: Option<Vec<String>>,
+    #[arg(long)]
+    region: Option<String>,
 }
 impl UpdateGroupClusterV20241023 {
     pub async fn execute(&self) -> ::std::result::Result<(), ::std::process::ExitCode> {

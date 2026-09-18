@@ -11,6 +11,19 @@ components:
       properties:
         name:
           type: string
+        region:
+          type: string
+        providers:
+          type: array
+          items:
+            type: string
+        person:
+          type: object
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
 paths:
   /api/atlas/v2/groups/{groupId}/clusters:
     post:

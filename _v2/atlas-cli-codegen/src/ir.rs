@@ -76,6 +76,10 @@ pub struct GeneratedVersion {
     pub variant_ident: String,
     /// clap::Parser struct name, e.g. `"CreateGroupClusterV20241023"`.
     pub struct_ident: String,
+    /// Flat flags derived from this version's request body (per-version, the
+    /// shape can change between versions). Empty when the body is absent or
+    /// not a supported simple shape.
+    pub body_flags: Vec<GeneratedFlag>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -83,4 +87,6 @@ pub struct GeneratedFlag {
     pub ident: String,
     pub description: String,
     pub required: bool,
+    /// Repeated flag: `--tag a --tag b` -> `Vec<String>`.
+    pub list: bool,
 }

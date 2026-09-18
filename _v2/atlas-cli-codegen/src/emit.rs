@@ -408,7 +408,11 @@ fn operation(operation: &GeneratedOperation) -> TokenStream {
     let version_structs = operation.versions.iter().map(|version| {
         let struct_ident = ident(&version.struct_ident);
         let variant = ident(&version.variant_ident);
-        let fields = operation.flags.iter().map(flag_field);
+        let fields = operation
+            .flags
+            .iter()
+            .chain(version.body_flags.iter())
+            .map(flag_field);
         let help_doc = format!(
             "Flags differ per API version (--version). This help describes version {}.",
             version.variant_ident
@@ -490,13 +494,19 @@ fn kebab_case(name: &str) -> String {
 fn flag_field(flag: &GeneratedFlag) -> TokenStream {
     let field_ident = ident(&flag.ident);
     let description = flag.description.trim();
-    let ty = if flag.required {
-        quote! { String }
+    let doc_attr = if description.is_empty() {
+        TokenStream::new()
     } else {
-        quote! { Option<String> }
+        quote! { #[doc = #description] }
+    };
+    let ty = match (flag.required, flag.list) {
+        (true, true) => quote! { Vec<String> },
+        (true, false) => quote! { String },
+        (false, true) => quote! { Option<Vec<String>> },
+        (false, false) => quote! { Option<String> },
     };
     quote! {
-        #[doc = #description]
+        #doc_attr
         #[arg(long)]
         #field_ident: #ty,
     }

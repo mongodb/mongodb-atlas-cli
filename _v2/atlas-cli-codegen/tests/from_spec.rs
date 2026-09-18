@@ -140,11 +140,13 @@ fn flags_from_parameters_with_optionality() {
                 ident: "groupId".to_owned(),
                 description: "Unique 24-hexadecimal digit string that identifies your project.".to_owned(),
                 required: true,
+                list: false,
             },
             GeneratedFlag {
                 ident: "pretty".to_owned(),
                 description: "Flag that indicates whether the response body should be pretty printed.".to_owned(),
                 required: false,
+                list: false,
             },
         ]
     );
@@ -153,6 +155,48 @@ fn flags_from_parameters_with_optionality() {
     assert_eq!(update.flags.len(), 1);
     assert_eq!(update.flags[0].ident, "groupId");
     assert!(update.flags[0].required);
+}
+
+#[test]
+fn body_flags_derived_from_request_body_flattened() {
+    let cli = cli(default_options());
+    let create = operation(entity(group(&cli, "Clusters"), "Cluster"), "Create");
+
+    assert_eq!(
+        create.versions[0].body_flags,
+        vec![
+            GeneratedFlag {
+                ident: "name".to_owned(),
+                description: String::new(),
+                required: true,
+                list: false,
+            },
+            GeneratedFlag {
+                ident: "person_first_name".to_owned(),
+                description: String::new(),
+                required: false,
+                list: false,
+            },
+            GeneratedFlag {
+                ident: "person_last_name".to_owned(),
+                description: String::new(),
+                required: false,
+                list: false,
+            },
+            GeneratedFlag {
+                ident: "providers".to_owned(),
+                description: String::new(),
+                required: false,
+                list: true,
+            },
+            GeneratedFlag {
+                ident: "region".to_owned(),
+                description: String::new(),
+                required: false,
+                list: false,
+            },
+        ]
+    );
 }
 
 #[test]

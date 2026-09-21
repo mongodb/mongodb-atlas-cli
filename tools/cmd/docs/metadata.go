@@ -5222,7 +5222,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterAdaptiveSettings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -5240,7 +5239,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7656,7 +7655,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`preview`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -8532,7 +8531,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getOrgMaintenanceSettings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -8883,7 +8881,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -10132,7 +10130,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the cluster.`,
 			},
 			`commands`: {
-				Usage: `Retrieve query shape statistics matching specified MongoDB commands. To include multiple commands, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each command. The currently supported parameters are find, distinct, and aggregate. Omit this parameter to return results for all supported commands.`,
+				Usage: `Retrieve query shape statistics matching specified MongoDB commands. To include multiple commands, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each command. The currently supported parameters are: find, distinct, aggregate, count, insert, update, and delete. The insert, update, and delete commands return results only for clusters running MongoDB 9.0 or later with write query shape statistics enabled for the project. Omit this parameter to return results for all supported commands.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12833,7 +12831,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`preview`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -13322,7 +13320,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`resetOrgMaintenanceSettings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -14079,7 +14076,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`updateGroupClusterAdaptiveSettings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -14990,7 +14986,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`updateOrgMaintenanceSettings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,

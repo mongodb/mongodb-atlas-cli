@@ -9329,7 +9329,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion(),
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10552,7 +10552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion(),
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17134,15 +17134,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 16),
-						Deprecated:         true,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{
@@ -19702,15 +19693,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 14),
-						Deprecated:         true,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{
@@ -19782,15 +19764,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 14),
-						Deprecated:         true,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{
@@ -19857,15 +19830,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 14),
-						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19982,15 +19946,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 						},
 					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 14),
-						Deprecated:         true,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 				},
 			},
 			{
@@ -20057,15 +20012,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
-						Version:            shared_api.NewPreviewVersion(),
-						Sunset:             shared_api.NewSunset(2026, 9, 14),
-						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25261,7 +25207,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				},
 				Versions: []shared_api.CommandVersion{
 					{
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
 						Version:            shared_api.NewPreviewVersion(),
+						Sunset:             shared_api.NewSunset(2026, 10, 12),
+						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25533,7 +25488,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				},
 				Versions: []shared_api.CommandVersion{
 					{
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
 						Version:            shared_api.NewPreviewVersion(),
+						Sunset:             shared_api.NewSunset(2026, 10, 12),
+						Deprecated:         true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25832,7 +25796,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				},
 				Versions: []shared_api.CommandVersion{
 					{
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
 						Version:            shared_api.NewPreviewVersion(),
+						Sunset:             shared_api.NewSunset(2026, 10, 12),
+						Deprecated:         true,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30352,6 +30325,13 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 						},
 					},
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 				},
 			},
 			{
@@ -30946,6 +30926,13 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 1, 1),
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32289,7 +32276,7 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 						},
 						{
 							Name:        `commands`,
-							Description: `Retrieve query shape statistics matching specified MongoDB commands. To include multiple commands, pass the parameter multiple times delimited with an ampersand (&) between each command. The currently supported parameters are find, distinct, and aggregate. Omit this parameter to return results for all supported commands.`,
+							Description: `Retrieve query shape statistics matching specified MongoDB commands. To include multiple commands, pass the parameter multiple times delimited with an ampersand (&) between each command. The currently supported parameters are: find, distinct, aggregate, count, insert, update, and delete. The insert, update, and delete commands return results only for clusters running MongoDB 9.0 or later with write query shape statistics enabled for the project. Omit this parameter to return results for all supported commands.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -35716,7 +35703,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID:      `deleteGroupServiceAccountAccessListEntry`,
 				ShortOperationID: `deleteGroupAccessEntry`,
 				Aliases:          nil,
-				Description: `Removes the specified access list entry from the specified Service Account for the project. You can't remove the requesting IP address from the access list.
+				Description: `Removes the specified access list entry from the specified Service Account for the project. A Service Account cannot remove its own IP address from its access list.
 
 This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-deletegroupserviceaccountaccesslistentry.
 
@@ -35945,7 +35932,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				OperationID:      `deleteOrgServiceAccountAccessListEntry`,
 				ShortOperationID: `deleteOrgAccessEntry`,
 				Aliases:          nil,
-				Description: `Removes the specified access list entry from the specified Service Account for the organization. You can't remove the requesting IP address from the access list.
+				Description: `Removes the specified access list entry from the specified Service Account for the organization. A Service Account cannot remove its own IP address from its access list.
 
 This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-deleteorgserviceaccountaccesslistentry.
 
@@ -36915,7 +36902,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				OperationID:      `createGroupStandbyLink`,
 				ShortOperationID: ``,
 				Aliases:          nil,
-				Description: `Creates a disaster recovery standby link between an active cluster and a standby cluster. Both clusters must not already be part of a standby link system, must be single-region clusters, and must be in different regions.
+				Description: `Creates a disaster recovery standby link between an active cluster and a standby cluster. Both clusters must not already be part of a standby link system and must be single-region clusters.
 
 This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-creategroupstandbylink.
 

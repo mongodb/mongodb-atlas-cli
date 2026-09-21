@@ -82,26 +82,20 @@ repos:
       - yum/redhat/9/mongodb-org
       - yum/redhat/9Server/mongodb-org
 
+  - name: rhel10
+    type: rpm
+    edition: org
+    bucket: repo.mongodb.org
+    repos:
+      - yum/redhat/10/mongodb-org
+      - yum/redhat/10Server/mongodb-org
+
   - name: amazon2023
     type: rpm
     edition: org
     bucket: repo.mongodb.org
     repos:
       - yum/amazon/2023/mongodb-org
-
-  - name: suse11
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - zypper/suse/11/mongodb-org
-
-  - name: suse12
-    type: rpm
-    edition: org
-    bucket: repo.mongodb.org
-    repos:
-      - zypper/suse/12/mongodb-org
 
   - name: suse15
     type: rpm
@@ -122,18 +116,17 @@ repos:
     repos:
       - apt/debian/dists/bookworm/mongodb-org
 
-  - name: ubuntu2004
+  - name: debian13
     type: deb
-    code_name: "focal"
-    edition: org
+    code_name: "trixie"
     bucket: repo.mongodb.org
-    component: multiverse
+    edition: org
+    component: main
     architectures:
       - amd64
-      - s390x
       - arm64
     repos:
-      - apt/ubuntu/dists/focal/mongodb-org
+      - apt/debian/dists/trixie/mongodb-org
 
   - name: ubuntu2204
     type: deb
@@ -184,26 +177,20 @@ repos:
       - yum/redhat/9/mongodb-enterprise
       - yum/redhat/9Server/mongodb-enterprise
 
+  - name: rhel10
+    type: rpm
+    edition: enterprise
+    bucket: repo.mongodb.com
+    repos:
+      - yum/redhat/10/mongodb-enterprise
+      - yum/redhat/10Server/mongodb-enterprise
+
   - name: amazon2023
     type: rpm
     edition: enterprise
     bucket: repo.mongodb.com
     repos:
       - yum/amazon/2023/mongodb-enterprise
-
-  - name: suse11
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - zypper/suse/11/mongodb-enterprise
-
-  - name: suse12
-    type: rpm
-    edition: enterprise
-    bucket: repo.mongodb.com
-    repos:
-      - zypper/suse/12/mongodb-enterprise
 
   - name: suse15
     type: rpm
@@ -224,19 +211,17 @@ repos:
     repos:
       - apt/debian/dists/bookworm/mongodb-enterprise
 
-  - name: ubuntu2004
+  - name: debian13
     type: deb
-    code_name: "focal"
     edition: enterprise
+    code_name: "trixie"
     bucket: repo.mongodb.com
-    component: multiverse
+    component: main
     architectures:
       - amd64
-      - ppc64el
-      - s390x
       - arm64
     repos:
-      - apt/ubuntu/dists/focal/mongodb-enterprise
+      - apt/debian/dists/trixie/mongodb-enterprise
 
   - name: ubuntu2204
     type: deb

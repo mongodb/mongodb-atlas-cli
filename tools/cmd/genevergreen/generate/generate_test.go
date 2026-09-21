@@ -29,7 +29,7 @@ const (
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 30)
+	assert.Len(t, c.Tasks, 34)
 	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
@@ -71,7 +71,7 @@ func TestPublishStableTasks(t *testing.T) {
 
 	assert.True(t, commandFound, "expected to find a push command")
 	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 112)
+	assert.Len(t, c.Tasks, 120)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -119,7 +119,7 @@ func TestRepoTasks(t *testing.T) {
 	}
 
 	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 44)
+	assert.Len(t, c.Tasks, 56)
 }
 
 func TestGetGpgServerVersion(t *testing.T) {

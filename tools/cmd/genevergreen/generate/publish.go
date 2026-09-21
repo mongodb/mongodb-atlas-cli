@@ -49,11 +49,15 @@ var distros = map[string]Platform{
 		extension:     rpm,
 		architectures: []string{x86_64, aarch64},
 	},
+	"rhel10": {
+		extension:     rpm,
+		architectures: []string{x86_64, aarch64},
+	},
 	"debian12": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},
-	"ubuntu2004": {
+	"debian13": {
 		extension:     deb,
 		architectures: []string{x86_64, arm64},
 	},

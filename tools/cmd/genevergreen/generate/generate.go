@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	runOn = "ubuntu2004-small"
+	runOn = "ubuntu2204-small"
 )
 
 var (
@@ -36,14 +36,16 @@ var (
 
 	unsupportedNewOsByVersion = map[string][]string{
 		"7.0": {"ubuntu2404"},
-		"6.0": {"ubuntu2404"},
+		"6.0": {"ubuntu2404", "debian13", "rhel10"},
 	}
 
 	oses = []string{
 		"suse15",
 		"centos8",
 		"rhel9",
+		"rhel10",
 		"debian12",
+		"debian13",
 		"ubuntu22.04",
 		"ubuntu24.04",
 	}
@@ -52,17 +54,21 @@ var (
 		"suse15":      "suse15-rpm",
 		"centos8":     "centos8-rpm",
 		"rhel9":       "rhel9-rpm",
+		"rhel10":      "rhel10-rpm",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
 		"debian12":    "debian12-deb",
+		"debian13":    "debian13-deb",
 	}
 	newOs = map[string]string{
 		"suse15":          "suse15",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
+		"rhel10":          "rhel10",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
 		"debian12":        "debian12",
+		"debian13":        "debian13",
 		"amazonlinux2023": "amazon2023",
 	}
 )
@@ -155,6 +161,10 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
+		if os == "debian13" || os == "rhel10" {
+			continue // TODO fix me after CLOUDP-446594
+		}
+
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue

@@ -11,12 +11,15 @@ RUN set -eux; \
 		ca-certificates \
 		curl \
 		gnupg \
+		apt-transport-https \
 	; \
 	if ! command -v ps > /dev/null; then \
 		apt-get install -y --no-install-recommends procps; \
 	fi; \
-	curl -L https://www.mongodb.org/static/pgp/server-${pgp_server_version}.asc | apt-key add -; \
-	echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu resolute/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
+	install -d -m 0755 /usr/share/keyrings; \
+	curl -L https://www.mongodb.org/static/pgp/server-${pgp_server_version}.asc \
+		| gpg --dearmor -o /usr/share/keyrings/mongodb-server-${pgp_server_version}.gpg; \
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-${pgp_server_version}.gpg ] https://repo.mongodb.org/apt/ubuntu resolute/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
 	rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \

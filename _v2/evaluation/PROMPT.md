@@ -43,3 +43,5 @@ An entry should look like this:
 > ## Result
 > Did you achieve the goal?
 > What did you learn and what will you do next, stop if the goal is achieved
+
+Update the file after **every** command you've ran.

@@ -249,7 +249,7 @@ jobs:
     steps:
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -284,7 +284,7 @@ jobs:
     steps:
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -360,7 +360,7 @@ jobs:
           echo "JIRA_KEY=${{steps.create.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312024/admin"
+	"go.mongodb.org/atlas-sdk/v20250312025/admin"
 )
 
 // list of keys to delete as clean up.

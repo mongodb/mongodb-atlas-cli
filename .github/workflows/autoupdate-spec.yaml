@@ -102,12 +102,12 @@ jobs:
             _Jira ticket:_ ${{ env.JIRA_KEY }}
 
             Note: Jira ticket will be closed automatically when this PR is merged.
-      - name: Set auto merge
+      - name: Approve and enable auto-merge
         if: env.FILES_CHANGED == 'true'
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+        uses: ./.github/actions/safe-auto-merge
+        with:
+          pr-url: ${{ steps.pr.outputs.pull-request-url }}
+          github-token: ${{ steps.app-token.outputs.token }}
       - name: Find JIRA ticket (on failure)
         id: find-failure
         if: failure() && env.FILES_CHANGED != 'true'

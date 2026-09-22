@@ -1,0 +1,49 @@
+name: Safe auto-merge
+description: Wait for required checks before approving and enabling auto-merge.
+inputs:
+  pr-url:
+    description: Pull request URL.
+    required: true
+  github-token:
+    description: GitHub token used to approve and enable auto-merge.
+    required: true
+  wait-timeout:
+    description: Maximum time to wait for required checks.
+    default: 45m
+    required: false
+  poll-interval:
+    description: Seconds between check status polls.
+    default: "30"
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Wait for required checks
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        POLL_INTERVAL: ${{ inputs.poll-interval }}
+        PR_URL: ${{ inputs.pr-url }}
+        WAIT_TIMEOUT: ${{ inputs.wait-timeout }}
+      run: |
+        set -euo pipefail
+
+        if timeout "$WAIT_TIMEOUT" gh pr checks "$PR_URL" --required --watch --fail-fast --interval "$POLL_INTERVAL"; then
+          exit 0
+        fi
+
+        echo "Required checks did not pass. Leaving the PR unapproved and auto-merge disabled."
+        gh pr checks "$PR_URL" --required || true
+        exit 1
+    - name: Approve PR
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_URL: ${{ inputs.pr-url }}
+      run: gh pr review "$PR_URL" --approve
+    - name: Enable auto-merge
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_URL: ${{ inputs.pr-url }}
+      run: gh pr merge "$PR_URL" --auto --squash

@@ -121,9 +121,9 @@ jobs:
             git commit -m "chore: update purls.txt"
             git push origin ${{ env.JIRA_KEY }}
           fi
-      - name: Set auto merge
+      - name: Approve and enable auto-merge
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+        uses: ./.github/actions/safe-auto-merge
+        with:
+          pr-url: ${{ steps.pr.outputs.pull-request-url }}
+          github-token: ${{ steps.app-token.outputs.token }}

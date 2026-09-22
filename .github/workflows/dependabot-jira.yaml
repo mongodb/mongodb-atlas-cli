@@ -1,14 +1,138 @@
-# synced from apix-actions/.github/workflows/dependabot-jira.yaml
 name: Dependabot PR automation
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened, ready_for_review]
 
-permissions: {}
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: dependabot-pr-automation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   dependabot:
-    if: github.actor == 'dependabot[bot]'
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@f7d2400a387dea2661651b14bbaf8c8f46c8bf66 # main
-    secrets: inherit
+    name: Create Jira ticket and safely auto-merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@bf82d13b9b10051d224345ab9184f5ede0a94289 # v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5
+        id: load-secrets
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          JIRA_API_TOKEN: "op://APIx/JIRA service account/credential"
+          APP_ID: "op://APIx/APIx Github Bot/App ID"
+          APP_SECRET: "op://APIx/APIx Github Bot/App Secret"
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Determine repo config
+        id: config
+        run: |
+          case "${{ github.repository }}" in
+            */atlas-local-lib|*/atlas-local-cli|*/atlas-local-lib-js|*/atlas-local-lib-py)
+              echo "component=local-atlas-experience" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "component=AtlasCLI" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+          case "${{ github.repository }}" in
+            */mongodb-atlas-cli)
+              echo "fix-version=next-atlascli-release" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "fix-version=Not Applicable" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+      - name: Create Jira ticket
+        if: github.event.action == 'opened'
+        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66 # v16
+        id: create
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "[${{ github.event.repository.name }}] ${{ github.event.pull_request.title }}"
+          issuetype: Story
+          description: "This ticket tracks the following GitHub pull request: ${{ github.event.pull_request.html_url }}"
+          components: ${{ steps.config.outputs.component }}
+          assignee: cloud-atlascli-escalation
+          extra-data: |
+            {
+              "fields": {
+                "fixVersions": [{"name": "${{ steps.config.outputs.fix-version }}"}],
+                "customfield_12751": [{"id": "22223"}],
+                "customfield_10257": {"id": "11861"}
+              }
+            }
+      - id: decode-app-secret
+        run: |
+          {
+            echo 'APP_PEM<<EOF'
+            echo "${{ steps.load-secrets.outputs.APP_SECRET }}" | base64 -d | openssl pkey -inform DER -outform PEM
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+      - name: Set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66 # v16
+        with:
+          app-id: ${{ steps.load-secrets.outputs.APP_ID }}
+          private-key: ${{ steps.decode-app-secret.outputs.APP_PEM }}
+      - name: Add comment
+        if: github.event.action == 'opened'
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            The ticket [${{ steps.create.outputs.issue-key }}](https://jira.mongodb.org/browse/${{ steps.create.outputs.issue-key }}) was created for internal tracking.
+
+            Note: Jira ticket will be closed automatically when this PR is merged.
+      - name: Add auto_close_jira label
+        if: github.event.action == 'opened'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: gh pr edit "${{ github.event.pull_request.html_url }}" --add-label "auto_close_jira"
+      - name: Determine auto-merge eligibility
+        id: eligibility
+        env:
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+          IS_SECURITY: ${{ contains(github.event.pull_request.labels.*.name, 'security') }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+        run: |
+          auto_merge=false
+          case "$UPDATE_TYPE" in
+            version-update:semver-minor|version-update:semver-patch)
+              auto_merge=true
+              ;;
+          esac
+
+          if [[ "$IS_SECURITY" == "true" || "$DEPENDENCY_NAMES" == *security* ]]; then
+            auto_merge=true
+          fi
+
+          echo "auto_merge=$auto_merge" >> "$GITHUB_OUTPUT"
+          if [[ "$auto_merge" == "true" ]]; then
+            echo "Dependabot update is eligible for auto-merge."
+          else
+            echo "Dependabot update type '$UPDATE_TYPE' is not eligible for auto-merge."
+          fi
+      - name: Checkout safe workflow action
+        if: steps.eligibility.outputs.auto_merge == 'true'
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Approve and enable auto-merge
+        if: steps.eligibility.outputs.auto_merge == 'true'
+        uses: ./.github/actions/safe-auto-merge
+        with:
+          pr-url: ${{ github.event.pull_request.html_url }}
+          github-token: ${{ steps.app-token.outputs.token }}

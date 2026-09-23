@@ -316,7 +316,7 @@ jobs:
         run: find artifacts/ -name 'snapshots.tar.gz' -exec tar -xzf {} -C . \;
       - name: Find JIRA ticket
         id: find
-        uses: mongodb/apix-action/find-jira@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Update Test Snapshots"

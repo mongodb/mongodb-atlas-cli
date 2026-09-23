@@ -379,8 +379,61 @@ expression: schema
                               {
                                 "enum": [
                                   "M0",
+                                  "M10",
+                                  "M100",
+                                  "M140",
+                                  "M140_GEN_2",
                                   "M2",
-                                  "M5"
+                                  "M20",
+                                  "M200",
+                                  "M200_GEN_2",
+                                  "M200_NVME",
+                                  "M200_NVME_GEN_2",
+                                  "M250",
+                                  "M30",
+                                  "M300",
+                                  "M300_GEN_2",
+                                  "M300_NVME",
+                                  "M30_GEN_2",
+                                  "M40",
+                                  "M400",
+                                  "M400_NVME",
+                                  "M400_NVME_GEN_2",
+                                  "M40_GEN_2",
+                                  "M40_NVME",
+                                  "M40_NVME_GEN_2",
+                                  "M5",
+                                  "M50",
+                                  "M50_GEN_2",
+                                  "M50_NVME",
+                                  "M50_NVME_GEN_2",
+                                  "M60",
+                                  "M600_NVME",
+                                  "M60_GEN_2",
+                                  "M60_NVME",
+                                  "M60_NVME_GEN_2",
+                                  "M80",
+                                  "M80_GEN_2",
+                                  "M80_NVME",
+                                  "M80_NVME_GEN_2",
+                                  "M90",
+                                  "R200",
+                                  "R200_GEN_2",
+                                  "R300",
+                                  "R300_GEN_2",
+                                  "R40",
+                                  "R400",
+                                  "R400_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50",
+                                  "R50_GEN_2",
+                                  "R60",
+                                  "R600",
+                                  "R60_GEN_2",
+                                  "R700",
+                                  "R700_GEN_2",
+                                  "R80",
+                                  "R80_GEN_2"
                                 ]
                               },
                               {
@@ -401,10 +454,15 @@ expression: schema
                         ]
                       },
                       "priority": {
+                        "maximum": 7,
+                        "minimum": 0,
                         "type": [
                           "integer",
                           "null"
                         ]
+                      },
+                      "providerName": {
+                        "const": "AWS"
                       },
                       "regionName": {
                         "anyOf": [
@@ -680,8 +738,61 @@ expression: schema
                               {
                                 "enum": [
                                   "M0",
+                                  "M10",
+                                  "M100",
+                                  "M140",
+                                  "M140_GEN_2",
                                   "M2",
-                                  "M5"
+                                  "M20",
+                                  "M200",
+                                  "M200_GEN_2",
+                                  "M200_NVME",
+                                  "M200_NVME_GEN_2",
+                                  "M250",
+                                  "M30",
+                                  "M300",
+                                  "M300_GEN_2",
+                                  "M300_NVME",
+                                  "M30_GEN_2",
+                                  "M40",
+                                  "M400",
+                                  "M400_NVME",
+                                  "M400_NVME_GEN_2",
+                                  "M40_GEN_2",
+                                  "M40_NVME",
+                                  "M40_NVME_GEN_2",
+                                  "M5",
+                                  "M50",
+                                  "M50_GEN_2",
+                                  "M50_NVME",
+                                  "M50_NVME_GEN_2",
+                                  "M60",
+                                  "M600_NVME",
+                                  "M60_GEN_2",
+                                  "M60_NVME",
+                                  "M60_NVME_GEN_2",
+                                  "M80",
+                                  "M80_GEN_2",
+                                  "M80_NVME",
+                                  "M80_NVME_GEN_2",
+                                  "M90",
+                                  "R200",
+                                  "R200_GEN_2",
+                                  "R300",
+                                  "R300_GEN_2",
+                                  "R40",
+                                  "R400",
+                                  "R400_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50",
+                                  "R50_GEN_2",
+                                  "R60",
+                                  "R600",
+                                  "R60_GEN_2",
+                                  "R700",
+                                  "R700_GEN_2",
+                                  "R80",
+                                  "R80_GEN_2"
                                 ]
                               },
                               {
@@ -702,10 +813,15 @@ expression: schema
                         ]
                       },
                       "priority": {
+                        "maximum": 7,
+                        "minimum": 0,
                         "type": [
                           "integer",
                           "null"
                         ]
+                      },
+                      "providerName": {
+                        "const": "AZURE"
                       },
                       "regionName": {
                         "anyOf": [
@@ -981,8 +1097,61 @@ expression: schema
                               {
                                 "enum": [
                                   "M0",
+                                  "M10",
+                                  "M100",
+                                  "M140",
+                                  "M140_GEN_2",
                                   "M2",
-                                  "M5"
+                                  "M20",
+                                  "M200",
+                                  "M200_GEN_2",
+                                  "M200_NVME",
+                                  "M200_NVME_GEN_2",
+                                  "M250",
+                                  "M30",
+                                  "M300",
+                                  "M300_GEN_2",
+                                  "M300_NVME",
+                                  "M30_GEN_2",
+                                  "M40",
+                                  "M400",
+                                  "M400_NVME",
+                                  "M400_NVME_GEN_2",
+                                  "M40_GEN_2",
+                                  "M40_NVME",
+                                  "M40_NVME_GEN_2",
+                                  "M5",
+                                  "M50",
+                                  "M50_GEN_2",
+                                  "M50_NVME",
+                                  "M50_NVME_GEN_2",
+                                  "M60",
+                                  "M600_NVME",
+                                  "M60_GEN_2",
+                                  "M60_NVME",
+                                  "M60_NVME_GEN_2",
+                                  "M80",
+                                  "M80_GEN_2",
+                                  "M80_NVME",
+                                  "M80_NVME_GEN_2",
+                                  "M90",
+                                  "R200",
+                                  "R200_GEN_2",
+                                  "R300",
+                                  "R300_GEN_2",
+                                  "R40",
+                                  "R400",
+                                  "R400_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50",
+                                  "R50_GEN_2",
+                                  "R60",
+                                  "R600",
+                                  "R60_GEN_2",
+                                  "R700",
+                                  "R700_GEN_2",
+                                  "R80",
+                                  "R80_GEN_2"
                                 ]
                               },
                               {
@@ -1003,10 +1172,15 @@ expression: schema
                         ]
                       },
                       "priority": {
+                        "maximum": 7,
+                        "minimum": 0,
                         "type": [
                           "integer",
                           "null"
                         ]
+                      },
+                      "providerName": {
+                        "const": "GCP"
                       },
                       "regionName": {
                         "anyOf": [
@@ -1212,8 +1386,61 @@ expression: schema
                               {
                                 "enum": [
                                   "M0",
+                                  "M10",
+                                  "M100",
+                                  "M140",
+                                  "M140_GEN_2",
                                   "M2",
-                                  "M5"
+                                  "M20",
+                                  "M200",
+                                  "M200_GEN_2",
+                                  "M200_NVME",
+                                  "M200_NVME_GEN_2",
+                                  "M250",
+                                  "M30",
+                                  "M300",
+                                  "M300_GEN_2",
+                                  "M300_NVME",
+                                  "M30_GEN_2",
+                                  "M40",
+                                  "M400",
+                                  "M400_NVME",
+                                  "M400_NVME_GEN_2",
+                                  "M40_GEN_2",
+                                  "M40_NVME",
+                                  "M40_NVME_GEN_2",
+                                  "M5",
+                                  "M50",
+                                  "M50_GEN_2",
+                                  "M50_NVME",
+                                  "M50_NVME_GEN_2",
+                                  "M60",
+                                  "M600_NVME",
+                                  "M60_GEN_2",
+                                  "M60_NVME",
+                                  "M60_NVME_GEN_2",
+                                  "M80",
+                                  "M80_GEN_2",
+                                  "M80_NVME",
+                                  "M80_NVME_GEN_2",
+                                  "M90",
+                                  "R200",
+                                  "R200_GEN_2",
+                                  "R300",
+                                  "R300_GEN_2",
+                                  "R40",
+                                  "R400",
+                                  "R400_GEN_2",
+                                  "R40_GEN_2",
+                                  "R50",
+                                  "R50_GEN_2",
+                                  "R60",
+                                  "R600",
+                                  "R60_GEN_2",
+                                  "R700",
+                                  "R700_GEN_2",
+                                  "R80",
+                                  "R80_GEN_2"
                                 ]
                               },
                               {
@@ -1234,10 +1461,15 @@ expression: schema
                         ]
                       },
                       "priority": {
+                        "maximum": 7,
+                        "minimum": 0,
                         "type": [
                           "integer",
                           "null"
                         ]
+                      },
+                      "providerName": {
+                        "const": "TENANT"
                       },
                       "regionName": {
                         "anyOf": [
@@ -1517,8 +1749,61 @@ expression: schema
                             {
                               "enum": [
                                 "M0",
+                                "M10",
+                                "M100",
+                                "M140",
+                                "M140_GEN_2",
                                 "M2",
-                                "M5"
+                                "M20",
+                                "M200",
+                                "M200_GEN_2",
+                                "M200_NVME",
+                                "M200_NVME_GEN_2",
+                                "M250",
+                                "M30",
+                                "M300",
+                                "M300_GEN_2",
+                                "M300_NVME",
+                                "M30_GEN_2",
+                                "M40",
+                                "M400",
+                                "M400_NVME",
+                                "M400_NVME_GEN_2",
+                                "M40_GEN_2",
+                                "M40_NVME",
+                                "M40_NVME_GEN_2",
+                                "M5",
+                                "M50",
+                                "M50_GEN_2",
+                                "M50_NVME",
+                                "M50_NVME_GEN_2",
+                                "M60",
+                                "M600_NVME",
+                                "M60_GEN_2",
+                                "M60_NVME",
+                                "M60_NVME_GEN_2",
+                                "M80",
+                                "M80_GEN_2",
+                                "M80_NVME",
+                                "M80_NVME_GEN_2",
+                                "M90",
+                                "R200",
+                                "R200_GEN_2",
+                                "R300",
+                                "R300_GEN_2",
+                                "R40",
+                                "R400",
+                                "R400_GEN_2",
+                                "R40_GEN_2",
+                                "R50",
+                                "R50_GEN_2",
+                                "R60",
+                                "R600",
+                                "R60_GEN_2",
+                                "R700",
+                                "R700_GEN_2",
+                                "R80",
+                                "R80_GEN_2"
                               ]
                             },
                             {
@@ -1539,10 +1824,15 @@ expression: schema
                       ]
                     },
                     "priority": {
+                      "maximum": 7,
+                      "minimum": 0,
                       "type": [
                         "integer",
                         "null"
                       ]
+                    },
+                    "providerName": {
+                      "const": "AWS"
                     },
                     "regionName": {
                       "anyOf": [
@@ -1818,8 +2108,61 @@ expression: schema
                             {
                               "enum": [
                                 "M0",
+                                "M10",
+                                "M100",
+                                "M140",
+                                "M140_GEN_2",
                                 "M2",
-                                "M5"
+                                "M20",
+                                "M200",
+                                "M200_GEN_2",
+                                "M200_NVME",
+                                "M200_NVME_GEN_2",
+                                "M250",
+                                "M30",
+                                "M300",
+                                "M300_GEN_2",
+                                "M300_NVME",
+                                "M30_GEN_2",
+                                "M40",
+                                "M400",
+                                "M400_NVME",
+                                "M400_NVME_GEN_2",
+                                "M40_GEN_2",
+                                "M40_NVME",
+                                "M40_NVME_GEN_2",
+                                "M5",
+                                "M50",
+                                "M50_GEN_2",
+                                "M50_NVME",
+                                "M50_NVME_GEN_2",
+                                "M60",
+                                "M600_NVME",
+                                "M60_GEN_2",
+                                "M60_NVME",
+                                "M60_NVME_GEN_2",
+                                "M80",
+                                "M80_GEN_2",
+                                "M80_NVME",
+                                "M80_NVME_GEN_2",
+                                "M90",
+                                "R200",
+                                "R200_GEN_2",
+                                "R300",
+                                "R300_GEN_2",
+                                "R40",
+                                "R400",
+                                "R400_GEN_2",
+                                "R40_GEN_2",
+                                "R50",
+                                "R50_GEN_2",
+                                "R60",
+                                "R600",
+                                "R60_GEN_2",
+                                "R700",
+                                "R700_GEN_2",
+                                "R80",
+                                "R80_GEN_2"
                               ]
                             },
                             {
@@ -1840,10 +2183,15 @@ expression: schema
                       ]
                     },
                     "priority": {
+                      "maximum": 7,
+                      "minimum": 0,
                       "type": [
                         "integer",
                         "null"
                       ]
+                    },
+                    "providerName": {
+                      "const": "AZURE"
                     },
                     "regionName": {
                       "anyOf": [
@@ -2119,8 +2467,61 @@ expression: schema
                             {
                               "enum": [
                                 "M0",
+                                "M10",
+                                "M100",
+                                "M140",
+                                "M140_GEN_2",
                                 "M2",
-                                "M5"
+                                "M20",
+                                "M200",
+                                "M200_GEN_2",
+                                "M200_NVME",
+                                "M200_NVME_GEN_2",
+                                "M250",
+                                "M30",
+                                "M300",
+                                "M300_GEN_2",
+                                "M300_NVME",
+                                "M30_GEN_2",
+                                "M40",
+                                "M400",
+                                "M400_NVME",
+                                "M400_NVME_GEN_2",
+                                "M40_GEN_2",
+                                "M40_NVME",
+                                "M40_NVME_GEN_2",
+                                "M5",
+                                "M50",
+                                "M50_GEN_2",
+                                "M50_NVME",
+                                "M50_NVME_GEN_2",
+                                "M60",
+                                "M600_NVME",
+                                "M60_GEN_2",
+                                "M60_NVME",
+                                "M60_NVME_GEN_2",
+                                "M80",
+                                "M80_GEN_2",
+                                "M80_NVME",
+                                "M80_NVME_GEN_2",
+                                "M90",
+                                "R200",
+                                "R200_GEN_2",
+                                "R300",
+                                "R300_GEN_2",
+                                "R40",
+                                "R400",
+                                "R400_GEN_2",
+                                "R40_GEN_2",
+                                "R50",
+                                "R50_GEN_2",
+                                "R60",
+                                "R600",
+                                "R60_GEN_2",
+                                "R700",
+                                "R700_GEN_2",
+                                "R80",
+                                "R80_GEN_2"
                               ]
                             },
                             {
@@ -2141,10 +2542,15 @@ expression: schema
                       ]
                     },
                     "priority": {
+                      "maximum": 7,
+                      "minimum": 0,
                       "type": [
                         "integer",
                         "null"
                       ]
+                    },
+                    "providerName": {
+                      "const": "GCP"
                     },
                     "regionName": {
                       "anyOf": [
@@ -2350,8 +2756,61 @@ expression: schema
                             {
                               "enum": [
                                 "M0",
+                                "M10",
+                                "M100",
+                                "M140",
+                                "M140_GEN_2",
                                 "M2",
-                                "M5"
+                                "M20",
+                                "M200",
+                                "M200_GEN_2",
+                                "M200_NVME",
+                                "M200_NVME_GEN_2",
+                                "M250",
+                                "M30",
+                                "M300",
+                                "M300_GEN_2",
+                                "M300_NVME",
+                                "M30_GEN_2",
+                                "M40",
+                                "M400",
+                                "M400_NVME",
+                                "M400_NVME_GEN_2",
+                                "M40_GEN_2",
+                                "M40_NVME",
+                                "M40_NVME_GEN_2",
+                                "M5",
+                                "M50",
+                                "M50_GEN_2",
+                                "M50_NVME",
+                                "M50_NVME_GEN_2",
+                                "M60",
+                                "M600_NVME",
+                                "M60_GEN_2",
+                                "M60_NVME",
+                                "M60_NVME_GEN_2",
+                                "M80",
+                                "M80_GEN_2",
+                                "M80_NVME",
+                                "M80_NVME_GEN_2",
+                                "M90",
+                                "R200",
+                                "R200_GEN_2",
+                                "R300",
+                                "R300_GEN_2",
+                                "R40",
+                                "R400",
+                                "R400_GEN_2",
+                                "R40_GEN_2",
+                                "R50",
+                                "R50_GEN_2",
+                                "R60",
+                                "R600",
+                                "R60_GEN_2",
+                                "R700",
+                                "R700_GEN_2",
+                                "R80",
+                                "R80_GEN_2"
                               ]
                             },
                             {
@@ -2372,10 +2831,15 @@ expression: schema
                       ]
                     },
                     "priority": {
+                      "maximum": 7,
+                      "minimum": 0,
                       "type": [
                         "integer",
                         "null"
                       ]
+                    },
+                    "providerName": {
+                      "const": "TENANT"
                     },
                     "regionName": {
                       "anyOf": [

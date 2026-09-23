@@ -1,5 +1,5 @@
 ---
-source: tests/quirks.rs
+source: models/tests/quirks.rs
 expression: datatype
 ---
 {
@@ -11,7 +11,10 @@ expression: datatype
       "onlyA": {
         "Optional": {
           "data_type": {
-            "Integer": {}
+            "Integer": {
+              "minimum": null,
+              "maximum": null
+            }
           }
         }
       },

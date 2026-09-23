@@ -262,6 +262,8 @@ expression: schema
       ]
     },
     "numShards": {
+      "maximum": 50,
+      "minimum": 1,
       "type": [
         "integer",
         "null"
@@ -494,6 +496,9 @@ expression: schema
                       }
                     ]
                   },
+                  "providerName": {
+                    "const": "AWS"
+                  },
                   "regionName": {
                     "anyOf": [
                       {
@@ -699,6 +704,9 @@ expression: schema
                       }
                     ]
                   },
+                  "providerName": {
+                    "const": "AZURE"
+                  },
                   "regionName": {
                     "anyOf": [
                       {
@@ -796,6 +804,9 @@ expression: schema
                         "type": "null"
                       }
                     ]
+                  },
+                  "providerName": {
+                    "const": "FLEX"
                   },
                   "regionName": {
                     "type": [
@@ -959,6 +970,9 @@ expression: schema
                       }
                     ]
                   },
+                  "providerName": {
+                    "const": "GCP"
+                  },
                   "regionName": {
                     "anyOf": [
                       {
@@ -1096,6 +1110,9 @@ expression: schema
                         "type": "null"
                       }
                     ]
+                  },
+                  "providerName": {
+                    "const": "TENANT"
                   },
                   "regionName": {
                     "type": [
@@ -1314,6 +1331,9 @@ expression: schema
                     }
                   ]
                 },
+                "providerName": {
+                  "const": "AWS"
+                },
                 "regionName": {
                   "anyOf": [
                     {
@@ -1519,6 +1539,9 @@ expression: schema
                     }
                   ]
                 },
+                "providerName": {
+                  "const": "AZURE"
+                },
                 "regionName": {
                   "anyOf": [
                     {
@@ -1616,6 +1639,9 @@ expression: schema
                       "type": "null"
                     }
                   ]
+                },
+                "providerName": {
+                  "const": "FLEX"
                 },
                 "regionName": {
                   "type": [
@@ -1779,6 +1805,9 @@ expression: schema
                     }
                   ]
                 },
+                "providerName": {
+                  "const": "GCP"
+                },
                 "regionName": {
                   "anyOf": [
                     {
@@ -1916,6 +1945,9 @@ expression: schema
                       "type": "null"
                     }
                   ]
+                },
+                "providerName": {
+                  "const": "TENANT"
                 },
                 "regionName": {
                   "type": [

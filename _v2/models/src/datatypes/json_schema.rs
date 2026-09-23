@@ -4,12 +4,14 @@
 //! construction; [`is_valid`] and [`validate`] are provided as a safety net
 //! for any schema, auto-detecting the draft like `jsonschema::meta` does.
 
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 
 use jsonschema::ValidationError;
 
 use crate::datatypes::reference_types::{ReferenceTypeObject, ReferenceTypeOneOf};
-use crate::datatypes::value_type::{ValueType, ValueTypeString, ValueTypeStringValidation};
+use crate::datatypes::value_type::{
+    ValueType, ValueTypeInteger, ValueTypeString, ValueTypeStringValidation,
+};
 use crate::datatypes::{DataType, ReferenceType};
 
 impl DataType {
@@ -36,10 +38,25 @@ fn value_type_schema(value_type: &ValueType) -> Value {
     match value_type {
         ValueType::Boolean(_) => json!({"type": "boolean"}),
         ValueType::Double(_) => json!({"type": "number"}),
-        ValueType::Integer(_) => json!({"type": "integer"}),
+        ValueType::Integer(integer) => integer_schema(integer),
         ValueType::String(string) => string_schema(string),
         ValueType::Enum(enumeration) => json!({"enum": enumeration.clone().into_inner()}),
     }
+}
+
+/// An integer schema carries its numeric bounds when the source spec declared
+/// them (`minimum`/`maximum`), so a wrong value is rejected before the request
+/// reaches the API.
+fn integer_schema(integer: &ValueTypeInteger) -> Value {
+    let mut keywords = Map::new();
+    keywords.insert("type".to_string(), json!("integer"));
+    if let Some(minimum) = integer.minimum {
+        keywords.insert("minimum".to_string(), json!(minimum));
+    }
+    if let Some(maximum) = integer.maximum {
+        keywords.insert("maximum".to_string(), json!(maximum));
+    }
+    Value::Object(keywords)
 }
 
 fn string_schema(string: &ValueTypeString) -> Value {
@@ -133,6 +150,7 @@ fn one_of_schema(one_of: &ReferenceTypeOneOf) -> Value {
     let mut mapping = Map::new();
     for (discriminator_value, reference_type) in one_of.options() {
         let schema = DataType::ReferenceType(reference_type.clone()).to_json_schema();
+        let schema = pin_discriminator(schema, one_of.discriminator_field(), discriminator_value);
         variants.push(schema.clone());
         mapping.insert(discriminator_value.clone(), schema);
     }
@@ -143,6 +161,27 @@ fn one_of_schema(one_of: &ReferenceTypeOneOf) -> Value {
             "mapping": mapping
         }
     })
+}
+
+/// Pin a variant's discriminator field to its tag value with a `const`, so a
+/// JSON-Schema `oneOf` selects exactly one variant. Plain JSON-Schema has no
+/// `discriminator` keyword — the validator ignores it — so without the `const`
+/// every structurally-equal variant would match and `oneOf` would reject the
+/// value as ambiguous.
+fn pin_discriminator(schema: Value, field: &str, value: &str) -> Value {
+    let object = match schema.as_object() {
+        Some(object) if object.contains_key("properties") => object,
+        _ => return schema,
+    };
+    let mut properties = object
+        .get("properties")
+        .and_then(Value::as_object)
+        .cloned()
+        .unwrap_or_default();
+    properties.insert(field.to_string(), json!({"const": value}));
+    let mut object = object.clone();
+    object.insert("properties".to_string(), Value::Object(properties));
+    Value::Object(object)
 }
 
 #[cfg(test)]
@@ -170,7 +209,9 @@ mod tests {
             json!({"type": "boolean"})
         );
         assert_eq!(
-            schema_of(DataType::ValueType(ValueType::Integer(ValueTypeInteger {}))),
+            schema_of(DataType::ValueType(ValueType::Integer(
+                ValueTypeInteger::new()
+            ))),
             json!({"type": "integer"})
         );
         assert_eq!(
@@ -208,8 +249,7 @@ mod tests {
 
     #[test]
     fn enums() {
-        let enumeration =
-            ValueTypeEnum::try_new(vec!["a".to_string(), "b".to_string()]).unwrap();
+        let enumeration = ValueTypeEnum::try_new(vec!["a".to_string(), "b".to_string()]).unwrap();
         assert_eq!(
             schema_of(DataType::ValueType(ValueType::Enum(enumeration))),
             json!({"enum": ["a", "b"]})
@@ -218,9 +258,9 @@ mod tests {
 
     #[test]
     fn arrays() {
-        let array = DataType::ReferenceType(ReferenceType::new_array(
-            DataType::ValueType(ValueType::Boolean(ValueTypeBoolean {})),
-        ));
+        let array = DataType::ReferenceType(ReferenceType::new_array(DataType::ValueType(
+            ValueType::Boolean(ValueTypeBoolean {}),
+        )));
         assert_eq!(
             schema_of(array),
             json!({"type": "array", "items": {"type": "boolean"}})
@@ -229,13 +269,10 @@ mod tests {
 
     #[test]
     fn optional_is_nullable() {
-        let optional = DataType::ReferenceType(ReferenceType::new_optional(
-            DataType::ValueType(ValueType::Integer(ValueTypeInteger {})),
-        ));
-        assert_eq!(
-            schema_of(optional),
-            json!({"type": ["integer", "null"]})
-        );
+        let optional = DataType::ReferenceType(ReferenceType::new_optional(DataType::ValueType(
+            ValueType::Integer(ValueTypeInteger::new()),
+        )));
+        assert_eq!(schema_of(optional), json!({"type": ["integer", "null"]}));
     }
 
     #[test]
@@ -269,14 +306,18 @@ mod tests {
             "default".to_string(),
             ReferenceType::try_new_object(properties).unwrap(),
         );
-        let one_of =
-            DataType::ReferenceType(ReferenceType::try_new_one_of("type".to_string(), options).unwrap());
+        let one_of = DataType::ReferenceType(
+            ReferenceType::try_new_one_of("type".to_string(), options).unwrap(),
+        );
         let optional = DataType::ReferenceType(ReferenceType::new_optional(one_of));
         let schema = schema_of(optional);
         let variant = json!({
             "oneOf": [{
                 "type": "object",
-                "properties": {"id": {"type": "boolean"}},
+                "properties": {
+                    "id": {"type": "boolean"},
+                    "type": {"const": "default"}
+                },
                 "required": ["id"]
             }],
             "discriminator": {
@@ -284,7 +325,10 @@ mod tests {
                 "mapping": {
                     "default": {
                         "type": "object",
-                        "properties": {"id": {"type": "boolean"}},
+                        "properties": {
+                            "id": {"type": "boolean"},
+                            "type": {"const": "default"}
+                        },
                         "required": ["id"]
                     }
                 }
@@ -309,10 +353,9 @@ mod tests {
         );
         properties.insert(
             "age".to_string(),
-            DataType::ValueType(ValueType::Integer(ValueTypeInteger {})),
+            DataType::ValueType(ValueType::Integer(ValueTypeInteger::new())),
         );
-        let object =
-            DataType::ReferenceType(ReferenceType::try_new_object(properties).unwrap());
+        let object = DataType::ReferenceType(ReferenceType::try_new_object(properties).unwrap());
         assert_eq!(
             schema_of(object),
             json!({
@@ -338,14 +381,18 @@ mod tests {
             "default".to_string(),
             ReferenceType::try_new_object(properties).unwrap(),
         );
-        let one_of =
-            DataType::ReferenceType(ReferenceType::try_new_one_of("type".to_string(), options).unwrap());
+        let one_of = DataType::ReferenceType(
+            ReferenceType::try_new_one_of("type".to_string(), options).unwrap(),
+        );
         assert_eq!(
             schema_of(one_of),
             json!({
                 "oneOf": [{
                     "type": "object",
-                    "properties": {"id": {"type": "boolean"}},
+                    "properties": {
+                        "id": {"type": "boolean"},
+                        "type": {"const": "default"}
+                    },
                     "required": ["id"]
                 }],
                 "discriminator": {
@@ -353,7 +400,10 @@ mod tests {
                     "mapping": {
                         "default": {
                             "type": "object",
-                            "properties": {"id": {"type": "boolean"}},
+                            "properties": {
+                                "id": {"type": "boolean"},
+                                "type": {"const": "default"}
+                            },
                             "required": ["id"]
                         }
                     }

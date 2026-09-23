@@ -2059,7 +2059,11 @@ components:
           description: Number of nodes of the given type for MongoDB Cloud to deploy to the region.
           example: 3
           format: int32
+          minimum: 1
           type: integer
+      required:
+      - instanceSize
+      - nodeCount
       title: AWS Cluster Hardware Settings
       type: object
     AWSRegionConfig:
@@ -2762,7 +2766,11 @@ components:
           description: Number of nodes of the given type for MongoDB Cloud to deploy to the region.
           example: 3
           format: int32
+          minimum: 1
           type: integer
+      required:
+      - instanceSize
+      - nodeCount
       type: object
     AzureRegionConfig:
       allOf:
@@ -3599,6 +3607,11 @@ components:
             title: GCP Regions
             type: string
           type: object
+      required:
+      - electableSpecs
+      - priority
+      - providerName
+      - regionName
       title: Cloud Service Provider Settings
       type: object
     ClusterAutoScalingSettings:
@@ -3991,6 +4004,10 @@ components:
           - LTS
           - CONTINUOUS
           type: string
+      required:
+      - clusterType
+      - name
+      - replicationSpecs
       type: object
     ClusterDescriptionConnectionStringsPrivateEndpoint:
       description: Private endpoint-aware connection string that you can use to connect to this cluster through a private endpoint.
@@ -4622,6 +4639,7 @@ components:
           description: Number of nodes of the given type for MongoDB Cloud to deploy to the region.
           example: 3
           format: int32
+          minimum: 1
           type: integer
       readOnly: true
       type: object
@@ -5509,7 +5527,11 @@ components:
           description: Number of nodes of the given type for MongoDB Cloud to deploy to the region.
           example: 3
           format: int32
+          minimum: 1
           type: integer
+      required:
+      - instanceSize
+      - nodeCount
       type: object
     GCPRegionConfig:
       allOf:
@@ -5647,6 +5669,9 @@ components:
             url: https://dochub.mongodb.org/core/customize-storage
           format: double
           type: number
+      required:
+      - instanceSize
+      - nodeCount
       type: object
     LegacyAtlasCluster:
       description: Group of settings that configure a MongoDB cluster.
@@ -6438,6 +6463,8 @@ components:
         zoneName:
           description: 'Human-readable label that describes the zone this shard belongs to in a Global Cluster. Provide this value only if `clusterType` : `GEOSHARDED` but not `selfManagedSharding` : `true`.'
           type: string
+      required:
+      - regionConfigs
       title: Replication Specifications
       type: object
     ResourceTag:

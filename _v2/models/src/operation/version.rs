@@ -65,15 +65,15 @@ impl OperationVersion {
         // Parse the JSON request body
         let request_body_datatype = if let Some(request_bodies) = request_bodies {
             match request_bodies.get(&MediaType::Json) {
-                Some(resolved_media_type) if resolved_media_type.schema.is_some() => Some(
-                    Self::resolved_media_type_to_datatype(
+                Some(resolved_media_type) if resolved_media_type.schema.is_some() => {
+                    Some(Self::resolved_media_type_to_datatype(
                         resolved_media_type,
                         &ConversionOptions {
                             drop_readonly_fields: true,
                             ..Default::default()
                         },
-                    )?,
-                ),
+                    )?)
+                }
                 Some(_) => {
                     eprintln!("Skipping JSON request body without a schema");
                     None
@@ -161,7 +161,9 @@ impl OperationVersion {
                 ResolvedSchemaKind::Any(any) => {
                     Self::resolved_any_schema_to_datatype(any, options, visited)
                 }
-                ResolvedSchemaKind::Type(typ) => Self::resolved_type_to_datatype(typ, options, visited),
+                ResolvedSchemaKind::Type(typ) => {
+                    Self::resolved_type_to_datatype(typ, options, visited)
+                }
                 ResolvedSchemaKind::OneOf { one_of } => {
                     Self::one_of_to_datatype(one_of, options, visited)
                 }
@@ -222,7 +224,12 @@ impl OperationVersion {
             Some("string") => {
                 Self::string_to_datatype(any.pattern.as_deref(), any.min_length, any.max_length)
             }
-            Some("integer") => Ok(DataType::ValueType(ValueType::Integer(ValueTypeInteger {}))),
+            Some("integer") => Ok(DataType::ValueType(ValueType::Integer(
+                ValueTypeInteger::with_bounds(
+                    Self::as_integral(any.minimum),
+                    Self::as_integral(any.maximum),
+                ),
+            ))),
             Some("number") => Ok(DataType::ValueType(ValueType::Double(ValueTypeDouble {}))),
             Some("boolean") => Ok(DataType::ValueType(ValueType::Boolean(ValueTypeBoolean {}))),
             Some("array") => match &any.items {
@@ -265,7 +272,10 @@ impl OperationVersion {
                     .iter()
                     .flatten()
                     .map(|value| value.to_string()),
-                ValueType::Integer(ValueTypeInteger {}),
+                ValueType::Integer(ValueTypeInteger::with_bounds(
+                    integer.minimum,
+                    integer.maximum,
+                )),
             ),
             ResolvedType::Number(number) => Self::scalar_with_enum(
                 number
@@ -369,12 +379,13 @@ impl OperationVersion {
     ) -> Result<DataType, OperationVersionParseError> {
         let mut option_types = BTreeMap::new();
         for (value, nested) in mapping {
-            let reference = match Self::resolved_schema_to_datatype(&nested.get(), options, visited)? {
-                DataType::ReferenceType(reference) => reference,
-                DataType::ValueType(_) => {
-                    return Err(OperationVersionParseError::UnionOptionNotReference(value));
-                }
-            };
+            let reference =
+                match Self::resolved_schema_to_datatype(&nested.get(), options, visited)? {
+                    DataType::ReferenceType(reference) => reference,
+                    DataType::ValueType(_) => {
+                        return Err(OperationVersionParseError::UnionOptionNotReference(value));
+                    }
+                };
             let option = Self::strip_discriminator_tag(reference, &discriminator_field);
             option_types.insert(value, option);
         }
@@ -469,7 +480,12 @@ impl OperationVersion {
     ) -> Result<DataType, OperationVersionParseError> {
         let mut property_types = BTreeMap::new();
         for alternative in alternatives {
-            Self::collect_object_properties(&alternative.get(), options, &mut property_types, visited)?;
+            Self::collect_object_properties(
+                &alternative.get(),
+                options,
+                &mut property_types,
+                visited,
+            )?;
         }
         Ok(DataType::ReferenceType(ReferenceType::try_new_object(
             property_types,
@@ -496,7 +512,12 @@ impl OperationVersion {
             ResolvedSchemaKind::Any(any) if !any.all_of.is_empty() => {
                 for nested in &any.all_of {
                     if !nested.is_recursive() {
-                        Self::collect_object_properties(&nested.get(), options, property_types, visited)?;
+                        Self::collect_object_properties(
+                            &nested.get(),
+                            options,
+                            property_types,
+                            visited,
+                        )?;
                     }
                 }
                 Ok(())
@@ -547,9 +568,65 @@ impl OperationVersion {
             if schema.schema_data.nullable || !required.contains(name) {
                 datatype = Self::wrap_optional(datatype);
             }
+            if let Some(merged) = Self::union_enumerations(
+                property_types.get(name),
+                &datatype,
+                schema.schema_data.nullable || !required.contains(name),
+            ) {
+                datatype = merged;
+            }
             property_types.insert(name.clone(), datatype);
         }
         Ok(())
+    }
+
+    /// When a merged object sees the same property twice and both are
+    /// enumerations, union them instead of letting the last alternative win.
+    /// This is how a discriminator-less `oneOf` of provider hardware specs
+    /// (each with its own `instanceSize` list) keeps every option.
+    ///
+    /// Returns `Some(merged)` when the property already exists as an enum and
+    /// `datatype` is also an enum; the merged enum is offered. If only the
+    /// existing property is enum, the existing enum is kept as-is (collected
+    /// before). Otherwise `None` leaves the caller's insert in charge.
+    fn union_enumerations(
+        existing: Option<&DataType>,
+        datatype: &DataType,
+        nullable: bool,
+    ) -> Option<DataType> {
+        let (
+            DataType::ValueType(ValueType::Enum(existing_enum)),
+            DataType::ValueType(ValueType::Enum(new_enum)),
+        ) = (
+            Self::unwrap_optional_for_enum(existing?),
+            Self::unwrap_optional_for_enum(datatype),
+        )
+        else {
+            return None;
+        };
+        let mut values = existing_enum.clone().into_inner();
+        values.extend(new_enum.clone().into_inner());
+        values.sort_unstable();
+        values.dedup();
+        let enum_type = DataType::ValueType(ValueType::Enum(ValueTypeEnum::try_new(values).ok()?));
+        if nullable
+            || matches!(
+                existing,
+                Some(DataType::ReferenceType(ReferenceType::Optional(_)))
+            )
+        {
+            Some(Self::wrap_optional(enum_type))
+        } else {
+            Some(enum_type)
+        }
+    }
+
+    /// Peek at the value under an `Optional` wrapper without unwrapping.
+    fn unwrap_optional_for_enum<'a>(datatype: &'a DataType) -> &'a DataType {
+        match datatype {
+            DataType::ReferenceType(ReferenceType::Optional(optional)) => optional.data_type(),
+            other => other,
+        }
     }
 
     /// Whether a property is dropped for the current direction: `readOnly`
@@ -634,6 +711,18 @@ impl OperationVersion {
             .map(u32::try_from)
             .transpose()
             .map_err(|_| OperationVersionParseError::InvalidLength)
+    }
+
+    /// A whole-number `f64` as `i64`; fractional bounds cannot be represented
+    /// on an integer value type, so they are dropped.
+    fn as_integral(value: Option<f64>) -> Option<i64> {
+        value.and_then(|number| {
+            if number.fract() == 0.0 && number >= i64::MIN as f64 && number <= i64::MAX as f64 {
+                Some(number as i64)
+            } else {
+                None
+            }
+        })
     }
 
     fn enum_values_to_datatype(

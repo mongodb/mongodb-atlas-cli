@@ -29,8 +29,8 @@ pub fn from_config(
         .map_err(|error| CodegenError::InvalidOpenAPISpec(error.to_string()))?;
     let resolved = ResolvedOpenAPI::try_from(&openapi)
         .map_err(|error| CodegenError::InvalidOpenAPISpec(error.to_string()))?;
-    let hierarchy: Hierarchy = serde_yaml::from_str(hierarchy_yaml)
-        .map_err(CodegenError::InvalidHierarchy)?;
+    let hierarchy: Hierarchy =
+        serde_yaml::from_str(hierarchy_yaml).map_err(CodegenError::InvalidHierarchy)?;
     build(&resolved, &hierarchy, options)
 }
 
@@ -428,7 +428,13 @@ fn ident_of(raw: &str) -> String {
 fn flag_ident(name: &str) -> String {
     let mut sanitized = name
         .chars()
-        .map(|c| if c.is_ascii_alphanumeric() || c == '_' { c } else { '_' })
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '_' {
+                c
+            } else {
+                '_'
+            }
+        })
         .collect::<String>();
     if sanitized.is_empty() {
         sanitized.push('_');
@@ -441,10 +447,10 @@ fn flag_ident(name: &str) -> String {
 }
 
 const KEYWORDS: &[&str] = &[
-    "as", "async", "await", "break", "const", "continue", "crate", "dyn", "else", "enum",
-    "extern", "false", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move",
-    "mut", "pub", "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true",
-    "try", "type", "unsafe", "use", "where", "while",
+    "as", "async", "await", "break", "const", "continue", "crate", "dyn", "else", "enum", "extern",
+    "false", "fn", "for", "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub",
+    "ref", "return", "self", "Self", "static", "struct", "super", "trait", "true", "try", "type",
+    "unsafe", "use", "where", "while",
 ];
 
 #[cfg(test)]
@@ -506,7 +512,10 @@ mod tests {
             "providers".into(),
             DataType::ReferenceType(ReferenceType::new_array(str_ty())),
         )]));
-        assert_eq!(request_body_flags(&body), vec![flag("providers", true, true)]);
+        assert_eq!(
+            request_body_flags(&body),
+            vec![flag("providers", true, true)]
+        );
     }
 
     #[test]
@@ -521,8 +530,20 @@ mod tests {
         assert_eq!(
             request_body_flags(&body),
             vec![
-                dot_flag("person.first_name", "person_first_name", true, false, FlagValueKind::String),
-                dot_flag("person.last_name", "person_last_name", false, false, FlagValueKind::String),
+                dot_flag(
+                    "person.first_name",
+                    "person_first_name",
+                    true,
+                    false,
+                    FlagValueKind::String
+                ),
+                dot_flag(
+                    "person.last_name",
+                    "person_last_name",
+                    false,
+                    false,
+                    FlagValueKind::String
+                ),
             ]
         );
     }
@@ -535,7 +556,13 @@ mod tests {
         )]));
         assert_eq!(
             request_body_flags(&body),
-            vec![dot_flag("person.first_name", "person_first_name", false, false, FlagValueKind::String)]
+            vec![dot_flag(
+                "person.first_name",
+                "person_first_name",
+                false,
+                false,
+                FlagValueKind::String
+            )]
         );
     }
 
@@ -567,12 +594,16 @@ mod tests {
 
     #[test]
     fn value_kinds_follow_the_leaf_type() {
-        use models::datatypes::value_type::{
-            ValueTypeBoolean, ValueTypeDouble, ValueTypeInteger,
-        };
+        use models::datatypes::value_type::{ValueTypeBoolean, ValueTypeDouble, ValueTypeInteger};
         let body = object(BTreeMap::from([
-            ("enabled".into(), typed(ValueType::Boolean(ValueTypeBoolean {}))),
-            ("port".into(), typed(ValueType::Integer(ValueTypeInteger {}))),
+            (
+                "enabled".into(),
+                typed(ValueType::Boolean(ValueTypeBoolean {})),
+            ),
+            (
+                "port".into(),
+                typed(ValueType::Integer(ValueTypeInteger::new())),
+            ),
             ("ratio".into(), typed(ValueType::Double(ValueTypeDouble {}))),
         ]));
         assert_eq!(
@@ -591,12 +622,18 @@ mod tests {
         let body = object(BTreeMap::from([(
             "ports".into(),
             DataType::ReferenceType(ReferenceType::new_array(typed(ValueType::Integer(
-                ValueTypeInteger {},
+                ValueTypeInteger::new(),
             )))),
         )]));
         assert_eq!(
             request_body_flags(&body),
-            vec![dot_flag("ports", "ports", true, true, FlagValueKind::Integer)]
+            vec![dot_flag(
+                "ports",
+                "ports",
+                true,
+                true,
+                FlagValueKind::Integer
+            )]
         );
     }
 }

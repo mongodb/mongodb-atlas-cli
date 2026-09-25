@@ -32,6 +32,7 @@ var (
 		"7.0",
 		"8.0",
 		"8.2",
+		"8.3",
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
@@ -172,6 +173,10 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue
+			}
+
+			if sv == "8.3" {
+				continue // TODO: CLOUDP-450652
 			}
 
 			t := &shrub.Task{

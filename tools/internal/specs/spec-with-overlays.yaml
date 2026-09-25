@@ -85,7 +85,7 @@ components:
                 pattern: ^([a-f0-9]{20})$
                 type: string
         includeCount:
-            description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+            description: Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to `false`, MongoDB Cloud may skip an additional count operation. The response may still include `totalCount` when the count is available without additional calculation.
             in: query
             name: includeCount
             schema:
@@ -458,6 +458,7 @@ components:
                             - M140_GEN_2
                             - M200_GEN_2
                             - M300_GEN_2
+                            - M700_GEN_2
                             - R40_GEN_2
                             - R50_GEN_2
                             - R60_GEN_2
@@ -569,6 +570,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -621,6 +623,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -765,6 +768,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -868,6 +872,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -1436,6 +1441,11 @@ components:
                     $ref: '#/components/schemas/AdvancedComputeAutoScaling'
                 diskGB:
                     $ref: '#/components/schemas/DiskGBAutoScaling'
+                storageConfig:
+                    allOf:
+                        - $ref: '#/components/schemas/StorageConfig'
+                    description: 'Available in Public Preview: Settings that determine the per-shard data-size limit for this cluster. Applies only to Atlas INFINITE clusters. MongoDB Cloud accepts these settings only on `autoScaling` and rejects them on `analyticsAutoScaling`, including when you send them as `null`. In a request that includes `replicationSpecs`, omitting `storageConfig` or sending it as `null` or `{}` clears the limit. Omitting `replicationSpecs` preserves it.'
+                    nullable: true
             title: Automatic Scaling Settings
             type: object
         AdvancedClusterDescription:
@@ -2173,6 +2183,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -3549,7 +3568,7 @@ components:
                     readOnly: true
                     type: string
                 nodeCount:
-                    description: Number of Search Nodes in this region.
+                    description: Number of Search Nodes for this configuration.
                     example: 2
                     format: int32
                     maximum: 32
@@ -3640,7 +3659,7 @@ components:
         ApiSearchDeploymentResponseView:
             properties:
                 effectiveSpecs:
-                    description: List of settings that configure the Search Nodes for your cluster, with per-region detail including the region name and cloud provider.
+                    description: List of settings that configure the Search Nodes for your cluster. Each entry describes one region or, when `shardId` is present, one shard in one region.
                     items:
                         $ref: '#/components/schemas/ApiSearchDeploymentEffectiveSpecView'
                     readOnly: true
@@ -4300,6 +4319,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -5126,6 +5154,12 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your cluster will be Atlas INFINITE or CORE. You can set it only when you create the cluster, or when you upgrade a Free or Flex cluster to a dedicated cluster. This value is immutable once the dedicated cluster exists; attempting to change it on an update request returns an error.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 diskWarmingMode:
                     default: FULLY_WARMED
                     description: Disk warming mode selection.
@@ -5135,6 +5169,13 @@ components:
                     externalDocs:
                         description: Reduce Secondary Disk Warming Impact
                         url: https://docs.atlas.mongodb.com/reference/replica-set-tags/#reduce-secondary-disk-warming-impact
+                    type: string
+                effectiveDatabaseEdition:
+                    description: 'Available in Public Preview: Field that represents whether your cluster is Atlas INFINITE or CORE. This is read-only and always returned in the response. It reflects the actual cluster state. This value matches `databaseEdition` if it was set, otherwise it reflects the default database edition assigned to the cluster.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    readOnly: true
                     type: string
                 effectiveReplicationSpecs:
                     description: List of settings that represent the actual cluster state. This is read-only and always returned in the response. It reflects the current cluster configuration, which may differ from `replicationSpecs` due to system-managed changes.
@@ -7458,6 +7499,7 @@ components:
                     - M140_GEN_2
                     - M200_GEN_2
                     - M300_GEN_2
+                    - M700_GEN_2
                     - R40_GEN_2
                     - R50_GEN_2
                     - R60_GEN_2
@@ -7528,6 +7570,7 @@ components:
                     - M140_GEN_2
                     - M200_GEN_2
                     - M300_GEN_2
+                    - M700_GEN_2
                     - R40_GEN_2
                     - R50_GEN_2
                     - R60_GEN_2
@@ -7653,6 +7696,7 @@ components:
                 - CREDIT_PULLED_FWD
                 - CREDIT_END_DATE_MODIFIED
                 - PROMO_CODE_APPLIED
+                - PAYMENT_METHOD_DEACTIVATED
                 - PAYMENT_FORGIVEN
                 - REFUND_ISSUED
                 - ACCOUNT_DOWNGRADED
@@ -8826,6 +8870,7 @@ components:
                             - M140_GEN_2
                             - M200_GEN_2
                             - M300_GEN_2
+                            - M700_GEN_2
                             - R40_GEN_2
                             - R50_GEN_2
                             - R60_GEN_2
@@ -10162,6 +10207,15 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
+                    readOnly: true
+                    type: string
                 status:
                     description: State of this alert at the time you requested its details. TRACKING indicates the alert condition exists but has not persisted for the minimum notification delay. OPEN indicates the alert condition currently exists. CLOSED indicates the alert condition has been resolved.
                     enum:
@@ -10365,6 +10419,12 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your cluster will be Atlas INFINITE or CORE. You can set it only when you create the cluster, or when you upgrade a Free or Flex cluster to a dedicated cluster. This value is immutable once the dedicated cluster exists; attempting to change it on an update request returns an error.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 diskWarmingMode:
                     default: FULLY_WARMED
                     description: Disk warming mode selection.
@@ -10374,6 +10434,13 @@ components:
                     externalDocs:
                         description: Reduce Secondary Disk Warming Impact
                         url: https://docs.atlas.mongodb.com/reference/replica-set-tags/#reduce-secondary-disk-warming-impact
+                    type: string
+                effectiveDatabaseEdition:
+                    description: 'Available in Public Preview: Field that represents whether your cluster is Atlas INFINITE or CORE. This is read-only and always returned in the response. It reflects the actual cluster state. This value matches `databaseEdition` if it was set, otherwise it reflects the default database edition assigned to the cluster.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    readOnly: true
                     type: string
                 effectiveReplicationSpecs:
                     description: List of settings that represent the actual cluster state. This is read-only and always returned in the response. It reflects the current cluster configuration, which may differ from `replicationSpecs` due to system-managed changes.
@@ -11897,8 +11964,6 @@ components:
                             - Backup
                             - Data Transfer
                             - BI Connector
-                            - DSC Compute
-                            - DSC Storage
                             - Premium Features
                             - Atlas Data Federation
                             - Atlas Stream Processing
@@ -12133,6 +12198,15 @@ components:
                         - AWS
                         - AZURE
                         - GCP
+                    type: string
+            type: object
+        CreateEphemeralClusterRequest:
+            description: Create an Atlas Ephemeral cluster.
+            properties:
+                clusterName:
+                    description: Human-readable label that identifies the Ephemeral cluster. Defaults to `Cluster0`.
+                    nullable: true
+                    pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
                     type: string
             type: object
         CreateGCPEndpointGroupRequest:
@@ -12951,6 +13025,7 @@ components:
                 - properties:
                     clusterName:
                         description: Human-readable label of the MongoDB Cloud cluster on which the store is based.
+                        pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]*$
                         type: string
                     projectId:
                         description: Unique 24-hexadecimal digit string that identifies the project.
@@ -13729,6 +13804,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -15167,6 +15251,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -17883,6 +17976,10 @@ components:
                     description: Usage count (since last restart) of index.
                     format: int64
                     type: integer
+                collation:
+                    additionalProperties: true
+                    description: Collation this index was built with. An index only serves a query that runs with the same collation. Absent when the index uses the default (simple) collation.
+                    type: object
                 index:
                     description: List that contains documents that specify a key in the index and its sort order.
                     items:
@@ -18381,6 +18478,62 @@ components:
             required:
                 - content
                 - status
+            type: object
+        EphemeralClusterCreated:
+            description: Details for the Atlas Ephemeral cluster that was created.
+            properties:
+                claimUrl:
+                    description: Unique URL for claiming this Ephemeral cluster. Redirects to the Atlas sign-in or registration page, where a user signs in or creates an account to claim the cluster. Valid for 7 days after the cluster is created.
+                    format: uri
+                    type: string
+                clusterId:
+                    description: Unique identifier of the Ephemeral cluster. Use this ID to retrieve the cluster's status and details in a GET request.
+                    type: string
+                connectionString:
+                    description: Connection string that uses the `mongodb+srv://` protocol to connect to the Ephemeral cluster. This string includes the unredacted SCRAM credentials (username and password) for an automatically generated database user that Atlas grants the built-in `readWriteAnyDatabase` role.
+                    type: string
+                expiresAt:
+                    description: Date and time when the cluster will be paused and no longer accessible until it is claimed. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    format: date-time
+                    type: string
+                status:
+                    description: Status of the Ephemeral cluster.
+                    enum:
+                        - ACTIVE
+                        - PROVISIONING
+                    type: string
+                termsOfService:
+                    description: Notice that by using this API, you agree to MongoDB's Cloud Terms of Service at <https://www.mongodb.com/legal/terms-and-conditions/cloud> and Privacy Policy at <https://www.mongodb.com/legal/privacy/privacy-policy>.
+                    type: string
+            type: object
+        EphemeralClusterStatusResponse:
+            description: Current status and details of an ephemeral Atlas cluster.
+            properties:
+                claimUrl:
+                    description: Unique URL for claiming this Ephemeral cluster. Redirects to the Atlas sign-in or registration page, where a user signs in or creates an account to claim the cluster. Valid for 7 days after the cluster is created.
+                    format: uri
+                    type: string
+                clusterId:
+                    description: Unique identifier of the Ephemeral cluster. Use this ID to retrieve the cluster's status and details in a GET request.
+                    type: string
+                connectionString:
+                    description: Connection string that uses the `mongodb+srv://` protocol to connect to the Ephemeral cluster. This string includes the SCRAM username of an automatically generated database user, but replaces the password with a placeholder. Atlas returns the password only in the create response.
+                    nullable: true
+                    type: string
+                expiresAt:
+                    description: Date and time when the cluster will be paused and no longer accessible until it is claimed. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    format: date-time
+                    type: string
+                status:
+                    description: Status of the Ephemeral cluster.
+                    enum:
+                        - PROVISIONING
+                        - ACTIVE
+                        - PAUSED
+                    type: string
+                termsOfService:
+                    description: Notice that by using this API, you agree to MongoDB's Cloud Terms of Service at <https://www.mongodb.com/legal/terms-and-conditions/cloud> and Privacy Policy at <https://www.mongodb.com/legal/privacy/privacy-policy>.
+                    type: string
             type: object
         EventSeverity:
             description: Severity of the event.
@@ -18929,6 +19082,7 @@ components:
                     - SERVERLESS_UPGRADE_TO_DEDICATED_SUCCESSFUL
                     - SERVERLESS_UPGRADE_TO_DEDICATED_FAILED
                     - CLUSTER_FORCE_RECONFIG_REQUESTED
+                    - SLS_LOG_AND_MONGOD_NODES_RECREATION_REQUESTED
                     - AGENT_FORCE_RESTART_REQUESTED
                     - CLUSTER_RESET_FORCE_RECONFIG_REQUESTED
                     - CLUSTER_FORCE_PAUSE_REQUESTED
@@ -19023,6 +19177,7 @@ components:
                     - MONGOTUNE_WRITE_BLOCK_POLICY_INELIGIBLE
                     - PREDICTIVE_AUTOSCALING_ENABLED
                     - PREDICTIVE_AUTOSCALING_DISABLED
+                    - ADAPTIVE_SETTINGS_LOAD_SHEDDING_UPDATED
                     - SHADOW_CLUSTER_CREATE_EXPOSURE
                     - SHADOW_CLUSTER_DELETE_EXPOSURE
                     - SHADOW_CLUSTER_RECORDING_STATUS_UPDATE
@@ -19384,6 +19539,7 @@ components:
                     - CREDIT_PULLED_FWD
                     - CREDIT_END_DATE_MODIFIED
                     - PROMO_CODE_APPLIED
+                    - PAYMENT_METHOD_DEACTIVATED
                     - PAYMENT_FORGIVEN
                     - REFUND_ISSUED
                     - ACCOUNT_DOWNGRADED
@@ -19514,6 +19670,9 @@ components:
                     - SHADOW_CLUSTER_ORG_OPT_IN
                     - SHADOW_CLUSTER_ORG_OPT_OUT
                     - ATLAS_MAINTENANCE_FLEET_ACTIVE_WAVE_CLOSED_BY_ADMIN
+                    - MAINTENANCE_WAVE_ASSIGNMENT_ADDED
+                    - MAINTENANCE_WAVE_ASSIGNMENT_MODIFIED
+                    - MAINTENANCE_WAVE_ASSIGNMENT_REMOVED
                   title: Atlas Audit Types
                   type: string
                 - enum:
@@ -20985,6 +21144,12 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your tenant cluster will be upgraded to Atlas INFINITE or CORE.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 groupId:
                     description: Unique 24-hexadecimal character string that identifies the project.
                     example: 32b6e34b3d91647abb20e7b8
@@ -21061,6 +21226,12 @@ components:
         FlexClusterDescriptionCreate20241113:
             description: Settings that you can specify when you create a flex cluster.
             properties:
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your tenant cluster will be upgraded to Atlas INFINITE or CORE.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
                     externalDocs:
@@ -21097,6 +21268,12 @@ components:
         FlexClusterDescriptionUpdate20241113:
             description: Settings that you can specify when you update a flex cluster.
             properties:
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your tenant cluster will be upgraded to Atlas INFINITE or CORE.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
                     externalDocs:
@@ -21362,6 +21539,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -22189,6 +22375,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -22229,6 +22416,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -22402,6 +22590,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -22475,6 +22664,7 @@ components:
                         - M140_GEN_2
                         - M200_GEN_2
                         - M300_GEN_2
+                        - M700_GEN_2
                         - R40_GEN_2
                         - R50_GEN_2
                         - R60_GEN_2
@@ -23584,7 +23774,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -23696,6 +23886,12 @@ components:
                         $ref: '#/components/schemas/ServiceAccountSecret'
                     type: array
                     uniqueItems: true
+                systemManaged:
+                    description: Indicates whether the Service Account is system managed.
+                    readOnly: true
+                    type: boolean
+            required:
+                - systemManaged
             type: object
         GroupServiceAccountRequest:
             properties:
@@ -24202,6 +24398,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -24732,6 +24937,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -26348,6 +26562,12 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your cluster will be Atlas INFINITE or CORE. This field applies only to flex and shared clusters. You can set it only when you create the cluster, or when you upgrade a flex cluster to a dedicated cluster. This value is immutable once the dedicated cluster exists; attempting to change it on an update request returns an error.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 deleteAfterCreationHours:
                     description: |-
                         Number of hours after cluster creation that this cluster will be automatically deleted.
@@ -26388,6 +26608,13 @@ components:
                     externalDocs:
                         description: Reduce Secondary Disk Warming Impact
                         url: https://docs.atlas.mongodb.com/reference/replica-set-tags/#reduce-secondary-disk-warming-impact
+                    type: string
+                effectiveDatabaseEdition:
+                    description: 'Available in Public Preview: Field that represents whether your cluster is Atlas INFINITE or CORE. This field applies only to flex and shared clusters. This is read-only and always returned in the response. It reflects the actual cluster state. This value matches `databaseEdition` if it was set, otherwise it reflects the default database edition assigned to the cluster.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    readOnly: true
                     type: string
                 encryptionAtRestProvider:
                     description: 'Cloud service provider that manages your customer keys to provide an additional layer of encryption at rest for the cluster. To enable customer key management for encryption at rest, the cluster `replicationSpecs[n].regionConfigs[m].{type}Specs.instanceSize` setting must be `M10` or higher and `"backupEnabled" : false` or omitted entirely.'
@@ -26668,6 +26895,12 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                databaseEdition:
+                    description: 'Available in Public Preview: Optional field that indicates whether your cluster will be Atlas INFINITE or CORE. This field applies only to flex and shared clusters. You can set it only when you create the cluster, or when you upgrade a flex cluster to a dedicated cluster. This value is immutable once the dedicated cluster exists; attempting to change it on an update request returns an error.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    type: string
                 deleteAfterCreationHours:
                     description: |-
                         Number of hours after cluster creation that this cluster will be automatically deleted.
@@ -26708,6 +26941,13 @@ components:
                     externalDocs:
                         description: Reduce Secondary Disk Warming Impact
                         url: https://docs.atlas.mongodb.com/reference/replica-set-tags/#reduce-secondary-disk-warming-impact
+                    type: string
+                effectiveDatabaseEdition:
+                    description: 'Available in Public Preview: Field that represents whether your cluster is Atlas INFINITE or CORE. This field applies only to flex and shared clusters. This is read-only and always returned in the response. It reflects the actual cluster state. This value matches `databaseEdition` if it was set, otherwise it reflects the default database edition assigned to the cluster.'
+                    enum:
+                        - CORE
+                        - INFINITE
+                    readOnly: true
                     type: string
                 encryptionAtRestProvider:
                     description: 'Cloud service provider that manages your customer keys to provide an additional layer of encryption at rest for the cluster. To enable customer key management for encryption at rest, the cluster `replicationSpecs[n].regionConfigs[m].{type}Specs.instanceSize` setting must be `M10` or higher and `"backupEnabled" : false` or omitted entirely.'
@@ -27314,6 +27554,7 @@ components:
                             - MONGOS
                             - MONGOD_AUDIT
                             - MONGOS_AUDIT
+                            - EVENTS
                         type: string
                     maxItems: 10
                     type: array
@@ -27367,6 +27608,7 @@ components:
                             - MONGOS
                             - MONGOD_AUDIT
                             - MONGOS_AUDIT
+                            - EVENTS
                         type: string
                     maxItems: 10
                     type: array
@@ -28605,9 +28847,10 @@ components:
                         - CUMULATIVE
                     type: string
                 authType:
-                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used.
+                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used. `OAUTH2` acquires a bearer token from an OAuth 2.0 token endpoint using the `oauth` field.
                     enum:
                         - HEADER
+                        - OAUTH2
                     type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL. Must use HTTPS.
@@ -28639,10 +28882,13 @@ components:
                     minItems: 1
                     type: array
                     uniqueItems: true
+                oauth:
+                    $ref: '#/components/schemas/OAuthConfigRequest'
                 providerType:
                     description: The provider type for the metric integration. Identifies the third-party service provider.
                     enum:
                         - CUSTOM
+                        - DATADOG
                         - DYNATRACE
                         - NEW_RELIC
                     type: string
@@ -28668,6 +28914,7 @@ components:
                     description: Authentication method the integration uses when exporting metrics to the endpoint.
                     enum:
                         - HEADER
+                        - OAUTH2
                     type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL.
@@ -28707,10 +28954,13 @@ components:
                     minItems: 1
                     type: array
                     uniqueItems: true
+                oauth:
+                    $ref: '#/components/schemas/OAuthConfigResponse'
                 providerType:
                     description: The provider type for the metric integration. Identifies the third-party service provider.
                     enum:
                         - CUSTOM
+                        - DATADOG
                         - DYNATRACE
                         - NEW_RELIC
                     type: string
@@ -28725,7 +28975,7 @@ components:
             title: Metric Integration Response
             type: object
         MetricIntegrationUpdateRequest:
-            description: Request schema for updating a metric integration.
+            description: Request schema for updating a metric integration. Omitted OAuth fields keep their stored values. An explicit null, an empty `scopes` array, or an empty `tokenRequestParams` object clears that field. Omitting `clientSecret` keeps the stored secret.
             properties:
                 aggregationTemporality:
                     description: The temporality to send to the metric integration.
@@ -28734,9 +28984,10 @@ components:
                         - CUMULATIVE
                     type: string
                 authType:
-                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used.
+                    description: Authentication method the integration uses when exporting metrics to the endpoint. `HEADER` authenticates with the static HTTP headers provided in the `headers` field, which must be set when this value is used. `OAUTH2` acquires a bearer token from an OAuth 2.0 token endpoint using the `oauth` field.
                     enum:
                         - HEADER
+                        - OAUTH2
                     type: string
                 endpoint:
                     description: OpenTelemetry collector endpoint URL. Must use HTTPS.
@@ -28768,10 +29019,13 @@ components:
                     minItems: 1
                     type: array
                     uniqueItems: true
+                oauth:
+                    $ref: '#/components/schemas/OAuthConfigRequest'
                 providerType:
                     description: The provider type for the metric integration. Identifies the third-party service provider.
                     enum:
                         - CUSTOM
+                        - DATADOG
                         - DYNATRACE
                         - NEW_RELIC
                     type: string
@@ -29432,6 +29686,7 @@ components:
                 - SERVERLESS_UPGRADE_TO_DEDICATED_SUCCESSFUL
                 - SERVERLESS_UPGRADE_TO_DEDICATED_FAILED
                 - CLUSTER_FORCE_RECONFIG_REQUESTED
+                - SLS_LOG_AND_MONGOD_NODES_RECREATION_REQUESTED
                 - AGENT_FORCE_RESTART_REQUESTED
                 - CLUSTER_RESET_FORCE_RECONFIG_REQUESTED
                 - CLUSTER_FORCE_PAUSE_REQUESTED
@@ -29526,6 +29781,7 @@ components:
                 - MONGOTUNE_WRITE_BLOCK_POLICY_INELIGIBLE
                 - PREDICTIVE_AUTOSCALING_ENABLED
                 - PREDICTIVE_AUTOSCALING_DISABLED
+                - ADAPTIVE_SETTINGS_LOAD_SHEDDING_UPDATED
                 - SHADOW_CLUSTER_CREATE_EXPOSURE
                 - SHADOW_CLUSTER_DELETE_EXPOSURE
                 - SHADOW_CLUSTER_RECORDING_STATUS_UPDATE
@@ -29562,6 +29818,9 @@ components:
                 - SHADOW_CLUSTER_ORG_OPT_IN
                 - SHADOW_CLUSTER_ORG_OPT_OUT
                 - ATLAS_MAINTENANCE_FLEET_ACTIVE_WAVE_CLOSED_BY_ADMIN
+                - MAINTENANCE_WAVE_ASSIGNMENT_ADDED
+                - MAINTENANCE_WAVE_ASSIGNMENT_MODIFIED
+                - MAINTENANCE_WAVE_ASSIGNMENT_REMOVED
             example: ORG_LIMIT_UPDATED
             title: Atlas Audit Types
             type: string
@@ -30726,6 +30985,15 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
+                    readOnly: true
+                    type: string
                 status:
                     description: State of this alert at the time you requested its details. TRACKING indicates the alert condition exists but has not persisted for the minimum notification delay. OPEN indicates the alert condition currently exists. CLOSED indicates the alert condition has been resolved.
                     enum:
@@ -30913,6 +31181,121 @@ components:
                     $ref: '#/components/schemas/NumberMetricUnits'
             readOnly: true
             title: Number Metric Value
+            type: object
+        OAuthConfigRequest:
+            description: OAuth 2.0 client credentials configuration. Required when `authType` is `OAUTH2`. Secrets are never returned.
+            properties:
+                clientAuthMethod:
+                    description: How the client authenticates to the token endpoint. `CLIENT_SECRET` sends a shared secret. `PRIVATE_KEY_JWT` signs a client assertion with an Atlas-generated, Atlas-managed key. Register the returned JWKS URL with your identity provider.
+                    enum:
+                        - CLIENT_SECRET
+                        - PRIVATE_KEY_JWT
+                    type: string
+                clientId:
+                    description: OAuth 2.0 client identifier registered with the token endpoint.
+                    example: atlas-otel
+                    maxLength: 2048
+                    type: string
+                clientSecret:
+                    description: Shared client secret. Required when `clientAuthMethod` is `CLIENT_SECRET`, and rejected for `PRIVATE_KEY_JWT`. Encrypted at rest and never returned.
+                    format: password
+                    type: string
+                    writeOnly: true
+                scopes:
+                    description: Optional OAuth 2.0 scopes requested on the token, sent as a space delimited `scope` parameter. Applies to both client authentication methods.
+                    items:
+                        maxLength: 256
+                        type: string
+                    maxItems: 20
+                    type: array
+                    uniqueItems: true
+                tokenEndpoint:
+                    description: OAuth 2.0 token endpoint URL. Must use HTTPS.
+                    example: https://idp.example.com/oauth2/token
+                    maxLength: 2048
+                    type: string
+                tokenRequestParams:
+                    additionalProperties:
+                        description: Optional provider-specific parameters added to the token request, for example a resource indicator. Applies to both client authentication methods.
+                        example: '{"resource":"https://otel.example.com/metrics"}'
+                        maxProperties: 10
+                        type: string
+                    description: Optional provider-specific parameters added to the token request, for example a resource indicator. Applies to both client authentication methods.
+                    example:
+                        resource: https://otel.example.com/metrics
+                    maxProperties: 10
+                    type: object
+            required:
+                - clientAuthMethod
+                - clientId
+                - tokenEndpoint
+            title: OAuth Config Request
+            type: object
+        OAuthConfigResponse:
+            description: OAuth 2.0 configuration returned for a metric integration. Secrets are never returned.
+            properties:
+                clientAuthMethod:
+                    description: How the client authenticates to the token endpoint.
+                    enum:
+                        - CLIENT_SECRET
+                        - PRIVATE_KEY_JWT
+                    type: string
+                clientId:
+                    description: OAuth 2.0 client identifier registered with the token endpoint.
+                    maxLength: 2048
+                    type: string
+                scopes:
+                    description: OAuth 2.0 scopes requested on the token.
+                    items:
+                        maxLength: 256
+                        type: string
+                    maxItems: 20
+                    type: array
+                    uniqueItems: true
+                signingKeyInfo:
+                    $ref: '#/components/schemas/OAuthSigningKeyInfo'
+                tokenEndpoint:
+                    description: OAuth 2.0 token endpoint URL.
+                    maxLength: 2048
+                    type: string
+                tokenRequestParams:
+                    additionalProperties:
+                        description: Provider-specific parameters added to the token request.
+                        maxProperties: 10
+                        type: string
+                    description: Provider-specific parameters added to the token request.
+                    maxProperties: 10
+                    type: object
+            required:
+                - clientAuthMethod
+                - clientId
+                - tokenEndpoint
+            title: OAuth Config Response
+            type: object
+        OAuthSigningKeyInfo:
+            description: Read-only metadata for the Atlas-managed signing key used by `PRIVATE_KEY_JWT`. Present only for that method. Register the `jwksUri` with your identity provider. Atlas rotates the underlying key without changing this URL.
+            properties:
+                algorithm:
+                    description: Signing algorithm of the Atlas-managed key.
+                    example: RS256
+                    readOnly: true
+                    type: string
+                createdAt:
+                    description: When the currently active signing key was created. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    format: date-time
+                    readOnly: true
+                    type: string
+                jwksUri:
+                    description: Public JWKS URL serving this integration's signing keys. Fixed for the lifetime of the integration.
+                    example: https://cloud.mongodb.com/api/keys/clientJwks/9f6c2a1e-8b3d-4e7a-a2c5-1f0e9d41d000
+                    readOnly: true
+                    type: string
+                kid:
+                    description: Key ID stamped on client assertions, the `SHA-1` thumbprint of the key certificate in uppercase hexadecimal. Changes when Atlas rotates the key.
+                    readOnly: true
+                    type: string
+            readOnly: true
+            title: OAuth Signing Key Info
             type: object
         ObjectStoragePrivateEndpointRequest:
             properties:
@@ -32437,7 +32820,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -32513,7 +32896,13 @@ components:
                         $ref: '#/components/schemas/ServiceAccountSecret'
                     type: array
                     uniqueItems: true
+                systemManaged:
+                    description: Indicates whether the Service Account is system managed.
+                    readOnly: true
+                    type: boolean
             readOnly: true
+            required:
+                - systemManaged
             type: object
         OrgServiceAccountRequest:
             description: Organization Service Account that Atlas creates for this organization. If omitted, Atlas doesn't create an organization Service Account for this organization. If specified, this object requires all body parameters. Note that API Keys cannot be specified in the same request.
@@ -33218,7 +33607,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33244,7 +33633,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33270,7 +33659,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33296,7 +33685,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33322,7 +33711,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33348,7 +33737,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33374,7 +33763,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33400,7 +33789,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33427,7 +33816,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33453,7 +33842,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33479,7 +33868,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33505,7 +33894,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33531,7 +33920,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33557,7 +33946,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33583,7 +33972,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33609,7 +33998,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33635,7 +34024,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33661,7 +34050,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33687,7 +34076,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33713,7 +34102,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33739,7 +34128,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33765,7 +34154,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33791,7 +34180,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33817,7 +34206,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33843,7 +34232,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33869,7 +34258,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33895,7 +34284,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33921,7 +34310,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33947,7 +34336,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -33973,7 +34362,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34000,7 +34389,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34027,7 +34416,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34053,7 +34442,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34079,7 +34468,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34105,7 +34494,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34131,7 +34520,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34157,7 +34546,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34183,7 +34572,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34209,7 +34598,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34236,7 +34625,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34263,7 +34652,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34289,7 +34678,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34316,7 +34705,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34342,7 +34731,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34369,7 +34758,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34395,7 +34784,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34421,7 +34810,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34447,7 +34836,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34473,7 +34862,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34499,7 +34888,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34526,7 +34915,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34552,7 +34941,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34578,7 +34967,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34604,7 +34993,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34630,7 +35019,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34656,7 +35045,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34682,7 +35071,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34708,7 +35097,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34734,7 +35123,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34760,7 +35149,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34786,7 +35175,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34812,7 +35201,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34838,7 +35227,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34864,7 +35253,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34891,7 +35280,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34917,7 +35306,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34943,7 +35332,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34970,7 +35359,33 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
+        PaginatedPrivateEndpointConnectionStringResponse:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/PrivateEndpointConnectionStringResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -34996,7 +35411,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35022,7 +35437,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35049,7 +35464,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35076,7 +35491,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35102,7 +35517,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35129,7 +35544,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35155,7 +35570,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35181,7 +35596,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35208,7 +35623,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35234,7 +35649,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35260,7 +35675,33 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            required:
+                - results
+            type: object
+        PaginatedStreamsWorkspacePrivateEndpointResponse:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/StreamsWorkspacePrivateEndpointResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35286,7 +35727,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35312,7 +35753,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35338,7 +35779,7 @@ components:
                     readOnly: true
                     type: array
                 totalCount:
-                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    description: Total number of documents available. When `includeCount` is set to `false`, MongoDB Cloud may omit this value or return it when the count is available without additional calculation. The total number is an estimate and may not be exact.
                     format: int32
                     minimum: 0
                     readOnly: true
@@ -35408,6 +35849,11 @@ components:
                     format: double
                     readOnly: true
                     type: number
+                collation:
+                    additionalProperties: true
+                    description: Collation the queries behind this suggestion run with. An index only serves a query when the two share a collation, so an index created from this suggestion must be created with it. Absent when those queries use the default (simple) collation.
+                    readOnly: true
+                    type: object
                 id:
                     description: Unique 24-hexadecimal digit string that identifies this index.
                     example: 32b6e34b3d91647abb20e7b8
@@ -35476,13 +35922,19 @@ components:
         PerformanceAdvisorOperationView:
             properties:
                 predicates:
-                    description: List that contains the search criteria that the query uses. To use the values in key-value pairs in these predicates requires **Project Data Access Read Only** permissions or greater. Otherwise, MongoDB Cloud redacts these values.
+                    description: List that contains the search criteria that the query uses. To use the values in key-value pairs in these predicates requires **Project Observability Viewer** or **Project Data Access Read Only** permissions or greater. Otherwise, MongoDB Cloud redacts these values.
                     items:
-                        description: List that contains the search criteria that the query uses. To use the values in key-value pairs in these predicates requires **Project Data Access Read Only** permissions or greater. Otherwise, MongoDB Cloud redacts these values.
+                        description: List that contains the search criteria that the query uses. To use the values in key-value pairs in these predicates requires **Project Observability Viewer** or **Project Data Access Read Only** permissions or greater. Otherwise, MongoDB Cloud redacts these values.
                         readOnly: true
                         type: object
                     readOnly: true
                     type: array
+                raw:
+                    description: Opaque serialized raw slow query log line or query shape for the query shape to be improved with index suggestions. The format isn't stable, so don't parse this value. Accessing this value requires **Project Observability Viewer** or **Project Data Access Read Only** permissions or greater. Otherwise, MongoDB Cloud returns `null`.
+                    example: '{"t":{"$date":"2026-08-17T22:04:15.133+00:00"},"s":"I","c":"COMMAND","id":51803,"ctx":"conn0","msg":"Slow query","attr":{"type":"command","ns":"<db>.<collection>","command":{"find":"<collection>","filter":{"<field>":"<value>"},"$db":"<db>"},"planSummary":"COLLSCAN","keysExamined":0,"docsExamined":10000,"nreturned":1,"remote":"<client>","durationMillis":108}}'
+                    nullable: true
+                    readOnly: true
+                    type: string
                 stats:
                     $ref: '#/components/schemas/PerformanceAdvisorOpStats'
             type: object
@@ -35697,6 +36149,91 @@ components:
                 onBehalfOf:
                     $ref: '#/components/schemas/Principal'
             readOnly: true
+            type: object
+        PrivateEndpointConnectionStringResponse:
+            description: Private endpoint connection string for one cluster.
+            properties:
+                connectionString:
+                    description: Private endpoint-aware connection string that uses the `mongodb://` protocol to connect to this cluster through the selected private endpoints. MongoDB Cloud returns this value when `status` is `AVAILABLE`. After you submit an update, MongoDB Cloud continues to return the existing connection string until the updated connection string becomes available.
+                    maxLength: 2048
+                    readOnly: true
+                    type: string
+                connectionStringId:
+                    description: Unique 24-hexadecimal digit string that identifies this private endpoint connection string. This value is the `connectionStringId` path parameter of this resource's endpoints.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
+                createdAt:
+                    description: Date and time when MongoDB Cloud created this private endpoint connection string. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    format: date-time
+                    readOnly: true
+                    type: string
+                errorMessage:
+                    description: Error message that explains why this private endpoint connection string is in the `FAILED` state, including the remediation, for example when a selected endpoint was deleted mid-flight. Present only when `status` is `FAILED`.
+                    readOnly: true
+                    type: string
+                managementType:
+                    description: Party that manages this private endpoint connection string. MongoDB Cloud returns `SELF_MANAGED` for connection strings that you create and maintain through this resource, and `IMPORTED` for records that preserve the private endpoint connection strings that this cluster exposed before migration. You can delete an imported record but not update it.
+                    enum:
+                        - SELF_MANAGED
+                        - IMPORTED
+                    readOnly: true
+                    type: string
+                name:
+                    description: Human-readable label of at most 64 characters that identifies this private endpoint connection string. You can change this label without changing the connection string.
+                    example: reporting-vpc
+                    maxLength: 64
+                    type: string
+                optimizedModeEnabled:
+                    default: false
+                    description: Flag that indicates whether this private endpoint connection string uses the optimized load-balanced mode. This mode requires a sharded cluster and a private endpoint selection that satisfies the optimized connection string requirements.
+                    type: boolean
+                privateEndpointIds:
+                    description: Set of private endpoints that this connection string covers. MongoDB Cloud stores this set as a snapshot of your selection and never adds newly created private endpoints to it. The set accepts at most one private endpoint per cloud provider region, and can include private endpoints that the cluster does not use yet. Order is not significant and MongoDB Cloud rejects duplicate values.
+                    items:
+                        description: 'Unique string of at most 512 characters that identifies one private endpoint. The format depends on the cloud provider: for Amazon Web Services, this value is a private endpoint ID; for Azure, this value is a resource ID; for Google Cloud, this value is either the forwarding rule name of a port mapped Private Service Connect endpoint or the endpoint group name of a legacy Private Service Connect endpoint group.'
+                        maxLength: 512
+                        type: string
+                    maxItems: 50
+                    type: array
+                    uniqueItems: true
+                    x-xgen-array-semantic: set
+                selectiveMongosEnabled:
+                    default: false
+                    description: Flag that indicates whether this private endpoint connection string routes clients to a subset of the `mongos` processes of the cluster.
+                    type: boolean
+                slug:
+                    description: Short generated pin of at most 64 characters, unique per project. Present only when `managementType` is `SELF_MANAGED`. A self-managed connection string embeds this value in its DNS names, and its replica set horizon name is `cs-` plus this value.
+                    example: ztevkhxb
+                    maxLength: 64
+                    readOnly: true
+                    type: string
+                srvConnectionString:
+                    description: Private endpoint-aware connection string that uses the `mongodb+srv://` protocol to connect to this cluster through the selected private endpoints. MongoDB Cloud returns this value when `status` is `AVAILABLE`. After you submit an update, MongoDB Cloud continues to return the existing connection string until the updated connection string becomes available.
+                    maxLength: 2048
+                    readOnly: true
+                    type: string
+                status:
+                    description: State of this private endpoint connection string. MongoDB Cloud returns `PENDING` while it reconfigures the cluster, `AVAILABLE` once the connection string is usable, and `FAILED` when creation cannot complete.
+                    enum:
+                        - PENDING
+                        - AVAILABLE
+                        - FAILED
+                    readOnly: true
+                    type: string
+                updatedAt:
+                    description: Date and time when MongoDB Cloud last updated this private endpoint connection string. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    format: date-time
+                    readOnly: true
+                    type: string
+            required:
+                - connectionStringId
+                - managementType
+                - name
+                - privateEndpointIds
+                - status
+            title: Private Endpoint Connection String
             type: object
         PrivateEndpointHostname:
             description: Set of Private endpoint and hostnames.
@@ -36641,6 +37178,15 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
+                    readOnly: true
+                    type: string
                 status:
                     description: State of this alert at the time you requested its details. TRACKING indicates the alert condition exists but has not persisted for the minimum notification delay. OPEN indicates the alert condition currently exists. CLOSED indicates the alert condition has been resolved.
                     enum:
@@ -37050,6 +37596,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -40297,6 +40852,16 @@ components:
                     type: string
             readOnly: true
             type: object
+        StorageConfig:
+            nullable: true
+            properties:
+                shardSizeLimitGB:
+                    description: 'Available in Public Preview: Maximum data size that MongoDB Cloud allows each shard of this cluster to reach, expressed in gigabytes. MongoDB Cloud rejects writes to a shard that reaches the limit that it enforces. In `replicationSpecs`, this field reports the limit that you configured, and MongoDB Cloud omits it when you never configured one. In `effectiveReplicationSpecs`, this field reports the limit that MongoDB Cloud enforces: usually the limit that you configured, otherwise the default limit that MongoDB Cloud assigns when it creates or updates the cluster. This value may differ from the limit that you configured due to system-managed changes. This limit applies to every shard of the cluster; set the same value on each region configuration''s `autoScaling`, as MongoDB Cloud rejects requests that specify differing values. You can set this only on Atlas INFINITE clusters: MongoDB Cloud rejects any request that names this field, including as `null`, for a cluster or node type that doesn''t support it. In a request that includes `replicationSpecs`, omitting `shardSizeLimitGB` or sending it as `null` clears the limit. Omitting `replicationSpecs` preserves it.'
+                    format: int32
+                    minimum: 1
+                    nullable: true
+                    type: integer
+            type: object
         StreamConfig:
             description: Configuration options for an Atlas Stream Processing Workspace.
             nullable: true
@@ -40498,6 +41063,15 @@ components:
                         description: ISO 8601
                         url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
+                    readOnly: true
+                    type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
                     readOnly: true
                     type: string
                 status:
@@ -42035,6 +42609,61 @@ components:
                 streamConfig:
                     $ref: '#/components/schemas/StreamConfig'
             type: object
+        StreamsWorkspacePrivateEndpointRequest:
+            description: Customer VPC endpoint to register for inbound private connectivity to Atlas Stream Processing.
+            properties:
+                customerDnsName:
+                    description: DNS name of the customer's VPC endpoint.
+                    example: vpce-0abc123def4567890-abc123.us-east-1.vpce.amazonaws.com
+                    type: string
+                id:
+                    description: Unique identifier of the customer's VPC endpoint.
+                    example: vpce-0abc123def4567890
+                    type: string
+                region:
+                    description: Human-readable label identifying the region of the customer's VPC endpoint.
+                    example: US_EAST_1
+                    type: string
+            required:
+                - customerDnsName
+                - id
+                - region
+            type: object
+        StreamsWorkspacePrivateEndpointResponse:
+            description: Customer VPC endpoint registered for inbound private connectivity to Atlas Stream Processing.
+            properties:
+                customerDnsName:
+                    description: DNS name of the customer's VPC endpoint.
+                    example: vpce-0abc123def4567890-abc123.us-east-1.vpce.amazonaws.com
+                    type: string
+                endpointServiceName:
+                    description: Name of the Atlas endpoint service the customer's VPC endpoint connects to. Absent when no endpoint service is configured for the endpoint's region.
+                    example: com.amazonaws.vpce.us-east-1.vpce-svc-0123456789abcdef0
+                    readOnly: true
+                    type: string
+                id:
+                    description: Unique identifier of the customer's VPC endpoint.
+                    example: vpce-0abc123def4567890
+                    type: string
+                provider:
+                    description: Cloud provider hosting the customer's VPC endpoint.
+                    example: AWS
+                    readOnly: true
+                    type: string
+                region:
+                    description: Human-readable label identifying the region of the customer's VPC endpoint.
+                    example: US_EAST_1
+                    type: string
+                status:
+                    description: Status of the endpoint registration.
+                    enum:
+                        - PENDING
+                        - OK
+                        - FAILED
+                        - DELETING
+                    readOnly: true
+                    type: string
+            type: object
         SwapUsageFreeDataMetricThresholdView:
             properties:
                 metricName:
@@ -43242,6 +43871,15 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                severity:
+                    description: Severity of the event.
+                    enum:
+                        - INFO
+                        - WARNING
+                        - ERROR
+                        - CRITICAL
+                    readOnly: true
+                    type: string
                 status:
                     description: State of this alert at the time you requested its details. TRACKING indicates the alert condition exists but has not persisted for the minimum notification delay. OPEN indicates the alert condition currently exists. CLOSED indicates the alert condition has been resolved.
                     enum:
@@ -43728,8 +44366,6 @@ components:
                             - Backup
                             - Data Transfer
                             - BI Connector
-                            - DSC Compute
-                            - DSC Storage
                             - Premium Features
                             - Atlas Data Federation
                             - Atlas Stream Processing
@@ -45361,7 +45997,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: df88910a7b3361f822b6b9af7f7b2bf01e61bbf0
+    x-xgen-sha: f88f6e88f284c80c4087f664a22c89de8278661f
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -46913,6 +47549,8 @@ paths:
                             $ref: '#/components/headers/HeaderRateLimitLimit'
                         RateLimit-Remaining:
                             $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
                 "401":
                     $ref: '#/components/responses/unauthorized'
                 "403":
@@ -54169,6 +54807,8 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "404":
                     $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
                 "429":
                     $ref: '#/components/responses/tooManyRequests'
                 "500":
@@ -54600,6 +55240,175 @@ paths:
                 - Project Read Only
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/listGroupClusterPerformanceAdvisorSuggestedIndexes
             x-xgen-operation-id-override: listClusterSuggestedIndexes
+    /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/privateEndpointConnectionStrings:
+        get:
+            description: Returns all private endpoint connection strings for the specified cluster.
+            operationId: listGroupClusterPrivateEndpointConnectionStrings
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - description: Human-readable label that identifies the cluster.
+                  in: path
+                  name: clusterName
+                  required: true
+                  schema:
+                    type: string
+                - description: Filter records by lifecycle status.
+                  in: query
+                  name: status
+                  schema:
+                    enum:
+                        - PENDING
+                        - AVAILABLE
+                        - FAILED
+                    type: string
+                - description: Filter records by management type.
+                  in: query
+                  name: managementType
+                  schema:
+                    enum:
+                        - SELF_MANAGED
+                        - IMPORTED
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedPrivateEndpointConnectionStringResponse'
+                            x-xgen-preview:
+                                name: private-endpoint-connection-strings
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Private Endpoint Connection Strings for One Cluster
+            tags:
+                - Clusters
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listGroupClusterPrivateEndpointConnectionStrings
+            x-xgen-operation-id-override: listEndpointConnectionStrings
+    /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/privateEndpointConnectionStrings/{connectionStringId}:
+        delete:
+            description: Deletes one private endpoint connection string from the specified cluster.
+            operationId: deleteGroupClusterPrivateEndpointConnectionString
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/pretty'
+                - description: Human-readable label that identifies the cluster.
+                  in: path
+                  name: clusterName
+                  required: true
+                  schema:
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies this private endpoint connection string.
+                  in: path
+                  name: connectionStringId
+                  required: true
+                  schema:
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            x-xgen-preview:
+                                name: private-endpoint-connection-strings
+                            x-xgen-version: preview
+                    description: No Content
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One Private Endpoint Connection String from One Cluster
+            tags:
+                - Clusters
+            x-rolesRequirements:
+                - Project Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/deleteGroupClusterPrivateEndpointConnectionString
+            x-xgen-operation-id-override: deleteEndpointConnectionString
+        get:
+            description: Returns one private endpoint connection string from the specified cluster. This endpoint treats `deleteRequested = true` records as not found.
+            operationId: getGroupClusterPrivateEndpointConnectionString
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/pretty'
+                - description: Human-readable label that identifies the cluster.
+                  in: path
+                  name: clusterName
+                  required: true
+                  schema:
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies this private endpoint connection string.
+                  in: path
+                  name: connectionStringId
+                  required: true
+                  schema:
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PrivateEndpointConnectionStringResponse'
+                            x-xgen-preview:
+                                name: private-endpoint-connection-strings
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Private Endpoint Connection String for One Cluster
+            tags:
+                - Clusters
+            x-rolesRequirements:
+                - Project Read Only
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getGroupClusterPrivateEndpointConnectionString
+            x-xgen-operation-id-override: getEndpointConnectionString
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs:
         get:
             description: Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn't available for `M0` free clusters, `M2` and `M5` shared-tier clusters, flex clusters, or serverless clusters.
@@ -58413,7 +59222,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Database-Users/operation/listGroupDatabaseUsers
             x-xgen-operation-id-override: listDatabaseUsers
         post:
-            description: Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact Support.
+            description: Creates one database user in the specified project. This MongoDB Cloud supports a default limit of 100 and a maximum of 900 database users per project. If you require more than 900 database users on a project, contact Support.
             externalDocs:
                 description: Contact MongoDB Support
                 url: https://cloud.mongodb.com/support
@@ -61103,7 +61912,7 @@ paths:
                     | `atlas.project.deployment.clusters` | Limit on the number of clusters in this project | 25 | 100 |
                     | `atlas.project.deployment.nodesPerPrivateLinkRegion` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, `currentUsage` doesn't grow with the number of `mongos` — the load balancer is counted as a single addressable target regardless of how many `mongos` sit behind it. | 50 | 90 |
                     | `atlas.project.security.databaseAccess.customRoles` | Limit on the number of custom roles in this project | 100 | 1400 |
-                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 100 |
+                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 900 |
                     | `atlas.project.security.networkAccess.crossRegionEntries` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
                     | `atlas.project.security.networkAccess.entries` | Limit on the number of network access entries in this project | 200 | 20 |
                     | `dataFederation.bytesProcessed.query` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -61177,7 +61986,7 @@ paths:
                     | `atlas.project.deployment.clusters` | Limit on the number of clusters in this project | 25 | 100 |
                     | `atlas.project.deployment.nodesPerPrivateLinkRegion` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, `currentUsage` doesn't grow with the number of `mongos` — the load balancer is counted as a single addressable target regardless of how many `mongos` sit behind it. | 50 | 90 |
                     | `atlas.project.security.databaseAccess.customRoles` | Limit on the number of custom roles in this project | 100 | 1400 |
-                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 100 |
+                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 900 |
                     | `atlas.project.security.networkAccess.crossRegionEntries` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
                     | `atlas.project.security.networkAccess.entries` | Limit on the number of network access entries in this project | 200 | 20 |
                     | `dataFederation.bytesProcessed.query` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -61253,7 +62062,7 @@ paths:
                     | `atlas.project.deployment.clusters` | Limit on the number of clusters in this project | 25 | 100 |
                     | `atlas.project.deployment.nodesPerPrivateLinkRegion` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, `currentUsage` doesn't grow with the number of `mongos` — the load balancer is counted as a single addressable target regardless of how many `mongos` sit behind it. | 50 | 90 |
                     | `atlas.project.security.databaseAccess.customRoles` | Limit on the number of custom roles in this project | 100 | 1400 |
-                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 100 |
+                    | `atlas.project.security.databaseAccess.users` | Limit on the number of database users in this project | 100 | 900 |
                     | `atlas.project.security.networkAccess.crossRegionEntries` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
                     | `atlas.project.security.networkAccess.entries` | Limit on the number of network access entries in this project | 200 | 20 |
                     | `dataFederation.bytesProcessed.query` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -65115,6 +65924,17 @@ paths:
                             - TRANSACTIONS_STARTED
                             - CACHE_PRESSURE_PERCENTAGE
                             - INGRESS_QUEUE_WAIT_TIME
+                            - CONNECTION_RATE_LIMITING_OFFERED_CONNECTIONS
+                            - CONNECTION_RATE_LIMITING_SUCCESSFUL_CONNECTIONS
+                            - CONNECTION_RATE_LIMITING_REJECTED_CONNECTIONS
+                            - CONNECTION_RATE_LIMITING_INTERRUPTED_IN_QUEUE
+                            - CONNECTION_RATE_LIMITING_AVERAGE_TIME_QUEUED
+                            - OPERATION_RATE_LIMITING_OFFERED_OPERATIONS
+                            - OPERATION_RATE_LIMITING_SUCCESSFUL_OPERATIONS
+                            - OPERATION_RATE_LIMITING_REJECTED_OPERATIONS
+                            - OPERATION_RATE_LIMITING_QUEUED_OPERATIONS
+                            - OPERATION_RATE_LIMITING_CURRENT_QUEUE_DEPTH
+                            - OPERATION_RATE_LIMITING_QUEUE_TIME_AVG
                         type: string
                     maxItems: 10
                     minItems: 1
@@ -67591,7 +68411,11 @@ paths:
             tags:
                 - Streams
             x-rolesRequirements:
-                - Project Read Only
+                - Organization Stream Processing Admin
+                - Project Data Access Admin
+                - Project Data Access Read Only
+                - Project Data Access Read Write
+                - Project Stream Processing Manager
             x-xgen-changelog:
                 "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamConnection
@@ -69011,6 +69835,161 @@ paths:
                 - Project Stream Processing Manager
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/withGroupStreamSampleConnections
             x-xgen-operation-id-override: withStreamSampleConnections
+    /api/atlas/v2/groups/{groupId}/streamsWorkspacePrivateEndpoints:
+        get:
+            description: Returns all private endpoints registered for Atlas Stream Processing in the specified project.
+            operationId: listGroupStreamsWorkspacePrivateEndpoints
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedStreamsWorkspacePrivateEndpointResponse'
+                            x-xgen-preview:
+                                name: streams-workspace-private-endpoint
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Workspace Private Endpoints for Atlas Stream Processing
+            tags:
+                - Streams
+            x-rolesRequirements:
+                - Organization Stream Processing Admin
+                - Project Stream Processing Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listGroupStreamsWorkspacePrivateEndpoints
+            x-xgen-operation-id-override: listWorkspacePrivateEndpoints
+        post:
+            description: Registers one customer VPC endpoint for Atlas Stream Processing in the specified project.
+            operationId: createGroupStreamsWorkspacePrivateEndpoint
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/StreamsWorkspacePrivateEndpointRequest'
+                        x-xgen-preview:
+                            name: streams-workspace-private-endpoint
+                        x-xgen-version: preview
+                description: Customer VPC endpoint to register for Atlas Stream Processing.
+                required: true
+            responses:
+                "202":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            x-xgen-preview:
+                                name: streams-workspace-private-endpoint
+                            x-xgen-version: preview
+                    description: Accepted
+                    headers:
+                        Location:
+                            description: Relative URI of the registered workspace private endpoint, which reports the registration once it has been applied.
+                            schema:
+                                description: Relative URI of the workspace private endpoint.
+                                format: uri
+                                type: string
+                            style: simple
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create One Workspace Private Endpoint for Atlas Stream Processing
+            tags:
+                - Streams
+            x-rolesRequirements:
+                - Organization Stream Processing Admin
+                - Project Stream Processing Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createGroupStreamsWorkspacePrivateEndpoint
+            x-xgen-operation-id-override: createWorkspacePrivateEndpoint
+    /api/atlas/v2/groups/{groupId}/streamsWorkspacePrivateEndpoints/{endpointId}:
+        get:
+            description: Returns one private endpoint registered for Atlas Stream Processing in the specified project.
+            operationId: getGroupStreamsWorkspacePrivateEndpoint
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - description: Unique identifier of the customer's VPC endpoint.
+                  in: path
+                  name: endpointId
+                  required: true
+                  schema:
+                    example: vpce-0abc123def4567890
+                    pattern: ^vpce-[a-z0-9]{17}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/StreamsWorkspacePrivateEndpointResponse'
+                            x-xgen-preview:
+                                name: streams-workspace-private-endpoint
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Workspace Private Endpoint for Atlas Stream Processing
+            tags:
+                - Streams
+            x-rolesRequirements:
+                - Organization Stream Processing Admin
+                - Project Stream Processing Owner
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getGroupStreamsWorkspacePrivateEndpoint
+            x-xgen-operation-id-override: getWorkspacePrivateEndpoint
     /api/atlas/v2/groups/{groupId}/teams:
         get:
             description: Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier. All members of the team share the same project access.
@@ -75820,6 +76799,94 @@ paths:
                 - Root
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Root/operation/listControlPlaneIpAddresses
             x-xgen-operation-id-override: listControlPlaneAddresses
+    /api/atlas/v2/unauth/ephemeralClusters/{clusterId}:
+        get:
+            description: |-
+                Returns the details for one Atlas Ephemeral cluster.
+
+                To learn more about Ephemeral clusters, see [Create an Atlas Ephemeral Cluster](https://dochub.mongodb.org/core/create-ephemeral-cluster) in the MongoDB Atlas documentation.
+            operationId: getEphemeralCluster
+            parameters:
+                - description: Unique ID of the ephemeral cluster to look up.
+                  in: path
+                  name: clusterId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/EphemeralClusterStatusResponse'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: OK
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            security: []
+            summary: Return One Ephemeral Atlas Cluster
+            tags:
+                - Ephemeral Clusters
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Ephemeral-Clusters/operation/getEphemeralCluster
+    /api/atlas/v2/unauth/ephemeralClusters:create:
+        post:
+            description: |-
+                Creates an Atlas Ephemeral cluster and returns its connection and claim details.
+
+                An Ephemeral cluster is a temporary Free cluster that you can create and connect to without an Atlas account. Atlas pauses the cluster 2 days after creation and deletes it 7 days after creation unless you claim it to an Atlas account.
+
+                Claiming an Ephemeral cluster converts it into a standard Free cluster with no expiration date and moves it into a new or existing Atlas organization. Until you claim the cluster, you can read and write its data but can't perform administrative operations, such as scaling the cluster, adding database users, or changing network access.
+
+                Atlas deploys all Ephemeral clusters to AWS `us-east-1` and allows connections from any IP address (`0.0.0.0/0`). To learn more about Ephemeral clusters, see [Create an Atlas Ephemeral Cluster](https://dochub.mongodb.org/core/create-ephemeral-cluster) in the MongoDB Atlas documentation.
+            operationId: createEphemeralCluster
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/CreateEphemeralClusterRequest'
+                        x-xgen-preview:
+                            public: "true"
+                        x-xgen-version: preview
+                description: Ephemeral cluster to create. An empty body creates a cluster with the default name.
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/EphemeralClusterCreated'
+                            x-xgen-preview:
+                                public: "true"
+                            x-xgen-version: preview
+                    description: Created
+                    headers:
+                        RateLimit-Limit:
+                            $ref: '#/components/headers/HeaderRateLimitLimit'
+                        RateLimit-Remaining:
+                            $ref: '#/components/headers/HeaderRateLimitRemaining'
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "429":
+                    $ref: '#/components/responses/tooManyRequests'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            security: []
+            summary: Create One Ephemeral Atlas Cluster
+            tags:
+                - Ephemeral Clusters
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Ephemeral-Clusters/operation/createEphemeralCluster
     /api/atlas/v2/users:
         post:
             deprecated: true
@@ -76002,6 +77069,13 @@ tags:
       name: Database Users
     - description: Returns and edits the Encryption at Rest using Customer Key Management configuration. MongoDB Cloud encrypts all storage whether or not you use your own key management.
       name: Encryption at Rest using Customer Key Management
+    - description: |-
+        Create and return Atlas Ephemeral clusters. An Ephemeral cluster is a temporary Atlas Free cluster that you can claim within 7 days to convert into a standard Free cluster.
+
+        Use of this API, including any resources created through it, is governed by MongoDB’s [Cloud Terms of Service](https://www.mongodb.com/legal/terms-and-conditions/cloud) and [Privacy Policy](https://www.mongodb.com/legal/privacy/privacy-policy). By using this API to create an Ephemeral cluster, you agree to these terms.
+
+        To learn more about Ephemeral clusters, see [Create an Atlas Ephemeral Cluster](https://dochub.mongodb.org/core/create-ephemeral-cluster) in the MongoDB Atlas documentation.
+      name: Ephemeral Clusters
     - description: Returns events. This collection remains under revision and may change.
       name: Events
     - description: Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.

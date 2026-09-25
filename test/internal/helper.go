@@ -21,14 +21,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"math/big"
 	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -117,6 +120,7 @@ const (
 	deletingState = "DELETING"
 
 	maxRetryAttempts    = 10
+	maxTransientRetries = 3
 	sleepTimeInSeconds  = 30
 	clusterWatchTimeout = 30 * time.Minute // 30 minutes timeout for cluster watch operations
 
@@ -146,6 +150,78 @@ func RandInt(maximum int64) (*big.Int, error) {
 	return rand.Int(rand.Reader, big.NewInt(maximum))
 }
 
+// transientErrorSubstrings are failures the Atlas control plane recovers from on its
+// own: dropped connections to cloud-dev and 400s raised while a freshly created
+// replica set is still catching up. Retrying is safe because every call wrapped in
+// RunAndGetStdOutWithRetry is read-only or idempotent.
+var transientErrorSubstrings = []string{
+	"EOF",
+	"connection reset by peer",
+	"connection refused",
+	"i/o timeout",
+	"TLS handshake timeout",
+	"OPERATION_INVALID_MEMBER_REPLICATION_LAG",
+}
+
+// IsTransientError reports whether err is worth retrying.
+func IsTransientError(err error) bool {
+	if err == nil {
+		return false
+	}
+	for _, s := range transientErrorSubstrings {
+		if strings.Contains(err.Error(), s) {
+			return true
+		}
+	}
+	return false
+}
+
+// RunAndGetStdOutWithRetry behaves like RunAndGetStdOut but retries transient
+// failures. An exec.Cmd cannot be run twice, so each attempt runs a copy; any
+// Stdin is buffered up front and replayed, since the first run drains it.
+func RunAndGetStdOutWithRetry(cmd *exec.Cmd) ([]byte, error) {
+	var stdin []byte
+	if cmd.Stdin != nil {
+		var err error
+		if stdin, err = io.ReadAll(cmd.Stdin); err != nil {
+			return nil, fmt.Errorf("failed to buffer stdin for %s: %w", cmd.Path, err)
+		}
+	}
+
+	return runWithRetryOnTransientError(func() *exec.Cmd {
+		next := exec.Command(cmd.Path, cmd.Args[1:]...)
+		next.Env = cmd.Env
+		next.Dir = cmd.Dir
+		if stdin != nil {
+			next.Stdin = bytes.NewReader(stdin)
+		}
+		return next
+	})
+}
+
+// runWithRetryOnTransientError runs the command until it succeeds, fails with a
+// non-transient error, or runs out of attempts. newCmd must return a fresh
+// *exec.Cmd on every call. Prefer RunAndGetStdOutWithRetry; this exists for the
+// callers that need to rebuild the command themselves, e.g. to bind a context.
+func runWithRetryOnTransientError(newCmd func() *exec.Cmd) ([]byte, error) {
+	var (
+		resp    []byte
+		err     error
+		backoff = time.Second
+	)
+	for attempt := 1; attempt <= maxTransientRetries; attempt++ {
+		resp, err = RunAndGetStdOut(newCmd())
+		if err == nil || !IsTransientError(err) {
+			return resp, err
+		}
+		if attempt < maxTransientRetries {
+			time.Sleep(backoff)
+			backoff *= 2
+		}
+	}
+	return resp, err
+}
+
 // DeleteProjectWithRetry deletes a project with a retry backoff strategy.
 func DeleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
@@ -157,6 +233,17 @@ func DeleteProjectWithRetry(t *testing.T, projectID string) {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
+		}
+
+		// The project cannot be closed while a cluster is still alive. This happens
+		// whenever a test fails before its own cluster teardown runs; without this
+		// the remaining attempts all fail the same way and the project is leaked.
+		if strings.Contains(e.Error(), "CANNOT_CLOSE_GROUP_ACTIVE_ATLAS_CLUSTERS") {
+			if leftover, err := deleteClustersForProject(t, projectID); err != nil {
+				t.Logf("could not list leftover clusters in project %s: %v", projectID, err)
+			} else if len(leftover) > 0 {
+				t.Logf("could not terminate %d leftover clusters in project %s: %v", len(leftover), projectID, leftover)
+			}
 		}
 
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
@@ -263,7 +350,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion, provider 
 	}
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(watch); err != nil {
+	if resp, err := RunAndGetStdOutWithRetry(watch); err != nil {
 		return "", fmt.Errorf("error watching cluster %s in project %s: %w: %s", clusterName, projectID, err, string(resp))
 	}
 	return region, nil
@@ -324,7 +411,7 @@ func getClusterState(projectID, clusterName string) (string, string, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := RunAndGetStdOutWithRetry(cmd)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to get cluster state: %w: %s", err, string(resp))
 	}
@@ -359,10 +446,11 @@ func WatchClusterWithTimeout(projectID, clusterName string, timeout time.Duratio
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	watchCmd := exec.CommandContext(ctx, cliPath, watchArgs...)
-	watchCmd.Env = os.Environ()
-
-	if resp, err := RunAndGetStdOut(watchCmd); err != nil {
+	if resp, err := runWithRetryOnTransientError(func() *exec.Cmd {
+		watchCmd := exec.CommandContext(ctx, cliPath, watchArgs...)
+		watchCmd.Env = os.Environ()
+		return watchCmd
+	}); err != nil {
 		if ctx.Err() == context.DeadlineExceeded {
 			// Get the actual cluster state to provide better debugging info
 			stateName, clusterID, stateErr := getClusterState(projectID, clusterName)
@@ -719,8 +807,16 @@ func createProject(projectName string) (string, error) {
 	return project.GetId(), nil
 }
 
-func listClustersForProject(t *testing.T, cliPath, projectID string) atlasClustersPinned.PaginatedAdvancedClusterDescription {
-	t.Helper()
+// clustersForProject lists the clusters in a project, reporting failures as an
+// error instead of failing the test, so that cleanup paths can call it too.
+func clustersForProject(projectID string) (atlasClustersPinned.PaginatedAdvancedClusterDescription, error) {
+	var clusters atlasClustersPinned.PaginatedAdvancedClusterDescription
+
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return clusters, err
+	}
+
 	cmd := exec.Command(cliPath,
 		clustersEntity,
 		"list",
@@ -730,65 +826,102 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasCluste
 		ProfileName(),
 	)
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	t.Log(string(resp))
-	require.NoError(t, err, string(resp))
-	var clusters atlasClustersPinned.PaginatedAdvancedClusterDescription
-	require.NoError(t, json.Unmarshal(resp, &clusters))
-	return clusters
+	resp, err := RunAndGetStdOutWithRetry(cmd)
+	if err != nil {
+		return clusters, fmt.Errorf("failed to list clusters in project %s: %w: %s", projectID, err, string(resp))
+	}
+	if err := json.Unmarshal(resp, &clusters); err != nil {
+		return clusters, fmt.Errorf("failed to parse the cluster list for project %s: %w", projectID, err)
+	}
+	return clusters, nil
 }
 
-func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
+// deleteClustersForProject deletes every cluster in a project, in parallel, and
+// returns the names of the ones it could not delete. Failures come back to the
+// caller instead of going through t, so this can run from a test body or from a
+// t.Cleanup, where t.Run would panic.
+//
+// There are no subtests to group the output, so every line is tagged with
+// [project/cluster] to keep concurrent progress readable in the task log.
+func deleteClustersForProject(t *testing.T, projectID string) ([]string, error) {
 	t.Helper()
-	clusters := listClustersForProject(t, cliPath, projectID)
-	if len(clusters.GetResults()) == 0 {
-		t.Logf("no clusters found in project %s", projectID)
-		return
+
+	clusters, err := clustersForProject(projectID)
+	if err != nil {
+		return nil, err
 	}
 
-	t.Logf("found %d clusters to delete in project %s", len(clusters.GetResults()), projectID)
-	var failedClusters []string
-	for _, cluster := range clusters.GetResults() {
-		func(clusterName, state string) {
-			t.Run("delete cluster "+clusterName, func(t *testing.T) {
-				t.Parallel()
-				if state == deletingState {
-					t.Logf("cluster %s is already in DELETING state, waiting for deletion to complete in project %s (timeout: %v)", clusterName, projectID, clusterWatchTimeout)
-					err := WatchClusterWithTimeout(projectID, clusterName, clusterWatchTimeout)
-					if err != nil {
-						// Try to get current state for better debugging
-						currentState, clusterID, stateErr := getClusterState(projectID, clusterName)
-						if stateErr == nil {
-							t.Errorf("failed to watch cluster %s (ID: %s) deletion in project %s: %v. Current state: %s", clusterName, clusterID, projectID, err, currentState)
-						} else {
-							t.Errorf("failed to watch cluster %s deletion in project %s: %v. Could not get current state: %v", clusterName, projectID, err, stateErr)
-						}
-						failedClusters = append(failedClusters, clusterName)
-					} else {
-						t.Logf("cluster %s successfully deleted in project %s", clusterName, projectID)
-					}
-					return
-				}
-				t.Logf("deleting cluster %s (state: %s) in project %s", clusterName, state, projectID)
-				err := DeleteClusterForProject(projectID, clusterName)
-				if err != nil {
-					// Try to get current state for better debugging
-					currentState, clusterID, stateErr := getClusterState(projectID, clusterName)
-					if stateErr == nil {
-						t.Errorf("failed to delete cluster %s (ID: %s) in project %s: %v. Current state: %s", clusterName, clusterID, projectID, err, currentState)
-					} else {
-						t.Errorf("failed to delete cluster %s in project %s: %v. Could not get current state: %v", clusterName, projectID, err, stateErr)
-					}
-					failedClusters = append(failedClusters, clusterName)
-				} else {
-					t.Logf("cluster %s successfully deleted in project %s", clusterName, projectID)
-				}
-			})
+	results := clusters.GetResults()
+	if len(results) == 0 {
+		t.Logf("no clusters found in project %s", projectID)
+		return nil, nil
+	}
+	t.Logf("found %d clusters to delete in project %s", len(results), projectID)
+
+	var (
+		wg     sync.WaitGroup
+		mu     sync.Mutex
+		failed []string
+	)
+	for _, cluster := range results {
+		wg.Add(1)
+		go func(clusterName, state string) {
+			defer wg.Done()
+			if err := deleteClusterAndWait(t, projectID, clusterName, state); err != nil {
+				t.Logf("[%s/%s] %v", projectID, clusterName, err)
+				mu.Lock()
+				defer mu.Unlock()
+				failed = append(failed, clusterName)
+				return
+			}
+			t.Logf("[%s/%s] successfully deleted", projectID, clusterName)
 		}(cluster.GetName(), cluster.GetStateName())
 	}
-	if len(failedClusters) > 0 {
-		t.Errorf("failed to delete %d clusters in project %s: %v", len(failedClusters), projectID, failedClusters)
+	// Every goroutine logs through t, so they must all finish before we return.
+	wg.Wait()
+
+	sort.Strings(failed)
+	return failed, nil
+}
+
+// deleteClusterAndWait deletes a single cluster, or waits out a deletion that is
+// already in flight. Errors carry the cluster's last known state for debugging.
+func deleteClusterAndWait(t *testing.T, projectID, clusterName, state string) error {
+	t.Helper()
+
+	if state == deletingState {
+		t.Logf("[%s/%s] already DELETING, waiting up to %v for it to finish", projectID, clusterName, clusterWatchTimeout)
+		// "clusters watch" surfaces the 404 as an error once the cluster is gone,
+		// unlike "clusters delete --watch", which treats it as the end state. Here
+		// the cluster going away is exactly the outcome we were waiting for.
+		if err := WatchClusterWithTimeout(projectID, clusterName, clusterWatchTimeout); err != nil && !isClusterGone(err) {
+			return fmt.Errorf("failed to watch deletion: %w. %s", err, describeClusterState(projectID, clusterName))
+		}
+		return nil
 	}
+
+	t.Logf("[%s/%s] deleting (state: %s)", projectID, clusterName, state)
+	// The cluster may have finished deleting between listing it and deleting it.
+	if err := DeleteClusterForProject(projectID, clusterName); err != nil && !isClusterGone(err) {
+		return fmt.Errorf("failed to delete: %w. %s", err, describeClusterState(projectID, clusterName))
+	}
+	return nil
+}
+
+// isClusterGone reports whether err means the cluster no longer exists, which for
+// a deletion is success rather than failure.
+func isClusterGone(err error) bool {
+	return err != nil &&
+		(strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND"))
+}
+
+// describeClusterState renders a cluster's current state for an error message.
+func describeClusterState(projectID, clusterName string) string {
+	stateName, clusterID, err := getClusterState(projectID, clusterName)
+	if err != nil {
+		return fmt.Sprintf("could not get current state: %v", err)
+	}
+	return fmt.Sprintf("current state: %s, cluster ID: %s", stateName, clusterID)
 }
 
 func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {

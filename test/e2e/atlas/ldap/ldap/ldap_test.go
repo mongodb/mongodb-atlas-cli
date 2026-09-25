@@ -264,7 +264,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := internal.RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOutWithRetry(cmd)
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)

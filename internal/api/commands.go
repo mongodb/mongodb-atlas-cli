@@ -1849,7 +1849,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -2063,7 +2063,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -2474,7 +2474,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -2578,7 +2578,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6284,7 +6284,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6394,7 +6394,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6495,7 +6495,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6586,7 +6586,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6687,7 +6687,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6808,7 +6808,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -6990,7 +6990,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -9175,6 +9175,87 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID:      `deleteGroupClusterPrivateEndpointConnectionString`,
+				ShortOperationID: `deleteEndpointConnectionString`,
+				Aliases:          nil,
+				Description: `Deletes one private endpoint connection string from the specified cluster.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-deletegroupclusterprivateendpointconnectionstring.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-clusters-deleteGroupClusterPrivateEndpointConnectionString/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/privateEndpointConnectionStrings/{connectionStringId}`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `connectionStringId`,
+							Description: `Unique 24-hexadecimal digit string that identifies this private endpoint connection string.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodDelete,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID:      `getGroupCluster`,
 				ShortOperationID: `getCluster`,
 				Aliases:          nil,
@@ -9330,6 +9411,87 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2025, 3, 12),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID:      `getGroupClusterPrivateEndpointConnectionString`,
+				ShortOperationID: `getEndpointConnectionString`,
+				Aliases:          nil,
+				Description: `Returns one private endpoint connection string from the specified cluster. This endpoint treats deleteRequested = true records as not found.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getgroupclusterprivateendpointconnectionstring.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-clusters-getGroupClusterPrivateEndpointConnectionString/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/privateEndpointConnectionStrings/{connectionStringId}`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `connectionStringId`,
+							Description: `Unique 24-hexadecimal digit string that identifies this private endpoint connection string.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9715,7 +9877,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -9768,6 +9930,127 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 				},
 			},
 			{
+				OperationID:      `listGroupClusterPrivateEndpointConnectionStrings`,
+				ShortOperationID: `listEndpointConnectionStrings`,
+				Aliases:          nil,
+				Description: `Returns all private endpoint connection strings for the specified cluster.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-listgroupclusterprivateendpointconnectionstrings.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-clusters-listGroupClusterPrivateEndpointConnectionStrings/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/privateEndpointConnectionStrings`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `includeCount`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `status`,
+							Description: `Filter records by lifecycle status.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `managementType`,
+							Description: `Filter records by management type.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID:      `listGroupClusterProviderRegions`,
 				ShortOperationID: `listClusterProviderRegions`,
 				Aliases:          nil,
@@ -9791,7 +10074,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -9905,7 +10188,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -12680,7 +12963,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -12917,7 +13200,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID:      `createGroupDatabaseUser`,
 				ShortOperationID: `createDatabaseUser`,
 				Aliases:          nil,
-				Description: `Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact Support.
+				Description: `Creates one database user in the specified project. This MongoDB Cloud supports a default limit of 100 and a maximum of 900 database users per project. If you require more than 900 database users on a project, contact Support.
 
 This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-creategroupdatabaseuser.
 
@@ -13186,7 +13469,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -13603,7 +13886,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -13818,6 +14101,93 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 	},
 	{
+		Name: `Ephemeral Clusters`,
+		Description: `Create and return Atlas Ephemeral clusters. An Ephemeral cluster is a temporary Atlas Free cluster that you can claim within 7 days to convert into a standard Free cluster.
+
+
+Use of this API, including any resources created through it, is governed by MongoDB’s Cloud Terms of Service and Privacy Policy. By using this API to create an Ephemeral cluster, you agree to these terms.
+
+
+To learn more about Ephemeral clusters, see Create an Atlas Ephemeral Cluster in the MongoDB Atlas documentation.`,
+		Commands: []shared_api.Command{
+			{
+				OperationID:      `createEphemeralCluster`,
+				ShortOperationID: ``,
+				Aliases:          nil,
+				Description: `Creates an Atlas Ephemeral cluster and returns its connection and claim details.
+
+
+An Ephemeral cluster is a temporary Free cluster that you can create and connect to without an Atlas account. Atlas pauses the cluster 2 days after creation and deletes it 7 days after creation unless you claim it to an Atlas account.
+
+
+Claiming an Ephemeral cluster converts it into a standard Free cluster with no expiration date and moves it into a new or existing Atlas organization. Until you claim the cluster, you can read and write its data but can't perform administrative operations, such as scaling the cluster, adding database users, or changing network access.
+
+
+Atlas deploys all Ephemeral clusters to AWS us-east-1 and allows connections from any IP address (0.0.0.0/0). To learn more about Ephemeral clusters, see Create an Atlas Ephemeral Cluster in the MongoDB Atlas documentation.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-createephemeralcluster.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-ephemeralClusters-createEphemeralCluster/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL:             `/api/atlas/v2/unauth/ephemeralClusters:create`,
+					QueryParameters: []shared_api.Parameter{},
+					URLParameters:   []shared_api.Parameter{},
+					Verb:            http.MethodPost,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						PublicPreview:      true,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID:      `getEphemeralCluster`,
+				ShortOperationID: ``,
+				Aliases:          nil,
+				Description: `Returns the details for one Atlas Ephemeral cluster.
+
+
+To learn more about Ephemeral clusters, see Create an Atlas Ephemeral Cluster in the MongoDB Atlas documentation.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getephemeralcluster.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-ephemeralClusters-getEphemeralCluster/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL:             `/api/atlas/v2/unauth/ephemeralClusters/{clusterId}`,
+					QueryParameters: []shared_api.Parameter{},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name:        `clusterId`,
+							Description: `Unique ID of the ephemeral cluster to look up.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						PublicPreview:      true,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+		},
+	},
+	{
 		Name:        `Events`,
 		Description: `Returns events. This collection remains under revision and may change.`,
 		Commands: []shared_api.Command{
@@ -14009,7 +14379,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -14088,7 +14458,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -14248,7 +14618,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -15707,7 +16077,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -16126,7 +16496,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -16385,7 +16755,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -17525,7 +17895,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -17623,7 +17993,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -17770,7 +18140,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -18750,7 +19120,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -18855,7 +19225,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -18967,7 +19337,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -19861,7 +20231,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -20751,7 +21121,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -21059,7 +21429,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -22818,7 +23188,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -22919,7 +23289,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -23020,7 +23390,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -23586,7 +23956,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -23677,7 +24047,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -23778,7 +24148,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -24451,7 +24821,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -25023,7 +25393,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -25377,7 +25747,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -26979,7 +27349,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -28130,7 +28500,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -28515,7 +28885,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -28606,7 +28976,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -28703,7 +29073,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -28871,7 +29241,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -29035,7 +29405,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -29349,7 +29719,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -29773,7 +30143,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
 | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, currentUsage doesn't grow with the number of mongos — the load balancer is counted as a single addressable target regardless of how many mongos sit behind it. | 50 | 90 |
 | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
+| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 |
 | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
 | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -30112,7 +30482,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
 | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, currentUsage doesn't grow with the number of mongos — the load balancer is counted as a single addressable target regardless of how many mongos sit behind it. | 50 | 90 |
 | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
+| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 |
 | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
 | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -30492,7 +30862,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -30642,7 +31012,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 | atlas.project.deployment.clusters | Limit on the number of clusters in this project | 25 | 100 |
 | atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, currentUsage doesn't grow with the number of mongos — the load balancer is counted as a single addressable target regardless of how many mongos sit behind it. | 50 | 90 |
 | atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 100 |
+| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 |
 | atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
 | dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -31629,7 +31999,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -31730,7 +32100,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -32407,7 +32777,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -33536,7 +33906,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -33637,7 +34007,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -33728,7 +34098,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -33825,7 +34195,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -35099,7 +35469,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -35259,7 +35629,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -35488,7 +35858,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -36402,7 +36772,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -36594,7 +36964,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -37827,6 +38197,67 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID:      `createGroupStreamsWorkspacePrivateEndpoint`,
+				ShortOperationID: `createWorkspacePrivateEndpoint`,
+				Aliases:          nil,
+				Description: `Registers one customer VPC endpoint for Atlas Stream Processing in the specified project.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-creategroupstreamsworkspaceprivateendpoint.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-createGroupStreamsWorkspacePrivateEndpoint/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsWorkspacePrivateEndpoints`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID:      `deleteGroupStreamConnection`,
 				ShortOperationID: `deleteStreamConnection`,
 				Aliases:          nil,
@@ -38893,7 +39324,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -39004,6 +39435,67 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID:      `getGroupStreamsWorkspacePrivateEndpoint`,
+				ShortOperationID: `getWorkspacePrivateEndpoint`,
+				Aliases:          nil,
+				Description: `Returns one private endpoint registered for Atlas Stream Processing in the specified project.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-getgroupstreamsworkspaceprivateendpoint.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-getGroupStreamsWorkspacePrivateEndpoint/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsWorkspacePrivateEndpoints/{endpointId}`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `endpointId`,
+							Description: `Unique identifier of the customer's VPC endpoint.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -39530,6 +40022,97 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewStableVersion(2023, 2, 1),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID:      `listGroupStreamsWorkspacePrivateEndpoints`,
+				ShortOperationID: `listWorkspacePrivateEndpoints`,
+				Aliases:          nil,
+				Description: `Returns all private endpoints registered for Atlas Stream Processing in the specified project.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-listgroupstreamsworkspaceprivateendpoints.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-listGroupStreamsWorkspacePrivateEndpoints/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsWorkspacePrivateEndpoints`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `includeCount`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -40799,7 +41382,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -40890,7 +41473,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -41257,7 +41840,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -41500,7 +42083,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -41591,7 +42174,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{
@@ -41829,7 +42412,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						},
 						{
 							Name:        `includeCount`,
-							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Description: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to false, MongoDB Cloud may skip an additional count operation. The response may still include totalCount when the count is available without additional calculation.`,
 							Short:       ``,
 							Required:    false,
 							Type: shared_api.ParameterType{

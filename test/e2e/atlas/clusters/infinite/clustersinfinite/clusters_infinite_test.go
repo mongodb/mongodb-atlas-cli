@@ -46,31 +46,33 @@ func TestClustersInfinite(t *testing.T) {
 	const apiVersion = "2024-10-23"
 
 	g.Run("Create Infinite Cluster via api subcommand", func(_ *testing.T) {
-		// Disk-related fields are managed by Atlas Infinite and must not be set.
+		// On the 2024-10-23 schema there is no top-level providerSettings; the provider is set
+		// per regionConfig via providerName. Disk-related fields (diskSizeGB, diskIOPS,
+		// ebsVolumeType, ...) are managed by Atlas Infinite and must not be set.
+		// autoScaling.compute.enabled is required, and Atlas Infinite replica sets reject
+		// nodeCount=3 electable nodes, so a single electable node is used.
 		payload := map[string]any{
 			"name":            clusterName,
 			"clusterType":     "REPLICASET",
 			"databaseEdition": "INFINITE",
-			"providerSettings": map[string]any{
-				"providerName":     "AWS",
-				"instanceSizeName": "M10",
-			},
 			"replicationSpecs": []any{
 				map[string]any{
+					"zoneName": "Zone 1",
 					"regionConfigs": []any{
 						map[string]any{
+							"providerName": "AWS",
+							"regionName":   "US_EAST_1",
+							"priority":     7,
 							"electableSpecs": map[string]any{
 								"instanceSize": "M10",
-								"nodeCount":    3,
+								"nodeCount":    1,
 							},
-							"priority":   7,
-							"regionName": "US_EAST_1",
+							"autoScaling": map[string]any{
+								"compute": map[string]any{"enabled": false},
+							},
 						},
 					},
 				},
-			},
-			"tags": []any{
-				map[string]any{"key": "e2e_test", "value": "yes"},
 			},
 			"terminationProtectionEnabled": false,
 		}

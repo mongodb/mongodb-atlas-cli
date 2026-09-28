@@ -87,6 +87,9 @@
 |             `cluster search nodes delete`             |     Y     |   Y   |
 |          `cluster advancedSettings describe`          |     Y     |   Y   |
 |           `cluster advancedSettings update`           |     Y     |   Y   |
+|             `api clusters createCluster`              |     Y     |   Y   |
+|            `api clusters getGroupCluster`             |     Y     |   Y   |
+|            `api clusters deleteCluster`               |     Y     |   Y   |
 |                    `dbrole create`                    |     Y     |   Y   |
 |                    `dbrole delete`                    |     Y     |   Y   |
 |                   `dbrole describe`                   |     Y     |   Y   |

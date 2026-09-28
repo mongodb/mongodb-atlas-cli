@@ -175,10 +175,6 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 				continue
 			}
 
-			if sv == "8.3" {
-				continue // TODO: CLOUDP-450652
-			}
-
 			t := &shrub.Task{
 				Name: "pkg_test_atlascli_meta_docker_" + sv + "_" + os,
 			}

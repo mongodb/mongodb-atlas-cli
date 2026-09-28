@@ -166,8 +166,8 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		if os == "debian13" || os == "rhel10" || os == "ubuntu26.04" {
-			continue // TODO fix me after CLOUDP-446594
+		if os == "ubuntu26.04" {
+			continue // TODO: CLOUDP-451347
 		}
 
 		for _, sv := range serverVersions {

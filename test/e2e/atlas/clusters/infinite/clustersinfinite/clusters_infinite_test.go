@@ -44,6 +44,8 @@ func TestClustersInfinite(t *testing.T) {
 
 	// databaseEdition is exposed on the createGroupCluster 2024-10-23 schema.
 	const apiVersion = "2024-10-23"
+	// deleteCluster is not available on 2024-10-23; use the 2023-02-01 schema.
+	const deleteAPIVersion = "2023-02-01"
 
 	g.Run("Create Infinite Cluster via api subcommand", func(_ *testing.T) {
 		// On the 2024-10-23 schema there is no top-level providerSettings; the provider is set
@@ -127,7 +129,7 @@ func TestClustersInfinite(t *testing.T) {
 			"deleteCluster",
 			"--groupId", g.ProjectID,
 			"--clusterName", clusterName,
-			"--version", apiVersion,
+			"--version", deleteAPIVersion,
 			"-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 

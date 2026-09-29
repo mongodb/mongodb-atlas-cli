@@ -37,7 +37,7 @@ var (
 
 	unsupportedNewOsByVersion = map[string][]string{
 		"8.2": {"ubuntu2604"},
-		"7.0": {"ubuntu2404", "ubuntu2604"},
+		"7.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"}, // TODO: CLOUDP-452014 7.0 signing key has a SHA-1 self-signature rejected by Debian 13 / RHEL 10
 		"6.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"},
 	}
 

@@ -179,7 +179,7 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 			}
 
 			if sv == "9.0" {
-				continue // TODO: CLOUDP-XXXXX Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
+				continue // TODO: CLOUDP-452069 Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
 			}
 
 			t := &shrub.Task{

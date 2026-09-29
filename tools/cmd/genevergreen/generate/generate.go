@@ -37,7 +37,7 @@ var (
 
 	unsupportedNewOsByVersion = map[string][]string{
 		"8.2": {"ubuntu2604"},
-		"7.0": {"ubuntu2404", "ubuntu2604"},
+		"7.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"}, // TODO: CLOUDP-452016
 		"6.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"},
 	}
 

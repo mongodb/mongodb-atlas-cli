@@ -77,6 +77,10 @@ var distros = map[string]Platform{
 		extension:     rpm,
 		architectures: []string{x86_64},
 	},
+	"suse16": {
+		extension:     rpm,
+		architectures: []string{x86_64},
+	},
 }
 
 func newPublishTask(taskName, extension, edition, distro, taskServerVersion, arch string, stable bool, dependency []shrub.TaskDependency) *shrub.Task {

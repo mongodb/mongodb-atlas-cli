@@ -17,6 +17,7 @@ package generate
 import (
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -33,9 +34,11 @@ var (
 		"8.0",
 		"8.2",
 		"8.3",
+		"9.0",
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
+		"9.0": {"ubuntu2604"},
 		"8.2": {"ubuntu2604"},
 		"7.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"}, // TODO: CLOUDP-452016
 		"6.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"},
@@ -175,6 +178,10 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 				continue
 			}
 
+			if sv == "9.0" {
+				continue // TODO: CLOUDP-452069 Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
+			}
+
 			t := &shrub.Task{
 				Name: "pkg_test_atlascli_meta_docker_" + sv + "_" + os,
 			}
@@ -198,8 +205,13 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 }
 
 func getGpgServerVersion(serverVersion string) string {
+	major := strings.Split(serverVersion, ".")[0]
+	// 9.x and later share one key per major, e.g. server-9.asc
+	if n, err := strconv.Atoi(major); err == nil && n >= 9 {
+		return major
+	}
 	// minor version uses the same major version gpg key e.g. 8.2 uses 8.0 gpg key
-	return strings.Split(serverVersion, ".")[0] + ".0"
+	return major + ".0"
 }
 
 const buildNamePrefix = "generated_release_atlascli_publish_"

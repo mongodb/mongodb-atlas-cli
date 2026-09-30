@@ -70,8 +70,8 @@ func TestPublishStableTasks(t *testing.T) {
 	}
 
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 5)
-	assert.Len(t, c.Tasks, 154)
+	assert.Len(t, c.Variants, 6)
+	assert.Len(t, c.Tasks, 188)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -118,8 +118,8 @@ func TestRepoTasks(t *testing.T) {
 		}
 	}
 
-	assert.Len(t, c.Variants, 5)
-	assert.Len(t, c.Tasks, 72)
+	assert.Len(t, c.Variants, 6)
+	assert.Len(t, c.Tasks, 88)
 }
 
 func TestGetGpgServerVersion(t *testing.T) {
@@ -128,4 +128,6 @@ func TestGetGpgServerVersion(t *testing.T) {
 	assert.Equal(t, "8.0", getGpgServerVersion("8.0"))
 	assert.Equal(t, "7.0", getGpgServerVersion("7.0"))
 	assert.Equal(t, "6.0", getGpgServerVersion("6.0"))
+	assert.Equal(t, "9", getGpgServerVersion("9.0"))
+	assert.Equal(t, "9", getGpgServerVersion("9.1"))
 }

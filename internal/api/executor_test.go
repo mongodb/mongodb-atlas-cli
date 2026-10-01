@@ -161,9 +161,7 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 
 func TestNewDefaultHTTPClient_UnauthenticatedAPICommandSkipsCredentials(t *testing.T) {
 	command := api.Command{
-		RequestParameters: api.RequestParameters{
-			URL: "/api/atlas/v2/unauth/ephemeralClusters:create",
-		},
+		Unauthenticated: true,
 	}
 
 	client, err := newDefaultHTTPClient(&testProfileProvider{}, command)
@@ -174,16 +172,59 @@ func TestNewDefaultHTTPClient_UnauthenticatedAPICommandSkipsCredentials(t *testi
 
 func TestNewDefaultHTTPClient_AuthenticatedAPICommandUsesCredentials(t *testing.T) {
 	expectedErr := errors.New("missing token")
-	command := api.Command{
-		RequestParameters: api.RequestParameters{
-			URL: "/api/atlas/v2/groups",
-		},
-	}
 
 	_, err := newDefaultHTTPClient(&testProfileProvider{
 		authType: config.UserAccount,
 		tokenErr: expectedErr,
-	}, command)
+	}, api.Command{})
 
 	require.ErrorIs(t, err, expectedErr)
+}
+
+func TestExecutorHTTPClientFactoryUsesRequestCommand(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	command := api.Command{
+		OperationID:     "testOperation",
+		Unauthenticated: true,
+		RequestParameters: api.RequestParameters{
+			URL: "/test/url",
+		},
+		Versions: []api.CommandVersion{{
+			Version:              api.NewStableVersion(1991, 5, 17),
+			RequestContentType:   "json",
+			ResponseContentTypes: []string{"json"},
+		}},
+	}
+	commandRequest := CommandRequest{
+		Command:     command,
+		ContentType: "json",
+		Format:      "json",
+		Version:     api.NewStableVersion(1991, 5, 17),
+	}
+
+	commandConverter := NewMockCommandConverter(ctrl)
+	commandConverter.EXPECT().ConvertToHTTPRequest(commandRequest).Return(&http.Request{}, nil)
+
+	httpClient := NewMockDoer(ctrl)
+	httpClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		StatusCode: http.StatusOK,
+		Body:       io.NopCloser(strings.NewReader(`{"success": true}`)),
+	}, nil)
+
+	logger := NewMockLogger(ctrl)
+	logger.EXPECT().IsDebugLevel().Return(false).AnyTimes()
+
+	var gotCommand api.Command
+	executor, err := newExecutorWithHTTPClientFactory(commandConverter, func(command api.Command) (Doer, error) {
+		gotCommand = command
+		return httpClient, nil
+	}, NewFormatter(), logger)
+	require.NoError(t, err)
+
+	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
+
+	require.NoError(t, err)
+	require.NotNil(t, response)
+	require.True(t, gotCommand.Unauthenticated)
+	require.Equal(t, "testOperation", gotCommand.OperationID)
 }

@@ -19,7 +19,6 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httputil"
-	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
@@ -37,23 +36,51 @@ var (
 	ErrMissingDependency            = errors.New("missing executor dependency")
 )
 
-const unauthAPIPath = "/api/atlas/v2/unauth/"
+type httpClientFactory func(shared_api.Command) (Doer, error)
 
 type Executor struct {
-	commandConverter CommandConverter
-	httpClient       Doer
-	formatter        ResponseFormatter
-	logger           Logger
+	commandConverter  CommandConverter
+	httpClientFactory httpClientFactory
+	formatter         ResponseFormatter
+	logger            Logger
 }
 
-// We're expecting a http client that's authenticated.
+// NewExecutor creates an executor with a fixed HTTP client.
 func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter ResponseFormatter, logger Logger) (*Executor, error) {
+	if httpClient == nil {
+		return nil, errors.Join(ErrMissingDependency, errors.New("httpClient is nil"))
+	}
+
+	return newExecutorWithHTTPClientFactory(
+		commandConverter,
+		func(shared_api.Command) (Doer, error) {
+			return httpClient, nil
+		},
+		formatter,
+		logger,
+	)
+}
+
+// NewDefaultExecutor creates an executor wired to the default profile and config.
+func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
+	profile := config.Default()
+
+	configWrapper := NewAuthenticatedConfigWrapper(profile)
+	commandConverter, err := NewDefaultCommandConverter(configWrapper)
+	if err != nil {
+		return nil, err
+	}
+
+	return newExecutorWithHTTPClientFactory(commandConverter, newDefaultHTTPClientFactory(profile), formatter, log.Default())
+}
+
+func newExecutorWithHTTPClientFactory(commandConverter CommandConverter, httpClientFactory httpClientFactory, formatter ResponseFormatter, logger Logger) (*Executor, error) {
 	if commandConverter == nil {
 		return nil, errors.Join(ErrMissingDependency, errors.New("commandConverter is nil"))
 	}
 
-	if httpClient == nil {
-		return nil, errors.Join(ErrMissingDependency, errors.New("httpClient is nil"))
+	if httpClientFactory == nil {
+		return nil, errors.Join(ErrMissingDependency, errors.New("httpClientFactory is nil"))
 	}
 
 	if formatter == nil {
@@ -65,56 +92,34 @@ func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter R
 	}
 
 	return &Executor{
-		commandConverter: commandConverter,
-		httpClient:       httpClient,
-		formatter:        formatter,
-		logger:           logger,
+		commandConverter:  commandConverter,
+		httpClientFactory: httpClientFactory,
+		formatter:         formatter,
+		logger:            logger,
 	}, nil
 }
 
-// Executor wired up to use the default profile and static functions on config.
-func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
-	return NewDefaultExecutorForCommand(formatter, shared_api.Command{})
-}
-
-// NewDefaultExecutorForCommand creates an executor with the default Atlas API transport for a command.
-func NewDefaultExecutorForCommand(formatter ResponseFormatter, command shared_api.Command) (*Executor, error) {
-	profile := config.Default()
-
-	client, err := newDefaultHTTPClient(profile, command)
-	if err != nil {
-		return nil, err
+func newDefaultHTTPClientFactory(profile transport.ProfileProvider) httpClientFactory {
+	return func(command shared_api.Command) (Doer, error) {
+		client, err := newDefaultHTTPClient(profile, command)
+		if err != nil {
+			return nil, err
+		}
+		client.Transport = &userAgentTransport{base: client.Transport, userAgent: config.UserAgent(version.Version)}
+		return client, nil
 	}
-	client.Transport = &userAgentTransport{base: client.Transport, userAgent: config.UserAgent(version.Version)}
-
-	configWrapper := NewAuthenticatedConfigWrapper(profile)
-	commandConverter, err := NewDefaultCommandConverter(configWrapper)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewExecutor(
-		commandConverter,
-		client,
-		formatter,
-		log.Default(),
-	)
 }
 
 func newDefaultHTTPClient(profile transport.ProfileProvider, command shared_api.Command) (*http.Client, error) {
-	if !requiresAuthentication(command) {
+	if command.Unauthenticated {
 		return &http.Client{Transport: transport.Default()}, nil
 	}
 
 	return transport.HTTPClientFromProfile(profile, version.Version, transport.Default())
 }
 
-func requiresAuthentication(command shared_api.Command) bool {
-	return !strings.HasPrefix(command.RequestParameters.URL, unauthAPIPath)
-}
-
 func (e *Executor) ensureInitialized() {
-	if e.commandConverter == nil || e.httpClient == nil {
+	if e.commandConverter == nil || e.httpClientFactory == nil {
 		// panic because this is developer error, not user error
 		// should never happen
 		panic("the executor was not properly initialized, use the NewExecutor method to initialize this struct")
@@ -129,6 +134,11 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 		return nil, err
 	}
 
+	httpClient, err := e.httpClientFactory(commandRequest.Command)
+	if err != nil {
+		return nil, err
+	}
+
 	// Convert the request (api command definition + execution context) into a http request
 	httpRequest, err := e.commandConverter.ConvertToHTTPRequest(commandRequest)
 	if err != nil {
@@ -140,7 +150,7 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 	e.logRequest(httpRequest)
 
 	// Execute the request
-	httpResponse, err := e.httpClient.Do(httpRequest)
+	httpResponse, err := httpClient.Do(httpRequest)
 	if err != nil {
 		return nil, errors.Join(ErrFailedToConvertToHTTPRequest, err)
 	}

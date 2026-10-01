@@ -52,8 +52,9 @@ func TestAtlasTeamUsers(t *testing.T) {
 		}
 	}()
 
+	// the profile's own user is already a team member, so the test needs a second org user to add
 	username, userID, err := internal.OrgNUser(1)
-	require.NoError(t, err)
+	require.NoError(t, err, "atlasteamusers needs at least two users in the org")
 
 	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

@@ -72,7 +72,6 @@ jobs:
         uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
       - run: find test/e2e/${{ matrix.package }} -type d -name .snapshots -exec rm -rf {} + 2>/dev/null || true
       - run: make build
       - id: config-path
@@ -117,15 +116,11 @@ jobs:
           ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           E2E_TEST_PACKAGES: ./test/e2e/${{ matrix.package }}/...
           TEST_MODE: record
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
-          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
-          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
-          IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -175,7 +170,6 @@ jobs:
         uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
       - run: make build
       - id: config-path
         env:
@@ -219,14 +213,10 @@ jobs:
           ./bin/atlas config set ops_manager_url "$MONGODB_ATLAS_OPS_MANAGER_URL" -P __e2e
       - run: make e2e-test
         env:
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           E2E_TEST_PACKAGES: ./test/internal/...
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
-          E2E_CLUSTER_1_NAME: ${{ secrets.E2E_CLUSTER_1_NAME }}
-          E2E_CLUSTER_2_NAME: ${{ secrets.E2E_CLUSTER_2_NAME }}
-          IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

@@ -68,15 +68,18 @@ func TestFlexBackup(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
+		require.NoError(t, err, "backup/flex needs an existing flex cluster %q (set E2E_FLEX_INSTANCE_NAME): %s", clusterName, string(resp))
 
 		var r atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
-		assert.NotEmpty(t, r)
+		require.NotEmpty(t, r.GetResults(), "backup/flex needs flex cluster %q with at least one snapshot (the first snapshot is taken ~24h after cluster creation)", clusterName)
 		snapshotID = r.GetResults()[0].GetId()
 		t.Log("snapshotID", snapshotID, "snapshotStatus", *r.GetResults()[0].Status)
 		require.NotEmpty(t, snapshotID)
 	})
+	if snapshotID == "" {
+		t.Fatalf("backup/flex needs flex cluster %q with at least one snapshot", clusterName)
+	}
 
 	g.Run("Snapshot Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

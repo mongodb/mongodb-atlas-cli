@@ -171,8 +171,6 @@ functions:
           - E2E_PROFILE_NAME
           - E2E_TEST_BUCKET
           - E2E_CLOUD_ROLE_ID
-          - E2E_CLUSTER_1_NAME
-          - E2E_CLUSTER_2_NAME
           - MONGODB_ATLAS_OPS_MANAGER_URL
           - LOCAL_KEY
           - KMIP_CA
@@ -186,7 +184,6 @@ functions:
           - E2E_TIMEOUT
           - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
-          - IDENTITY_PROVIDER_ID
           - revision
         env:
           <<: *go_env
@@ -194,25 +191,8 @@ functions:
           MONGODB_ATLAS_SILENCE_STORAGE_WARNING: "true"
           DO_NOT_TRACK: "1"
           TEST_MODE: live
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
           LOCALDEV_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/mongodb/mongodb-atlas-local
         command: make e2e-test
-  "install gotestsum":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          if [[ "$(uname -s)" == "Darwin"* ]]; then
-            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_darwin_arm64.tar.gz
-          else
-            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
-          fi
-          curl -sfL $URL | tar zx
   "generate evergreen":
     - command: subprocess.exec
       type: test
@@ -316,13 +296,9 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
-          E2E_CLUSTER_1_NAME: ${e2e_cluster_1_name}
-          E2E_CLUSTER_2_NAME: ${e2e_cluster_2_name}
-          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -331,14 +307,10 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
           E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
-          E2E_CLUSTER_1_NAME: ${e2e_cluster_1_name}
-          E2E_CLUSTER_2_NAME: ${e2e_cluster_2_name}
-          IDENTITY_PROVIDER_ID: ${identity_provider_id}
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
@@ -348,7 +320,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
@@ -360,7 +331,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration/...
@@ -372,7 +342,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
@@ -384,7 +353,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
@@ -396,7 +364,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex/...
@@ -408,7 +375,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss/...
@@ -416,7 +382,6 @@ tasks:
     tags: ["e2e","atlas","plugin","install","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/install/...
@@ -424,7 +389,6 @@ tasks:
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/run/...
@@ -432,7 +396,6 @@ tasks:
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/uninstall/...
@@ -440,7 +403,6 @@ tasks:
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/update/...
@@ -452,7 +414,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0/...
@@ -460,7 +421,6 @@ tasks:
     tags: ["e2e","atlas","plugin","kubernetes","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/kubernetes/...
@@ -468,7 +428,6 @@ tasks:
     tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
     must_have_test_results: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/local/...
@@ -480,7 +439,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade/...
@@ -492,7 +450,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
@@ -504,7 +461,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
@@ -516,7 +472,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -529,7 +484,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -542,7 +496,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -556,7 +509,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap/...
@@ -569,7 +521,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
@@ -581,7 +532,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -595,7 +545,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
@@ -607,7 +556,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -621,7 +569,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
@@ -633,7 +580,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -647,7 +593,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive/...
@@ -660,7 +605,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
@@ -672,7 +616,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -687,7 +630,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
@@ -700,7 +642,6 @@ tasks:
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -713,7 +654,6 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes/...
@@ -726,7 +666,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/networking/...
@@ -739,7 +678,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/db/...
@@ -754,7 +692,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/privatenetwork/...
@@ -769,7 +706,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/querylimits/...
@@ -784,7 +720,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
@@ -796,7 +731,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -810,7 +744,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/livemigrations/...
@@ -823,7 +756,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/streams/...
@@ -835,7 +767,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/streams_with_cluster/...
@@ -847,7 +778,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "build"
       - func: "e2e test"
         vars:
@@ -872,7 +802,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/snapshot/...
@@ -886,7 +815,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/schedule/...
@@ -900,7 +828,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/buckets/...
@@ -914,7 +841,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/jobs/...
@@ -929,7 +855,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/flex/...
@@ -946,7 +871,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -963,7 +887,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -981,7 +904,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -998,7 +920,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1015,7 +936,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1026,7 +946,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
@@ -1040,7 +959,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
@@ -1054,7 +972,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
@@ -1068,7 +985,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
@@ -1082,7 +998,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
@@ -1120,7 +1035,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}

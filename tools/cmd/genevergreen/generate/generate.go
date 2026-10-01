@@ -17,6 +17,7 @@ package generate
 import (
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -32,15 +33,22 @@ var (
 		"7.0",
 		"8.0",
 		"8.2",
+		"8.3",
+		"9.0",
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"7.0": {"ubuntu2404"},
-		"6.0": {"ubuntu2404", "debian13", "rhel10"},
+		"9.0": {"ubuntu2604"},
+		"8.3": {"suse16"},
+		"8.2": {"ubuntu2604", "suse16"},
+		"8.0": {"suse16"},
+		"7.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"}, // TODO: CLOUDP-452016
+		"6.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"},
 	}
 
 	oses = []string{
 		"suse15",
+		"suse16",
 		"centos8",
 		"rhel9",
 		"rhel10",
@@ -48,25 +56,30 @@ var (
 		"debian13",
 		"ubuntu22.04",
 		"ubuntu24.04",
+		"ubuntu26.04",
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
 		"suse15":      "suse15-rpm",
+		"suse16":      "suse16-rpm",
 		"centos8":     "centos8-rpm",
 		"rhel9":       "rhel9-rpm",
 		"rhel10":      "rhel10-rpm",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
+		"ubuntu26.04": "ubuntu26.04-deb",
 		"debian12":    "debian12-deb",
 		"debian13":    "debian13-deb",
 	}
 	newOs = map[string]string{
 		"suse15":          "suse15",
+		"suse16":          "suse16",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
 		"rhel10":          "rhel10",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
+		"ubuntu26.04":     "ubuntu2604",
 		"debian12":        "debian12",
 		"debian13":        "debian13",
 		"amazonlinux2023": "amazon2023",
@@ -161,13 +174,17 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		if os == "debian13" || os == "rhel10" {
-			continue // TODO fix me after CLOUDP-446594
+		if os == "ubuntu26.04" {
+			continue // TODO: CLOUDP-451347
 		}
 
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue
+			}
+
+			if sv == "9.0" {
+				continue // TODO: CLOUDP-452069 Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
 			}
 
 			t := &shrub.Task{
@@ -193,8 +210,13 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 }
 
 func getGpgServerVersion(serverVersion string) string {
+	major := strings.Split(serverVersion, ".")[0]
+	// 9.x and later share one key per major, e.g. server-9.asc
+	if n, err := strconv.Atoi(major); err == nil && n >= 9 {
+		return major
+	}
 	// minor version uses the same major version gpg key e.g. 8.2 uses 8.0 gpg key
-	return strings.Split(serverVersion, ".")[0] + ".0"
+	return major + ".0"
 }
 
 const buildNamePrefix = "generated_release_atlascli_publish_"

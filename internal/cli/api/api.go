@@ -469,7 +469,7 @@ func remindUserToPinVersion(cmd *cobra.Command) {
 	// - not set using api_version on the users profile
 	// in that case, print a warning
 	if !versionFlag.Changed {
-		fmt.Fprintf(os.Stderr, "warning: using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", versionFlag.Value.String())
+		fmt.Fprintf(os.Stderr, "warning: using default API version '%s'; consider pinning a version to ensure consistency when updating the CLI\n", versionFlag.Value.String())
 	}
 }
 
@@ -493,7 +493,7 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *stri
 		return
 	}
 
-	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", *versionString, defaultVersion)
+	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consistency when updating the CLI\n", *versionString, defaultVersion)
 	*versionString = defaultVersion
 }
 

@@ -273,6 +273,10 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`createEphemeralCluster`: {
+		Parameters: nil,
+		Examples:   nil,
+	},
 	`createFederationSettingConnectedOrgConfigRoleMapping`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -340,7 +344,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -1469,7 +1473,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`integrationType`: {
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
@@ -1705,7 +1709,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -1857,6 +1861,23 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupStreamsWorkspacePrivateEndpoint`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createOrg`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -1891,7 +1912,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -2043,7 +2064,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -2737,6 +2758,40 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteGroupClusterPrivateEndpointConnectionString`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`connectionStringId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies this private endpoint connection string.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`:        `[clusterName]`,
+					`connectionStringId`: `[connectionStringId]`,
+					`groupId`:            `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`deleteGroupClusterSearchDeployment`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
@@ -3146,7 +3201,7 @@ var metadata = metadatatypes.Metadata{
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
 | ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
-| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 900 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
 | ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -4554,6 +4609,14 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`getEphemeralCluster`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterId`: {
+				Usage: `Unique ID of the ephemeral cluster to look up.`,
+			},
+		},
+		Examples: nil,
+	},
 	`getFederationSettingConnectedOrgConfig`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -4916,7 +4979,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -4983,7 +5046,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -5781,6 +5844,40 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`:  `[clusterName]`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`simulationId`: `[simulationId]`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupClusterPrivateEndpointConnectionString`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`connectionStringId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies this private endpoint connection string.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`:        `[clusterName]`,
+					`connectionStringId`: `[connectionStringId]`,
+					`groupId`:            `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6751,7 +6848,7 @@ var metadata = metadatatypes.Metadata{
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
 | ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
-| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 900 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
 | ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -7865,7 +7962,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -7916,6 +8013,33 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`tenantName`: `[tenantName]`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupStreamsWorkspacePrivateEndpoint`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`endpointId`: {
+				Usage: `Unique identifier of the customer's VPC endpoint.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`endpointId`: `vpce-0abc123def4567890`,
+					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8371,7 +8495,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9030,7 +9154,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9075,7 +9199,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9182,7 +9306,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9249,7 +9373,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9283,7 +9407,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9320,7 +9444,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9354,7 +9478,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9391,7 +9515,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9454,7 +9578,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9492,7 +9616,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9530,7 +9654,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9571,7 +9695,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9614,7 +9738,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9685,7 +9809,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -9929,7 +10053,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10084,6 +10208,51 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupClusterPrivateEndpointConnectionStrings`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the cluster.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`managementType`: {
+				Usage: `Filter records by management type.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+			`status`: {
+				Usage: `Filter records by lifecycle status.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupClusterProviderRegions`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -10095,7 +10264,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10197,7 +10366,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10241,7 +10410,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10348,7 +10517,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10386,7 +10555,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`includeDeletedWithRetainedBackups`: {
 				Usage: `Flag that indicates whether to return Clusters with retain backups.`,
@@ -10447,7 +10616,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10481,7 +10650,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10601,7 +10770,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10639,7 +10808,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10676,7 +10845,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10724,7 +10893,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`includeRaw`: {
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
@@ -10767,7 +10936,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10805,7 +10974,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10843,7 +11012,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -10999,7 +11168,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11086,7 +11255,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`integrationType`: {
 				Usage: `Optional filter by integration type (e.g., ` + "`" + `S3_LOG_EXPORT` + "`" + `).`,
@@ -11123,7 +11292,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11161,7 +11330,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11195,7 +11364,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`integrationType`: {
 				Usage: `Optional filter by integration type (e.g., ` + "`" + `OTEL` + "`" + `).`,
@@ -11235,7 +11404,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11327,7 +11496,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11408,7 +11577,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11446,7 +11615,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11587,7 +11756,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11640,7 +11809,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11676,7 +11845,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -11713,7 +11882,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12018,6 +12187,41 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupStreamsWorkspacePrivateEndpoints`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupTeams`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -12029,7 +12233,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12066,7 +12270,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`includeOrgUsers`: {
 				Usage: `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If ` + "`" + `"includeOrgUsers": false` + "`" + `, this resource returns only users with a role in the project. If ` + "`" + `"includeOrgUsers": true` + "`" + `, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`,
@@ -12108,7 +12312,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12167,7 +12371,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12200,7 +12404,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12237,7 +12441,7 @@ var metadata = metadatatypes.Metadata{
 **IMPORTANT**: The complete list of event type values changes frequently.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`includeRaw`: {
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
@@ -12327,7 +12531,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`invoiceId`: {
 				Usage: `Unique string that identifies the invoice to list reports for.`,
@@ -12366,7 +12570,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Retrieve the invoices the ` + "`" + `startDates` + "`" + ` of which are greater than or equal to the ` + "`" + `fromDate` + "`" + `. If omit, the invoices return will go back to earliest ` + "`" + `startDate` + "`" + `.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12439,7 +12643,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12471,7 +12675,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12507,7 +12711,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12595,7 +12799,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12706,7 +12910,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12738,7 +12942,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12780,7 +12984,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -12852,7 +13056,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -13489,7 +13693,7 @@ var metadata = metadatatypes.Metadata{
 | ` + "`" + `atlas.project.deployment.clusters` + "`" + ` | Limit on the number of clusters in this project | 25 | 100 |
 | ` + "`" + `atlas.project.deployment.nodesPerPrivateLinkRegion` + "`" + ` | Limit on AWS PrivateLink addressable target nodes per region in this project. For sharded clusters using optimized (load-balanced) connection strings, ` + "`" + `currentUsage` + "`" + ` doesn't grow with the number of ` + "`" + `mongos` + "`" + ` — the load balancer is counted as a single addressable target regardless of how many ` + "`" + `mongos` + "`" + ` sit behind it. | 50 | 90 |
 | ` + "`" + `atlas.project.security.databaseAccess.customRoles` + "`" + ` | Limit on the number of custom roles in this project | 100 | 1400 |
-| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 100 |
+| ` + "`" + `atlas.project.security.databaseAccess.users` + "`" + ` | Limit on the number of database users in this project | 100 | 900 |
 | ` + "`" + `atlas.project.security.networkAccess.crossRegionEntries` + "`" + ` | Limit on the number of cross-region network access entries in this project | 40 | 220 |
 | ` + "`" + `atlas.project.security.networkAccess.entries` + "`" + ` | Limit on the number of network access entries in this project | 200 | 20 |
 | ` + "`" + `dataFederation.bytesProcessed.query` + "`" + ` | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
@@ -13953,7 +14157,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
@@ -14507,7 +14711,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`includeCount`: {
-				Usage: `Flag that indicates whether the response returns the total number of items (` + "`" + `totalCount` + "`" + `) in the response.`,
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
 			},
 			`integrationType`: {
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,

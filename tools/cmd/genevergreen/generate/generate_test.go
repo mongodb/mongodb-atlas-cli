@@ -29,7 +29,7 @@ const (
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 34)
+	assert.Len(t, c.Tasks, 38)
 	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
@@ -70,8 +70,8 @@ func TestPublishStableTasks(t *testing.T) {
 	}
 
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 120)
+	assert.Len(t, c.Variants, 6)
+	assert.Len(t, c.Tasks, 190)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -96,7 +96,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 22)
+	assert.Len(t, c.Tasks, 34)
 }
 
 func TestRepoTasks(t *testing.T) {
@@ -118,13 +118,16 @@ func TestRepoTasks(t *testing.T) {
 		}
 	}
 
-	assert.Len(t, c.Variants, 4)
-	assert.Len(t, c.Tasks, 56)
+	assert.Len(t, c.Variants, 6)
+	assert.Len(t, c.Tasks, 90)
 }
 
 func TestGetGpgServerVersion(t *testing.T) {
+	assert.Equal(t, "8.0", getGpgServerVersion("8.3"))
 	assert.Equal(t, "8.0", getGpgServerVersion("8.2"))
 	assert.Equal(t, "8.0", getGpgServerVersion("8.0"))
 	assert.Equal(t, "7.0", getGpgServerVersion("7.0"))
 	assert.Equal(t, "6.0", getGpgServerVersion("6.0"))
+	assert.Equal(t, "9", getGpgServerVersion("9.0"))
+	assert.Equal(t, "9", getGpgServerVersion("9.1"))
 }

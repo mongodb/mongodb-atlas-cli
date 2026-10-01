@@ -153,7 +153,7 @@ jobs:
         if: always()
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5
         with:
-          paths: e2e-tests.xml
+          paths: tests.xml
   cleanup:
     if: always() && github.event_name != 'pull_request' || (github.event.action == 'labeled' && github.event.label.name == 'update-snapshots')
     needs: update-tests
@@ -231,7 +231,7 @@ jobs:
         if: always()
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5
         with:
-          paths: e2e-tests.xml
+          paths: tests.xml
   commit:
     runs-on: ubuntu-latest
     if: success() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'

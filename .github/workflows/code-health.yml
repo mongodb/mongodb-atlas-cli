@@ -58,7 +58,7 @@ jobs:
         id: test_summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5
         with:
-          paths: unit-tests.xml
+          paths: tests.xml
         if: always() && matrix.os == 'ubuntu-latest'
 
   coverage:
@@ -373,4 +373,4 @@ jobs:
         if: always()
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5
         with:
-          paths: e2e-tests.xml
+          paths: tests.xml

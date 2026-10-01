@@ -39,13 +39,16 @@ var (
 
 	unsupportedNewOsByVersion = map[string][]string{
 		"9.0": {"ubuntu2604"},
-		"8.2": {"ubuntu2604"},
-		"7.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"}, // TODO: CLOUDP-452016
-		"6.0": {"ubuntu2404", "ubuntu2604", "debian13", "rhel10"},
+		"8.3": {"suse16"},
+		"8.2": {"ubuntu2604", "suse16"},
+		"8.0": {"suse16"},
+		"7.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"}, // TODO: CLOUDP-452016
+		"6.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"},
 	}
 
 	oses = []string{
 		"suse15",
+		"suse16",
 		"centos8",
 		"rhel9",
 		"rhel10",
@@ -58,6 +61,7 @@ var (
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
 		"suse15":      "suse15-rpm",
+		"suse16":      "suse16-rpm",
 		"centos8":     "centos8-rpm",
 		"rhel9":       "rhel9-rpm",
 		"rhel10":      "rhel10-rpm",
@@ -69,6 +73,7 @@ var (
 	}
 	newOs = map[string]string{
 		"suse15":          "suse15",
+		"suse16":          "suse16",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
 		"rhel10":          "rhel10",

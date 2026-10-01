@@ -184,7 +184,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// Create a new executor
 			// This is the piece of code which knows how to execute api.Commands
 			formatter := api.NewFormatter()
-			executor, err := api.NewDefaultExecutor(formatter)
+			executor, err := api.NewDefaultExecutorForCommand(formatter, command)
 			if err != nil {
 				return err
 			}

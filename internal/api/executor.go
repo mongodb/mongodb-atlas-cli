@@ -19,11 +19,13 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httputil"
+	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 var (
@@ -34,6 +36,8 @@ var (
 	ErrFailedToHandleFormat         = errors.New("failed to handle format")
 	ErrMissingDependency            = errors.New("missing executor dependency")
 )
+
+const unauthAPIPath = "/api/atlas/v2/unauth/"
 
 type Executor struct {
 	commandConverter CommandConverter
@@ -70,9 +74,14 @@ func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter R
 
 // Executor wired up to use the default profile and static functions on config.
 func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
+	return NewDefaultExecutorForCommand(formatter, shared_api.Command{})
+}
+
+// NewDefaultExecutorForCommand creates an executor with the default Atlas API transport for a command.
+func NewDefaultExecutorForCommand(formatter ResponseFormatter, command shared_api.Command) (*Executor, error) {
 	profile := config.Default()
 
-	client, err := transport.HTTPClient(version.Version, transport.Default())
+	client, err := newDefaultHTTPClient(profile, command)
 	if err != nil {
 		return nil, err
 	}
@@ -90,6 +99,18 @@ func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 		formatter,
 		log.Default(),
 	)
+}
+
+func newDefaultHTTPClient(profile transport.ProfileProvider, command shared_api.Command) (*http.Client, error) {
+	if !requiresAuthentication(command) {
+		return &http.Client{Transport: transport.Default()}, nil
+	}
+
+	return transport.HTTPClientFromProfile(profile, version.Version, transport.Default())
+}
+
+func requiresAuthentication(command shared_api.Command) bool {
+	return !strings.HasPrefix(command.RequestParameters.URL, unauthAPIPath)
 }
 
 func (e *Executor) ensureInitialized() {

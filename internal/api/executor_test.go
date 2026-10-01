@@ -15,15 +15,38 @@
 package api
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
+
+type testProfileProvider struct {
+	authType config.AuthMechanism
+	tokenErr error
+}
+
+func (p *testProfileProvider) AuthType() config.AuthMechanism { return p.authType }
+func (*testProfileProvider) PublicAPIKey() string             { panic("PublicAPIKey should not be called") }
+func (*testProfileProvider) PrivateAPIKey() string            { panic("PrivateAPIKey should not be called") }
+func (p *testProfileProvider) Token() (*auth.Token, error)    { return nil, p.tokenErr }
+func (*testProfileProvider) ServiceAccountToken() (*auth.Token, error) {
+	panic("ServiceAccountToken should not be called")
+}
+func (*testProfileProvider) SetAccessToken(string)  { panic("SetAccessToken should not be called") }
+func (*testProfileProvider) SetRefreshToken(string) { panic("SetRefreshToken should not be called") }
+func (*testProfileProvider) Save() error            { panic("Save should not be called") }
+func (*testProfileProvider) ClientID() string       { panic("ClientID should not be called") }
+func (*testProfileProvider) ClientSecret() string   { panic("ClientSecret should not be called") }
+func (*testProfileProvider) OpsManagerURL() string  { panic("OpsManagerURL should not be called") }
 
 func TestExecutorHappyPathNoLogging(t *testing.T) {
 	// Setup
@@ -134,4 +157,33 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 	// Assert
 	require.NoError(t, err)
 	require.NotNil(t, response)
+}
+
+func TestNewDefaultHTTPClient_UnauthenticatedAPICommandSkipsCredentials(t *testing.T) {
+	command := api.Command{
+		RequestParameters: api.RequestParameters{
+			URL: "/api/atlas/v2/unauth/ephemeralClusters:create",
+		},
+	}
+
+	client, err := newDefaultHTTPClient(&testProfileProvider{}, command)
+
+	require.NoError(t, err)
+	require.Same(t, transport.Default(), client.Transport)
+}
+
+func TestNewDefaultHTTPClient_AuthenticatedAPICommandUsesCredentials(t *testing.T) {
+	expectedErr := errors.New("missing token")
+	command := api.Command{
+		RequestParameters: api.RequestParameters{
+			URL: "/api/atlas/v2/groups",
+		},
+	}
+
+	_, err := newDefaultHTTPClient(&testProfileProvider{
+		authType: config.UserAccount,
+		tokenErr: expectedErr,
+	}, command)
+
+	require.ErrorIs(t, err, expectedErr)
 }

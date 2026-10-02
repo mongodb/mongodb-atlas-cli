@@ -20,12 +20,6 @@
 
 set -Eeou pipefail
 
-# The reusable workflow does not set up Go, so fall back to installing the
-# version pinned in go.mod when the runner image lacks a toolchain.
-if ! command -v go >/dev/null 2>&1; then
-    GO_VERSION=$(sed -n 's/^go //p' go.mod)
-    curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | sudo tar -C /usr/local -xzf -
-    export PATH="/usr/local/go/bin:$PATH"
-fi
-
-make gen-purls
+# The Makefile pins GOTOOLCHAIN=local, but the runner image's Go can be older
+# than go.mod requires. Override it so Go downloads the pinned toolchain.
+make GOTOOLCHAIN=auto gen-purls

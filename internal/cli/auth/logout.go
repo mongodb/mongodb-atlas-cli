@@ -18,6 +18,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -37,6 +38,7 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	List() []string
 	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
@@ -66,6 +68,7 @@ type logoutOpts struct {
 	config                    ConfigDeleter
 	flow                      Revoker
 	keepConfig                bool
+	profileMissing            bool
 	revokeServiceAccountToken func() error
 }
 
@@ -134,6 +137,13 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	return nil
 }
 
+func profileRequested(cmd *cobra.Command) bool {
+	if f := cmd.Flag(flag.Profile); f != nil && f.Changed {
+		return true
+	}
+	return config.GetString(config.ProfileFlag) != ""
+}
+
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
 		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
@@ -155,6 +165,13 @@ func LogoutBuilder() *cobra.Command {
 				opts.config = config.Default()
 			}
 
+			profiles := opts.config.List()
+			opts.profileMissing = !slices.Contains(profiles, opts.config.Name()) && (len(profiles) > 0 || profileRequested(cmd))
+			if opts.profileMissing {
+				_, _ = log.Warningf("Warning: profile %q does not exist, nothing to log out\n", opts.config.Name())
+				return nil
+			}
+
 			// Only initialize OAuth flow if we have OAuth-based auth
 			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
 				return opts.initFlow(cmd.Context())
@@ -163,6 +180,10 @@ func LogoutBuilder() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			if opts.profileMissing {
+				return nil
+			}
+
 			var message string
 
 			entry := opts.config.Name()

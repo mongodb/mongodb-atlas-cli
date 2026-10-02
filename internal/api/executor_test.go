@@ -15,15 +15,38 @@
 package api
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
+
+type testProfileProvider struct {
+	authType config.AuthMechanism
+	tokenErr error
+}
+
+func (p *testProfileProvider) AuthType() config.AuthMechanism { return p.authType }
+func (*testProfileProvider) PublicAPIKey() string             { panic("PublicAPIKey should not be called") }
+func (*testProfileProvider) PrivateAPIKey() string            { panic("PrivateAPIKey should not be called") }
+func (p *testProfileProvider) Token() (*auth.Token, error)    { return nil, p.tokenErr }
+func (*testProfileProvider) ServiceAccountToken() (*auth.Token, error) {
+	panic("ServiceAccountToken should not be called")
+}
+func (*testProfileProvider) SetAccessToken(string)  { panic("SetAccessToken should not be called") }
+func (*testProfileProvider) SetRefreshToken(string) { panic("SetRefreshToken should not be called") }
+func (*testProfileProvider) Save() error            { panic("Save should not be called") }
+func (*testProfileProvider) ClientID() string       { panic("ClientID should not be called") }
+func (*testProfileProvider) ClientSecret() string   { panic("ClientSecret should not be called") }
+func (*testProfileProvider) OpsManagerURL() string  { panic("OpsManagerURL should not be called") }
 
 func TestExecutorHappyPathNoLogging(t *testing.T) {
 	// Setup
@@ -134,4 +157,74 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 	// Assert
 	require.NoError(t, err)
 	require.NotNil(t, response)
+}
+
+func TestNewDefaultHTTPClient_UnauthenticatedAPICommandSkipsCredentials(t *testing.T) {
+	command := api.Command{
+		Unauthenticated: true,
+	}
+
+	client, err := newDefaultHTTPClient(&testProfileProvider{}, command)
+
+	require.NoError(t, err)
+	require.Same(t, transport.Default(), client.Transport)
+}
+
+func TestNewDefaultHTTPClient_AuthenticatedAPICommandUsesCredentials(t *testing.T) {
+	expectedErr := errors.New("missing token")
+
+	_, err := newDefaultHTTPClient(&testProfileProvider{
+		authType: config.UserAccount,
+		tokenErr: expectedErr,
+	}, api.Command{})
+
+	require.ErrorIs(t, err, expectedErr)
+}
+
+func TestExecutorHTTPClientFactoryUsesRequestCommand(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	command := api.Command{
+		OperationID:     "testOperation",
+		Unauthenticated: true,
+		RequestParameters: api.RequestParameters{
+			URL: "/test/url",
+		},
+		Versions: []api.CommandVersion{{
+			Version:              api.NewStableVersion(1991, 5, 17),
+			RequestContentType:   "json",
+			ResponseContentTypes: []string{"json"},
+		}},
+	}
+	commandRequest := CommandRequest{
+		Command:     command,
+		ContentType: "json",
+		Format:      "json",
+		Version:     api.NewStableVersion(1991, 5, 17),
+	}
+
+	commandConverter := NewMockCommandConverter(ctrl)
+	commandConverter.EXPECT().ConvertToHTTPRequest(commandRequest).Return(&http.Request{}, nil)
+
+	httpClient := NewMockDoer(ctrl)
+	httpClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		StatusCode: http.StatusOK,
+		Body:       io.NopCloser(strings.NewReader(`{"success": true}`)),
+	}, nil)
+
+	logger := NewMockLogger(ctrl)
+	logger.EXPECT().IsDebugLevel().Return(false).AnyTimes()
+
+	var gotCommand api.Command
+	executor, err := newExecutorWithHTTPClientFactory(commandConverter, func(command api.Command) (Doer, error) {
+		gotCommand = command
+		return httpClient, nil
+	}, NewFormatter(), logger)
+	require.NoError(t, err)
+
+	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
+
+	require.NoError(t, err)
+	require.NotNil(t, response)
+	require.True(t, gotCommand.Unauthenticated)
+	require.Equal(t, "testOperation", gotCommand.OperationID)
 }

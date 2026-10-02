@@ -24,6 +24,10 @@ import (
 
 const headerParam = "headerParam"
 
+const digestAuth = "DigestAuth"
+
+const rootTag = "Root"
+
 func TestExtractVersionAndContentType(t *testing.T) {
 	tests := []struct {
 		input           string
@@ -176,6 +180,121 @@ func TestExtractParameters_HeaderParametersSkipped(t *testing.T) {
 			t.Error("Header parameter 'headerParam' should not be in URL parameters")
 		}
 	}
+}
+
+func TestOperationRequiresAuthentication(t *testing.T) {
+	rootSecurity := openapi3.SecurityRequirements{
+		{digestAuth: []string{}},
+	}
+	explicitNoSecurity := openapi3.SecurityRequirements{}
+	explicitSecurity := openapi3.SecurityRequirements{
+		{"ServiceAccounts": []string{}},
+	}
+
+	tests := []struct {
+		name      string
+		operation *openapi3.Operation
+		want      bool
+	}{
+		{
+			name:      "inherits root security",
+			operation: &openapi3.Operation{},
+			want:      true,
+		},
+		{
+			name: "operation explicitly disables security",
+			operation: &openapi3.Operation{
+				Security: &explicitNoSecurity,
+			},
+			want: false,
+		},
+		{
+			name: "operation explicitly requires security",
+			operation: &openapi3.Operation{
+				Security: &explicitSecurity,
+			},
+			want: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := operationRequiresAuthentication(tt.operation, rootSecurity)
+			if got != tt.want {
+				t.Fatalf("operationRequiresAuthentication() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSpecToCommandsSetsUnauthenticatedFromOperationSecurity(t *testing.T) {
+	noSecurity := openapi3.SecurityRequirements{}
+	spec := &openapi3.T{
+		Security: openapi3.SecurityRequirements{
+			{digestAuth: []string{}},
+		},
+		Tags: openapi3.Tags{
+			{Name: rootTag},
+		},
+		Paths: openapi3.NewPaths(
+			openapi3.WithPath("/api/atlas/v2/groups", &openapi3.PathItem{
+				Get: testOperation("listGroups", nil),
+			}),
+			openapi3.WithPath("/api/atlas/v2/unauth/ephemeralClusters:create", &openapi3.PathItem{
+				Post: testOperation("createEphemeralCluster", &noSecurity),
+			}),
+		),
+	}
+
+	groups, err := specToCommands(time.Now(), spec)
+
+	if err != nil {
+		t.Fatalf("specToCommands() error = %v", err)
+	}
+	if len(groups) != 1 {
+		t.Fatalf("expected 1 group, got %d", len(groups))
+	}
+
+	commands := groups[0].Commands
+	if len(commands) != 2 {
+		t.Fatalf("expected 2 commands, got %d", len(commands))
+	}
+
+	for _, command := range commands {
+		switch command.OperationID {
+		case "createEphemeralCluster":
+			if !command.Unauthenticated {
+				t.Fatal("expected createEphemeralCluster to be unauthenticated")
+			}
+		case "listGroups":
+			if command.Unauthenticated {
+				t.Fatal("expected listGroups to require authentication")
+			}
+		default:
+			t.Fatalf("unexpected command %q", command.OperationID)
+		}
+	}
+}
+
+func testOperation(operationID string, security *openapi3.SecurityRequirements) *openapi3.Operation {
+	return &openapi3.Operation{
+		OperationID:  operationID,
+		Tags:         []string{rootTag},
+		Description:  operationID,
+		Security:     security,
+		Responses:    testResponses(),
+		Parameters:   openapi3.Parameters{},
+		RequestBody:  nil,
+		ExternalDocs: nil,
+	}
+}
+
+func testResponses() *openapi3.Responses {
+	return openapi3.NewResponses(openapi3.WithStatus(200, &openapi3.ResponseRef{Value: &openapi3.Response{
+		Content: openapi3.Content{
+			"application/vnd.atlas.2025-01-01+json": &openapi3.MediaType{},
+		},
+	}}))
 }
 
 func TestAddContentTypeToVersion_DeprecatedWithSunset(t *testing.T) {

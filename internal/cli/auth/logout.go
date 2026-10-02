@@ -137,13 +137,6 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	return nil
 }
 
-func profileRequested(cmd *cobra.Command) bool {
-	if f := cmd.Flag(flag.Profile); f != nil && f.Changed {
-		return true
-	}
-	return config.GetString(config.ProfileFlag) != ""
-}
-
 func LogoutBuilder() *cobra.Command {
 	opts := &logoutOpts{
 		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
@@ -165,8 +158,7 @@ func LogoutBuilder() *cobra.Command {
 				opts.config = config.Default()
 			}
 
-			profiles := opts.config.List()
-			opts.profileMissing = !slices.Contains(profiles, opts.config.Name()) && (len(profiles) > 0 || profileRequested(cmd))
+			opts.profileMissing = !slices.Contains(opts.config.List(), opts.config.Name())
 			if opts.profileMissing {
 				_, _ = log.Warningf("Warning: profile %q does not exist, nothing to log out\n", opts.config.Name())
 				return nil

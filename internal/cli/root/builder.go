@@ -247,6 +247,12 @@ func shouldSetService(cmd *cobra.Command) bool {
 		return false
 	}
 
+	// Setting the service would create the selected profile in memory and defeat logout's profile existence check.
+	switch cmd.CommandPath() {
+	case atlas + " auth logout", atlas + " logout":
+		return false
+	}
+
 	return true
 }
 

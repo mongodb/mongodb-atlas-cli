@@ -70,10 +70,12 @@ require (
 require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.5.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/signin v1.10.1 // indirect
+	github.com/bitfield/gotestdox v0.2.2 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cli/safeexec v1.0.1 // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
+	github.com/dnephin/pflag v1.0.7 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
@@ -81,7 +83,9 @@ require (
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.1 // indirect
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
+	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
+	github.com/mattn/goveralls v0.0.12 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/mongodb-forks/digest v1.1.0 // indirect
 	github.com/otiai10/copy v1.14.1 // indirect
@@ -95,6 +99,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	google.golang.org/grpc v1.84.0 // indirect
+	gotest.tools/gotestsum v1.13.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 )
 
@@ -129,7 +134,7 @@ require (
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
 	github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707 // indirect
 	github.com/ebitengine/purego v0.10.2 // indirect
-	github.com/fatih/color v1.14.1 // indirect
+	github.com/fatih/color v1.18.0 // indirect
 	github.com/felixge/httpsnoop v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
@@ -197,5 +202,7 @@ tool (
 	github.com/google/addlicense
 	github.com/google/go-licenses/v2
 	github.com/icholy/gomajor
+	github.com/mattn/goveralls
 	go.uber.org/mock/mockgen
+	gotest.tools/gotestsum
 )

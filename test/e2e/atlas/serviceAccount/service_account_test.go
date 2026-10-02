@@ -86,8 +86,18 @@ func setupServiceAccountProfile(t *testing.T, cliPath, profileName, clientID, cl
 		return fmt.Errorf("failed to set service: %w", err)
 	}
 
-	// Set ops manager URL
-	opsManagerURL := "https://cloud-dev.mongodb.com/"
+	// Set ops manager URL to the one the current e2e profile points at
+	opsManagerURL := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
+	if opsManagerURL == "" {
+		profile, err := internal.ProfileData()
+		if err != nil {
+			return fmt.Errorf("failed to read profile %q: %w", internal.ProfileName(), err)
+		}
+		opsManagerURL = profile["ops_manager_url"]
+	}
+	if opsManagerURL == "" {
+		return fmt.Errorf("service account test needs an ops_manager_url: set MONGODB_ATLAS_OPS_MANAGER_URL or ops_manager_url in profile %q", internal.ProfileName())
+	}
 	cmd = exec.Command(cliPath, "config", "set", "ops_manager_url", opsManagerURL, "-P", profileName)
 	cmd.Env = os.Environ()
 	if _, err := internal.RunAndGetStdOut(cmd); err != nil {

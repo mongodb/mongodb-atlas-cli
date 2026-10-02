@@ -32,6 +32,7 @@ const (
 	federationSettingsEntity      = "federationSettings"
 	identityProviderEntity        = "identityProvider"
 	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
+	workforceDomain               = "iam-test-domain-dev.com"
 )
 
 func TestIdentityProviders(t *testing.T) {
@@ -52,6 +53,36 @@ func TestIdentityProviders(t *testing.T) {
 	var federationSettingsID string
 	var oidcWorkloadIdpID string
 	var oidcIWorkforceIdpID string
+	var oidcWorkloadIdpDeleted, oidcWorkforceIdpDeleted bool
+
+	// deleteIdPOnCleanup makes sure an IdP created by this test is deleted even when a later step fails,
+	// unless the "Delete OIDC IdP" step already removed it.
+	deleteIdPOnCleanup := func(idpID string, deleted *bool) {
+		if idpID == "" {
+			return
+		}
+		t.Cleanup(func() {
+			if *deleted {
+				return
+			}
+			cmd := exec.Command(cliPath,
+				federatedAuthenticationEntity,
+				federationSettingsEntity,
+				identityProviderEntity,
+				"delete",
+				idpID,
+				"--federationSettingsId",
+				federationSettingsID,
+				"--force",
+				"-P",
+				internal.ProfileName(),
+			)
+			cmd.Env = os.Environ()
+			if resp, err := internal.RunAndGetStdOut(cmd); err != nil {
+				t.Errorf("failed to delete identity provider %s: %v: %s", idpID, err, string(resp))
+			}
+		})
+	}
 
 	g.Run("Describe an org federation settings", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -117,6 +148,7 @@ func TestIdentityProviders(t *testing.T) {
 
 		assert.NotEmpty(t, provider.GetId())
 		oidcWorkloadIdpID = provider.GetId()
+		deleteIdPOnCleanup(oidcWorkloadIdpID, &oidcWorkloadIdpDeleted)
 	})
 
 	g.Run("Connect OIDC IdP WORKLOAD", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -176,7 +208,7 @@ func TestIdentityProviders(t *testing.T) {
 			"--userClaim",
 			"user",
 			"--associatedDomain",
-			"iam-test-domain-dev.com",
+			workforceDomain,
 			"-o=json",
 			"-P",
 			internal.ProfileName(),
@@ -184,13 +216,14 @@ func TestIdentityProviders(t *testing.T) {
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
+		req.NoError(err, "creating a WORKFORCE IdP needs %s to be a verified domain in the org's federation settings: %s", workforceDomain, string(resp))
 
 		var provider atlasv2.FederationIdentityProvider
 		req.NoError(json.Unmarshal(resp, &provider))
 
 		assert.NotEmpty(t, provider.GetId())
-		oidcIWorkforceIdpID = provider.Id
+		oidcIWorkforceIdpID = provider.GetId()
+		deleteIdPOnCleanup(oidcIWorkforceIdpID, &oidcWorkforceIdpDeleted)
 	})
 
 	g.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -526,6 +559,7 @@ func TestIdentityProviders(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
+		oidcWorkforceIdpDeleted = true
 	})
 
 	t.Run("Revoke JWK from OIDC IdP WORKLOAD", func(_ *testing.T) {
@@ -565,5 +599,6 @@ func TestIdentityProviders(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
+		oidcWorkloadIdpDeleted = true
 	})
 }

@@ -322,28 +322,27 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefixAndProvider(prefix, pro
 
 	g.ClusterName = g.Memory(prefix+"GenerateClusterName", Must(RandClusterNameWithPrefix(prefix))).(string)
 
+	// register the cleanup before deploying so a cluster that was created but failed to become ready is still deleted
+	if !SkipCleanup() {
+		g.t.Cleanup(func() {
+			err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
+			if err == nil {
+				return
+			}
+
+			if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+				return
+			}
+
+			g.t.Errorf("unexpected error deleting cluster: %v", err)
+		})
+	}
+
 	g.clusterRegion, err = deployClusterForProject(g.ProjectID, g.ClusterName, g.Tier, g.MDBVer, provider, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.ProjectID, g.ClusterName)
-		g.t.Errorf("unexpected error deploying cluster: %v", err)
+		g.t.Fatalf("unexpected error deploying cluster: %v", err)
 	}
-
-	if SkipCleanup() {
-		return
-	}
-
-	g.t.Cleanup(func() {
-		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
-		if err == nil {
-			return
-		}
-
-		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
-			return
-		}
-
-		g.t.Errorf("unexpected error deleting cluster: %v", err)
-	})
 }
 
 func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
@@ -560,13 +559,10 @@ func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	o := s
 	o = strings.ReplaceAll(o, p["org_id"], snapshotOrgID)
 	o = strings.ReplaceAll(o, p["project_id"], snapshotProjectID)
-	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), snapshotIdentityProviderID)
 	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), snapshotCloudRoleID)
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), snapshotFlexInstanceName)
 	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), snapshotTestBucket)
 	o = strings.ReplaceAll(o, g.snapshotTargetURI, snapshotOpsManagerURL)
-	o = strings.ReplaceAll(o, os.Getenv("E2E_CLUSTER_1_NAME"), snapshotCluster1Name)
-	o = strings.ReplaceAll(o, os.Getenv("E2E_CLUSTER_2_NAME"), snapshotCluster2Name)
 	o = replaceLinkToken(o)
 
 	return o

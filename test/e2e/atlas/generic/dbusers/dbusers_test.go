@@ -41,6 +41,14 @@ const (
 	clusterType   = "CLUSTER"
 )
 
+// Atlas only validates the format of scope cluster names and the OIDC username prefix,
+// so these don't need to refer to existing clusters or identity providers.
+const (
+	clusterName1       = "snapshotCluster0"
+	clusterName2       = "snapshotCluster1"
+	identityProviderID = "d0123456789abcdef012345d"
+)
+
 func TestDBUserWithFlags(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
@@ -49,8 +57,6 @@ func TestDBUserWithFlags(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
-	clusterName1, clusterName2, err := internal.TestClusterNames()
-	require.NoError(t, err)
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -171,13 +177,9 @@ func TestDBUsersWithStdin(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
-	clusterName1, clusterName2, err := internal.TestClusterNames()
-	require.NoError(t, err)
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
-	idpID, err := internal.IdentityProviderID()
-	require.NoError(t, err)
-	oidcUsername := idpID + "/" + username
+	oidcUsername := identityProviderID + "/" + username
 
 	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
@@ -252,9 +254,6 @@ func TestDBUsersWithStdin(t *testing.T) {
 func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
-	clusterName1, clusterName2, err := internal.TestClusterNames()
-	require.NoError(t, err)
-
 	cmd.Env = os.Environ()
 
 	resp, err := internal.RunAndGetStdOut(cmd)
@@ -297,9 +296,6 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 
 func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
-
-	clusterName1, _, err := internal.TestClusterNames()
-	require.NoError(t, err)
 
 	cmd.Env = os.Environ()
 	resp, err := internal.RunAndGetStdOut(cmd)

@@ -33,17 +33,11 @@ const (
 	azureEntity            = "azure"
 	gcpEntity              = "gcp"
 	regionalModeEntity     = "regionalModes"
+	// fixed regions keep runs reproducible and only use regions available in every environment
+	regionAWS   = "us-east-1"
+	regionAzure = "US_EAST_2"
+	regionGCP   = "CENTRAL_US"
 )
-
-var regionsAWS = []string{
-	"us-east-1",
-	"us-east-2",
-	"us-west-1",
-	"ca-central-1",
-	"sa-east-1",
-	"eu-west-1",
-	"eu-central-1",
-}
 
 func TestPrivateEndpointsAWS(t *testing.T) {
 	if testing.Short() {
@@ -53,12 +47,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsAWS")
 
-	n := g.MemoryRand("rand", int64(len(regionsAWS)))
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAWS[n.Int64()]
+	region := regionAWS
 	var id string
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -183,13 +175,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 }
 
-var regionsAzure = []string{
-	"US_EAST_2",
-	"EUROPE_NORTH",
-	"US_WEST_2",
-	"ASIA_SOUTH_EAST",
-}
-
 func TestPrivateEndpointsAzure(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
@@ -198,12 +183,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsAzure")
 
-	n := g.MemoryRand("rand", int64(len(regionsAzure)))
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAzure[n.Int64()]
+	region := regionAzure
 	g.Logf("region=%s", region)
 	var id string
 
@@ -330,21 +313,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	})
 }
 
-var regionsGCP = []string{
-	"CENTRAL_US",
-	"US_EAST_4",
-	"NORTH_AMERICA_NORTHEAST_1",
-	"SOUTH_AMERICA_EAST_1",
-	"WESTERN_US",
-	"US_WEST_2",
-	"AUSTRALIA_SOUTHEAST_2",
-	"ASIA_SOUTHEAST_2",
-	"WESTERN_EUROPE",
-	"EUROPE_NORTH_1",
-	"EUROPE_WEST_2",
-	"EUROPE_CENTRAL_2",
-}
-
 func TestPrivateEndpointsGCP(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
@@ -353,9 +321,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("privateEndpointsGPC")
 
-	n := g.MemoryRand("rand", int64(len(regionsGCP)))
-
-	region := regionsGCP[n.Int64()]
+	region := regionGCP
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)

@@ -27,6 +27,15 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const (
+	versionV1      = "v1.0.0"
+	versionAtlasV1 = "atlascli/v1.0.0"
+	versionV2      = "v2.0.0"
+	versionAtlasV2 = "atlascli/v2.0.0"
+	versionV3      = "v3.0.0"
+	versionV3Build = "v3.0.0-123"
+)
+
 type testCase struct {
 	currentVersion   string
 	expectNewVersion bool
@@ -35,31 +44,47 @@ type testCase struct {
 
 func testCases() []testCase {
 	f := false
-	atlasV := "atlascli/v2.0.0"
+	atlasV := versionAtlasV2
+	bareV := versionV2
 
 	tests := []testCase{
 		{
-			currentVersion:   "v1.0.0",
+			currentVersion:   versionV1,
 			expectNewVersion: true,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "atlascli/v1.0.0",
+			currentVersion:   versionAtlasV1,
 			expectNewVersion: true,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v2.0.0",
+			currentVersion:   versionV1,
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion:   versionAtlasV1,
+			expectNewVersion: true,
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion:   versionV2,
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v3.0.0",
+			currentVersion:   versionV2,
+			expectNewVersion: false,
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
+		},
+		{
+			currentVersion:   versionV3,
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v3.0.0-123",
+			currentVersion:   versionV3Build,
 			expectNewVersion: false,
 			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
 		},
@@ -110,9 +135,20 @@ func TestOutputOpts_testIsValidTag(t *testing.T) {
 		tag     string
 		isValid bool
 	}{
-		{"atlascli/v1.0.0", true},
+		// Legacy format.
+		{versionAtlasV1, true},
+		{"atlascli/v1.0.0-rc0", true},
+		// New bare format.
+		{versionV1, true},
+		{"v2.3.4", true},
+		// Other tools' tags. mongocli shares this repo's release feed and its
+		// latest tag (v2.x) outranks atlascli's (v1.x), so it must never match.
 		{"mongocli/v1.0.0", false},
-		{"v1.0.0", false},
+		{"mongocli/v2.0.3", false},
+		// Tags that do not carry a version.
+		{"nightly", false},
+		{"atlascli/nightly", false},
+		{"2024", false},
 	}
 
 	for _, tt := range tests {

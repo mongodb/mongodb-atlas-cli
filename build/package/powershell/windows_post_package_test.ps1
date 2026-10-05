@@ -1,5 +1,7 @@
 # Install current version of MongoDB Atlas CLI
-$NewestVersion = git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2
+# Kept inline (Windows/PowerShell cannot run build/package/git-version.sh).
+# Matches both the legacy "atlascli/vX.Y.Z" and the new "vX.Y.Z" tag formats.
+$NewestVersion = git tag --list "atlascli/v*" "v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2
 $PackageName = "mongodb-atlas-cli_${NewestVersion}_windows_x86_64.msi"
 if("${Env:UNSTABLE}" -eq "-unstable") {
     $PackageName = "mongodb-atlas-cli_${NewestVersion}-next_windows_x86_64.msi"

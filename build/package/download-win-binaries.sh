@@ -19,7 +19,7 @@ export project
 export revision
 export created_at
 
-VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 VERSION_NAME="$VERSION_GIT"
 if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"

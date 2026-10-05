@@ -3,12 +3,15 @@ name: Dependabot PR automation
 
 on:
   pull_request:
-    types: [opened]
+    # `synchronize` covers Dependabot rebases and recreates, which rewrite the PR
+    # branch without opening a new PR. The job's actor guard keeps the workflow's
+    # own post-update commit from re-triggering it.
+    types: [opened, synchronize]
 
 permissions: {}
 
 jobs:
   dependabot:
     if: github.actor == 'dependabot[bot]'
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@000a40a4ca03566a3d4ad41a293866ef8bdbb0ea
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@63d846315cbb3b905482ee8f32c88188032daf28
     secrets: inherit

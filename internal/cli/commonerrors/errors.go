@@ -105,7 +105,7 @@ func Check(err error) error {
 		if names := serviceAccountEnvVars(os.Environ()); len(names) > 0 {
 			return fmt.Errorf(`%w
 
-Note: credentials set in environment variables (%s) take precedence over your profile and may be the cause of this error.
+Note: credentials from environment variables (%s) were used to authenticate; they take precedence over your profile.
 Unset them or verify they hold the intended service account credentials. To learn more, see %s`,
 				ErrUnauthorized, strings.Join(names, " and "), EnvVarsDocsURL)
 		}

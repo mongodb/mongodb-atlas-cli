@@ -16,11 +16,14 @@ package commonerrors
 
 import (
 	"errors"
+	"strings"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/oauth2"
 )
 
 func TestCheck(t *testing.T) {
@@ -175,4 +178,41 @@ func TestGetErrorCode(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEnvVarName(t *testing.T) {
+	if got := EnvVarName(config.ClientIDField); got != "MONGODB_ATLAS_CLIENT_ID" {
+		t.Errorf("EnvVarName() = %v, want MONGODB_ATLAS_CLIENT_ID", got)
+	}
+
+	// an unrelated MCLI_ variable is enough; it need not be a credential
+	t.Setenv("MCLI_OPS_MANAGER_URL", "http://localhost")
+	if got := EnvVarName(config.ClientIDField); got != "MCLI_CLIENT_ID" {
+		t.Errorf("EnvVarName() = %v, want MCLI_CLIENT_ID", got)
+	}
+}
+
+func TestCheckInvalidClient(t *testing.T) {
+	invalidClientErr := &oauth2.RetrieveError{ErrorCode: invalidServiceAccountClient}
+
+	t.Run("without credential env vars", func(t *testing.T) {
+		got := Check(invalidClientErr)
+		if !errors.Is(got, ErrUnauthorized) {
+			t.Errorf("Check() = %v, want ErrUnauthorized", got)
+		}
+		if strings.Contains(got.Error(), "Your environment sets") {
+			t.Errorf("Check() should not mention env vars, got %v", got)
+		}
+	})
+
+	t.Run("with credential env vars", func(t *testing.T) {
+		t.Setenv("MONGODB_ATLAS_CLIENT_ID", "from-env")
+		got := Check(invalidClientErr)
+		if !errors.Is(got, ErrUnauthorized) {
+			t.Errorf("Check() = %v, want it to wrap ErrUnauthorized", got)
+		}
+		if !strings.Contains(got.Error(), "MONGODB_ATLAS_CLIENT_ID") {
+			t.Errorf("Check() should name the env var, got %v", got)
+		}
+	})
 }

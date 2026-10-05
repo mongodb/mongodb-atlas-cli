@@ -16,6 +16,8 @@ Authenticate with MongoDB Atlas.
 
 This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
 
+Note: If credentials are set in environment variables, they take precedence over the values you provide during authentication. To learn more, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-env-variables/#precedence.
+
 Syntax
 ------
 

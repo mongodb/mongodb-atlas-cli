@@ -47,6 +47,8 @@ Once you've selected ServiceAccount, the CLI will prompt you to provide the Clie
 You are configuring a profile for atlas.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
+Note that environment variables take precedence over the values you enter here.
+To learn more about environment variables, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-env-variables/#precedence.
 
 Enter [?] on any option to get help.
 

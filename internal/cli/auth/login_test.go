@@ -26,6 +26,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
@@ -134,6 +135,7 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().AuthType().Return(config.UserAccount).AnyTimes()
 
 	opts.SkipConfig = true
 
@@ -177,6 +179,9 @@ func TestLoginRun_APIKeys_Success(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetPublicAPIKey("public-key").Times(1)
 	mockConfig.EXPECT().SetPrivateAPIKey("private-key").Times(1)
+	mockConfig.EXPECT().PublicAPIKey().Return("public-key").AnyTimes()
+	mockConfig.EXPECT().PrivateAPIKey().Return("private-key").AnyTimes()
+	mockConfig.EXPECT().AuthType().Return(config.APIKeys).AnyTimes()
 
 	opts.SkipConfig = true
 
@@ -309,4 +314,207 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 
 	ctx := t.Context()
 	require.NoError(t, opts.setUpProfile(ctx))
+}
+
+func TestLoginRun_ServiceAccount_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+
+	buf := new(bytes.Buffer)
+	opts := &LoginOpts{
+		config: mockConfig,
+		Asker:  mockAsker,
+	}
+	opts.OutWriter = buf
+
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = prompt.ServiceAccountAuth
+			}
+			return nil
+		})
+
+	mockAsker.EXPECT().
+		TrackAsk(gomock.Any(), opts).
+		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
+			if o, ok := answer.(*LoginOpts); ok {
+				o.ClientID = "client-id"
+				o.ClientSecret = "client-secret"
+			}
+			return nil
+		})
+
+	mockConfig.EXPECT().SetAuthType(config.ServiceAccount).Times(1)
+	mockConfig.EXPECT().SetService("cloud").Times(1)
+	mockConfig.EXPECT().SetClientID("client-id").Times(1)
+	mockConfig.EXPECT().SetClientSecret("client-secret").Times(1)
+	mockConfig.EXPECT().ClientID().Return("client-id").AnyTimes()
+	mockConfig.EXPECT().ClientSecret().Return("client-secret").AnyTimes()
+	mockConfig.EXPECT().AuthType().Return(config.ServiceAccount).AnyTimes()
+
+	opts.SkipConfig = true
+
+	require.NoError(t, opts.LoginRun(t.Context()))
+	assert.Contains(t, buf.String(), "environment variables take precedence over the values you enter here")
+	assert.Contains(t, buf.String(), commonerrors.EnvVarsDocsURL)
+}
+
+const clientIDEnvVar = config.AtlasCLIEnvPrefix + "_CLIENT_ID"
+
+func TestLoginOpts_checkEnvAuthTypeOverride(t *testing.T) {
+	tests := []struct {
+		name      string
+		selected  config.AuthMechanism
+		effective config.AuthMechanism
+		envVars   map[string]string
+		errSubstr string
+	}{
+		{
+			name:      "env credentials hijack the selected mechanism",
+			selected:  config.UserAccount,
+			effective: config.ServiceAccount,
+			envVars:   map[string]string{clientIDEnvVar: "from-env"},
+			errSubstr: "selects service_account authentication and overrides the user_account method you chose",
+		},
+		{
+			name:      "stale profile hijacks the mechanism without env vars",
+			selected:  config.UserAccount,
+			effective: config.ServiceAccount,
+		},
+		{
+			name:      "mechanism matches",
+			selected:  config.UserAccount,
+			effective: config.UserAccount,
+			envVars:   map[string]string{clientIDEnvVar: "from-env"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.envVars {
+				t.Setenv(k, v)
+			}
+
+			mockConfig := NewMockLoginConfig(gomock.NewController(t))
+			mockConfig.EXPECT().AuthType().Return(tt.effective).AnyTimes()
+			opts := &LoginOpts{config: mockConfig}
+
+			err := opts.checkEnvAuthTypeOverride(tt.selected)
+			if tt.errSubstr == "" {
+				require.NoError(t, err)
+				return
+			}
+			require.Error(t, err)
+			assert.Contains(t, err.Error(), tt.errSubstr)
+			assert.Contains(t, err.Error(), commonerrors.EnvVarsDocsURL)
+		})
+	}
+}
+
+func TestLoginOpts_checkEnvCredentialOverride(t *testing.T) {
+	tests := []struct {
+		name      string
+		authType  string
+		envVars   map[string]string
+		opts      LoginOpts
+		resolved  func(*MockLoginConfig)
+		errSubstr string
+	}{
+		{
+			name:     "entered value survives",
+			authType: prompt.ServiceAccountAuth,
+			envVars:  map[string]string{clientIDEnvVar: "from-env"},
+			opts:     LoginOpts{ClientID: "from-env", ClientSecret: "secret"},
+			resolved: func(c *MockLoginConfig) {
+				c.EXPECT().ClientID().Return("from-env").AnyTimes()
+				c.EXPECT().ClientSecret().Return("secret").AnyTimes()
+			},
+		},
+		{
+			name:     "env var discards the entered value",
+			authType: prompt.ServiceAccountAuth,
+			envVars:  map[string]string{clientIDEnvVar: "from-env"},
+			opts:     LoginOpts{ClientID: "typed-by-user", ClientSecret: "secret"},
+			resolved: func(c *MockLoginConfig) {
+				c.EXPECT().ClientID().Return("from-env").AnyTimes()
+				c.EXPECT().ClientSecret().Return("secret").AnyTimes()
+			},
+			errSubstr: clientIDEnvVar + " takes precedence over the Client ID you entered",
+		},
+		{
+			name:     "mismatch without the env var set is not reported",
+			authType: prompt.ServiceAccountAuth,
+			opts:     LoginOpts{ClientID: "typed-by-user", ClientSecret: "secret"},
+			resolved: func(c *MockLoginConfig) {
+				c.EXPECT().ClientID().Return("stale-from-keyring").AnyTimes()
+				c.EXPECT().ClientSecret().Return("secret").AnyTimes()
+			},
+		},
+		{
+			name:     "nothing supplied",
+			authType: userAccountAuth,
+			resolved: func(_ *MockLoginConfig) {},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.envVars {
+				t.Setenv(k, v)
+			}
+
+			mockConfig := NewMockLoginConfig(gomock.NewController(t))
+			tt.resolved(mockConfig)
+
+			opts := tt.opts
+			opts.authType = tt.authType
+			opts.config = mockConfig
+
+			err := opts.checkEnvCredentialOverride()
+			if tt.errSubstr == "" {
+				require.NoError(t, err)
+				return
+			}
+			require.Error(t, err)
+			assert.Contains(t, err.Error(), tt.errSubstr)
+			assert.Contains(t, err.Error(), commonerrors.EnvVarsDocsURL)
+		})
+	}
+}
+
+// The hijack is detectable from the environment alone, so LoginRun must fail before
+// setUpCredentials sends the user through the OAuth device flow.
+func TestLoginRun_HijackFailsBeforeDeviceFlow(t *testing.T) {
+	t.Setenv(clientIDEnvVar, "from-env")
+
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
+	opts := &LoginOpts{config: mockConfig, Asker: mockAsker, NoBrowser: true}
+	opts.WithFlow(mockFlow)
+	opts.OutWriter = new(bytes.Buffer)
+
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = userAccountAuth
+			}
+			return nil
+		})
+
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().AuthType().Return(config.ServiceAccount).AnyTimes()
+	// the device flow must never start
+	mockFlow.EXPECT().RequestCode(gomock.Any()).Times(0)
+	mockConfig.EXPECT().Save().Times(0)
+
+	err := opts.LoginRun(t.Context())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), clientIDEnvVar)
 }

@@ -18,6 +18,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -58,6 +60,11 @@ type SetSaver interface {
 type LoginConfig interface {
 	SetSaver
 	AccessTokenSubject() (string, error)
+	AuthType() config.AuthMechanism
+	ClientID() string
+	ClientSecret() string
+	PublicAPIKey() string
+	PrivateAPIKey() string
 	OrgID() string
 	ProjectID() string
 }
@@ -82,6 +89,13 @@ var (
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
+
+type credential struct {
+	field    string // config field name, used to derive the environment variable
+	label    string // how the credential is labeled at the prompt
+	supplied string
+	resolved string
+}
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
@@ -146,10 +160,12 @@ func (opts *LoginOpts) setProgrammaticCredentials() error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
+Note that environment variables take precedence over the values you enter here.
+To learn more about environment variables, see %s.
 
 Enter [?] on any option to get help.
 
-`, atlasName)
+`, atlasName, commonerrors.EnvVarsDocsURL)
 
 	q := prompt.AccessQuestions(opts.authType)
 	if err := opts.Asker.TrackAsk(q, opts); err != nil {
@@ -201,6 +217,64 @@ func (opts *LoginOpts) setUpAccess() {
 	}
 }
 
+func (opts *LoginOpts) suppliedCredentials() []credential {
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		return []credential{
+			{config.ClientIDField, "Client ID", opts.ClientID, opts.config.ClientID()},
+			{config.ClientSecretField, "Client Secret", opts.ClientSecret, opts.config.ClientSecret()},
+		}
+	case prompt.APIKeysAuth:
+		return []credential{
+			{commonerrors.PublicAPIKeyField, "Public API Key", opts.PublicAPIKey, opts.config.PublicAPIKey()},
+			{commonerrors.PrivateAPIKeyField, "Private API Key", opts.PrivateAPIKey, opts.config.PrivateAPIKey()},
+		}
+	}
+	return nil
+}
+
+// checkEnvAuthTypeOverride reports environment credentials that select a different
+// mechanism than the one just chosen, which would authenticate the user as somebody else.
+// It runs before any credentials are gathered so the user is not sent through a browser
+// round-trip first.
+//
+// It requires an environment variable to actually be set: a profile can also disagree
+// with the selected mechanism because of stale keyring or file values, which this error
+// would misdiagnose.
+func (opts *LoginOpts) checkEnvAuthTypeOverride(selected config.AuthMechanism) error {
+	effective := opts.config.AuthType()
+	if effective == selected {
+		return nil
+	}
+	names := commonerrors.CredentialEnvVarsFor(effective)
+	if len(names) == 0 {
+		return nil
+	}
+	set := strings.Join(names, " and ")
+	return fmt.Errorf(`authentication failed: your environment sets %s, which selects %s authentication and overrides the %s method you chose
+
+To authenticate as %s, unset %s and run this command again.
+To learn more, see %s`, set, effective, selected, selected, set, commonerrors.EnvVarsDocsURL)
+}
+
+// checkEnvCredentialOverride reports credentials that were accepted at the prompt and
+// then discarded, because environment variables outrank profile values on read. It can
+// only run once the answers are in. Left undetected this surfaces later as an opaque
+// oauth2 "invalid_client" error.
+func (opts *LoginOpts) checkEnvCredentialOverride() error {
+	for _, c := range opts.suppliedCredentials() {
+		name := commonerrors.EnvVarName(c.field)
+		if c.supplied == "" || c.supplied == c.resolved || os.Getenv(name) == "" {
+			continue
+		}
+		return fmt.Errorf(`authentication failed: the environment variable %s takes precedence over the %s you entered, so your input was ignored
+
+To use the value you entered, unset %s and run this command again.
+To learn more, see %s`, name, c.label, name, commonerrors.EnvVarsDocsURL)
+	}
+	return nil
+}
+
 // SyncWithOAuthAccessProfile returns a function that is synchronizing the oauth settings
 // from a login config profile with the provided command opts.
 func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
@@ -243,18 +317,28 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
+	var selected config.AuthMechanism
 	switch opts.authType {
 	case userAccountAuth:
-		opts.config.SetAuthType(config.UserAccount)
+		selected = config.UserAccount
 	case prompt.ServiceAccountAuth:
-		opts.config.SetAuthType(config.ServiceAccount)
+		selected = config.ServiceAccount
 	case prompt.APIKeysAuth:
-		opts.config.SetAuthType(config.APIKeys)
+		selected = config.APIKeys
 	default:
 		return errors.New("no authentication type selected")
 	}
+	opts.config.SetAuthType(selected)
+
+	if err := opts.checkEnvAuthTypeOverride(selected); err != nil {
+		return err
+	}
 
 	if err := opts.setUpCredentials(ctx); err != nil {
+		return err
+	}
+
+	if err := opts.checkEnvCredentialOverride(); err != nil {
 		return err
 	}
 
@@ -446,7 +530,9 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Long:  `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.`,
+		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
+
+Note: If credentials are set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + ".",
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 `,

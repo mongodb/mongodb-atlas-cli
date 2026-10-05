@@ -69,8 +69,28 @@ func VersionFromTag(ver string) string {
 	return ver
 }
 
+// isValidTagForTool reports whether a release tag belongs to the Atlas CLI and
+// carries a valid version. It accepts both the legacy "atlascli/vX.Y.Z" tags
+// and the new bare "vX.Y.Z" tags, while rejecting tags for other tools such as
+// "mongocli/vX.Y.Z".
 func isValidTagForTool(tag string) bool {
-	return strings.Contains(tag, config.AtlasCLI)
+	switch {
+	case strings.HasPrefix(tag, config.AtlasCLI+"/"):
+		// Legacy format: atlascli/vX.Y.Z
+		return isVersionTag(VersionFromTag(tag))
+	case strings.Contains(tag, "/"):
+		// Another tool's tag, e.g. mongocli/vX.Y.Z
+		return false
+	default:
+		// New format: vX.Y.Z. The "v" prefix is required so unrelated tags
+		// (e.g. a bare "2024") are not coerced into a version.
+		return strings.HasPrefix(tag, "v") && isVersionTag(tag)
+	}
+}
+
+func isVersionTag(tag string) bool {
+	_, err := semver.NewVersion(tag)
+	return err == nil
 }
 
 func (f *finder) loadOrGet() (*ReleaseInformation, *semver.Version, error) {

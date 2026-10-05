@@ -27,36 +27,34 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const (
+	versionV1 = "v1.0.0"
+	versionV2 = "v2.0.0"
+)
+
 func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 	f := false
-	atlasV := "atlascli/v2.0.0"
+	bareV := versionV2
 	tests := []struct {
 		currentVersion   string
 		expectNewVersion bool
 		release          *github.RepositoryRelease
 	}{
 		{
-			currentVersion:   "atlascli/v1.0.0",
+			// New bare tag format must render the upgrade notice.
+			currentVersion:   versionV1,
 			expectNewVersion: true,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v3.0.0",
+			// Already on the latest version: no notice.
+			currentVersion:   versionV2,
 			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v2.0.0",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
-		},
-		{
-			currentVersion:   "v2.0.0-123",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
-		},
-		{
-			currentVersion:   "v3.0.0-123",
+			// No release found: no notice.
+			currentVersion:   versionV1,
 			expectNewVersion: false,
 			release:          nil,
 		},

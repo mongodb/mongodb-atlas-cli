@@ -16,11 +16,14 @@ package commonerrors
 
 import (
 	"errors"
+	"slices"
+	"strings"
 	"testing"
 
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/oauth2"
 )
 
 func TestCheck(t *testing.T) {
@@ -80,6 +83,76 @@ func TestCheck(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestServiceAccountEnvVars(t *testing.T) {
+	testCases := []struct {
+		name    string
+		environ []string
+		want    []string
+	}{
+		{
+			name:    "no env vars",
+			environ: []string{"HOME=/home/user"},
+			want:    nil,
+		},
+		{
+			name:    "atlas prefix",
+			environ: []string{"MONGODB_ATLAS_CLIENT_ID=id", "MONGODB_ATLAS_CLIENT_SECRET=secret"},
+			want:    []string{"MONGODB_ATLAS_CLIENT_ID", "MONGODB_ATLAS_CLIENT_SECRET"},
+		},
+		{
+			name:    "mcli prefix takes over",
+			environ: []string{"MONGODB_ATLAS_CLIENT_ID=id", "MCLI_CLIENT_ID=id"},
+			want:    []string{"MCLI_CLIENT_ID"},
+		},
+		{
+			name:    "any mcli var switches the prefix",
+			environ: []string{"MCLI_OPS_MANAGER_URL=https://cloud-dev.mongodb.com/", "MONGODB_ATLAS_CLIENT_ID=id"},
+			want:    nil,
+		},
+		{
+			name:    "empty values are ignored",
+			environ: []string{"MONGODB_ATLAS_CLIENT_ID=", "MONGODB_ATLAS_CLIENT_SECRET=secret"},
+			want:    []string{"MONGODB_ATLAS_CLIENT_SECRET"},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := serviceAccountEnvVars(tc.environ); !slices.Equal(got, tc.want) {
+				t.Errorf("serviceAccountEnvVars(%v) = %v, want %v", tc.environ, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestCheck_invalidClient(t *testing.T) {
+	invalidClientErr := &oauth2.RetrieveError{ErrorCode: invalidServiceAccountClient}
+
+	t.Run("with service account env vars set", func(t *testing.T) {
+		t.Setenv("MCLI_CLIENT_ID", "id")
+		t.Setenv("MCLI_CLIENT_SECRET", "")
+
+		got := Check(invalidClientErr)
+		if !errors.Is(got, ErrUnauthorized) {
+			t.Fatalf("Check() = %v, want ErrUnauthorized", got)
+		}
+		if !strings.Contains(got.Error(), "MCLI_CLIENT_ID") || !strings.Contains(got.Error(), EnvVarsDocsURL) {
+			t.Errorf("Check() = %v, want the env var name and docs URL in the message", got)
+		}
+	})
+
+	t.Run("without service account env vars", func(t *testing.T) {
+		// setting MCLI vars to empty also pins the prefix detection to MCLI_,
+		// keeping the result deterministic on hosts with MONGODB_ATLAS_* vars set
+		t.Setenv("MCLI_CLIENT_ID", "")
+		t.Setenv("MCLI_CLIENT_SECRET", "")
+
+		if got := Check(invalidClientErr); !errors.Is(got, ErrUnauthorized) || got.Error() != ErrUnauthorized.Error() {
+			t.Errorf("Check() = %v, want exactly ErrUnauthorized", got)
+		}
+	})
 }
 
 func TestGetError(t *testing.T) {

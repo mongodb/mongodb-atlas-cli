@@ -16,8 +16,12 @@ package commonerrors
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312025/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -46,7 +50,35 @@ const (
 	unauthorizedErrorCode                   = "UNAUTHORIZED"
 	invalidRefreshTokenErrorCode            = "INVALID_REFRESH_TOKEN"
 	invalidServiceAccountClient             = "invalid_client"
+
+	// EnvVarsDocsURL documents which environment variables the CLI reads and their precedence.
+	EnvVarsDocsURL = "https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-env-variables/#precedence"
 )
+
+// serviceAccountEnvVars returns the service account credential environment variables that
+// are set to a non-empty value in environ (os.Environ format). atlas-cli-core reads
+// MONGODB_ATLAS_* variables, unless any MCLI-prefixed variable is set, in which case it
+// reads MCLI_* variables instead; the prefix detection here mirrors that behavior.
+func serviceAccountEnvVars(environ []string) []string {
+	prefix := config.AtlasCLIEnvPrefix
+	vars := make(map[string]string, len(environ))
+	for _, entry := range environ {
+		if strings.HasPrefix(entry, config.MongoCLIEnvPrefix) {
+			prefix = config.MongoCLIEnvPrefix
+		}
+		if name, value, ok := strings.Cut(entry, "="); ok {
+			vars[name] = value
+		}
+	}
+
+	var set []string
+	for _, field := range []string{config.ClientIDField, config.ClientSecretField} {
+		if name := prefix + "_" + strings.ToUpper(field); vars[name] != "" {
+			set = append(set, name)
+		}
+	}
+	return set
+}
 
 // Check checks the error and returns a more user-friendly error message if applicable.
 func Check(err error) error {
@@ -68,6 +100,15 @@ func Check(err error) error {
 	case asymmetricShardUnsupportedErrorCode:
 		return errAsymmetricShardUnsupported
 	case invalidServiceAccountClient: // oauth2 error
+		// Environment variables take precedence over profile credentials, so they are the
+		// likely source of the rejected client even when the profile looks correct.
+		if names := serviceAccountEnvVars(os.Environ()); len(names) > 0 {
+			return fmt.Errorf(`%w
+
+Note: credentials set in environment variables (%s) take precedence over your profile and may be the cause of this error.
+Unset them or verify they hold the intended service account credentials. To learn more, see %s`,
+				ErrUnauthorized, strings.Join(names, " and "), EnvVarsDocsURL)
+		}
 		return ErrUnauthorized
 	}
 

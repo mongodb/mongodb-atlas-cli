@@ -16,11 +16,13 @@ package auth
 
 import (
 	"bytes"
+	"os"
 	"testing"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -336,7 +338,58 @@ func TestLogoutBuilder_PreRunE_ProfileFromContext(t *testing.T) {
 		GetHierarchicalValue("test-profile", gomock.Any()).
 		Return("").
 		AnyTimes()
+	mockStore.EXPECT().
+		GetProfileNames().
+		Return([]string{"test-profile"}).
+		AnyTimes()
 
-	err := cmd.PreRunE(cmd, []string{})
-	require.NoError(t, err)
+	warnings := captureWarnings(t)
+
+	require.NoError(t, cmd.PreRunE(cmd, []string{}))
+	require.Empty(t, warnings.String())
+}
+
+func TestLogoutBuilder_PreRunE_ProfileDoesNotExist(t *testing.T) {
+	tests := []struct {
+		name     string
+		profiles []string
+	}{
+		{name: "other profiles exist", profiles: []string{"other"}},
+		{name: "no profiles exist", profiles: nil},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := mocks.NewMockStore(ctrl)
+
+			testProfile := config.NewProfile("missing", mockStore)
+
+			cmd := LogoutBuilder()
+			cmd.SetContext(config.WithProfile(t.Context(), testProfile))
+
+			mockStore.EXPECT().
+				GetProfileNames().
+				Return(tt.profiles).
+				AnyTimes()
+			// PreRunE reads the auth type before RunE reaches the existence check.
+			mockStore.EXPECT().
+				GetHierarchicalValue("missing", gomock.Any()).
+				Return("").
+				AnyTimes()
+
+			warnings := captureWarnings(t)
+
+			require.NoError(t, cmd.PreRunE(cmd, []string{}))
+			require.NoError(t, cmd.RunE(cmd, []string{}))
+			require.Contains(t, warnings.String(), `profile "missing" does not exist, nothing to log out`)
+		})
+	}
+}
+
+func captureWarnings(t *testing.T) *bytes.Buffer {
+	t.Helper()
+	buf := new(bytes.Buffer)
+	log.SetWriter(buf)
+	t.Cleanup(func() { log.SetWriter(os.Stderr) })
+	return buf
 }

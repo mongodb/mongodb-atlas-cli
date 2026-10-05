@@ -247,6 +247,12 @@ func shouldSetService(cmd *cobra.Command) bool {
 		return false
 	}
 
+	// Setting the service would create the selected profile in memory and defeat logout's profile existence check.
+	if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s %s", atlas, "auth", "logout")) ||
+		strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "logout")) {
+		return false
+	}
+
 	return true
 }
 

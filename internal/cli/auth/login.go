@@ -88,6 +88,11 @@ var (
 		prompt.ServiceAccountAuth: "(best for automation)",
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}
+	authTypeLabels = map[config.AuthMechanism]string{
+		config.UserAccount:    userAccountAuth,
+		config.ServiceAccount: prompt.ServiceAccountAuth,
+		config.APIKeys:        prompt.APIKeysAuth,
+	}
 )
 
 type credential struct {
@@ -217,6 +222,15 @@ func (opts *LoginOpts) setUpAccess() {
 	}
 }
 
+// authTypeLabel maps a mechanism back to the name shown in the authentication type
+// prompt, so errors refer to what the user actually picked.
+func authTypeLabel(mechanism config.AuthMechanism) string {
+	if label, ok := authTypeLabels[mechanism]; ok {
+		return label
+	}
+	return string(mechanism)
+}
+
 func (opts *LoginOpts) suppliedCredentials() []credential {
 	switch opts.authType {
 	case prompt.ServiceAccountAuth:
@@ -251,10 +265,11 @@ func (opts *LoginOpts) checkEnvAuthTypeOverride(selected config.AuthMechanism) e
 		return nil
 	}
 	set := strings.Join(names, " and ")
+	chosen := authTypeLabel(selected)
 	return fmt.Errorf(`authentication failed: your environment sets %s, which selects %s authentication and overrides the %s method you chose
 
 To authenticate as %s, unset %s and run this command again.
-To learn more, see %s`, set, effective, selected, selected, set, commonerrors.EnvVarsDocsURL)
+To learn more, see %s`, set, authTypeLabel(effective), chosen, chosen, set, commonerrors.EnvVarsDocsURL)
 }
 
 // checkEnvCredentialOverride reports credentials that were accepted at the prompt and

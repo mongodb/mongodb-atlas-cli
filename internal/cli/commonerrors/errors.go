@@ -88,11 +88,6 @@ func CredentialEnvVarsFor(mechanism config.AuthMechanism) []string {
 	return set
 }
 
-func allCredentialEnvVars() []string {
-	set := CredentialEnvVarsFor(config.ServiceAccount)
-	return append(set, CredentialEnvVarsFor(config.APIKeys)...)
-}
-
 // Check checks the error and returns a more user-friendly error message if applicable.
 func Check(err error) error {
 	if err == nil {
@@ -114,8 +109,9 @@ func Check(err error) error {
 		return errAsymmetricShardUnsupported
 	case invalidServiceAccountClient: // oauth2 error
 		// Credentials in the environment outrank the profile, so they are the likely
-		// source of the rejected client even when the profile looks correct.
-		if names := allCredentialEnvVars(); len(names) > 0 {
+		// source of the rejected client even when the profile looks correct. Only
+		// service account variables can cause this: API keys do not use oauth2.
+		if names := CredentialEnvVarsFor(config.ServiceAccount); len(names) > 0 {
 			return fmt.Errorf(`%w
 
 Your environment sets %s, which takes precedence over your profile, so those credentials were used.

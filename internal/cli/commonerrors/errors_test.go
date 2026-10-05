@@ -16,6 +16,7 @@ package commonerrors
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"testing"
 
@@ -181,6 +182,7 @@ func TestGetErrorCode(t *testing.T) {
 }
 
 func TestEnvVarName(t *testing.T) {
+	clearAtlasEnv(t)
 	if got := EnvVarName(config.ClientIDField); got != "MONGODB_ATLAS_CLIENT_ID" {
 		t.Errorf("EnvVarName() = %v, want MONGODB_ATLAS_CLIENT_ID", got)
 	}
@@ -196,6 +198,7 @@ func TestCheckInvalidClient(t *testing.T) {
 	invalidClientErr := &oauth2.RetrieveError{ErrorCode: invalidServiceAccountClient}
 
 	t.Run("without credential env vars", func(t *testing.T) {
+		clearAtlasEnv(t)
 		got := Check(invalidClientErr)
 		if !errors.Is(got, ErrUnauthorized) {
 			t.Errorf("Check() = %v, want ErrUnauthorized", got)
@@ -206,6 +209,7 @@ func TestCheckInvalidClient(t *testing.T) {
 	})
 
 	t.Run("with credential env vars", func(t *testing.T) {
+		clearAtlasEnv(t)
 		t.Setenv("MONGODB_ATLAS_CLIENT_ID", "from-env")
 		got := Check(invalidClientErr)
 		if !errors.Is(got, ErrUnauthorized) {
@@ -215,4 +219,23 @@ func TestCheckInvalidClient(t *testing.T) {
 			t.Errorf("Check() should name the env var, got %v", got)
 		}
 	})
+}
+
+// clearAtlasEnv unsets every MCLI_ and MONGODB_ATLAS_ variable for the duration of the
+// test. Setting them to "" is not enough: EnvVarName scans os.Environ() for the MCLI_
+// prefix, and an empty MCLI_FOO= entry still matches.
+func clearAtlasEnv(t *testing.T) {
+	t.Helper()
+	for _, entry := range os.Environ() {
+		key, value, _ := strings.Cut(entry, "=")
+		if !strings.HasPrefix(key, config.MongoCLIEnvPrefix+"_") && !strings.HasPrefix(key, config.AtlasCLIEnvPrefix+"_") {
+			continue
+		}
+		// t.Setenv records the original value and restores it on cleanup; unsetting
+		// afterwards gives the test a clean slate without calling os.Setenv directly.
+		t.Setenv(key, value)
+		if err := os.Unsetenv(key); err != nil {
+			t.Fatal(err)
+		}
+	}
 }

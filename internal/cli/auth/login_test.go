@@ -21,6 +21,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -377,7 +379,7 @@ func TestLoginOpts_checkEnvAuthTypeOverride(t *testing.T) {
 			selected:  config.UserAccount,
 			effective: config.ServiceAccount,
 			envVars:   map[string]string{clientIDEnvVar: "from-env"},
-			errSubstr: "selects service_account authentication and overrides the user_account method you chose",
+			errSubstr: "selects ServiceAccount authentication and overrides the UserAccount method you chose",
 		},
 		{
 			name:      "stale profile hijacks the mechanism without env vars",
@@ -394,6 +396,7 @@ func TestLoginOpts_checkEnvAuthTypeOverride(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			clearAtlasEnv(t)
 			for k, v := range tt.envVars {
 				t.Setenv(k, v)
 			}
@@ -462,6 +465,7 @@ func TestLoginOpts_checkEnvCredentialOverride(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			clearAtlasEnv(t)
 			for k, v := range tt.envVars {
 				t.Setenv(k, v)
 			}
@@ -488,6 +492,7 @@ func TestLoginOpts_checkEnvCredentialOverride(t *testing.T) {
 // The hijack is detectable from the environment alone, so LoginRun must fail before
 // setUpCredentials sends the user through the OAuth device flow.
 func TestLoginRun_HijackFailsBeforeDeviceFlow(t *testing.T) {
+	clearAtlasEnv(t)
 	t.Setenv(clientIDEnvVar, "from-env")
 
 	ctrl := gomock.NewController(t)
@@ -517,4 +522,21 @@ func TestLoginRun_HijackFailsBeforeDeviceFlow(t *testing.T) {
 	err := opts.LoginRun(t.Context())
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), clientIDEnvVar)
+}
+
+// clearAtlasEnv unsets every MCLI_ and MONGODB_ATLAS_ variable for the duration of the
+// test. Setting them to "" is not enough: EnvVarName scans os.Environ() for the MCLI_
+// prefix, and an empty MCLI_FOO= entry still matches.
+func clearAtlasEnv(t *testing.T) {
+	t.Helper()
+	for _, entry := range os.Environ() {
+		key, value, _ := strings.Cut(entry, "=")
+		if !strings.HasPrefix(key, config.MongoCLIEnvPrefix+"_") && !strings.HasPrefix(key, config.AtlasCLIEnvPrefix+"_") {
+			continue
+		}
+		// t.Setenv records the original value and restores it on cleanup; unsetting
+		// afterwards gives the test a clean slate without calling os.Setenv directly.
+		t.Setenv(key, value)
+		require.NoError(t, os.Unsetenv(key))
+	}
 }

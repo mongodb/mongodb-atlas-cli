@@ -371,6 +371,11 @@ func TestLogoutBuilder_PreRunE_ProfileDoesNotExist(t *testing.T) {
 				GetProfileNames().
 				Return(tt.profiles).
 				AnyTimes()
+			// PreRunE reads the auth type before RunE reaches the existence check.
+			mockStore.EXPECT().
+				GetHierarchicalValue("missing", gomock.Any()).
+				Return("").
+				AnyTimes()
 
 			warnings := captureWarnings(t)
 

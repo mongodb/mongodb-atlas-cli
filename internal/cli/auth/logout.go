@@ -68,7 +68,6 @@ type logoutOpts struct {
 	config                    ConfigDeleter
 	flow                      Revoker
 	keepConfig                bool
-	profileMissing            bool
 	revokeServiceAccountToken func() error
 }
 
@@ -158,12 +157,6 @@ func LogoutBuilder() *cobra.Command {
 				opts.config = config.Default()
 			}
 
-			opts.profileMissing = !slices.Contains(opts.config.List(), opts.config.Name())
-			if opts.profileMissing {
-				_, _ = log.Warningf("Warning: profile %q does not exist, nothing to log out\n", opts.config.Name())
-				return nil
-			}
-
 			// Only initialize OAuth flow if we have OAuth-based auth
 			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
 				return opts.initFlow(cmd.Context())
@@ -172,7 +165,8 @@ func LogoutBuilder() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if opts.profileMissing {
+			if !slices.Contains(opts.config.List(), opts.config.Name()) {
+				_, _ = log.Warningf("Warning: profile %q does not exist, nothing to log out\n", opts.config.Name())
 				return nil
 			}
 

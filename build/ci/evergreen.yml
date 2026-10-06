@@ -253,8 +253,8 @@ functions:
           set -Eeou pipefail
           cat <<EOF > expansions.yaml
           home: $HOME
-          tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)
-          version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+          tag: $(./build/package/git-version.sh tag)
+          version: $(./build/package/git-version.sh version)
           EOF
     - command: expansions.update
       params:
@@ -1327,6 +1327,9 @@ github_pr_aliases:
     task_tags: ["e2e", "generic"]
 git_tag_aliases:
   - git_tag: "atlascli/v*"
+    variant: "^release_atlascli"
+    task: ".*"
+  - git_tag: "v*"
     variant: "^release_atlascli"
     task: ".*"
 github_checks_aliases:

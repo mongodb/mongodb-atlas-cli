@@ -1662,6 +1662,260 @@ paths:
             application/vnd.atlas.2025-03-12+json:
               schema:
                 type: object
+  /api/atlas/v2/groups/{groupId}/processes:
+    get:
+      description: Returns details of all processes for the specified project. A MongoDB process can be either a `mongod` or
+        `mongos`.
+      operationId: listGroupProcesses
+      tags:
+      - Monitoring and Logs
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: *id004
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: *id005
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: *id006
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/processes/{processId}/performanceAdvisor/slowQueryLogs:
+    get:
+      description: Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance
+        Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB
+        Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant
+        recommendations.
+      operationId: listGroupProcessPerformanceAdvisorSlowQueryLogs
+      tags:
+      - Performance Advisor
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: duration
+        in: query
+        description: |-
+          Length of time expressed during which the query finds slow queries among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.
+
+          - If you don't specify the **since** parameter, the endpoint returns data covering the duration before the current time.
+          - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.
+        schema:
+          format: int64
+          type: integer
+      - name: namespaces
+        in: query
+        description: 'Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection
+          resource written as `.`: `<database>.<collection>`. To include multiple namespaces, pass the parameter multiple
+          times delimited with an ampersand (`&`) between each namespace. Omit this parameter to return results for all namespaces.'
+        schema:
+          items:
+            type: string
+          type: array
+      - name: nLogs
+        in: query
+        description: Maximum number of lines from the log to return.
+        schema:
+          default: 20000
+          format: int64
+          maximum: 20000
+          minimum: 0
+          type: integer
+      - name: processId
+        in: path
+        required: true
+        description: Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4
+          address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA
+          port on which the MongoDB process listens for requests.
+        schema:
+          pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-f]{1,4}\:){7}([0-9a-f]{1,4})|(([a-z0-9]+\.){1,10}[a-z]+)?(\:[0-9]{4,5})$
+          type: string
+      - name: since
+        in: query
+        description: |-
+          Date and time from which the query retrieves the slow queries. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+          - If you don't specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
+          - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.
+        schema:
+          format: int64
+          minimum: 1199145600000
+          type: integer
+      - name: includeMetrics
+        in: query
+        description: Whether or not to include metrics extracted from the slow query log as separate fields.
+        schema:
+          default: false
+          type: boolean
+      - name: includeReplicaState
+        in: query
+        description: Whether or not to include the replica state of the host when the slow query log was generated as a separate
+          field.
+        schema:
+          default: false
+          type: boolean
+      - name: includeOpType
+        in: query
+        description: Whether or not to include the operation type (read/write/command) extracted from the slow query log as
+          a separate field.
+        schema:
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
+  /api/atlas/v2/groups/{groupId}/processes/{processId}/performanceAdvisor/suggestedIndexes:
+    get:
+      description: Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that
+        MongoDB considers slow and suggests new indexes to improve query performance.
+      operationId: listGroupProcessPerformanceAdvisorSuggestedIndexes
+      tags:
+      - Performance Advisor
+      parameters:
+      - name: envelope
+        in: query
+        description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients
+          cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints
+          that return a list of results use the results object as an envelope. Application adds the status parameter to the
+          response body.
+        schema: *id001
+      - name: groupId
+        in: path
+        required: true
+        description: 'Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects)
+          endpoint to retrieve all projects to which the authenticated user has access.
+
+
+          **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups,
+          your group/project id remains the same. The resource and corresponding endpoints use the term groups.'
+        schema: *id002
+      - name: includeCount
+        in: query
+        description: Flag that indicates whether the response returns the total number of items (`totalCount`) in the response.
+        schema: *id004
+      - name: itemsPerPage
+        in: query
+        description: Number of items that the response returns per page.
+        schema: *id005
+      - name: pageNum
+        in: query
+        description: Number of the page that displays the current set of the total objects that the response returns.
+        schema: *id006
+      - name: pretty
+        in: query
+        description: Flag that indicates whether the response body should be in the prettyprint format.
+        schema: *id003
+      - name: duration
+        in: query
+        description: |-
+          Length of time expressed during which the query finds suggested indexes among the managed namespaces in the cluster. This parameter expresses its value in milliseconds.
+
+          - If you don't specify the **since** parameter, the endpoint returns data covering the duration before the current time.
+          - If you specify neither the **duration** nor **since** parameters, the endpoint returns data from the previous 24 hours.
+        schema:
+          format: int64
+          type: integer
+      - name: namespaces
+        in: query
+        description: 'Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection
+          resource written as `.`: `<database>.<collection>`. To include multiple namespaces, pass the parameter multiple
+          times delimited with an ampersand (`&`) between each namespace. Omit this parameter to return results for all namespaces.'
+        schema:
+          items:
+            type: string
+          type: array
+      - name: nExamples
+        in: query
+        description: Maximum number of example queries that benefit from the suggested index.
+        schema:
+          default: 5
+          format: int64
+          type: integer
+      - name: nIndexes
+        in: query
+        description: Number that indicates the maximum indexes to suggest.
+        schema:
+          format: int64
+          type: integer
+      - name: processId
+        in: path
+        required: true
+        description: Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4
+          address, or IPv6 address of the host that runs the MongoDB process (`mongod` or `mongos`). The port must be the IANA
+          port on which the MongoDB process listens for requests.
+        schema:
+          pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-f]{1,4}\:){7}([0-9a-f]{1,4})|(([a-z0-9]+\.){1,10}[a-z]+)?(\:[0-9]{4,5})$
+          type: string
+      - name: since
+        in: query
+        description: |-
+          Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the [UNIX epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+          - If you don't specify the **duration** parameter, the endpoint returns data covering from the **since** value and the current time.
+          - If you specify neither the **duration** nor the **since** parameters, the endpoint returns data from the previous 24 hours.
+        schema:
+          format: int64
+          minimum: 1199145600000
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                type: object
 
 
 components:

@@ -64,3 +64,18 @@ groups:
           takeSnapshot: takeGroupClusterBackupSnapshots
           getSchedule: getGroupClusterBackupSchedule
           updateSchedule: updateGroupClusterBackupSchedule
+  Processes:
+    description: Manage the MongoDB processes in your project.
+    entities:
+      Process:
+        description: Manage the MongoDB processes in your project.
+        list: listGroupProcesses
+  Performance Advisor:
+    description: Review slow queries and index recommendations for your cluster.
+    entities:
+      Slow Query Logs:
+        description: Review the slow queries the Performance Advisor identified.
+        list: listGroupProcessPerformanceAdvisorSlowQueryLogs
+      Suggested Indexes:
+        description: Review the indexes the Performance Advisor suggests.
+        list: listGroupProcessPerformanceAdvisorSuggestedIndexes

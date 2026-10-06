@@ -14,5 +14,5 @@ jobs:
     # apix-bot's own post-update commit re-triggers this, and that run is the one that
     # approves: by then the PR head has caught up with the commit it just pushed.
     if: github.actor == 'dependabot[bot]' || github.actor == 'apix-bot[bot]'
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@261776f94d51a8be1c2537624564474817d585c6
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@09da7906fa2304420acdcf0e92fb218e6333051c
     secrets: inherit

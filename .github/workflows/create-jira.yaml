@@ -13,5 +13,5 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: mongodb/apix-action/.github/workflows/_create-jira.yaml@261776f94d51a8be1c2537624564474817d585c6
+    uses: mongodb/apix-action/.github/workflows/_create-jira.yaml@09da7906fa2304420acdcf0e92fb218e6333051c
     secrets: inherit

@@ -34,11 +34,15 @@ functions:
     - command: shell.exec
       type: setup
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        env:
+          <<: *go_env
+          GORELEASER_VERSION: "v2.18.2"
         script: |
           set -Eeou pipefail
 
-          curl -sfL ${goreleaser_pro_tar_gz} | tar zx
+          curl -sfL "https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz" | tar zx
   "install macos notarization service":
     - command: shell.exec
       type: setup
@@ -128,7 +132,6 @@ functions:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
-          - goreleaser_key
           - unstable
           - AWS_ACCESS_KEY_ID
           - AWS_SECRET_ACCESS_KEY

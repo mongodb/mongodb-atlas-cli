@@ -25,7 +25,7 @@ if [ -z "${AUTHOR:-}" ]; then
 fi
 
 if [ -z "${VERSION:-}" ]; then
-  VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+  VERSION="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 fi
 
 if [ "${AUGMENTED_REPORT}" = "true" ]; then

@@ -23,7 +23,7 @@ echo "Packaging $PWD/build/package/msi.zip"
 mkdir -p ./build/package/msi/bin
 cp ./dist/windows_windows_amd64_v1/bin/atlas.exe ./build/package/msi/bin/atlas.exe
 cp ./LICENSE ./build/package/msi/LICENSE
-git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2 > ./build/package/msi/version.txt
+"$(dirname "${BASH_SOURCE[0]}")/git-version.sh" > ./build/package/msi/version.txt
 cd ./build/package
 zip -r msi.zip msi
 rm -rf ./msi/version.txt ./msi/bin/atlas.exe ./msi/LICENSE
@@ -46,7 +46,7 @@ cd '/cygdrive/c/Users/Administrator/msi';
 ./generate-msi.sh;
 "
 
-VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 VERSION_NAME="$VERSION_GIT"
 if [[ "${unstable-}" == "-unstable" ]]; then
 	VERSION_NAME="$VERSION_GIT-next"

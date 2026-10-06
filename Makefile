@@ -8,10 +8,10 @@ GIT_SHA?=$(shell git rev-parse HEAD)
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ifeq ($(OS),Windows_NT)
-    ATLAS_VERSION?=$(shell powershell -Command "(git describe --match 'atlascli/v*') -replace '.*v(.*)', '$$1'")
+    ATLAS_VERSION?=$(shell powershell -Command "(git describe --match 'atlascli/v*' --match 'v*') -replace '.*v(.*)', '$$1'")
 	ATLAS_BINARY_NAME=atlas.exe
 else
-    ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
+    ATLAS_VERSION?=$(shell ./build/package/git-version.sh describe)
 	ATLAS_BINARY_NAME=atlas
 endif
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)

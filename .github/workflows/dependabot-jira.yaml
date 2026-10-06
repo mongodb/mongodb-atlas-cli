@@ -11,8 +11,9 @@ permissions: {}
 
 jobs:
   dependabot:
-    # apix-bot's own post-update commit re-triggers this, and that run is the one that
-    # approves: by then the PR head has caught up with the commit it just pushed.
-    if: github.actor == 'dependabot[bot]' || github.actor == 'apix-bot[bot]'
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@261776f94d51a8be1c2537624564474817d585c6
+    # Two gates. The author identifies a Dependabot PR and ignores the sync pull requests
+    # this app opens. The actor limits the trigger to Dependabot or this app's own
+    # post-update commit, so a push to the branch by anyone else does not start a run.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && (github.actor == 'dependabot[bot]' || github.actor == 'apix-bot[bot]')
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@71c64f5aee7b34c14cde286c275657614caf534d
     secrets: inherit

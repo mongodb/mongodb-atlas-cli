@@ -70,16 +70,18 @@ A GitHub workflow generates a compliance report after the release and opens a PR
 To manually generate a new stable release, you can run:
 
 ```bash
-./scripts/release.sh atlascli/v1.0.0
+./scripts/release.sh v1.0.0
 ```
 
 > [!IMPORTANT]  
-> Please use the `atlascli/vX.Y.Z` format for the version to release 
+> Please use the `vX.Y.Z` format for the version to release. This is the
+> format used by GoReleaser OSS; the legacy `atlascli/vX.Y.Z` prefix is no
+> longer used to trigger releases.
 
 This will do the following things:
 
-1. Tag a new version, ie: `git tag -a -s atlascli/v1.0.0 -m "atlascli/v1.0.0"`
-2. Publish the new tag, ie: `git push origin atlascli/v1.0.0`
+1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
+2. Publish the new tag, ie: `git push origin v1.0.0`
 3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
 4. If everything goes smoothly, the release will be published in the
    [release page](https://github.com/mongodb/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/atlascli).

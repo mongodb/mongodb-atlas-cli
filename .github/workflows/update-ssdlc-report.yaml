@@ -32,15 +32,17 @@ jobs:
         id: extract
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
-            # Expect input like 'atlascli/v1.42.2' or '1.42.2'
+            # Accept 'v1.42.2', 'atlascli/v1.42.2' or a full ref.
             TAG="${{ github.event.inputs.tag }}"
-            VERSION="${TAG#atlascli/v}"
             AUTHOR="${{ github.actor }}"
           else
-            # GITHUB_REF is refs/tags/atlascli/v1.42.2
-            VERSION="${GITHUB_REF#refs/tags/atlascli/v}"
+            # GITHUB_REF is refs/tags/v1.42.2
+            TAG="${GITHUB_REF#refs/tags/}"
             AUTHOR="${{ github.event.release.author.login }}"
           fi
+          # Normalize to a bare X.Y.Z, tolerating the legacy 'atlascli/' prefix.
+          TAG="${TAG##*/}"
+          VERSION="${TAG#v}"
           echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Run gen-ssdlc-report.sh

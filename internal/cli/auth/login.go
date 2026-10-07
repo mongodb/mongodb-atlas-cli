@@ -89,19 +89,20 @@ var (
 type LoginOpts struct {
 	cli.DefaultSetterOpts
 	cli.RefresherOpts
-	AccessToken   string
-	RefreshToken  string
-	ClientID      string
-	ClientSecret  string
-	PublicAPIKey  string
-	PrivateAPIKey string
-	IsGov         bool
-	NoBrowser     bool
-	authType      string
-	force         bool
-	SkipConfig    bool
-	config        LoginConfig
-	Asker         TrackAsker
+	AccessToken      string
+	RefreshToken     string
+	ClientID         string
+	ClientSecret     string
+	PublicAPIKey     string
+	PrivateAPIKey    string
+	IsGov            bool
+	NoBrowser        bool
+	authType         string
+	authTypeFromFlag bool
+	force            bool
+	SkipConfig       bool
+	config           LoginConfig
+	Asker            TrackAsker
 }
 
 // validateLoginFlags ensures that once any programmatic login flag is used, every flag
@@ -137,6 +138,7 @@ func (opts *LoginOpts) validateLoginFlags() error {
 
 func (opts *LoginOpts) promptAuthType() error {
 	if opts.authType != "" {
+		opts.authTypeFromFlag = true
 		if !slices.Contains(authTypeOptions, opts.authType) {
 			return fmt.Errorf("invalid --%s %q: must be one of %s", flag.AuthType, opts.authType, strings.Join(authTypeOptions, ", "))
 		}
@@ -436,12 +438,16 @@ To continue, go to `,
 	_, _ = fmt.Fprintln(opts.OutWriter, code.VerificationURI)
 }
 
+func (opts *LoginOpts) browserConfirmationRequired() bool {
+	return !opts.force && !opts.authTypeFromFlag
+}
+
 func (opts *LoginOpts) handleBrowser(uri string) {
 	if opts.NoBrowser {
 		return
 	}
 
-	if !opts.force {
+	if opts.browserConfirmationRequired() {
 		_, _ = fmt.Fprintf(opts.OutWriter, "\nPress Enter to open the browser and complete authentication...")
 		_, _ = fmt.Scanln()
 	}
@@ -524,12 +530,15 @@ func LoginBuilder() *cobra.Command {
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 
-To log in non-interactively, set --authType, --output, and whichever credential flags that authentication type requires (--clientId and --clientSecret for ServiceAccount, or --publicApiKey and --privateApiKey for APIKeys). Using any one of these flags without the others needed to complete the flow returns an error instead of prompting.`,
+To log in non-interactively, set --authType, --output, and the credential flags that type requires (--clientId and --clientSecret for ServiceAccount, or --publicApiKey and --privateApiKey for APIKeys). Using any one of these flags without the others needed to complete the flow returns an error instead of prompting.`,
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 
   # Log in non-interactively with a Service Account:
   atlas auth login --authType ServiceAccount --clientId <clientId> --clientSecret <clientSecret> --output plaintext
+
+  # Log in non-interactively with API Keys:
+  atlas auth login --authType APIKeys --publicApiKey <publicApiKey> --privateApiKey <privateApiKey> --output plaintext
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()

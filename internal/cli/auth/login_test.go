@@ -206,6 +206,7 @@ func Test_loginOpts_promptAuthType(t *testing.T) {
 
 		require.NoError(t, opts.promptAuthType())
 		assert.Equal(t, prompt.ServiceAccountAuth, opts.authType)
+		assert.True(t, opts.authTypeFromFlag)
 	})
 
 	t.Run("invalid authType flag errors without prompting", func(t *testing.T) {
@@ -223,6 +224,7 @@ func Test_loginOpts_promptAuthType(t *testing.T) {
 
 		require.NoError(t, opts.promptAuthType())
 		assert.Equal(t, prompt.APIKeysAuth, opts.authType)
+		assert.True(t, opts.authTypeFromFlag)
 	})
 
 	t.Run("force defaults to UserAccount without prompting when authType is unset", func(t *testing.T) {
@@ -232,6 +234,7 @@ func Test_loginOpts_promptAuthType(t *testing.T) {
 
 		require.NoError(t, opts.promptAuthType())
 		assert.Equal(t, userAccountAuth, opts.authType)
+		assert.False(t, opts.authTypeFromFlag)
 	})
 
 	t.Run("no flags falls back to the interactive prompt", func(t *testing.T) {
@@ -246,7 +249,29 @@ func Test_loginOpts_promptAuthType(t *testing.T) {
 
 		require.NoError(t, opts.promptAuthType())
 		assert.Equal(t, prompt.APIKeysAuth, opts.authType)
+		assert.False(t, opts.authTypeFromFlag)
 	})
+}
+
+func Test_loginOpts_browserConfirmationRequired(t *testing.T) {
+	tests := []struct {
+		name             string
+		force            bool
+		authTypeFromFlag bool
+		want             bool
+	}{
+		{name: "neither set requires confirmation", want: true},
+		{name: "force skips confirmation", force: true, want: false},
+		{name: "authType flag skips confirmation", authTypeFromFlag: true, want: false},
+		{name: "both set skips confirmation", force: true, authTypeFromFlag: true, want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &LoginOpts{force: tt.force, authTypeFromFlag: tt.authTypeFromFlag}
+			assert.Equal(t, tt.want, opts.browserConfirmationRequired())
+		})
+	}
 }
 
 func Test_loginOpts_promptOutput(t *testing.T) {

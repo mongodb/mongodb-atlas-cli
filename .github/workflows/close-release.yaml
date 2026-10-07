@@ -64,7 +64,7 @@ jobs:
         uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx Triage"'
+          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
 
       - name: Resolve the release ticket
         if: steps.find-release.outputs.found == 'true'

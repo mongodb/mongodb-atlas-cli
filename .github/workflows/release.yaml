@@ -167,7 +167,7 @@ jobs:
         uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx Triage"'
+          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
 
       - name: Create release ticket
         id: create-release
@@ -185,7 +185,7 @@ jobs:
           issuetype: Story
           assignee: opsmanager.serviceaccount
           components: AtlasCLI
-          extra-data: '{"customfield_12751":[{"value":"APIx Triage"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
+          extra-data: '{"customfield_12751":[{"value":"APIx DevTools"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
 
       - name: Resolve release ticket key
         id: release-ticket

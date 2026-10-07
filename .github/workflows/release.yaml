@@ -7,6 +7,13 @@ on:
         description: "Version to release, e.g. 1.60.0 (without the leading v)"
         required: true
         type: string
+      # Emergency escape hatch: cut a release even when a required test is red
+      # (e.g. a known-flaky or unrelated failing check). Leave unchecked normally.
+      force:
+        description: "Release even if the required tests are failing (emergency use only)"
+        required: false
+        default: false
+        type: boolean
 
 permissions: {}
 
@@ -35,6 +42,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.sha }}
+          FORCE: ${{ inputs.force }}
           REQUIRED_TESTS: |
             evergreen/code_health
             docs
@@ -71,8 +79,12 @@ jobs:
             esac
           done <<< "${REQUIRED_TESTS}"
           if [[ "${failed}" -ne 0 ]]; then
-            echo "Required tests did not pass on ${SHA}. Aborting." >&2
-            exit 1
+            if [[ "${FORCE}" == "true" ]]; then
+              echo "::warning::Required tests did not pass on ${SHA}, but 'force' was set — releasing anyway."
+            else
+              echo "Required tests did not pass on ${SHA}. Aborting." >&2
+              exit 1
+            fi
           fi
 
       - uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5

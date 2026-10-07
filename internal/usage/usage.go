@@ -406,4 +406,10 @@ dbName and collection are required only for built-in roles.`
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. Note: Unsupported fields in the JSON file are ignored."
 	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
 	AutoScalingMode            = "Mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling."
+	LoginAuthType              = "Authentication type to use. Valid values are UserAccount, ServiceAccount, or APIKeys. If set, skips the authentication type prompt."
+	LoginClientID              = "Service Account client ID. Must be set together with --clientSecret. If both are set, skips the credential prompt."
+	LoginClientSecret          = "Service Account client secret. Must be set together with --clientId. If both are set, skips the credential prompt."
+	LoginPublicAPIKey          = "Public API key. Must be set together with --privateApiKey. If both are set, skips the credential prompt." //nolint:gosec // not a credential, a flag description
+	LoginPrivateAPIKey         = "Private API key. Must be set together with --publicApiKey. If both are set, skips the credential prompt." //nolint:gosec // not a credential, a flag description
+	LoginOutput                = "Default output format to save to the profile. Valid values are plaintext or json. If set, skips the output format prompt."
 )

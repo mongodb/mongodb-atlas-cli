@@ -18,6 +18,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
+	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -76,6 +78,7 @@ var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
 	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	outputFormatOptions  = []string{"plaintext", "json"}
 	authTypeDescription  = map[string]string{
 		userAccountAuth:           "(best for getting started)",
 		prompt.ServiceAccountAuth: "(best for automation)",
@@ -101,7 +104,44 @@ type LoginOpts struct {
 	Asker         TrackAsker
 }
 
+// validateLoginFlags ensures that once any programmatic login flag is used, every flag
+// needed to complete that flow without a prompt is also set, instead of silently falling
+// back to a prompt for whatever was left out.
+func (opts *LoginOpts) validateLoginFlags() error {
+	anyOther := opts.ClientID != "" || opts.ClientSecret != "" ||
+		opts.PublicAPIKey != "" || opts.PrivateAPIKey != "" || opts.Output != ""
+
+	if opts.authType == "" {
+		if anyOther {
+			return fmt.Errorf("--%s is required when using --%s, --%s, --%s, --%s, or --%s",
+				flag.AuthType, flag.ClientID, flag.ClientSecret, flag.PublicAPIKey, flag.PrivateAPIKey, flag.Output)
+		}
+		return nil
+	}
+	if opts.Output == "" {
+		return fmt.Errorf("--%s is required when --%s is set", flag.Output, flag.AuthType)
+	}
+
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		if opts.ClientID == "" || opts.ClientSecret == "" {
+			return fmt.Errorf("--%s and --%s are required when --%s is %s", flag.ClientID, flag.ClientSecret, flag.AuthType, prompt.ServiceAccountAuth)
+		}
+	case prompt.APIKeysAuth:
+		if opts.PublicAPIKey == "" || opts.PrivateAPIKey == "" {
+			return fmt.Errorf("--%s and --%s are required when --%s is %s", flag.PublicAPIKey, flag.PrivateAPIKey, flag.AuthType, prompt.APIKeysAuth)
+		}
+	}
+	return nil
+}
+
 func (opts *LoginOpts) promptAuthType() error {
+	if opts.authType != "" {
+		if !slices.Contains(authTypeOptions, opts.authType) {
+			return fmt.Errorf("invalid --%s %q: must be one of %s", flag.AuthType, opts.authType, strings.Join(authTypeOptions, ", "))
+		}
+		return nil
+	}
 	if opts.force {
 		opts.authType = userAccountAuth
 		return nil
@@ -115,6 +155,16 @@ func (opts *LoginOpts) promptAuthType() error {
 		},
 	}
 	return opts.Asker.TrackAskOne(authTypePrompt, &opts.authType)
+}
+
+func (opts *LoginOpts) promptOutput() error {
+	if opts.Output != "" {
+		if !slices.Contains(outputFormatOptions, opts.Output) {
+			return fmt.Errorf("invalid --%s %q: must be one of %s", flag.Output, opts.Output, strings.Join(outputFormatOptions, ", "))
+		}
+		return nil
+	}
+	return opts.Asker.TrackAsk(opts.DefaultQuestions(), opts)
 }
 
 func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
@@ -142,7 +192,26 @@ func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
 	return nil
 }
 
+// credentialsProvided reports whether the credential pair for opts.authType was fully
+// supplied. validateLoginFlags already rejects a half-supplied pair before this is called,
+// so there is nothing left to validate here, only to check.
+func (opts *LoginOpts) credentialsProvided() bool {
+	switch opts.authType {
+	case prompt.ServiceAccountAuth:
+		return opts.ClientID != "" && opts.ClientSecret != ""
+	case prompt.APIKeysAuth:
+		return opts.PublicAPIKey != "" && opts.PrivateAPIKey != ""
+	default:
+		return false
+	}
+}
+
 func (opts *LoginOpts) setProgrammaticCredentials() error {
+	if opts.credentialsProvided() {
+		opts.setUpAccess()
+		return nil
+	}
+
 	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
@@ -240,6 +309,10 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 }
 
 func (opts *LoginOpts) LoginRun(ctx context.Context) error {
+	if err := opts.validateLoginFlags(); err != nil {
+		return err
+	}
+
 	if err := opts.promptAuthType(); err != nil {
 		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
@@ -314,7 +387,7 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 	}
 	opts.SetUpProject()
 
-	if err := opts.Asker.TrackAsk(opts.DefaultQuestions(), opts); err != nil {
+	if err := opts.promptOutput(); err != nil {
 		return err
 	}
 	opts.SetUpOutput()
@@ -449,9 +522,14 @@ func LoginBuilder() *cobra.Command {
 		Short: "Authenticate with MongoDB Atlas.",
 		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
 
-Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + ".",
+Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
+
+To log in non-interactively, set --authType, --output, and whichever credential flags that authentication type requires (--clientId and --clientSecret for ServiceAccount, or --publicApiKey and --privateApiKey for APIKeys). Using any one of these flags without the others needed to complete the flow returns an error instead of prompting.`,
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
+
+  # Log in non-interactively with a Service Account:
+  atlas auth login --authType ServiceAccount --clientId <clientId> --clientSecret <clientSecret> --output plaintext
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			opts.OutWriter = cmd.OutOrStdout()
@@ -475,5 +553,11 @@ Note: If you have credentials set in environment variables, they take precedence
 	_ = cmd.Flags().MarkDeprecated("skipConfig", "if you configured a profile, the command skips the config step by default.")
 	cmd.Flags().BoolVar(&opts.force, flag.Force, false, usage.Force)
 	_ = cmd.Flags().MarkHidden(flag.Force)
+	cmd.Flags().StringVar(&opts.authType, flag.AuthType, "", usage.LoginAuthType)
+	cmd.Flags().StringVar(&opts.ClientID, flag.ClientID, "", usage.LoginClientID)
+	cmd.Flags().StringVar(&opts.ClientSecret, flag.ClientSecret, "", usage.LoginClientSecret)
+	cmd.Flags().StringVar(&opts.PublicAPIKey, flag.PublicAPIKey, "", usage.LoginPublicAPIKey)
+	cmd.Flags().StringVar(&opts.PrivateAPIKey, flag.PrivateAPIKey, "", usage.LoginPrivateAPIKey)
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.LoginOutput)
 	return cmd
 }

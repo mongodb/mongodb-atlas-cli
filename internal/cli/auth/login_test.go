@@ -198,6 +198,203 @@ func (confirmMock) Error(_ *survey.PromptConfig, err error) error {
 	return err
 }
 
+func Test_loginOpts_promptAuthType(t *testing.T) {
+	t.Run("valid authType flag skips the prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker, authType: prompt.ServiceAccountAuth}
+
+		require.NoError(t, opts.promptAuthType())
+		assert.Equal(t, prompt.ServiceAccountAuth, opts.authType)
+	})
+
+	t.Run("invalid authType flag errors without prompting", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker, authType: "NotARealType"}
+
+		require.Error(t, opts.promptAuthType())
+	})
+
+	t.Run("authType flag takes precedence over force", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker, authType: prompt.APIKeysAuth, force: true}
+
+		require.NoError(t, opts.promptAuthType())
+		assert.Equal(t, prompt.APIKeysAuth, opts.authType)
+	})
+
+	t.Run("force defaults to UserAccount without prompting when authType is unset", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker, force: true}
+
+		require.NoError(t, opts.promptAuthType())
+		assert.Equal(t, userAccountAuth, opts.authType)
+	})
+
+	t.Run("no flags falls back to the interactive prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		mockAsker.EXPECT().TrackAskOne(gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ survey.Prompt, response any, _ ...survey.AskOpt) error {
+				*response.(*string) = prompt.APIKeysAuth
+				return nil
+			}).Times(1)
+		opts := &LoginOpts{Asker: mockAsker}
+
+		require.NoError(t, opts.promptAuthType())
+		assert.Equal(t, prompt.APIKeysAuth, opts.authType)
+	})
+}
+
+func Test_loginOpts_promptOutput(t *testing.T) {
+	t.Run("valid output flag skips the prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker}
+		opts.Output = "json"
+
+		require.NoError(t, opts.promptOutput())
+		assert.Equal(t, "json", opts.Output)
+	})
+
+	t.Run("invalid output flag errors without prompting", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		opts := &LoginOpts{Asker: mockAsker}
+		opts.Output = "xml"
+
+		require.Error(t, opts.promptOutput())
+	})
+
+	t.Run("no flag falls back to the interactive prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		mockAsker.EXPECT().TrackAsk(gomock.Any(), gomock.Any()).Times(1)
+		opts := &LoginOpts{Asker: mockAsker}
+
+		require.NoError(t, opts.promptOutput())
+	})
+}
+
+func Test_loginOpts_validateLoginFlags(t *testing.T) {
+	tests := []struct {
+		name                                                            string
+		authType, output, clientID, clientSecret, publicKey, privateKey string
+		wantErr                                                         bool
+	}{
+		{name: "no flags set is valid (fully interactive)"},
+		{name: "credential flag set without authType errors", clientID: "id", wantErr: true},
+		{name: "output set without authType errors", output: "json", wantErr: true},
+		{name: "authType set without output errors", authType: userAccountAuth, wantErr: true},
+		{name: "authType UserAccount with output is valid", authType: userAccountAuth, output: "json"},
+		{name: "authType ServiceAccount without credentials errors", authType: prompt.ServiceAccountAuth, output: "json", wantErr: true},
+		{name: "authType ServiceAccount with only clientId errors", authType: prompt.ServiceAccountAuth, output: "json", clientID: "id", wantErr: true},
+		{name: "authType ServiceAccount with full credentials is valid", authType: prompt.ServiceAccountAuth, output: "json", clientID: "id", clientSecret: "secret"},
+		{name: "authType APIKeys without credentials errors", authType: prompt.APIKeysAuth, output: "json", wantErr: true},
+		{name: "authType APIKeys with full credentials is valid", authType: prompt.APIKeysAuth, output: "json", publicKey: "pub", privateKey: "priv"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &LoginOpts{
+				authType:      tt.authType,
+				ClientID:      tt.clientID,
+				ClientSecret:  tt.clientSecret,
+				PublicAPIKey:  tt.publicKey,
+				PrivateAPIKey: tt.privateKey,
+			}
+			opts.Output = tt.output
+
+			err := opts.validateLoginFlags()
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func Test_credentialsProvided(t *testing.T) {
+	tests := []struct {
+		name string
+		opts LoginOpts
+		want bool
+	}{
+		{
+			name: "service account both flags set",
+			opts: LoginOpts{authType: prompt.ServiceAccountAuth, ClientID: "id", ClientSecret: "secret"},
+			want: true,
+		},
+		{
+			name: "service account only clientId set",
+			opts: LoginOpts{authType: prompt.ServiceAccountAuth, ClientID: "id"},
+			want: false,
+		},
+		{
+			name: "service account neither flag set",
+			opts: LoginOpts{authType: prompt.ServiceAccountAuth},
+			want: false,
+		},
+		{
+			name: "api keys both flags set",
+			opts: LoginOpts{authType: prompt.APIKeysAuth, PublicAPIKey: "pub", PrivateAPIKey: "priv"},
+			want: true,
+		},
+		{
+			name: "api keys only publicApiKey set",
+			opts: LoginOpts{authType: prompt.APIKeysAuth, PublicAPIKey: "pub"},
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.opts.credentialsProvided())
+		})
+	}
+}
+
+func Test_loginOpts_setProgrammaticCredentials(t *testing.T) {
+	t.Run("both credential flags set skips the prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		mockConfig := NewMockLoginConfig(ctrl)
+		opts := &LoginOpts{
+			Asker:        mockAsker,
+			config:       mockConfig,
+			authType:     prompt.ServiceAccountAuth,
+			ClientID:     "id",
+			ClientSecret: "secret",
+		}
+		opts.OutWriter = new(bytes.Buffer)
+
+		mockConfig.EXPECT().SetService(gomock.Any()).Times(1)
+		mockConfig.EXPECT().SetClientID("id").Times(1)
+		mockConfig.EXPECT().SetClientSecret("secret").Times(1)
+
+		require.NoError(t, opts.setProgrammaticCredentials())
+		assert.Empty(t, opts.OutWriter.(*bytes.Buffer).String())
+	})
+
+	t.Run("partial credential flags fall back to the interactive prompt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockAsker := NewMockTrackAsker(ctrl)
+		mockConfig := NewMockLoginConfig(ctrl)
+		opts := &LoginOpts{Asker: mockAsker, config: mockConfig, authType: prompt.ServiceAccountAuth, ClientID: "id"}
+		opts.OutWriter = new(bytes.Buffer)
+
+		mockAsker.EXPECT().TrackAsk(gomock.Any(), opts).Return(nil).Times(1)
+		mockConfig.EXPECT().SetService(gomock.Any()).Times(1)
+		mockConfig.EXPECT().SetClientID("id").Times(1)
+
+		require.NoError(t, opts.setProgrammaticCredentials())
+	})
+}
+
 func Test_shouldRetryAuthenticate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockAsker := NewMockTrackAsker(ctrl)

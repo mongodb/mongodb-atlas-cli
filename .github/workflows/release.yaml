@@ -4,9 +4,8 @@ name: Release
 # to do, then tags the repo. The tag triggers the Evergreen release pipeline
 # (build/sign/publish) — see build/ci/release.yml.
 #
-# NOTE: apix-action refs below point at the CLOUDP-455407 branch. Repin them to a
-# released SHA once the apix-action changes (create-jira-version, update-jira-version,
-# update-jira, link-jira, find-jira/transition-jira enhancements) are merged and released.
+# apix-action refs are pinned to the commit that added the Jira version/link actions and
+# transition-name support (mongodb/apix-action#295, CLOUDP-455407).
 
 on:
   workflow_dispatch:
@@ -135,14 +134,14 @@ jobs:
       # ---- Fix versions -------------------------------------------------------
 
       - name: Ensure the rolling next fix version exists
-        uses: mongodb/apix-action/create-jira-version@CLOUDP-455407
+        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.next-fix-version }}
 
       - name: Rename the rolling next fix version to the release fix version
-        uses: mongodb/apix-action/update-jira-version@CLOUDP-455407
+        uses: mongodb/apix-action/update-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -150,7 +149,7 @@ jobs:
           new-name: ${{ steps.meta.outputs.fix-version }}
 
       - name: Create a new rolling next fix version
-        uses: mongodb/apix-action/create-jira-version@CLOUDP-455407
+        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -160,7 +159,7 @@ jobs:
 
       - name: Find existing release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx Triage"'
@@ -168,7 +167,7 @@ jobs:
       - name: Create release ticket
         id: create-release
         if: steps.find-release.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@CLOUDP-455407
+        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -198,7 +197,7 @@ jobs:
           fi
 
       - name: Move release ticket to In Progress
-        uses: mongodb/apix-action/transition-jira@CLOUDP-455407
+        uses: mongodb/apix-action/transition-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.release-ticket.outputs.key }}
@@ -211,7 +210,7 @@ jobs:
 
       - name: Find still-open tickets on the release fix version
         id: to-move
-        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           # Key off status, not resolution: a reopened ticket keeps its last
@@ -235,7 +234,7 @@ jobs:
 
       - name: Move still-open tickets back to the rolling next fix version
         if: steps.to-move.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira@CLOUDP-455407
+        uses: mongodb/apix-action/update-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-keys.outputs.keys }}
@@ -245,7 +244,7 @@ jobs:
 
       - name: Extract release notes
         id: notes
-        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND summary != "AtlasCLI ${{ inputs.version }} Release" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
@@ -274,7 +273,7 @@ jobs:
 
       - name: Find existing release notes ticket
         id: find-notes
-        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = DOCSP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
@@ -282,7 +281,7 @@ jobs:
       - name: Create release notes ticket
         id: create-notes
         if: steps.find-notes.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@CLOUDP-455407
+        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: DOCSP
@@ -305,7 +304,7 @@ jobs:
           fi
 
       - name: Link release and release notes tickets
-        uses: mongodb/apix-action/link-jira@CLOUDP-455407
+        uses: mongodb/apix-action/link-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           inward-issue: ${{ steps.release-ticket.outputs.key }}

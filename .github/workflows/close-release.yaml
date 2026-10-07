@@ -5,8 +5,8 @@ name: Close Release
 # fix version is marked released and the release ticket resolved here rather than
 # at tag time — see release.yaml.
 #
-# NOTE: apix-action refs below point at the CLOUDP-455407 branch. Repin them to a
-# released SHA once the apix-action changes are merged and released.
+# apix-action refs are pinned to the commit that added the Jira version/link actions and
+# transition-name support (mongodb/apix-action#295, CLOUDP-455407).
 
 on:
   release:
@@ -51,7 +51,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Mark the fix version released
-        uses: mongodb/apix-action/update-jira-version@CLOUDP-455407
+        uses: mongodb/apix-action/update-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -61,14 +61,14 @@ jobs:
 
       - name: Find the release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx Triage"'
 
       - name: Resolve the release ticket
         if: steps.find-release.outputs.found == 'true'
-        uses: mongodb/apix-action/transition-jira@CLOUDP-455407
+        uses: mongodb/apix-action/transition-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}

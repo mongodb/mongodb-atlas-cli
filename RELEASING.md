@@ -10,7 +10,28 @@ these tasks run on master and can be patched at any time.
 
 ## Stable release
 
-Stable releases are now managed by internal tooling (PCT)
+Stable releases are managed by the [Release](.github/workflows/release.yaml) GitHub Actions
+workflow.
+
+To cut a release:
+
+1. Go to **Actions → Release → Run workflow**, pick the `master` branch, and enter the
+   version to release as `X.Y.Z` (without the leading `v`).
+2. The workflow:
+   - verifies the required checks are green on the release commit — the required PR checks
+     on `master` plus a few release-specific Evergreen variants,
+   - performs the Jira bookkeeping PCT used to do: creates the `atlascli-<version>` fix
+     version (renaming the rolling `next-atlascli-release` and recreating it), creates the
+     CLOUDP release ticket, moves any still-open tickets back to `next-atlascli-release`,
+     and opens and links the DOCSP release-notes ticket,
+   - pushes the `vX.Y.Z` tag, which triggers the [evergreen](build/ci/release.yml) release
+     pipeline to build, sign and publish.
+3. Once the GitHub release is published, [close-release.yaml](.github/workflows/close-release.yaml)
+   marks the fix version released and resolves the release ticket.
+
+> [!NOTE]
+> The workflow is idempotent: re-running it reuses an existing release ticket and release
+> notes ticket rather than creating duplicates.
 
 ## Package Managers
 
@@ -61,27 +82,3 @@ Papertrail runs to record detailed metadata about the release for improved trace
 #### Step 6: Compliance Reporting
 
 A GitHub workflow generates a compliance report after the release and opens a PR with the report.
-
-## Manual Release (Deprecated)
-
-> [!IMPORTANT]  
-> This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/apix/)
-
-To manually generate a new stable release, you can run:
-
-```bash
-./scripts/release.sh v1.0.0
-```
-
-> [!IMPORTANT]  
-> Please use the `vX.Y.Z` format for the version to release. This is the
-> format used by GoReleaser OSS; the legacy `atlascli/vX.Y.Z` prefix is no
-> longer used to trigger releases.
-
-This will do the following things:
-
-1. Tag a new version, ie: `git tag -a -s v1.0.0 -m "v1.0.0"`
-2. Publish the new tag, ie: `git push origin v1.0.0`
-3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
-4. If everything goes smoothly, the release will be published in the
-   [release page](https://github.com/mongodb/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/atlascli).

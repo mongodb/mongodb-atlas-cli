@@ -1,0 +1,338 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 1.60.0 (without the leading v)"
+        required: true
+        type: string
+      # Emergency escape hatch: cut a release even when a required test is red
+      # (e.g. a known-flaky or unrelated failing check). Leave unchecked normally.
+      force:
+        description: "Release even if the required tests are failing (emergency use only)"
+        required: false
+        default: false
+        type: boolean
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release AtlasCLI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+
+      - name: Validate version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -Eeou pipefail
+          if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version '${VERSION}'. Expected X.Y.Z." >&2
+            exit 1
+          fi
+
+      - name: Verify required tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          FORCE: ${{ inputs.force }}
+          REQUIRED_TESTS: |
+            evergreen/code_health
+            docs
+            mocks
+            tidy
+            lint
+            shellcheck
+            unit-tests (macos-latest)
+            unit-tests (ubuntu-latest)
+            unit-tests (windows-latest)
+            libraryOwners
+            licensecheck
+            evergreen/goreleaser_atlascli_snapshot
+            evergreen/pkg_smoke_tests_docker_atlascli
+        run: |
+          set -Eeou pipefail
+          # 'evergreen/*' contexts are commit statuses; the rest are check runs.
+          statuses=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${SHA}/statuses?per_page=100")
+          checks=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/commits/${SHA}/check-runs?per_page=100")
+          failed=0
+          while IFS= read -r context; do
+            [[ -n "${context}" ]] || continue
+            if [[ "${context}" == evergreen/* ]]; then
+              state=$(echo "${statuses}" | jq -r --arg c "${context}" \
+                '[.[] | select(.context == $c)][0].state // "missing"')
+            else
+              state=$(echo "${checks}" | jq -r --arg n "${context}" \
+                '[.check_runs[] | select(.name == $n)][0].conclusion // "missing"')
+            fi
+            echo "${context}: ${state}"
+            case "${state}" in
+              success|skipped|neutral) ;;
+              *) failed=1 ;;
+            esac
+          done <<< "${REQUIRED_TESTS}"
+          if [[ "${failed}" -ne 0 ]]; then
+            if [[ "${FORCE}" == "true" ]]; then
+              echo "::warning::Required tests did not pass on ${SHA}, but 'force' was set — releasing anyway."
+            else
+              echo "Required tests did not pass on ${SHA}. Aborting." >&2
+              exit 1
+            fi
+          fi
+
+      - uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5
+        id: load-secrets
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          APP_ID: "op://APIx/APIx Github Bot/App ID"
+          APP_SECRET: "op://APIx/APIx Github Bot/App Secret"
+          JIRA_API_TOKEN: "op://APIx/JIRA service account/credential"
+      - id: decode-app-secret
+        env:
+          APP_SECRET: ${{ steps.load-secrets.outputs.APP_SECRET }}
+        run: |
+          {
+            echo 'APP_PEM<<EOF'
+            echo "${APP_SECRET}" | base64 -d | openssl pkey -inform DER -outform PEM
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+      - name: Set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        with:
+          app-id: ${{ steps.load-secrets.outputs.APP_ID }}
+          private-key: ${{ steps.decode-app-secret.outputs.APP_PEM }}
+
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Determine previous release tag
+        id: previous
+        run: |
+          set -Eeou pipefail
+          # Support both the legacy 'atlascli/vX.Y.Z' and the new 'vX.Y.Z' tag formats.
+          PREVIOUS=$(git describe --tags --abbrev=0 --match 'v*' --match 'atlascli/v*' 2>/dev/null || true)
+          echo "tag=${PREVIOUS}" >> "$GITHUB_OUTPUT"
+
+      - name: Set release metadata
+        id: meta
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -Eeou pipefail
+          {
+            echo "next-fix-version=next-atlascli-release"
+            echo "fix-version=atlascli-${VERSION}"
+            echo "tag=v${VERSION}"
+          } >> "$GITHUB_OUTPUT"
+
+      # ---- Fix versions -------------------------------------------------------
+
+      - name: Ensure the rolling next fix version exists
+        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.next-fix-version }}
+
+      - name: Rename the rolling next fix version to the release fix version
+        uses: mongodb/apix-action/update-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.next-fix-version }}
+          new-name: ${{ steps.meta.outputs.fix-version }}
+
+      - name: Create a new rolling next fix version
+        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.next-fix-version }}
+
+      # ---- Release ticket -----------------------------------------------------
+
+      - name: Find existing release ticket
+        id: find-release
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
+
+      - name: Create release ticket
+        id: create-release
+        if: steps.find-release.outputs.found != 'true'
+        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "AtlasCLI ${{ inputs.version }} Release"
+          description: |
+            Release ticket for AtlasCLI ${{ inputs.version }}.
+
+            This ticket is created and progressed by the "Release AtlasCLI" GitHub Actions
+            workflow in mongodb/mongodb-atlas-cli.
+          issuetype: Story
+          assignee: cloud-atlascli-escalation
+          components: AtlasCLI
+          extra-data: '{"customfield_12751":[{"value":"APIx DevTools"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
+
+      - name: Resolve release ticket key
+        id: release-ticket
+        env:
+          FOUND: ${{ steps.find-release.outputs.found }}
+          EXISTING: ${{ steps.find-release.outputs.issue-key }}
+          CREATED: ${{ steps.create-release.outputs.issue-key }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "key=${EXISTING}" >> "$GITHUB_OUTPUT"
+          else
+            echo "key=${CREATED}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Move release ticket to In Progress
+        uses: mongodb/apix-action/transition-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-key: ${{ steps.release-ticket.outputs.key }}
+          transition-name: "Start Progress"
+
+      # ---- Move still-open tickets back to the rolling next fix version -------
+      # Renaming next-atlascli-release -> atlascli-<version> moves every ticket
+      # onto the release version. Move the still-open ones (the fewer set) back
+      # so the release version keeps only what shipped.
+
+      - name: Find still-open tickets on the release fix version
+        id: to-move
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          # Key off status, not resolution: a reopened ticket keeps its last
+          # resolution, so it must be matched by status. Exclude the release
+          # ticket, which is still in progress and belongs on the release version.
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND status NOT IN (Resolved, Closed) AND key != "${{ steps.release-ticket.outputs.key }}"'
+          max-results: "1000"
+
+      - name: Collect issue keys to move back
+        id: to-move-keys
+        if: steps.to-move.outputs.found == 'true'
+        env:
+          ISSUES: ${{ steps.to-move.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          {
+            echo "keys<<EOF"
+            echo "${ISSUES}" | jq -r '.[].key'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Move still-open tickets back to the rolling next fix version
+        if: steps.to-move.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-keys: ${{ steps.to-move-keys.outputs.keys }}
+          extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}'
+
+      # ---- Release notes ------------------------------------------------------
+
+      - name: Extract release notes
+        id: notes
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND summary != "AtlasCLI ${{ inputs.version }} Release" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
+          fields: "summary,Release Notes"
+          max-results: "1000"
+
+      - name: Build release notes description
+        id: notes-body
+        env:
+          ISSUES: ${{ steps.notes.outputs.issues }}
+          VERSION: ${{ inputs.version }}
+          PREVIOUS_TAG: ${{ steps.previous.outputs.tag }}
+        run: |
+          set -Eeou pipefail
+          {
+            echo "body<<EOF"
+            echo "Please use the [Atlas CLI Release Checklist|https://wiki.corp.mongodb.com/spaces/DOC/pages/165790822/Atlas+CLI+Release+Checklist] to publish these notes."
+            echo "If [~corry.root] is available, please route this ticket to them for docs review."
+            echo ""
+            echo "Changes since the previous release: https://github.com/mongodb/mongodb-atlas-cli/compare/${PREVIOUS_TAG}...v${VERSION}"
+            echo ""
+            echo "List of changes extracted from Jira tickets:"
+            echo "${ISSUES}" | jq -r '.[] | select((.fields["Release Notes"] // "") != "") | "- " + .fields["Release Notes"]'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find existing release notes ticket
+        id: find-notes
+        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = DOCSP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
+
+      - name: Create release notes ticket
+        id: create-notes
+        if: steps.find-notes.outputs.found != 'true'
+        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: DOCSP
+          summary: "[AtlasCLI] AtlasCLI ${{ inputs.version }} Release Notes"
+          description: ${{ steps.notes-body.outputs.body }}
+          issuetype: Task
+
+      - name: Resolve release notes ticket key
+        id: notes-ticket
+        env:
+          FOUND: ${{ steps.find-notes.outputs.found }}
+          EXISTING: ${{ steps.find-notes.outputs.issue-key }}
+          CREATED: ${{ steps.create-notes.outputs.issue-key }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "key=${EXISTING}" >> "$GITHUB_OUTPUT"
+          else
+            echo "key=${CREATED}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Link release and release notes tickets
+        uses: mongodb/apix-action/link-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          inward-issue: ${{ steps.release-ticket.outputs.key }}
+          outward-issue: ${{ steps.notes-ticket.outputs.key }}
+          link-type: "related to"
+
+      # The fix version is marked released and the release ticket resolved by
+      # close-release.yaml, once the GitHub release is published.
+
+      # ---- Tag ----------------------------------------------------------------
+
+      - name: Create and push tag
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          GIT_USER_NAME: ${{ steps.app-token.outputs.user-name }}
+          GIT_USER_EMAIL: ${{ steps.app-token.outputs.user-email }}
+        run: |
+          set -Eeou pipefail
+          if git rev-parse "${TAG}" >/dev/null 2>&1; then
+            echo "tag ${TAG} already exists" >&2
+            exit 1
+          fi
+          git config user.name "${GIT_USER_NAME}"
+          git config user.email "${GIT_USER_EMAIL}"
+          git tag -a "${TAG}" -m "${TAG}"
+          git push origin "${TAG}"

@@ -1,0 +1,76 @@
+name: Close Release
+
+# Marks the Jira release complete once the GitHub release is published. The tag
+# alone does not guarantee the Evergreen build/sign/publish succeeded, so the
+# fix version is marked released and the release ticket resolved here rather than
+# at tag time — see release.yaml.
+#
+# NOTE: apix-action refs below point at the CLOUDP-455407 branch. Repin them to a
+# released SHA once the apix-action changes are merged and released.
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+
+jobs:
+  finalize:
+    name: Finalize AtlasCLI release
+    # Only act on release tags in either supported format.
+    if: startsWith(github.event.release.tag_name, 'v') || startsWith(github.event.release.tag_name, 'atlascli/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+
+      - uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5
+        id: load-secrets
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          JIRA_API_TOKEN: "op://APIx/JIRA service account/credential"
+
+      - name: Determine version
+        id: meta
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -Eeou pipefail
+          # Support both the legacy 'atlascli/vX.Y.Z' and the new 'vX.Y.Z' tag formats.
+          VERSION="${TAG##*/}"
+          VERSION="${VERSION#v}"
+          if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Ignoring release with unexpected tag '${TAG}'." >&2
+            exit 1
+          fi
+          {
+            echo "version=${VERSION}"
+            echo "fix-version=atlascli-${VERSION}"
+            echo "release-date=$(date -u +%Y-%m-%d)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Mark the fix version released
+        uses: mongodb/apix-action/update-jira-version@CLOUDP-455407
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.fix-version }}
+          released: "true"
+          release-date: ${{ steps.meta.outputs.release-date }}
+
+      - name: Find the release ticket
+        id: find-release
+        uses: mongodb/apix-action/find-jira@CLOUDP-455407
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx Triage"'
+
+      - name: Resolve the release ticket
+        if: steps.find-release.outputs.found == 'true'
+        uses: mongodb/apix-action/transition-jira@CLOUDP-455407
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-key: ${{ steps.find-release.outputs.issue-key }}
+          transition-name: "Resolve Issue"
+          resolution: Done

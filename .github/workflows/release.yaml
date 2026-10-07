@@ -183,7 +183,7 @@ jobs:
             This ticket is created and progressed by the "Release AtlasCLI" GitHub Actions
             workflow in mongodb/mongodb-atlas-cli.
           issuetype: Story
-          assignee: opsmanager.serviceaccount
+          assignee: cloud-atlascli-escalation
           components: AtlasCLI
           extra-data: '{"customfield_12751":[{"value":"APIx DevTools"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
 

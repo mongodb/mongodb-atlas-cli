@@ -1,12 +1,5 @@
 name: Release
 
-# Manual release flow (CLOUDP-453178). Performs the Jira bookkeeping that PCT used
-# to do, then tags the repo. The tag triggers the Evergreen release pipeline
-# (build/sign/publish) — see build/ci/release.yml.
-#
-# apix-action refs are pinned to the commit that added the Jira version/link actions and
-# transition-name support (mongodb/apix-action#295, CLOUDP-455407).
-
 on:
   workflow_dispatch:
     inputs:

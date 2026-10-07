@@ -10,7 +10,28 @@ these tasks run on master and can be patched at any time.
 
 ## Stable release
 
-Stable releases are now managed by internal tooling (PCT)
+Stable releases are managed by the [Release](.github/workflows/release.yaml) GitHub Actions
+workflow, which replaces the previous PCT tooling.
+
+To cut a release:
+
+1. Go to **Actions → Release → Run workflow**, pick the `master` branch, and enter the
+   version to release as `X.Y.Z` (without the leading `v`).
+2. The workflow:
+   - verifies the required checks are green on the release commit — the required PR checks
+     on `master` plus a few release-specific Evergreen variants,
+   - performs the Jira bookkeeping PCT used to do: creates the `atlascli-<version>` fix
+     version (renaming the rolling `next-atlascli-release` and recreating it), creates the
+     CLOUDP release ticket, moves any still-open tickets back to `next-atlascli-release`,
+     and opens and links the DOCSP release-notes ticket,
+   - pushes the `vX.Y.Z` tag, which triggers the [evergreen](build/ci/release.yml) release
+     pipeline to build, sign and publish.
+3. Once the GitHub release is published, [close-release.yaml](.github/workflows/close-release.yaml)
+   marks the fix version released and resolves the release ticket.
+
+> [!NOTE]
+> The workflow is idempotent: re-running it reuses an existing release ticket and release
+> notes ticket rather than creating duplicates.
 
 ## Package Managers
 
@@ -63,6 +84,11 @@ Papertrail runs to record detailed metadata about the release for improved trace
 A GitHub workflow generates a compliance report after the release and opens a PR with the report.
 
 ## Manual Release (Deprecated)
+
+> [!IMPORTANT]
+> Prefer the [Release](.github/workflows/release.yaml) workflow above. This script only
+> tags and pushes — it skips the Jira bookkeeping (fix version, release ticket, release
+> notes), so use it only as a fallback.
 
 > [!IMPORTANT]  
 > This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/apix/)

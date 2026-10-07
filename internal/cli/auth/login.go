@@ -146,10 +146,11 @@ func (opts *LoginOpts) setProgrammaticCredentials() error {
 	_, _ = fmt.Fprintf(opts.OutWriter, `You are configuring a profile for %s.
 
 All values are optional and you can use environment variables (MONGODB_ATLAS_*) instead.
+Note: environment variables take precedence over the values you enter here. To learn more, see %s.
 
 Enter [?] on any option to get help.
 
-`, atlasName)
+`, atlasName, commonerrors.EnvVarsDocsURL)
 
 	q := prompt.AccessQuestions(opts.authType)
 	if err := opts.Asker.TrackAsk(q, opts); err != nil {
@@ -446,7 +447,9 @@ func LoginBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
-		Long:  `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.`,
+		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
+
+Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + ".",
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 `,

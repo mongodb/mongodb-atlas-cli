@@ -42,7 +42,12 @@ functions:
         script: |
           set -Eeou pipefail
 
-          curl -sfL "https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz" | tar zx
+          curl -fL --retry 5 --retry-all-errors --retry-delay 2 \
+            -o goreleaser.tar.gz \
+            "https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz"
+          test -s goreleaser.tar.gz
+          tar xzf goreleaser.tar.gz
+          rm -f goreleaser.tar.gz
   "install macos notarization service":
     - command: shell.exec
       type: setup

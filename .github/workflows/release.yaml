@@ -7,6 +7,13 @@ on:
         description: "Version to release, e.g. 1.60.0 (without the leading v)"
         required: true
         type: string
+      # Commit to release. Defaults to master; set a ref or SHA to release a
+      # specific commit (e.g. a hotfix that is not the tip of master).
+      ref:
+        description: "Commit SHA or ref to release (defaults to master)"
+        required: false
+        default: master
+        type: string
       # Emergency escape hatch: cut a release even when a required test is red
       # (e.g. a known-flaky or unrelated failing check). Leave unchecked normally.
       force:
@@ -38,10 +45,34 @@ jobs:
             exit 1
           fi
 
+      - name: Check the release tag does not already exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -Eeou pipefail
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists. Aborting." >&2
+            exit 1
+          fi
+          echo "Tag ${TAG} is free."
+
+      - name: Check the release ref exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET: ${{ inputs.ref }}
+        run: |
+          set -Eeou pipefail
+          if ! gh api "repos/${GITHUB_REPOSITORY}/commits/${TARGET}" >/dev/null 2>&1; then
+            echo "Ref '${TARGET}' does not resolve to a commit in ${GITHUB_REPOSITORY}. Aborting." >&2
+            exit 1
+          fi
+          echo "Ref ${TARGET} exists."
+
       - name: Verify required tests
         env:
           GH_TOKEN: ${{ github.token }}
-          SHA: ${{ github.sha }}
+          TARGET: ${{ inputs.ref }}
           FORCE: ${{ inputs.force }}
           REQUIRED_TESTS: |
             evergreen/code_health
@@ -59,6 +90,8 @@ jobs:
             evergreen/pkg_smoke_tests_docker_atlascli
         run: |
           set -Eeou pipefail
+          SHA=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${TARGET}" --jq '.sha')
+          echo "Releasing ${TARGET} (${SHA})"
           # 'evergreen/*' contexts are commit statuses; the rest are check runs.
           statuses=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${SHA}/statuses?per_page=100")
           checks=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/commits/${SHA}/check-runs?per_page=100")
@@ -113,6 +146,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
@@ -138,23 +172,75 @@ jobs:
 
       # ---- Fix versions -------------------------------------------------------
 
-      - name: Ensure the rolling next fix version exists
-        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+      - name: Find the rolling next fix version
+        id: find-next-version
+        uses: mongodb/apix-action/get-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.next-fix-version }}
 
-      - name: Rename the rolling next fix version to the release fix version
-        uses: mongodb/apix-action/update-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+      - name: Create the rolling next fix version
+        id: create-next-version
+        if: steps.find-next-version.outputs.found != 'true'
+        uses: mongodb/apix-action/create-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.next-fix-version }}
+
+      - name: Resolve the rolling next fix version id
+        id: next-version
+        env:
+          FOUND: ${{ steps.find-next-version.outputs.found }}
+          EXISTING: ${{ steps.find-next-version.outputs.version-id }}
+          CREATED: ${{ steps.create-next-version.outputs.version-id }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "id=${EXISTING}" >> "$GITHUB_OUTPUT"
+          else
+            echo "id=${CREATED}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Find the release fix version
+        id: find-release-version
+        uses: mongodb/apix-action/get-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.fix-version }}
+
+      - name: Check the release fix version is not already released
+        if: steps.find-release-version.outputs.found == 'true' && steps.find-release-version.outputs.released == 'true'
+        run: |
+          set -Eeou pipefail
+          echo "Fix version ${{ steps.meta.outputs.fix-version }} is already released. Aborting." >&2
+          exit 1
+
+      # Skip the rename when the release version already exists, so a re-run
+      # after a partial failure does not rename the rolling version twice.
+      - name: Rename the rolling next fix version to the release fix version
+        if: steps.find-release-version.outputs.found != 'true'
+        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          version-id: ${{ steps.next-version.outputs.id }}
           new-name: ${{ steps.meta.outputs.fix-version }}
 
+      # The rename consumed the rolling version; recreate it (unless it is
+      # already there) so the next release has somewhere to go.
+      - name: Find the rolling next fix version after the rename
+        id: find-next-version-after
+        uses: mongodb/apix-action/get-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.next-fix-version }}
+
       - name: Create a new rolling next fix version
-        uses: mongodb/apix-action/create-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        if: steps.find-next-version-after.outputs.found != 'true'
+        uses: mongodb/apix-action/create-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -164,15 +250,16 @@ jobs:
 
       - name: Find existing release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
+          fields: "status"
 
       - name: Create release ticket
         id: create-release
         if: steps.find-release.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -185,7 +272,10 @@ jobs:
           issuetype: Story
           assignee: cloud-atlascli-escalation
           components: AtlasCLI
-          extra-data: '{"customfield_12751":[{"value":"APIx DevTools"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
+          # extra-data is merged into the request body, so the fields must be
+          # nested under "fields" (as the dependabot flow does) or Jira ignores
+          # them. Assigned Teams (customfield_12751) is set by option id.
+          extra-data: '{"fields":{"customfield_12751":[{"id":"22223"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}}'
 
       - name: Resolve release ticket key
         id: release-ticket
@@ -201,21 +291,49 @@ jobs:
             echo "key=${CREATED}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Resolve release ticket status
+        id: release-status
+        env:
+          FOUND: ${{ steps.find-release.outputs.found }}
+          ISSUES: ${{ steps.find-release.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "status=$(printf '%s' "${ISSUES}" | jq -r '.[0].fields.status.name // ""')" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check the release ticket is not already resolved
+        # A resolved/closed release ticket means the release already happened.
+        if: steps.release-status.outputs.status == 'Resolved' || steps.release-status.outputs.status == 'Closed'
+        run: |
+          set -Eeou pipefail
+          echo "Release ticket ${{ steps.release-ticket.outputs.key }} is already ${{ steps.release-status.outputs.status }}. Aborting." >&2
+          exit 1
+
       - name: Move release ticket to In Progress
-        uses: mongodb/apix-action/transition-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        # Skip when the ticket is already In Progress, so a re-run is a no-op.
+        if: steps.release-status.outputs.status != 'In Progress'
+        uses: mongodb/apix-action/transition-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.release-ticket.outputs.key }}
           transition-name: "Start Progress"
 
-      # ---- Move still-open tickets back to the rolling next fix version -------
-      # Renaming next-atlascli-release -> atlascli-<version> moves every ticket
-      # onto the release version. Move the still-open ones (the fewer set) back
-      # so the release version keeps only what shipped.
+      # ---- Reconcile the fix versions -----------------------------------------
+      # Both moves run unconditionally (each skipped only when its query finds
+      # nothing), so a re-run after a partial failure converges either way:
+      #   - a rename drags every ticket onto the release version, so the
+      #     still-open ones are moved back to the rolling version;
+      #   - if the release version already existed (no rename), the shipped
+      #     (closed/resolved) ones are moved forward onto it.
+      # Whichever state a failure left, one move is a no-op and the other
+      # completes the reconciliation.
 
       - name: Find still-open tickets on the release fix version
         id: to-move
-        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           # Key off status, not resolution: a reopened ticket keeps its last
@@ -239,20 +357,50 @@ jobs:
 
       - name: Move still-open tickets back to the rolling next fix version
         if: steps.to-move.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/update-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-keys.outputs.keys }}
-          extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}'
+          extra-data: '{"fields":{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}}'
+
+      - name: Find shipped tickets still on the rolling next fix version
+        id: to-move-shipped
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.next-fix-version }}" AND status IN (Resolved, Closed)'
+          max-results: "1000"
+
+      - name: Collect shipped issue keys
+        id: to-move-shipped-keys
+        if: steps.to-move-shipped.outputs.found == 'true'
+        env:
+          ISSUES: ${{ steps.to-move-shipped.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          {
+            echo "keys<<EOF"
+            echo "${ISSUES}" | jq -r '.[].key'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Move shipped tickets to the release fix version
+        if: steps.to-move-shipped.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-keys: ${{ steps.to-move-shipped-keys.outputs.keys }}
+          extra-data: '{"fields":{"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}]}}'
 
       # ---- Release notes ------------------------------------------------------
 
       - name: Extract release notes
         id: notes
-        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND summary != "AtlasCLI ${{ inputs.version }} Release" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
+          # JQL has no `!=` for summary; exclude the release ticket by key instead.
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND key != "${{ steps.release-ticket.outputs.key }}" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
           fields: "summary,Release Notes"
           max-results: "1000"
 
@@ -267,7 +415,7 @@ jobs:
           {
             echo "body<<EOF"
             echo "Please use the [Atlas CLI Release Checklist|https://wiki.corp.mongodb.com/spaces/DOC/pages/165790822/Atlas+CLI+Release+Checklist] to publish these notes."
-            echo "If [~corry.root] is available, please route this ticket to them for docs review."
+            echo "If [~corry.root@mongodb.com] is available, please route this ticket to them for docs review."
             echo ""
             echo "Changes since the previous release: https://github.com/mongodb/mongodb-atlas-cli/compare/${PREVIOUS_TAG}...v${VERSION}"
             echo ""
@@ -276,20 +424,26 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      # TODO(CLOUDP-455888): the release-notes ticket belongs in DOCSP. It is
+      # created in CLOUDP for now because the Jira service account lacks Create
+      # Issues (and Link Issues) in DOCSP; switch both this JQL and the create
+      # step below back to DOCSP once that permission is granted.
       - name: Find existing release notes ticket
         id: find-notes
-        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = DOCSP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
+          jql: 'project = CLOUDP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
 
       - name: Create release notes ticket
         id: create-notes
         if: steps.find-notes.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          project-key: DOCSP
+          # TODO(CLOUDP-455888): move back to DOCSP once the service account has
+          # Create Issues there (see the find step above).
+          project-key: CLOUDP
           summary: "[AtlasCLI] AtlasCLI ${{ inputs.version }} Release Notes"
           description: ${{ steps.notes-body.outputs.body }}
           issuetype: Task
@@ -309,12 +463,15 @@ jobs:
           fi
 
       - name: Link release and release notes tickets
-        uses: mongodb/apix-action/link-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        # Only when the notes ticket was just created, so a re-run does not add a
+        # duplicate link.
+        if: steps.create-notes.outcome == 'success'
+        uses: mongodb/apix-action/link-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           inward-issue: ${{ steps.release-ticket.outputs.key }}
           outward-issue: ${{ steps.notes-ticket.outputs.key }}
-          link-type: "related to"
+          link-type: "Related"
 
       # The fix version is marked released and the release ticket resolved by
       # close-release.yaml, once the GitHub release is published.

@@ -353,7 +353,7 @@ jobs:
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-keys.outputs.keys }}
-          extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}'
+          extra-data: '{"fields":{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}}'
 
       - name: Find shipped tickets still on the rolling next fix version
         id: to-move-shipped
@@ -382,7 +382,7 @@ jobs:
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-shipped-keys.outputs.keys }}
-          extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}]}'
+          extra-data: '{"fields":{"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}]}}'
 
       # ---- Release notes ------------------------------------------------------
 

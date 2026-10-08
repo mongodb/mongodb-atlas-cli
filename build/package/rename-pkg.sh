@@ -24,8 +24,7 @@ fi
 
 FILENAME="${package_name-}_${VERSION}_linux_x86_64"
 FILENAME_ARM="${package_name-}_${VERSION}_linux_arm64"
-META_FILENAME="${meta_package_name-}_${VERSION}_linux_x86_64"
-META_FILENAME_ARM="${meta_package_name-}_${VERSION}_linux_arm64"
+META_FILENAME="${meta_package_name-}_${VERSION}_linux_all"
 
 pushd dist
 
@@ -47,6 +46,6 @@ rename "${FILENAME}.rpm" "yum/x86_64/mongodb-atlas-cli${unstable-}-${VERSION}${l
 rename "${FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas-cli${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
 
 rename "${META_FILENAME}.deb" "apt/x86_64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_amd64.deb"
-rename "${META_FILENAME_ARM}.deb" "apt/arm64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
+rename "${META_FILENAME}.deb" "apt/arm64/mongodb-atlas${unstable-}_${VERSION}${latest_deb-}_arm64.deb"
 rename "${META_FILENAME}.rpm" "yum/x86_64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.x86_64.rpm"
-rename "${META_FILENAME_ARM}.rpm" "yum/arm64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"
+rename "${META_FILENAME}.rpm" "yum/arm64/mongodb-atlas${unstable-}-${VERSION}${latest_rpm-}.aarch64.rpm"

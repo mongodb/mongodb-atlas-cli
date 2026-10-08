@@ -372,7 +372,8 @@ jobs:
         uses: mongodb/apix-action/find-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND summary != "AtlasCLI ${{ inputs.version }} Release" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
+          # JQL has no `!=` for summary; exclude the release ticket by key instead.
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.fix-version }}" AND component NOT IN (Evergreen, Infrastructure, "OnPrem Packaging", Testing, Tests) AND key != "${{ steps.release-ticket.outputs.key }}" AND "Release Notes" IS NOT EMPTY AND resolution IN (Done, Fixed)'
           fields: "summary,Release Notes"
           max-results: "1000"
 

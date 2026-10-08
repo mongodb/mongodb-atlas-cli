@@ -5,8 +5,8 @@ name: Close Release
 # fix version is marked released and the release ticket resolved here rather than
 # at tag time — see release.yaml.
 #
-# apix-action refs are pinned to the CLOUDP-455888 branch for testing; repin to
-# a released SHA before merging.
+# apix-action refs are pinned to the commit that added get-jira-version and the
+# create/update extra-data fixes (mongodb/apix-action#302, CLOUDP-455888).
 
 on:
   release:
@@ -52,7 +52,7 @@ jobs:
 
       - name: Find the fix version
         id: find-version
-        uses: mongodb/apix-action/get-jira-version@CLOUDP-455888
+        uses: mongodb/apix-action/get-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -60,7 +60,7 @@ jobs:
 
       - name: Mark the fix version released
         if: steps.find-version.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira-version@CLOUDP-455888
+        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.find-version.outputs.version-id }}
@@ -69,7 +69,7 @@ jobs:
 
       - name: Find the release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@CLOUDP-455888
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
@@ -91,7 +91,7 @@ jobs:
       - name: Resolve the release ticket
         # Skip when already resolved, so a re-run is a no-op.
         if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
-        uses: mongodb/apix-action/transition-jira@CLOUDP-455888
+        uses: mongodb/apix-action/transition-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}

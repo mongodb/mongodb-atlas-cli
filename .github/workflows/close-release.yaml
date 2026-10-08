@@ -73,9 +73,24 @@ jobs:
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
+          fields: "status"
+
+      - name: Resolve the release ticket status
+        id: release-status
+        env:
+          FOUND: ${{ steps.find-release.outputs.found }}
+          ISSUES: ${{ steps.find-release.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "status=$(printf '%s' "${ISSUES}" | jq -r '.[0].fields.status.name // ""')" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Resolve the release ticket
-        if: steps.find-release.outputs.found == 'true'
+        # Skip when already resolved, so a re-run is a no-op.
+        if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
         uses: mongodb/apix-action/transition-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}

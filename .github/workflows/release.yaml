@@ -45,6 +45,18 @@ jobs:
             exit 1
           fi
 
+      - name: Check the release tag does not already exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ inputs.version }}
+        run: |
+          set -Eeou pipefail
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists. Aborting." >&2
+            exit 1
+          fi
+          echo "Tag ${TAG} is free."
+
       - name: Verify required tests
         env:
           GH_TOKEN: ${{ github.token }}

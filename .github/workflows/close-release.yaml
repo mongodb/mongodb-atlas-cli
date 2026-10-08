@@ -50,25 +50,33 @@ jobs:
             echo "release-date=$(date -u +%Y-%m-%d)"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Mark the fix version released
-        uses: mongodb/apix-action/update-jira-version@8c4de82ed86622a3340e1d51628fcd23947f1e00
+      - name: Find the fix version
+        id: find-version
+        uses: mongodb/apix-action/get-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.fix-version }}
+
+      - name: Mark the fix version released
+        if: steps.find-version.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          version-id: ${{ steps.find-version.outputs.version-id }}
           released: "true"
           release-date: ${{ steps.meta.outputs.release-date }}
 
       - name: Find the release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/find-jira@ed46c8d761c47b8c4161222deddde35abf90263e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
 
       - name: Resolve the release ticket
         if: steps.find-release.outputs.found == 'true'
-        uses: mongodb/apix-action/transition-jira@8c4de82ed86622a3340e1d51628fcd23947f1e00
+        uses: mongodb/apix-action/transition-jira@ed46c8d761c47b8c4161222deddde35abf90263e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}

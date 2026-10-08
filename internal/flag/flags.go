@@ -321,4 +321,8 @@ const (
 	AuditFilter                                   = "auditFilter"                                   // AuditFilter flag
 	InitDB                                        = "initdb"                                        // InitDB flag
 	AutoScalingMode                               = "autoScalingMode"                               // AutoScalingMode flag
+	AuthType                                      = "authType"                                      // AuthType flag
+	ClientSecret                                  = "clientSecret"                                  // ClientSecret flag
+	PublicAPIKey                                  = "publicApiKey"                                  // PublicAPIKey flag
+	PrivateAPIKey                                 = "privateApiKey"                                 // PrivateAPIKey flag
 )

@@ -52,7 +52,7 @@ jobs:
 
       - name: Find the fix version
         id: find-version
-        uses: mongodb/apix-action/get-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
+        uses: mongodb/apix-action/get-jira-version@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -60,7 +60,7 @@ jobs:
 
       - name: Mark the fix version released
         if: steps.find-version.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
+        uses: mongodb/apix-action/update-jira-version@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.find-version.outputs.version-id }}
@@ -69,14 +69,14 @@ jobs:
 
       - name: Find the release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@ed46c8d761c47b8c4161222deddde35abf90263e
+        uses: mongodb/apix-action/find-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
 
       - name: Resolve the release ticket
         if: steps.find-release.outputs.found == 'true'
-        uses: mongodb/apix-action/transition-jira@ed46c8d761c47b8c4161222deddde35abf90263e
+        uses: mongodb/apix-action/transition-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}

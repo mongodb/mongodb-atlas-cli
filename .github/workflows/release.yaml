@@ -304,6 +304,14 @@ jobs:
             echo "status=" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Check the release ticket is not already resolved
+        # A resolved/closed release ticket means the release already happened.
+        if: steps.release-status.outputs.status == 'Resolved' || steps.release-status.outputs.status == 'Closed'
+        run: |
+          set -Eeou pipefail
+          echo "Release ticket ${{ steps.release-ticket.outputs.key }} is already ${{ steps.release-status.outputs.status }}. Aborting." >&2
+          exit 1
+
       - name: Move release ticket to In Progress
         # Skip when the ticket is already In Progress, so a re-run is a no-op.
         if: steps.release-status.outputs.status != 'In Progress'

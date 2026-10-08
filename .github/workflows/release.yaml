@@ -272,7 +272,10 @@ jobs:
           issuetype: Story
           assignee: cloud-atlascli-escalation
           components: AtlasCLI
-          extra-data: '{"customfield_12751":[{"value":"APIx DevTools"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
+          # Assigned Teams (customfield_12751) must be set by option id; a
+          # {"value": ...} is silently ignored, which made the find above miss
+          # and create duplicates.
+          extra-data: '{"customfield_12751":[{"id":"22223"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}'
 
       - name: Resolve release ticket key
         id: release-ticket

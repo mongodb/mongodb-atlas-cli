@@ -5,8 +5,8 @@ name: Close Release
 # fix version is marked released and the release ticket resolved here rather than
 # at tag time — see release.yaml.
 #
-# apix-action refs are pinned to the commit that added the Jira version/link actions and
-# transition-name support (mongodb/apix-action#295, CLOUDP-455407).
+# apix-action refs are pinned to the CLOUDP-455888 branch for testing; repin to
+# a released SHA before merging.
 
 on:
   release:

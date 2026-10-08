@@ -407,7 +407,7 @@ jobs:
           {
             echo "body<<EOF"
             echo "Please use the [Atlas CLI Release Checklist|https://wiki.corp.mongodb.com/spaces/DOC/pages/165790822/Atlas+CLI+Release+Checklist] to publish these notes."
-            echo "If [~corry.root] is available, please route this ticket to them for docs review."
+            echo "If [~corry.root@mongodb.com] is available, please route this ticket to them for docs review."
             echo ""
             echo "Changes since the previous release: https://github.com/mongodb/mongodb-atlas-cli/compare/${PREVIOUS_TAG}...v${VERSION}"
             echo ""

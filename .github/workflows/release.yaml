@@ -169,14 +169,36 @@ jobs:
             echo "id=${CREATED}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Find the release fix version
+        id: find-release-version
+        uses: mongodb/apix-action/get-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.fix-version }}
+
+      # Skip the rename when the release version already exists, so a re-run
+      # after a partial failure does not rename the rolling version twice.
       - name: Rename the rolling next fix version to the release fix version
+        if: steps.find-release-version.outputs.found != 'true'
         uses: mongodb/apix-action/update-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.next-version.outputs.id }}
           new-name: ${{ steps.meta.outputs.fix-version }}
 
+      # The rename consumed the rolling version; recreate it (unless it is
+      # already there) so the next release has somewhere to go.
+      - name: Find the rolling next fix version after the rename
+        id: find-next-version-after
+        uses: mongodb/apix-action/get-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.next-fix-version }}
+
       - name: Create a new rolling next fix version
+        if: steps.find-next-version-after.outputs.found != 'true'
         uses: mongodb/apix-action/create-jira-version@ed46c8d761c47b8c4161222deddde35abf90263e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}

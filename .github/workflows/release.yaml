@@ -57,6 +57,18 @@ jobs:
           fi
           echo "Tag ${TAG} is free."
 
+      - name: Check the release ref exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET: ${{ inputs.ref }}
+        run: |
+          set -Eeou pipefail
+          if ! gh api "repos/${GITHUB_REPOSITORY}/commits/${TARGET}" >/dev/null 2>&1; then
+            echo "Ref '${TARGET}' does not resolve to a commit in ${GITHUB_REPOSITORY}. Aborting." >&2
+            exit 1
+          fi
+          echo "Ref ${TARGET} exists."
+
       - name: Verify required tests
         env:
           GH_TOKEN: ${{ github.token }}
@@ -198,6 +210,13 @@ jobs:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.fix-version }}
+
+      - name: Check the release fix version is not already released
+        if: steps.find-release-version.outputs.found == 'true' && steps.find-release-version.outputs.released == 'true'
+        run: |
+          set -Eeou pipefail
+          echo "Fix version ${{ steps.meta.outputs.fix-version }} is already released. Aborting." >&2
+          exit 1
 
       # Skip the rename when the release version already exists, so a re-run
       # after a partial failure does not rename the rolling version twice.

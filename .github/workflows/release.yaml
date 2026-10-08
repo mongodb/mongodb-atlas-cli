@@ -254,6 +254,7 @@ jobs:
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
+          fields: "status"
 
       - name: Create release ticket
         id: create-release
@@ -287,7 +288,22 @@ jobs:
             echo "key=${CREATED}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Resolve release ticket status
+        id: release-status
+        env:
+          FOUND: ${{ steps.find-release.outputs.found }}
+          ISSUES: ${{ steps.find-release.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "status=$(printf '%s' "${ISSUES}" | jq -r '.[0].fields.status.name // ""')" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Move release ticket to In Progress
+        # Skip when the ticket is already In Progress, so a re-run is a no-op.
+        if: steps.release-status.outputs.status != 'In Progress'
         uses: mongodb/apix-action/transition-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
@@ -430,12 +446,15 @@ jobs:
           fi
 
       - name: Link release and release notes tickets
+        # Only when the notes ticket was just created, so a re-run does not add a
+        # duplicate link.
+        if: steps.create-notes.outcome == 'success'
         uses: mongodb/apix-action/link-jira@CLOUDP-455888
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           inward-issue: ${{ steps.release-ticket.outputs.key }}
           outward-issue: ${{ steps.notes-ticket.outputs.key }}
-          link-type: "related to"
+          link-type: "Related"
 
       # The fix version is marked released and the release ticket resolved by
       # close-release.yaml, once the GitHub release is published.

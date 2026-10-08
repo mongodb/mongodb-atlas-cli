@@ -253,10 +253,15 @@ jobs:
           issue-key: ${{ steps.release-ticket.outputs.key }}
           transition-name: "Start Progress"
 
-      # ---- Move still-open tickets back to the rolling next fix version -------
-      # Renaming next-atlascli-release -> atlascli-<version> moves every ticket
-      # onto the release version. Move the still-open ones (the fewer set) back
-      # so the release version keeps only what shipped.
+      # ---- Reconcile the fix versions -----------------------------------------
+      # Both moves run unconditionally (each skipped only when its query finds
+      # nothing), so a re-run after a partial failure converges either way:
+      #   - a rename drags every ticket onto the release version, so the
+      #     still-open ones are moved back to the rolling version;
+      #   - if the release version already existed (no rename), the shipped
+      #     (closed/resolved) ones are moved forward onto it.
+      # Whichever state a failure left, one move is a no-op and the other
+      # completes the reconciliation.
 
       - name: Find still-open tickets on the release fix version
         id: to-move
@@ -289,6 +294,35 @@ jobs:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-keys.outputs.keys }}
           extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.next-fix-version }}"}]}'
+
+      - name: Find shipped tickets still on the rolling next fix version
+        id: to-move-shipped
+        uses: mongodb/apix-action/find-jira@ed46c8d761c47b8c4161222deddde35abf90263e
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.next-fix-version }}" AND status IN (Resolved, Closed)'
+          max-results: "1000"
+
+      - name: Collect shipped issue keys
+        id: to-move-shipped-keys
+        if: steps.to-move-shipped.outputs.found == 'true'
+        env:
+          ISSUES: ${{ steps.to-move-shipped.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          {
+            echo "keys<<EOF"
+            echo "${ISSUES}" | jq -r '.[].key'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Move shipped tickets to the release fix version
+        if: steps.to-move-shipped.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira@ed46c8d761c47b8c4161222deddde35abf90263e
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-keys: ${{ steps.to-move-shipped-keys.outputs.keys }}
+          extra-data: '{"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}]}'
 
       # ---- Release notes ------------------------------------------------------
 

@@ -36,15 +36,12 @@ functions:
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        env:
-          <<: *go_env
-          GORELEASER_VERSION: "v2.18.2"
         script: |
           set -Eeou pipefail
 
           curl -fL --retry 5 --retry-all-errors --retry-delay 2 \
             -o goreleaser.tar.gz \
-            "https://github.com/goreleaser/goreleaser/releases/download/${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz"
+            "https://github.com/goreleaser/goreleaser/releases/download/v2.18.2/goreleaser_Linux_x86_64.tar.gz"
           test -s goreleaser.tar.gz
           tar xzf goreleaser.tar.gz
           rm -f goreleaser.tar.gz

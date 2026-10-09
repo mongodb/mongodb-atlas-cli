@@ -275,7 +275,7 @@ jobs:
           # extra-data is merged into the request body, so the fields must be
           # nested under "fields" (as the dependabot flow does) or Jira ignores
           # them. Assigned Teams (customfield_12751) is set by option id.
-          extra-data: '{"fields":{"customfield_12751":[{"id":"22223"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"}}}'
+          extra-data: '{"fields":{"customfield_12751":[{"id":"22223"}],"fixVersions":[{"name":"${{ steps.meta.outputs.fix-version }}"}],"priority":{"id":"3"},"customfield_10257":{"value":"Not Needed"}}}'
 
       - name: Resolve release ticket key
         id: release-ticket

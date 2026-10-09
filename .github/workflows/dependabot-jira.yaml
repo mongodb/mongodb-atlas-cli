@@ -15,5 +15,6 @@ jobs:
     # this app opens. The actor limits the trigger to Dependabot or this app's own
     # post-update commit, so a push to the branch by anyone else does not start a run.
     if: github.event.pull_request.user.login == 'dependabot[bot]' && (github.actor == 'dependabot[bot]' || github.actor == 'apix-bot[bot]')
-    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@71c64f5aee7b34c14cde286c275657614caf534d
-    secrets: inherit
+    uses: mongodb/apix-action/.github/workflows/_dependabot-jira.yaml@58bed0c5e3362646ee6450a40f1bfa323be50991
+    secrets:
+      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

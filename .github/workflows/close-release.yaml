@@ -58,15 +58,6 @@ jobs:
           project-key: CLOUDP
           name: ${{ steps.meta.outputs.fix-version }}
 
-      - name: Mark the fix version released
-        if: steps.find-version.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
-        with:
-          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          version-id: ${{ steps.find-version.outputs.version-id }}
-          released: "true"
-          release-date: ${{ steps.meta.outputs.release-date }}
-
       - name: Find the release ticket
         id: find-release
         uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
@@ -88,6 +79,18 @@ jobs:
             echo "status=" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Set Documentation Changes on the release ticket
+        # The CLOUDP "Resolve Issue" transition requires "Documentation Changes"
+        # (customfield_10257). The release ticket itself needs no docs, so mark
+        # it "Not Needed" before resolving (covers tickets created before the
+        # field was set at creation).
+        if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
+        uses: mongodb/apix-action/update-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-keys: ${{ steps.find-release.outputs.issue-key }}
+          extra-data: '{"fields":{"customfield_10257":{"value":"Not Needed"}}}'
+
       - name: Resolve the release ticket
         # Skip when already resolved, so a re-run is a no-op.
         if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
@@ -96,4 +99,16 @@ jobs:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}
           transition-name: "Resolve Issue"
-          resolution: Done
+          resolution: Fixed
+
+      - name: Mark the fix version released
+        # Run last: resolving the release ticket can fail (e.g. a required Jira
+        # field), and we only want to mark the version released once the release
+        # ticket is actually done.
+        if: steps.find-version.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          version-id: ${{ steps.find-version.outputs.version-id }}
+          released: "true"
+          release-date: ${{ steps.meta.outputs.release-date }}

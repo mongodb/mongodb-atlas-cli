@@ -263,7 +263,7 @@ jobs:
           git add test/e2e/
           git commit -m "Update snapshots"
           git push
-      - uses: actions-ecosystem/action-remove-labels@v1
+      - uses: actions-ecosystem/action-remove-labels@2ce5d41b4b6aa8503e285553f75ed56e0a40bae0 # v1
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           labels: update-snapshots
@@ -278,7 +278,7 @@ jobs:
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
-      - uses: actions-ecosystem/action-remove-labels@v1
+      - uses: actions-ecosystem/action-remove-labels@2ce5d41b4b6aa8503e285553f75ed56e0a40bae0 # v1
         with:
           github_token: ${{ steps.app-token.outputs.token }}
           labels: update-snapshots

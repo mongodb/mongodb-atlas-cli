@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasauth "go.mongodb.org/atlas/auth"
@@ -44,6 +45,13 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	if err = opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
 		return err
 	}
+
+	// register always authenticates via the OAuth device flow, so the resulting profile is a
+	// UserAccount profile. Without this, the profile's AuthType stays NoAuth/unset, and
+	// HTTPClientFromProfile (atlas-cli-core/transport) falls through to a client with no
+	// Authorization header at all, so the newly saved tokens are never sent and every
+	// subsequent API call 401s. See CLOUDP-452510.
+	opts.config.SetAuthType(config.UserAccount)
 
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
@@ -93,8 +101,19 @@ func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.Registr
 	}
 }
 
+// newRegisterOpts constructs RegisterOpts with the same dependencies LoginBuilder wires up
+// for LoginOpts. Asker must be set: setUpProfile's promptOutput calls opts.Asker.TrackAsk, and
+// a nil TrackAsker panics. See CLOUDP-452510.
+func newRegisterOpts() *RegisterOpts {
+	return &RegisterOpts{
+		LoginOpts: LoginOpts{
+			Asker: &telemetry.Ask{},
+		},
+	}
+}
+
 func RegisterBuilder() *cobra.Command {
-	opts := &RegisterOpts{}
+	opts := newRegisterOpts()
 
 	cmd := &cobra.Command{
 		Use:   "register",

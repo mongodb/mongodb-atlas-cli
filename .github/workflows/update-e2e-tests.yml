@@ -69,7 +69,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v7
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version-file: 'go.mod'
       - run: find test/e2e/${{ matrix.package }} -type d -name .snapshots -exec rm -rf {} + 2>/dev/null || true
@@ -167,7 +167,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Go
-        uses: actions/setup-go@v7
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
           go-version-file: 'go.mod'
       - run: make build

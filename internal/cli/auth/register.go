@@ -46,11 +46,7 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 		return err
 	}
 
-	// register always authenticates via the OAuth device flow, so the resulting profile is a
-	// UserAccount profile. Without this, the profile's AuthType stays NoAuth/unset, and
-	// HTTPClientFromProfile (atlas-cli-core/transport) falls through to a client with no
-	// Authorization header at all, so the newly saved tokens are never sent and every
-	// subsequent API call 401s. See CLOUDP-452510.
+	// Without this, the profile has no AuthType, and the HTTP client never attaches the token.
 	opts.config.SetAuthType(config.UserAccount)
 
 	s, err := opts.config.AccessTokenSubject()
@@ -101,9 +97,7 @@ func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.Registr
 	}
 }
 
-// newRegisterOpts constructs RegisterOpts with the same dependencies LoginBuilder wires up
-// for LoginOpts. Asker must be set: setUpProfile's promptOutput calls opts.Asker.TrackAsk, and
-// a nil TrackAsker panics. See CLOUDP-452510.
+// Asker must be set, promptOutput calls it and a nil TrackAsker panics.
 func newRegisterOpts() *RegisterOpts {
 	return &RegisterOpts{
 		LoginOpts: LoginOpts{

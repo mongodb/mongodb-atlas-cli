@@ -21,6 +21,7 @@ import (
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasauth "go.mongodb.org/atlas/auth"
@@ -44,6 +45,9 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	if err = opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
 		return err
 	}
+
+	// Without this, the profile has no AuthType, and the HTTP client never attaches the token.
+	opts.config.SetAuthType(config.UserAccount)
 
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
@@ -93,8 +97,17 @@ func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.Registr
 	}
 }
 
+// Asker must be set, promptOutput calls it and a nil TrackAsker panics.
+func newRegisterOpts() *RegisterOpts {
+	return &RegisterOpts{
+		LoginOpts: LoginOpts{
+			Asker: &telemetry.Ask{},
+		},
+	}
+}
+
 func RegisterBuilder() *cobra.Command {
-	opts := &RegisterOpts{}
+	opts := newRegisterOpts()
 
 	cmd := &cobra.Command{
 		Use:   "register",

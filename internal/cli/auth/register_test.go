@@ -22,15 +22,23 @@ import (
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312026/admin"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
+
+func Test_newRegisterOpts_setsAsker(t *testing.T) {
+	opts := newRegisterOpts()
+	require.NotNil(t, opts.Asker)
+	assert.IsType(t, &telemetry.Ask{}, opts.Asker)
+}
 
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -86,6 +94,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()

@@ -424,9 +424,6 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # The release-notes ticket belongs in DOCSP. Creating and linking it
-      # requires the Jira service account to have Create Issues and Link Issues
-      # there (CLOUDP-455992, blocked by IPSUP-1977).
       - name: Find existing release notes ticket
         id: find-notes
         uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
@@ -440,8 +437,6 @@ jobs:
         uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          # DOCSP requires the service account to have Create Issues there
-          # (CLOUDP-455992, see the find step above).
           project-key: DOCSP
           summary: "[AtlasCLI] AtlasCLI ${{ inputs.version }} Release Notes"
           description: ${{ steps.notes-body.outputs.body }}

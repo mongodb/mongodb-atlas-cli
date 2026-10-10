@@ -424,16 +424,12 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # TODO(CLOUDP-455888): the release-notes ticket belongs in DOCSP. It is
-      # created in CLOUDP for now because the Jira service account lacks Create
-      # Issues (and Link Issues) in DOCSP; switch both this JQL and the create
-      # step below back to DOCSP once that permission is granted.
       - name: Find existing release notes ticket
         id: find-notes
         uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          jql: 'project = CLOUDP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
+          jql: 'project = DOCSP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'
 
       - name: Create release notes ticket
         id: create-notes
@@ -441,9 +437,7 @@ jobs:
         uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
-          # TODO(CLOUDP-455888): move back to DOCSP once the service account has
-          # Create Issues there (see the find step above).
-          project-key: CLOUDP
+          project-key: DOCSP
           summary: "[AtlasCLI] AtlasCLI ${{ inputs.version }} Release Notes"
           description: ${{ steps.notes-body.outputs.body }}
           issuetype: Task

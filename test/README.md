@@ -281,6 +281,7 @@
 |                   `completion fish`                   |     Y     |   Y   |
 |                `completion powershell`                |     Y     |   Y   |
 |                        `setup`                        |     Y     |   Y   |
+|                     `auth login`                      |     Y     |   Y   |
 |                      `register`                       |     N     |   Y   |
 |                     `kubernetes`                      |     Y     |   Y   |
 | `federatedAuthentication federationSettings describe` |     Y     |   Y   |

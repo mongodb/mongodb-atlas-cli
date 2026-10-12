@@ -1,7 +1,7 @@
 name: Update API Commands
 on:
   schedule:
-   - cron: 30 8 * * TUE
+    - cron: 30 8 * * 1-5
   workflow_dispatch:
 jobs:
   update-api:
@@ -16,15 +16,14 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run:  make update-openapi-spec
+      - run:  make gen-api-commands
       - name: Verify Changed files
         run: |
           FILES_CHANGED=false
-          if git diff --name-only | grep -qE '^tools/internal/specs/spec\.yaml'; then
+          if [ -n "$(git diff --name-only)" ]; then
               FILES_CHANGED=true
           fi
           echo "FILES_CHANGED=${FILES_CHANGED}" >> "$GITHUB_ENV"
-      - run:  make gen-api-commands
-        if: env.FILES_CHANGED == 'true'
       - run:  make gen-docs
         if: env.FILES_CHANGED == 'true'
       - name: Find JIRA ticket

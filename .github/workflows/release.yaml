@@ -222,7 +222,7 @@ jobs:
       # after a partial failure does not rename the rolling version twice.
       - name: Rename the rolling next fix version to the release fix version
         if: steps.find-release-version.outputs.found != 'true'
-        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/update-jira-version@f98b4c1070db586669be02334d83c1ab2432964d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.next-version.outputs.id }}

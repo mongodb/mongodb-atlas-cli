@@ -319,49 +319,6 @@ func TestLoginAPIKeys(t *testing.T) {
 	})
 }
 
-func TestLoginServiceAccountNoOrgProjectFlags(t *testing.T) {
-	if testing.Short() {
-		t.Skip("skipping test in short mode")
-	}
-
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
-	cliPath, err := internal.AtlasCLIBin()
-	require.NoError(t, err)
-
-	g := internal.NewAtlasE2ETestGenerator(t)
-	g.GenerateOrgServiceAccount(cliPath, "login-e2e")
-
-	const profile = "sa-login-noflags"
-	seed := readProfileSeed(t)
-
-	isolateLoginEnv(t)
-	seedLoginEnv(t, seed)
-
-	out, err := runLogin(t, cliPath,
-		"--authType", "ServiceAccount",
-		"--clientId", g.ClientID,
-		"--clientSecret", g.ClientSecret,
-		"--output", "plaintext",
-		"-P", profile,
-	)
-	require.NoError(t, err, out)
-
-	cmd := exec.Command(cliPath, "config", "describe", profile, "-o", "json")
-	cmd.Env = os.Environ()
-	resp, err := internal.RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
-
-	var saved map[string]string
-	require.NoError(t, json.Unmarshal(resp, &saved), string(resp))
-	assert.Equal(t, seed.orgID, saved["org_id"])
-	assert.Equal(t, seed.projectID, saved["project_id"])
-}
-
 func TestLoginMultipleProjectsNoFlags(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")

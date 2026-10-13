@@ -21,11 +21,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
@@ -34,6 +37,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312026/admin"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
+	"golang.org/x/oauth2"
 )
 
 func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
@@ -306,20 +310,26 @@ func Test_loginOpts_promptOutput(t *testing.T) {
 
 func Test_loginOpts_validateLoginFlags(t *testing.T) {
 	tests := []struct {
-		name                                                            string
-		authType, output, clientID, clientSecret, publicKey, privateKey string
-		wantErr                                                         bool
+		name                                                                              string
+		authType, output, clientID, clientSecret, publicKey, privateKey, orgID, projectID string
+		wantErr                                                                           bool
 	}{
 		{name: "no flags set is valid (fully interactive)"},
 		{name: "credential flag set without authType errors", clientID: "id", wantErr: true},
 		{name: "output set without authType errors", output: "json", wantErr: true},
 		{name: "authType set without output errors", authType: userAccountAuth, wantErr: true},
 		{name: "authType UserAccount with output is valid", authType: userAccountAuth, output: "json"},
+		{name: "authType UserAccount with invalid output errors", authType: userAccountAuth, output: "xml", wantErr: true},
 		{name: "authType ServiceAccount without credentials errors", authType: prompt.ServiceAccountAuth, output: "json", wantErr: true},
 		{name: "authType ServiceAccount with only clientId errors", authType: prompt.ServiceAccountAuth, output: "json", clientID: "id", wantErr: true},
 		{name: "authType ServiceAccount with full credentials is valid", authType: prompt.ServiceAccountAuth, output: "json", clientID: "id", clientSecret: "secret"},
+		{name: "authType ServiceAccount with full credentials and ids is valid", authType: prompt.ServiceAccountAuth, output: "json", clientID: "id", clientSecret: "secret", orgID: "5a1b39eec902201990f12345", projectID: "5efda6aea3f2ed2e7dd6ce05"},
 		{name: "authType APIKeys without credentials errors", authType: prompt.APIKeysAuth, output: "json", wantErr: true},
 		{name: "authType APIKeys with full credentials is valid", authType: prompt.APIKeysAuth, output: "json", publicKey: "pub", privateKey: "priv"},
+		{name: "invalid orgID errors", orgID: "nothex", wantErr: true},
+		{name: "invalid projectID errors", projectID: "nothex", wantErr: true},
+		{name: "valid orgID without authType is valid", orgID: "5a1b39eec902201990f12345"},
+		{name: "valid projectID without authType is valid", projectID: "5efda6aea3f2ed2e7dd6ce05"},
 	}
 
 	for _, tt := range tests {
@@ -330,6 +340,8 @@ func Test_loginOpts_validateLoginFlags(t *testing.T) {
 				ClientSecret:  tt.clientSecret,
 				PublicAPIKey:  tt.publicKey,
 				PrivateAPIKey: tt.privateKey,
+				orgIDFlag:     tt.orgID,
+				projectIDFlag: tt.projectID,
 			}
 			opts.Output = tt.output
 
@@ -496,7 +508,7 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 	orgsBody, err := json.Marshal(&admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
 		Results: []admin.AtlasOrganization{
-			{Id: pointer.Get("o1"), Name: "Org1"},
+			{Id: pointer.Get(testOrgID), Name: "Org1"},
 		},
 	})
 	require.NoError(t, err)
@@ -514,10 +526,10 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 
 	expectedProjects := &admin.PaginatedAtlasGroup{TotalCount: pointer.Get(1),
 		Results: []admin.Group{
-			{Id: pointer.Get("p1"), Name: "Project1"},
+			{Id: pointer.Get(testProjectID), Name: "Project1"},
 		},
 	}
-	mockStore.EXPECT().GetOrgProjects("o1", gomock.Any()).Return(expectedProjects, nil).Times(1)
+	mockStore.EXPECT().GetOrgProjects(testOrgID, gomock.Any()).Return(expectedProjects, nil).Times(1)
 	mockAsker.EXPECT().
 		TrackAsk(gomock.Any(), opts).
 		DoAndReturn(func(_ []*survey.Question, answer any, _ ...survey.AskOpt) error {
@@ -531,4 +543,238 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 
 	ctx := t.Context()
 	require.NoError(t, opts.setUpProfile(ctx))
+}
+
+// programmaticLoginOpts builds opts for a programmatic setUpProfile run: no prompts,
+// so the asker gets no expectations and any prompt call fails the test.
+const (
+	testOrgID     = "o1"
+	testOrgID2    = "o2"
+	testProjectID = "p1"
+)
+
+func programmaticLoginOpts(t *testing.T) (*LoginOpts, *MockLoginConfig, *mocks.MockProjectOrgsLister, *api.MockCommandExecutor) {
+	t.Helper()
+
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+
+	opts := &LoginOpts{
+		config:           mockConfig,
+		authTypeFromFlag: true,
+	}
+	opts.Output = "plaintext"
+	opts.OutWriter = new(bytes.Buffer)
+	opts.Store = mockStore
+	opts.OrgExecutor = mockExecutor
+
+	return opts, mockConfig, mockStore, mockExecutor
+}
+
+func orgsResponse(t *testing.T, mockExecutor *api.MockCommandExecutor, orgs ...admin.AtlasOrganization) {
+	t.Helper()
+
+	body, err := json.Marshal(&admin.PaginatedOrganization{
+		TotalCount: pointer.Get(len(orgs)),
+		Results:    orgs,
+	})
+	require.NoError(t, err)
+
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: true,
+			HTTPCode:  http.StatusOK,
+			Output:    io.NopCloser(bytes.NewReader(body)),
+		}, nil).
+		Times(1)
+}
+
+func apiError(code int) error {
+	err := &admin.GenericOpenAPIError{}
+	err.SetModel(admin.ApiError{Error: code})
+	return err
+}
+
+func projectsResponse(mockStore *mocks.MockProjectOrgsLister, projects ...admin.Group) {
+	expected := &admin.PaginatedAtlasGroup{
+		TotalCount: pointer.Get(len(projects)),
+		Results:    projects,
+	}
+	mockStore.EXPECT().GetOrgProjects(gomock.Any(), gomock.Any()).Return(expected, nil).Times(1)
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_NoFlags_MultipleOrgs(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+
+	orgsResponse(t, mockExecutor,
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID)},
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID2)},
+	)
+	mockConfig.EXPECT().OrgID().Return("").Times(1)
+	mockConfig.EXPECT().SetOrgID("").Times(1)
+	mockStore.EXPECT().Projects(gomock.Any()).Return(&admin.PaginatedAtlasGroup{
+		TotalCount: pointer.Get(2),
+		Results: []admin.Group{
+			{Id: pointer.Get("p1")},
+			{Id: pointer.Get("p2")},
+		},
+	}, nil).Times(1)
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+	mockConfig.EXPECT().SetProjectID("").Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().OrgID().Return("").Times(1)
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Empty(t, opts.OrgID)
+	assert.Empty(t, opts.ProjectID)
+	assert.Contains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default organization set")
+	assert.Contains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default project set")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_NoFlags_SingleOrgAndProject(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockConfig.EXPECT().OrgID().Return("").Times(1)
+	mockConfig.EXPECT().SetOrgID("").Times(1)
+	projectsResponse(mockStore, admin.Group{Id: pointer.Get(testProjectID)})
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+	mockConfig.EXPECT().SetProjectID("").Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, testOrgID, opts.OrgID)
+	assert.Equal(t, testProjectID, opts.ProjectID)
+	assert.NotContains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_KeptProfileOrgNoHint(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+
+	orgsResponse(t, mockExecutor,
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID)},
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID2)},
+	)
+	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(2)
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(2)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID)}, nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.NotContains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_OrgFlagAccessible(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.orgIDFlag = testOrgID
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+	mockConfig.EXPECT().SetProjectID("").Times(1)
+	projectsResponse(mockStore, admin.Group{Id: pointer.Get(testProjectID)})
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, testOrgID, opts.OrgID)
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_OrgFlagInaccessible(t *testing.T) {
+	opts, _, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.orgIDFlag = testOrgID
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockStore.EXPECT().Organization(testOrgID).Return(nil, apiError(http.StatusNotFound)).Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.ErrorIs(t, err, ErrOrgIDNotFound)
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_OrgFlagServerError(t *testing.T) {
+	opts, _, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.orgIDFlag = testOrgID
+
+	serverErr := apiError(http.StatusInternalServerError)
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockStore.EXPECT().Organization(testOrgID).Return(nil, serverErr).Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.ErrorIs(t, err, serverErr)
+	require.NotErrorIs(t, err, ErrOrgIDNotFound)
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_ProjectFlagDerivesOrg(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.projectIDFlag = testProjectID
+
+	orgsResponse(t, mockExecutor,
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID)},
+		admin.AtlasOrganization{Id: pointer.Get(testOrgID2)},
+	)
+	mockConfig.EXPECT().OrgID().Return("").Times(1)
+	mockConfig.EXPECT().SetOrgID("").Times(1)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID2}, nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().OrgID().Return(testOrgID2).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(1)
+	t.Cleanup(func() {
+		config.SetOrgID("")
+		config.SetProjectID("")
+	})
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, testOrgID2, config.OrgID())
+	assert.Equal(t, testProjectID, config.ProjectID())
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_ProjectFlagOrgMismatch(t *testing.T) {
+	opts, _, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.orgIDFlag = testOrgID
+	opts.projectIDFlag = testProjectID
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID2}, nil).Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "belongs to organization")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_Unauthorized(t *testing.T) {
+	opts, _, _, mockExecutor := programmaticLoginOpts(t)
+
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: false,
+			HTTPCode:  http.StatusUnauthorized,
+			Output:    io.NopCloser(strings.NewReader(`{"error":401}`)),
+		}, nil).
+		Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
+	opts, _, _, mockExecutor := programmaticLoginOpts(t)
+
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(nil, errors.Join(api.ErrFailedToConvertToHTTPRequest,
+			&url.Error{Op: "Post", Err: &oauth2.RetrieveError{ErrorCode: "invalid_client"}})).
+		Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
 }

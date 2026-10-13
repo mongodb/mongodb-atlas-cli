@@ -25,11 +25,13 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"go.uber.org/mock/gomock"
 )
 
@@ -193,6 +195,19 @@ func TestDefaultOpts_Orgs(t *testing.T) {
 		_, err := opts.orgs(ctx, "")
 		require.ErrorIs(t, err, errTooManyResults)
 	})
+
+	t.Run("401 maps to unauthorized", func(t *testing.T) {
+		mockExecutor.EXPECT().
+			ExecuteCommand(gomock.Any(), gomock.Any()).
+			Return(&api.CommandResponse{
+				IsSuccess: false,
+				HTTPCode:  http.StatusUnauthorized,
+				Output:    io.NopCloser(strings.NewReader(`{"error":401}`)),
+			}, nil).
+			Times(1)
+		_, err := opts.orgs(ctx, "")
+		require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+	})
 }
 
 // The server defaults includeGlobal to true, so a regression here degrades silently.
@@ -223,4 +238,121 @@ func TestDefaultOpts_Orgs_SuppressesGlobalOrgs(t *testing.T) {
 	assert.Equal(t, "false", query.Get("includeGlobal"))
 	assert.Equal(t, "myFilter", query.Get("name"))
 	assert.Equal(t, strconv.Itoa(resultsLimit), query.Get("itemsPerPage"))
+}
+
+func TestDefaultOpts_AskOrg_Unauthorized(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+	mockExecutor.EXPECT().
+		ExecuteCommand(gomock.Any(), gomock.Any()).
+		Return(&api.CommandResponse{
+			IsSuccess: false,
+			HTTPCode:  http.StatusUnauthorized,
+			Output:    io.NopCloser(strings.NewReader(`{"error":401}`)),
+		}, nil).
+		Times(1)
+
+	opts := &DefaultSetterOpts{Service: "cloud", OrgExecutor: mockExecutor}
+	err := opts.AskOrg(context.Background())
+	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+func TestDefaultOpts_AskProject_Unauthorized(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockStore.EXPECT().
+		Projects(gomock.Any()).
+		Return(nil, &atlas.ErrorResponse{HTTPCode: http.StatusUnauthorized}).
+		Times(1)
+
+	opts := &DefaultSetterOpts{Service: "cloud", Store: mockStore}
+	err := opts.AskProject()
+	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+func TestDefaultOpts_OnlyOrgID(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockExecutor := api.NewMockCommandExecutor(ctrl)
+	opts := &DefaultSetterOpts{Service: "cloud", OrgExecutor: mockExecutor}
+
+	t.Run("one org", func(t *testing.T) {
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{
+			Results:    []atlasv2.AtlasOrganization{{Id: pointer.Get("1")}},
+			TotalCount: pointer.Get(1),
+		})
+		got, err := opts.OnlyOrgID(context.Background())
+		require.NoError(t, err)
+		assert.Equal(t, "1", got)
+	})
+	t.Run("no org", func(t *testing.T) {
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{
+			Results: []atlasv2.AtlasOrganization{},
+		})
+		got, err := opts.OnlyOrgID(context.Background())
+		require.NoError(t, err)
+		assert.Empty(t, got)
+	})
+	t.Run("multiple orgs", func(t *testing.T) {
+		expectOrgs(t, mockExecutor, &atlasv2.PaginatedOrganization{
+			Results: []atlasv2.AtlasOrganization{
+				{Id: pointer.Get("1")},
+				{Id: pointer.Get("2")},
+			},
+			TotalCount: pointer.Get(2),
+		})
+		got, err := opts.OnlyOrgID(context.Background())
+		require.NoError(t, err)
+		assert.Empty(t, got)
+	})
+	t.Run("unauthorized", func(t *testing.T) {
+		mockExecutor.EXPECT().
+			ExecuteCommand(gomock.Any(), gomock.Any()).
+			Return(&api.CommandResponse{
+				IsSuccess: false,
+				HTTPCode:  http.StatusUnauthorized,
+				Output:    io.NopCloser(strings.NewReader(`{"error":401}`)),
+			}, nil).
+			Times(1)
+		_, err := opts.OnlyOrgID(context.Background())
+		require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+	})
+}
+
+func TestDefaultOpts_OnlyProjectID(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	opts := &DefaultSetterOpts{Service: "cloud", Store: mockStore}
+
+	t.Run("one project", func(t *testing.T) {
+		mockStore.EXPECT().Projects(gomock.Any()).
+			Return(&atlasv2.PaginatedAtlasGroup{
+				Results:    []atlasv2.Group{{Id: pointer.Get("1")}},
+				TotalCount: pointer.Get(1),
+			}, nil).
+			Times(1)
+		got, err := opts.OnlyProjectID()
+		require.NoError(t, err)
+		assert.Equal(t, "1", got)
+	})
+	t.Run("multiple projects", func(t *testing.T) {
+		mockStore.EXPECT().Projects(gomock.Any()).
+			Return(&atlasv2.PaginatedAtlasGroup{
+				Results: []atlasv2.Group{
+					{Id: pointer.Get("1")},
+					{Id: pointer.Get("2")},
+				},
+				TotalCount: pointer.Get(2),
+			}, nil).
+			Times(1)
+		got, err := opts.OnlyProjectID()
+		require.NoError(t, err)
+		assert.Empty(t, got)
+	})
+	t.Run("unauthorized", func(t *testing.T) {
+		mockStore.EXPECT().Projects(gomock.Any()).
+			Return(nil, &atlas.ErrorResponse{HTTPCode: http.StatusUnauthorized}).
+			Times(1)
+		_, err := opts.OnlyProjectID()
+		require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+	})
 }

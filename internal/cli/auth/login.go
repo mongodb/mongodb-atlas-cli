@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"slices"
 	"strings"
 	"time"
@@ -36,6 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -97,6 +99,8 @@ type LoginOpts struct {
 	PrivateAPIKey    string
 	IsGov            bool
 	NoBrowser        bool
+	orgIDFlag        string
+	projectIDFlag    string
 	authType         string
 	authTypeFromFlag bool
 	force            bool
@@ -105,10 +109,36 @@ type LoginOpts struct {
 	Asker            TrackAsker
 }
 
+func (opts *LoginOpts) validateOutput() error {
+	if !slices.Contains(outputFormatOptions, opts.Output) {
+		return fmt.Errorf("invalid --%s %q: must be one of %s", flag.Output, opts.Output, strings.Join(outputFormatOptions, ", "))
+	}
+	return nil
+}
+
 // validateLoginFlags ensures that once any programmatic login flag is used, every flag
 // needed to complete that flow without a prompt is also set, instead of silently falling
 // back to a prompt for whatever was left out.
+// validateOrgProjectFlags checks the ID format of the provided --orgId/--projectId.
+func (opts *LoginOpts) validateOrgProjectFlags() error {
+	if opts.orgIDFlag != "" {
+		if err := validate.ObjectID(opts.orgIDFlag); err != nil {
+			return fmt.Errorf("invalid --%s: %w", flag.OrgID, err)
+		}
+	}
+	if opts.projectIDFlag != "" {
+		if err := validate.ObjectID(opts.projectIDFlag); err != nil {
+			return fmt.Errorf("invalid --%s: %w", flag.ProjectID, err)
+		}
+	}
+	return nil
+}
+
 func (opts *LoginOpts) validateLoginFlags() error {
+	if err := opts.validateOrgProjectFlags(); err != nil {
+		return err
+	}
+
 	anyOther := opts.ClientID != "" || opts.ClientSecret != "" ||
 		opts.PublicAPIKey != "" || opts.PrivateAPIKey != "" || opts.Output != ""
 
@@ -122,7 +152,15 @@ func (opts *LoginOpts) validateLoginFlags() error {
 	if opts.Output == "" {
 		return fmt.Errorf("--%s is required when --%s is set", flag.Output, flag.AuthType)
 	}
+	if err := opts.validateOutput(); err != nil {
+		return err
+	}
 
+	return opts.validateCredentials()
+}
+
+// validateCredentials checks the credential pair for the selected --authType.
+func (opts *LoginOpts) validateCredentials() error {
 	switch opts.authType {
 	case prompt.ServiceAccountAuth:
 		if opts.ClientID == "" || opts.ClientSecret == "" {
@@ -161,10 +199,7 @@ func (opts *LoginOpts) promptAuthType() error {
 
 func (opts *LoginOpts) promptOutput() error {
 	if opts.Output != "" {
-		if !slices.Contains(outputFormatOptions, opts.Output) {
-			return fmt.Errorf("invalid --%s %q: must be one of %s", flag.Output, opts.Output, strings.Join(outputFormatOptions, ", "))
-		}
-		return nil
+		return opts.validateOutput()
 	}
 	return opts.Asker.TrackAsk(opts.DefaultQuestions(), opts)
 }
@@ -374,19 +409,24 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		}
 	}
 
-	if opts.config.OrgID() == "" || !opts.OrgExists(opts.config.OrgID()) {
-		if err := opts.AskOrg(ctx); err != nil {
+	// The org list doubles as the credential check for programmatic login.
+	soleOrgID := ""
+	if opts.authTypeFromFlag {
+		var err error
+		soleOrgID, err = opts.OnlyOrgID(ctx)
+		if err != nil {
 			return err
 		}
 	}
 
+	if err := opts.resolveOrg(ctx, soleOrgID); err != nil {
+		return err
+	}
+	if err := opts.resolveProject(); err != nil {
+		return err
+	}
+	// After resolveProject, which may derive the org from --projectId.
 	opts.SetUpOrg()
-
-	if opts.config.ProjectID() == "" || !opts.ProjectExists(opts.config.ProjectID()) {
-		if err := opts.AskProject(); err != nil {
-			return err
-		}
-	}
 	opts.SetUpProject()
 
 	if err := opts.promptOutput(); err != nil {
@@ -398,7 +438,106 @@ func (opts *LoginOpts) setUpProfile(ctx context.Context) error {
 		return err
 	}
 
+	if opts.authTypeFromFlag {
+		if opts.config.OrgID() == "" {
+			_, _ = fmt.Fprintf(opts.OutWriter, "No default organization set; pass --%s on commands that require one.\n", flag.OrgID)
+		}
+		if opts.config.ProjectID() == "" {
+			_, _ = fmt.Fprintf(opts.OutWriter, "No default project set; pass --%s on commands that require one.\n", flag.ProjectID)
+		}
+	}
+
 	return opts.validateOrgAndProject()
+}
+
+func (opts *LoginOpts) resolveOrg(ctx context.Context, soleOrgID string) error {
+	if opts.orgIDFlag != "" {
+		if err := opts.verifyOrgAccess(opts.orgIDFlag); err != nil {
+			return err
+		}
+		opts.OrgID = opts.orgIDFlag
+		return nil
+	}
+
+	if cfgOrgID := opts.config.OrgID(); cfgOrgID != "" && opts.OrgExists(cfgOrgID) {
+		return nil
+	}
+
+	if opts.authTypeFromFlag {
+		opts.config.SetOrgID("")
+		opts.OrgID = soleOrgID
+		return nil
+	}
+
+	return opts.AskOrg(ctx)
+}
+
+func (opts *LoginOpts) resolveProject() error {
+	if opts.projectIDFlag != "" {
+		project, err := opts.verifyProjectAccess(opts.projectIDFlag)
+		if err != nil {
+			return err
+		}
+		if opts.orgIDFlag != "" {
+			if project.GetOrgId() != opts.orgIDFlag {
+				return fmt.Errorf("--%s %s belongs to organization %s, not --%s %s",
+					flag.ProjectID, opts.projectIDFlag, project.GetOrgId(), flag.OrgID, opts.orgIDFlag)
+			}
+		} else {
+			opts.OrgID = project.GetOrgId()
+		}
+		opts.ProjectID = opts.projectIDFlag
+		return nil
+	}
+
+	if cfgProjectID := opts.config.ProjectID(); cfgProjectID != "" && opts.ProjectExists(cfgProjectID) {
+		return nil
+	}
+
+	if opts.authTypeFromFlag {
+		opts.config.SetProjectID("")
+		var err error
+		opts.ProjectID, err = opts.OnlyProjectID()
+		return err
+	}
+
+	return opts.AskProject()
+}
+
+// isAccessError reports whether err means the resource is missing or not accessible.
+// Credentials are already verified, so a 401 here means no access to the resource.
+func isAccessError(err error) bool {
+	apiErr, ok := atlasv2.AsError(err)
+	if !ok {
+		return false
+	}
+	switch apiErr.GetError() {
+	case http.StatusUnauthorized, http.StatusForbidden, http.StatusNotFound:
+		return true
+	}
+	return false
+}
+
+func (opts *LoginOpts) verifyOrgAccess(id string) error {
+	o, err := opts.Store.Organization(id)
+	if err != nil && !isAccessError(err) {
+		return fmt.Errorf("--%s %s: %w", flag.OrgID, id, err)
+	}
+	if err != nil || o == nil {
+		return fmt.Errorf("--%s %s: %w", flag.OrgID, id, ErrOrgIDNotFound)
+	}
+	return nil
+}
+
+func (opts *LoginOpts) verifyProjectAccess(id string) (*atlasv2.Group, error) {
+	p, err := opts.Store.Project(id)
+	if err != nil && !isAccessError(err) {
+		return nil, fmt.Errorf("--%s %s: %w", flag.ProjectID, id, err)
+	}
+	if err != nil || p == nil {
+		return nil, fmt.Errorf("--%s %s: %w", flag.ProjectID, id, ErrProjectIDNotFound)
+	}
+	return p, nil
 }
 
 func (opts *LoginOpts) validateOrgAndProject() error {
@@ -530,12 +669,17 @@ func LoginBuilder() *cobra.Command {
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 
-To log in non-interactively, set --authType, --output, and the credential flags that type requires (--clientId and --clientSecret for ServiceAccount, or --publicApiKey and --privateApiKey for APIKeys). Using any one of these flags without the others needed to complete the flow returns an error instead of prompting.`,
+To log in non-interactively, set --authType, --output, and the credential flags that type requires (--clientId and --clientSecret for ServiceAccount, or --publicApiKey and --privateApiKey for APIKeys). Using any one of these flags without the others needed to complete the flow returns an error instead of prompting.
+
+Without --orgId or --projectId, a default is saved only if the credentials can access exactly one organization or project.`,
 		Example: `  # Log in to your MongoDB Atlas account in interactive mode:
   atlas auth login
 
   # Log in non-interactively with a Service Account:
   atlas auth login --authType ServiceAccount --clientId <clientId> --clientSecret <clientSecret> --output plaintext
+
+  # Log in non-interactively with a Service Account and store the default organization and project:
+  atlas auth login --authType ServiceAccount --clientId <clientId> --clientSecret <clientSecret> --output plaintext --orgId <orgId> --projectId <projectId>
 
   # Log in non-interactively with API Keys:
   atlas auth login --authType APIKeys --publicApiKey <publicApiKey> --privateApiKey <privateApiKey> --output plaintext
@@ -568,5 +712,7 @@ To log in non-interactively, set --authType, --output, and the credential flags 
 	cmd.Flags().StringVar(&opts.PublicAPIKey, flag.PublicAPIKey, "", usage.LoginPublicAPIKey)
 	cmd.Flags().StringVar(&opts.PrivateAPIKey, flag.PrivateAPIKey, "", usage.LoginPrivateAPIKey)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.LoginOutput)
+	cmd.Flags().StringVar(&opts.orgIDFlag, flag.OrgID, "", usage.LoginOrgID)
+	cmd.Flags().StringVar(&opts.projectIDFlag, flag.ProjectID, "", usage.LoginProjectID)
 	return cmd
 }

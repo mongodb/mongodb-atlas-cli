@@ -46,6 +46,8 @@ const (
 var (
 	// ErrNotFound is returned when the API responds 404.
 	ErrNotFound = errors.New("no organizations found")
+	// ErrUnauthorized is returned when the API responds 401.
+	ErrUnauthorized = errors.New("unauthorized")
 
 	ErrCommandNotFound = errors.New("api command not found")
 	ErrNoVersions      = errors.New("api command has no versions")
@@ -180,6 +182,9 @@ func ListOrgs(ctx context.Context, executor api.CommandExecutor, o ListOrgsOptio
 		}
 
 		body, _ := io.ReadAll(response.Output)
+		if response.HTTPCode == http.StatusUnauthorized {
+			return nil, fmt.Errorf("%w: failed to list organizations (HTTP %d): %s", ErrUnauthorized, response.HTTPCode, body)
+		}
 		return nil, fmt.Errorf("failed to list organizations (HTTP %d): %s", response.HTTPCode, body)
 	}
 

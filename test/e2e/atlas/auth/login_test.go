@@ -111,6 +111,21 @@ func TestLoginFlagValidation(t *testing.T) {
 			args:    []string{"--authType", "Invalid", "--output", "plaintext"},
 			wantErr: `invalid --authType "Invalid"`,
 		},
+		{
+			name:    "invalid output",
+			args:    []string{"--authType", "ServiceAccount", "--clientId", "id", "--clientSecret", "secret", "--output", "xml"},
+			wantErr: `invalid --output "xml"`,
+		},
+		{
+			name:    "invalid orgId",
+			args:    []string{"--orgId", "nothex", "--authType", "ServiceAccount", "--clientId", "id", "--clientSecret", "secret", "--output", "plaintext"},
+			wantErr: "invalid --orgId",
+		},
+		{
+			name:    "invalid projectId",
+			args:    []string{"--projectId", "nothex", "--authType", "ServiceAccount", "--clientId", "id", "--clientSecret", "secret", "--output", "plaintext"},
+			wantErr: "invalid --projectId",
+		},
 	}
 
 	for _, tc := range tests {
@@ -146,17 +161,10 @@ func readProfileSeed(t *testing.T) profileSeed {
 	return seed
 }
 
-func seedLoginProfile(t *testing.T, cliPath, profile string, seed profileSeed) {
+func seedLoginEnv(t *testing.T, seed profileSeed) {
 	t.Helper()
 
 	t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", seed.opsManagerURL)
-	// Login prompts for org/project when they are unset and more than one is visible (CLOUDP-457358).
-	for field, value := range map[string]string{"org_id": seed.orgID, "project_id": seed.projectID} {
-		cmd := exec.Command(cliPath, "config", "set", field, value, "-P", profile)
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-	}
 }
 
 func TestLoginServiceAccount(t *testing.T) {
@@ -180,13 +188,15 @@ func TestLoginServiceAccount(t *testing.T) {
 	seed := readProfileSeed(t)
 
 	isolateLoginEnv(t)
-	seedLoginProfile(t, cliPath, profile, seed)
+	seedLoginEnv(t, seed)
 
 	out, err := runLogin(t, cliPath,
 		"--authType", "ServiceAccount",
 		"--clientId", g.ClientID,
 		"--clientSecret", g.ClientSecret,
 		"--output", "plaintext",
+		"--orgId", seed.orgID,
+		"--projectId", seed.projectID,
 		"-P", profile,
 	)
 	require.NoError(t, err, out)
@@ -203,7 +213,8 @@ func TestLoginServiceAccount(t *testing.T) {
 		assert.Equal(t, "plaintext", saved["output"])
 		assert.NotEmpty(t, saved["client_id"])
 		assert.NotEmpty(t, saved["client_secret"])
-		assert.NotEmpty(t, saved["org_id"])
+		assert.Equal(t, seed.orgID, saved["org_id"])
+		assert.Equal(t, seed.projectID, saved["project_id"])
 	})
 
 	t.Run("profile authenticates", func(t *testing.T) {
@@ -264,13 +275,15 @@ func TestLoginAPIKeys(t *testing.T) {
 	require.NotEmpty(t, created.PrivateKey)
 
 	isolateLoginEnv(t)
-	seedLoginProfile(t, cliPath, profile, seed)
+	seedLoginEnv(t, seed)
 
 	out, err := runLogin(t, cliPath,
 		"--authType", "APIKeys",
 		"--publicApiKey", created.PublicKey,
 		"--privateApiKey", created.PrivateKey,
 		"--output", "plaintext",
+		"--orgId", seed.orgID,
+		"--projectId", seed.projectID,
 		"-P", profile,
 	)
 	require.NoError(t, err, out)
@@ -287,7 +300,8 @@ func TestLoginAPIKeys(t *testing.T) {
 		assert.Equal(t, "plaintext", saved["output"])
 		assert.NotEmpty(t, saved["public_api_key"])
 		assert.NotEmpty(t, saved["private_api_key"])
-		assert.NotEmpty(t, saved["org_id"])
+		assert.Equal(t, seed.orgID, saved["org_id"])
+		assert.Equal(t, seed.projectID, saved["project_id"])
 	})
 
 	t.Run("profile authenticates", func(t *testing.T) {
@@ -303,4 +317,157 @@ func TestLoginAPIKeys(t *testing.T) {
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
+}
+
+func TestLoginServiceAccountNoOrgProjectFlags(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
+	mode, err := internal.TestRunMode()
+	require.NoError(t, err)
+	if mode != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
+
+	g := internal.NewAtlasE2ETestGenerator(t)
+	g.GenerateOrgServiceAccount(cliPath, "login-e2e")
+
+	const profile = "sa-login-noflags"
+	seed := readProfileSeed(t)
+
+	isolateLoginEnv(t)
+	seedLoginEnv(t, seed)
+
+	out, err := runLogin(t, cliPath,
+		"--authType", "ServiceAccount",
+		"--clientId", g.ClientID,
+		"--clientSecret", g.ClientSecret,
+		"--output", "plaintext",
+		"-P", profile,
+	)
+	require.NoError(t, err, out)
+
+	cmd := exec.Command(cliPath, "config", "describe", profile, "-o", "json")
+	cmd.Env = os.Environ()
+	resp, err := internal.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+
+	var saved map[string]string
+	require.NoError(t, json.Unmarshal(resp, &saved), string(resp))
+	assert.Equal(t, seed.orgID, saved["org_id"])
+	assert.Equal(t, seed.projectID, saved["project_id"])
+}
+
+func TestLoginMultipleProjectsNoFlags(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
+	mode, err := internal.TestRunMode()
+	require.NoError(t, err)
+	if mode != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
+
+	g := internal.NewAtlasE2ETestGenerator(t)
+	g.GenerateOrgServiceAccount(cliPath, "login-e2e")
+	g.GenerateProject("login")
+
+	const profile = "sa-login-multi"
+	seed := readProfileSeed(t)
+
+	isolateLoginEnv(t)
+	seedLoginEnv(t, seed)
+
+	out, err := runLogin(t, cliPath,
+		"--authType", "ServiceAccount",
+		"--clientId", g.ClientID,
+		"--clientSecret", g.ClientSecret,
+		"--output", "plaintext",
+		"-P", profile,
+	)
+	require.NoError(t, err, out)
+	assert.Contains(t, out, "No default project set")
+
+	cmd := exec.Command(cliPath, "config", "describe", profile, "-o", "json")
+	cmd.Env = os.Environ()
+	resp, err := internal.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+
+	var saved map[string]string
+	require.NoError(t, json.Unmarshal(resp, &saved), string(resp))
+	assert.Equal(t, seed.orgID, saved["org_id"])
+	assert.Empty(t, saved["project_id"])
+}
+
+func TestLoginInaccessibleOrg(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
+	mode, err := internal.TestRunMode()
+	require.NoError(t, err)
+	if mode != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
+
+	g := internal.NewAtlasE2ETestGenerator(t)
+	g.GenerateOrgServiceAccount(cliPath, "login-e2e")
+
+	seed := readProfileSeed(t)
+
+	isolateLoginEnv(t)
+	seedLoginEnv(t, seed)
+
+	out, err := runLogin(t, cliPath,
+		"--authType", "ServiceAccount",
+		"--clientId", g.ClientID,
+		"--clientSecret", g.ClientSecret,
+		"--output", "plaintext",
+		"--orgId", "000000000000000000000000",
+		"-P", "sa-login-bad-org",
+	)
+	require.Error(t, err, out)
+	assert.Contains(t, out, "organization is inaccessible")
+}
+
+func TestLoginInvalidCredentials(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
+	mode, err := internal.TestRunMode()
+	require.NoError(t, err)
+	if mode != internal.TestModeLive {
+		t.Skip("skipping test in snapshot mode")
+	}
+
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
+
+	seed := readProfileSeed(t)
+
+	isolateLoginEnv(t)
+	seedLoginEnv(t, seed)
+
+	out, err := runLogin(t, cliPath,
+		"--authType", "ServiceAccount",
+		"--clientId", "mdb_sa_id_000000000000000000000000",
+		"--clientSecret", "mdb_sa_sk_000000000000000000000000000000000000000",
+		"--output", "plaintext",
+		"-P", "sa-login-bad-creds",
+	)
+	require.Error(t, err, out)
+	assert.Contains(t, out, "unauthorized")
+	assert.NotContains(t, out, "Do you want to enter")
 }

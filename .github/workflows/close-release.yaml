@@ -73,7 +73,7 @@ jobs:
 
       - name: Find the fix version
         id: find-version
-        uses: mongodb/apix-action/get-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP

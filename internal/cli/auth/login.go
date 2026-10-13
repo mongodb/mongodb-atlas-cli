@@ -116,10 +116,6 @@ func (opts *LoginOpts) validateOutput() error {
 	return nil
 }
 
-// validateLoginFlags ensures that once any programmatic login flag is used, every flag
-// needed to complete that flow without a prompt is also set, instead of silently falling
-// back to a prompt for whatever was left out.
-// validateOrgProjectFlags checks the ID format of the provided --orgId/--projectId.
 func (opts *LoginOpts) validateOrgProjectFlags() error {
 	if opts.orgIDFlag != "" {
 		if err := validate.ObjectID(opts.orgIDFlag); err != nil {
@@ -134,6 +130,9 @@ func (opts *LoginOpts) validateOrgProjectFlags() error {
 	return nil
 }
 
+// validateLoginFlags ensures that once any programmatic login flag is used, every flag
+// needed to complete that flow without a prompt is also set, instead of silently falling
+// back to a prompt for whatever was left out.
 func (opts *LoginOpts) validateLoginFlags() error {
 	if err := opts.validateOrgProjectFlags(); err != nil {
 		return err
@@ -159,7 +158,6 @@ func (opts *LoginOpts) validateLoginFlags() error {
 	return opts.validateCredentials()
 }
 
-// validateCredentials checks the credential pair for the selected --authType.
 func (opts *LoginOpts) validateCredentials() error {
 	switch opts.authType {
 	case prompt.ServiceAccountAuth:
@@ -504,8 +502,7 @@ func (opts *LoginOpts) resolveProject() error {
 	return opts.AskProject()
 }
 
-// isAccessError reports whether err means the resource is missing or not accessible.
-// Credentials are already verified, so a 401 here means no access to the resource.
+// Credentials are verified before this runs, so a 401 means no access to the resource.
 func isAccessError(err error) bool {
 	apiErr, ok := atlasv2.AsError(err)
 	if !ok {

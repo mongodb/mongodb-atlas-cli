@@ -314,15 +314,12 @@ func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error
 	return nil
 }
 
-// isUnauthorized reports whether err maps to ErrUnauthorized; it returns the
-// mapped error so callers can return it directly.
 func isUnauthorized(err error) (bool, error) {
 	c := commonerrors.Check(err)
 	return errors.Is(c, commonerrors.ErrUnauthorized), c
 }
 
-// OnlyOrgID returns the organization ID when the user can see exactly one,
-// without prompting. Multiple or none yield an empty ID.
+// OnlyOrgID returns the organization ID if the user can see exactly one, without prompting.
 func (opts *DefaultSetterOpts) OnlyOrgID(ctx context.Context) (string, error) {
 	orgs, err := opts.orgs(ctx, "")
 	if err != nil {
@@ -340,8 +337,7 @@ func (opts *DefaultSetterOpts) OnlyOrgID(ctx context.Context) (string, error) {
 	return "", nil
 }
 
-// OnlyProjectID returns the project ID when the user can see exactly one,
-// without prompting. Multiple or none yield an empty ID.
+// OnlyProjectID returns the project ID if the user can see exactly one, without prompting.
 func (opts *DefaultSetterOpts) OnlyProjectID() (string, error) {
 	ids, _, err := opts.projects()
 	if err != nil {

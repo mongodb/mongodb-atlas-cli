@@ -460,14 +460,34 @@ func TestLoginInvalidCredentials(t *testing.T) {
 	isolateLoginEnv(t)
 	seedLoginEnv(t, seed)
 
-	out, err := runLogin(t, cliPath,
-		"--authType", "ServiceAccount",
-		"--clientId", "mdb_sa_id_000000000000000000000000",
-		"--clientSecret", "mdb_sa_sk_000000000000000000000000000000000000000",
-		"--output", "plaintext",
-		"-P", "sa-login-bad-creds",
-	)
-	require.Error(t, err, out)
-	assert.Contains(t, out, "unauthorized")
-	assert.NotContains(t, out, "Do you want to enter")
+	tests := []struct {
+		name string
+		args []string
+	}{
+		{
+			name: "service account",
+			args: []string{
+				"--authType", "ServiceAccount",
+				"--clientId", "mdb_sa_id_000000000000000000000000",
+				"--clientSecret", "mdb_sa_sk_000000000000000000000000000000000000000",
+			},
+		},
+		{
+			name: "api keys",
+			args: []string{
+				"--authType", "APIKeys",
+				"--publicApiKey", "invalid",
+				"--privateApiKey", "00000000-0000-0000-0000-000000000000",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			out, err := runLogin(t, cliPath, append(tc.args, "--output", "plaintext", "-P", "bad-creds")...)
+			require.Error(t, err, out)
+			assert.Contains(t, out, "unauthorized")
+			assert.NotContains(t, out, "Do you want to enter")
+		})
+	}
 }

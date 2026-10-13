@@ -545,8 +545,7 @@ func TestLoginOpts_setUpProfile_Success(t *testing.T) {
 	require.NoError(t, opts.setUpProfile(ctx))
 }
 
-// programmaticLoginOpts builds opts for a programmatic setUpProfile run: no prompts,
-// so the asker gets no expectations and any prompt call fails the test.
+// programmaticLoginOpts sets no asker, so any prompt fails the test.
 const (
 	testOrgID     = "o1"
 	testOrgID2    = "o2"
@@ -668,6 +667,41 @@ func TestLoginOpts_setUpProfile_Programmatic_KeptProfileOrgNoHint(t *testing.T) 
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 
 	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.NotContains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_StaleProfileOrgCleared(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockConfig.EXPECT().OrgID().Return(testOrgID2).Times(1)
+	mockStore.EXPECT().Organization(testOrgID2).Return(nil, apiError(http.StatusNotFound)).Times(1)
+	mockConfig.EXPECT().SetOrgID("").Times(1)
+	mockConfig.EXPECT().ProjectID().Return("").Times(1)
+	mockConfig.EXPECT().SetProjectID("").Times(1)
+	projectsResponse(mockStore, admin.Group{Id: pointer.Get(testProjectID)})
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, testOrgID, opts.OrgID)
+}
+
+func TestLoginOpts_setUpProfile_Interactive_FlagsSkipPickers(t *testing.T) {
+	opts, mockConfig, mockStore, _ := programmaticLoginOpts(t)
+	opts.authTypeFromFlag = false
+	opts.orgIDFlag = testOrgID
+	opts.projectIDFlag = testProjectID
+
+	// No executor expectations: the org list (credential check and picker) must not run.
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID}, nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, testOrgID, opts.OrgID)
+	assert.Equal(t, testProjectID, opts.ProjectID)
 	assert.NotContains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default")
 }
 

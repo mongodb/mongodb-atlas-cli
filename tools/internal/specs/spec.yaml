@@ -4015,6 +4015,7 @@ components:
                 - EUROPE_WEST1
                 - US_EAST4
                 - US_WEST1
+                - ASIA_SOUTH1
             type: string
         ApiUserEventTypeViewForNdsGroup:
             description: Unique identifier of event type.
@@ -46071,7 +46072,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 352203deeba6947194e364d78d615d65a91b8f5f
+    x-xgen-sha: 92170f603cb912efa26ee560dcc662d86afb124e
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

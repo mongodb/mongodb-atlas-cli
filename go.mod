@@ -59,8 +59,8 @@ require (
 	go.mongodb.org/mongo-driver v1.17.10
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.41.0
-	golang.org/x/net v0.59.0
-	golang.org/x/sys v0.48.0
+	golang.org/x/net v0.60.0
+	golang.org/x/sys v0.49.0
 	golang.org/x/tools v0.51.0
 	google.golang.org/api v0.300.0
 	google.golang.org/protobuf v1.36.12

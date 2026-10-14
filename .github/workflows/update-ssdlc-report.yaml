@@ -30,15 +30,19 @@ jobs:
           ref: master
       - name: Extract AUTHOR and VERSION
         id: extract
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          DISPATCH_AUTHOR: ${{ github.actor }}
+          RELEASE_AUTHOR: ${{ github.event.release.author.login }}
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             # Accept 'v1.42.2', 'atlascli/v1.42.2' or a full ref.
-            TAG="${{ github.event.inputs.tag }}"
-            AUTHOR="${{ github.actor }}"
+            TAG="$INPUT_TAG"
+            AUTHOR="$DISPATCH_AUTHOR"
           else
             # GITHUB_REF is refs/tags/v1.42.2
             TAG="${GITHUB_REF#refs/tags/}"
-            AUTHOR="${{ github.event.release.author.login }}"
+            AUTHOR="$RELEASE_AUTHOR"
           fi
           # Normalize to a bare X.Y.Z, tolerating the legacy 'atlascli/' prefix.
           TAG="${TAG##*/}"
@@ -51,9 +55,14 @@ jobs:
           VERSION: ${{ steps.extract.outputs.version }}
           AUGMENTED_REPORT: "false"
         run: ./build/package/gen-ssdlc-report.sh
-      - run: |
-          git config user.name "${{ steps.app-token.outputs.user-name }}"
-          git config user.email "${{ steps.app-token.outputs.user-email }}"
+      - name: Commit and push
+        env:
+          APP_TOKEN_USER_NAME: ${{ steps.app-token.outputs.user-name }}
+          APP_TOKEN_USER_EMAIL: ${{ steps.app-token.outputs.user-email }}
+          VERSION: ${{ steps.extract.outputs.version }}
+        run: |
+          git config user.name "$APP_TOKEN_USER_NAME"
+          git config user.email "$APP_TOKEN_USER_EMAIL"
           git add .
-          git commit -m "Update compliance report for v${{ steps.extract.outputs.version }}"
+          git commit -m "Update compliance report for v$VERSION"
           git push

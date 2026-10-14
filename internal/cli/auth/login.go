@@ -458,6 +458,7 @@ func (opts *LoginOpts) resolveOrg(ctx context.Context, soleOrgID string) error {
 	}
 
 	if cfgOrgID := opts.config.OrgID(); cfgOrgID != "" && opts.OrgExists(cfgOrgID) {
+		opts.OrgID = cfgOrgID
 		return nil
 	}
 
@@ -488,8 +489,21 @@ func (opts *LoginOpts) resolveProject() error {
 		return nil
 	}
 
-	if cfgProjectID := opts.config.ProjectID(); cfgProjectID != "" && opts.ProjectExists(cfgProjectID) {
-		return nil
+	if cfgProjectID := opts.config.ProjectID(); cfgProjectID != "" {
+		project, err := opts.verifyProjectAccess(cfgProjectID)
+		switch {
+		case err != nil:
+			// Inaccessible or server error; fall through and re-resolve.
+		case opts.OrgID != "" && project.GetOrgId() != opts.OrgID:
+			if opts.orgIDFlag != "" {
+				return fmt.Errorf("--%s %s belongs to organization %s, not --%s %s",
+					flag.ProjectID, cfgProjectID, project.GetOrgId(), flag.OrgID, opts.orgIDFlag)
+			}
+			// Stale project from another org; fall through and re-resolve.
+		default:
+			opts.ProjectID = cfgProjectID
+			return nil
+		}
 	}
 
 	if opts.authTypeFromFlag {

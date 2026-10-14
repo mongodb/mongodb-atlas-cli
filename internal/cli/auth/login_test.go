@@ -663,11 +663,41 @@ func TestLoginOpts_setUpProfile_Programmatic_KeptProfileOrgNoHint(t *testing.T) 
 	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(2)
 	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
 	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(2)
-	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID)}, nil).Times(1)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID}, nil).Times(1)
 	mockConfig.EXPECT().Save().Return(nil).Times(1)
 
 	require.NoError(t, opts.setUpProfile(t.Context()))
 	assert.NotContains(t, opts.OutWriter.(*bytes.Buffer).String(), "No default")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_KeptProjectOrgMismatchErrors(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+	opts.orgIDFlag = testOrgID
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(1)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID2}, nil).Times(1)
+
+	err := opts.setUpProfile(t.Context())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "belongs to organization")
+}
+
+func TestLoginOpts_setUpProfile_Programmatic_StaleProjectFromOtherOrgReResolved(t *testing.T) {
+	opts, mockConfig, mockStore, mockExecutor := programmaticLoginOpts(t)
+
+	orgsResponse(t, mockExecutor, admin.AtlasOrganization{Id: pointer.Get(testOrgID)})
+	mockConfig.EXPECT().OrgID().Return(testOrgID).Times(2)
+	mockStore.EXPECT().Organization(testOrgID).Return(&admin.AtlasOrganization{Id: pointer.Get(testOrgID)}, nil).Times(1)
+	mockConfig.EXPECT().ProjectID().Return(testProjectID).Times(2)
+	mockStore.EXPECT().Project(testProjectID).Return(&admin.Group{Id: pointer.Get(testProjectID), OrgId: testOrgID2}, nil).Times(1)
+	mockConfig.EXPECT().SetProjectID("").Times(1)
+	projectsResponse(mockStore, admin.Group{Id: pointer.Get("p2")})
+	mockConfig.EXPECT().Save().Return(nil).Times(1)
+
+	require.NoError(t, opts.setUpProfile(t.Context()))
+	assert.Equal(t, "p2", opts.ProjectID)
 }
 
 func TestLoginOpts_setUpProfile_Programmatic_StaleProfileOrgCleared(t *testing.T) {

@@ -20,7 +20,7 @@ if [[ "${unstable-}" == "-unstable" ]]; then
   exit 0
 fi
 
-VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 
 # Use /api/rest/v2 (not /rest/v2): the Evergreen UI host now serves the Spruce SPA
 # for /rest/v2 paths, returning index.html with HTTP 200 so the notification was

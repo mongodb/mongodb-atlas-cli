@@ -1,0 +1,119 @@
+name: Close Release
+
+# Marks the Jira release complete once the GitHub release is published. The tag
+# alone does not guarantee the Evergreen build/sign/publish succeeded, so the
+# fix version is marked released and the release ticket resolved here rather than
+# at tag time — see release.yaml.
+#
+# apix-action refs are pinned to the commit that added get-jira-version and the
+# create/update extra-data fixes (mongodb/apix-action#302, CLOUDP-455888).
+
+on:
+  release:
+    types: [published]
+  # Manual re-run for a release whose close-out failed (e.g. a Jira error),
+  # so recovery doesn't require unpublishing/republishing the GitHub release.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to finalize (e.g. v1.59.1)"
+        required: true
+
+permissions: {}
+
+jobs:
+  finalize:
+    name: Finalize AtlasCLI release
+    # Only act on release tags in either supported format. On workflow_dispatch
+    # the tag comes from the input instead of the release event.
+    if: startsWith(github.event.release.tag_name || inputs.tag, 'v') || startsWith(github.event.release.tag_name || inputs.tag, 'atlascli/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+
+      - uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5
+        id: load-secrets
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          JIRA_API_TOKEN: "op://APIx/JIRA service account/credential"
+
+      - name: Validate the tag exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          set -Eeou pipefail
+          if ! gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} does not exist. Aborting." >&2
+            exit 1
+          fi
+
+      - name: Determine version
+        id: meta
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          set -Eeou pipefail
+          # Support both the legacy 'atlascli/vX.Y.Z' and the new 'vX.Y.Z' tag formats.
+          VERSION="${TAG##*/}"
+          VERSION="${VERSION#v}"
+          if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Ignoring release with unexpected tag '${TAG}'." >&2
+            exit 1
+          fi
+          {
+            echo "version=${VERSION}"
+            echo "fix-version=atlascli-${VERSION}"
+            echo "release-date=$(date -u +%Y-%m-%d)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find the fix version
+        id: find-version
+        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          name: ${{ steps.meta.outputs.fix-version }}
+
+      - name: Find the release ticket
+        id: find-release
+        uses: mongodb/apix-action/find-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ steps.meta.outputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
+          fields: "status"
+
+      - name: Resolve the release ticket status
+        id: release-status
+        env:
+          FOUND: ${{ steps.find-release.outputs.found }}
+          ISSUES: ${{ steps.find-release.outputs.issues }}
+        run: |
+          set -Eeou pipefail
+          if [[ "${FOUND}" == "true" ]]; then
+            echo "status=$(printf '%s' "${ISSUES}" | jq -r '.[0].fields.status.name // ""')" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve the release ticket
+        if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
+        uses: mongodb/apix-action/transition-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          issue-key: ${{ steps.find-release.outputs.issue-key }}
+          transition-name: "Resolve Issue"
+          resolution: Fixed
+
+      - name: Mark the fix version released
+        if: steps.find-version.outputs.found == 'true'
+        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        with:
+          token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
+          version-id: ${{ steps.find-version.outputs.version-id }}
+          released: "true"
+          release-date: ${{ steps.meta.outputs.release-date }}

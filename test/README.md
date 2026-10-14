@@ -87,6 +87,9 @@
 |             `cluster search nodes delete`             |     Y     |   Y   |
 |          `cluster advancedSettings describe`          |     Y     |   Y   |
 |           `cluster advancedSettings update`           |     Y     |   Y   |
+|             `api clusters createCluster`              |     Y     |   Y   |
+|            `api clusters getGroupCluster`             |     Y     |   Y   |
+|            `api clusters deleteCluster`               |     Y     |   Y   |
 |                    `dbrole create`                    |     Y     |   Y   |
 |                    `dbrole delete`                    |     Y     |   Y   |
 |                   `dbrole describe`                   |     Y     |   Y   |
@@ -278,6 +281,7 @@
 |                   `completion fish`                   |     Y     |   Y   |
 |                `completion powershell`                |     Y     |   Y   |
 |                        `setup`                        |     Y     |   Y   |
+|                     `auth login`                      |     Y     |   Y   |
 |                      `register`                       |     N     |   Y   |
 |                     `kubernetes`                      |     Y     |   Y   |
 | `federatedAuthentication federationSettings describe` |     Y     |   Y   |

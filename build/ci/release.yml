@@ -34,11 +34,17 @@ functions:
     - command: shell.exec
       type: setup
       params:
+        <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         script: |
           set -Eeou pipefail
 
-          curl -sfL ${goreleaser_pro_tar_gz} | tar zx
+          curl -fL --retry 5 --retry-all-errors --retry-delay 2 \
+            -o goreleaser.tar.gz \
+            "https://github.com/goreleaser/goreleaser/releases/download/v2.18.2/goreleaser_Linux_x86_64.tar.gz"
+          test -s goreleaser.tar.gz
+          tar xzf goreleaser.tar.gz
+          rm -f goreleaser.tar.gz
   "install macos notarization service":
     - command: shell.exec
       type: setup
@@ -128,7 +134,6 @@ functions:
           - notary_service_key_id
           - notary_service_secret
           - notary_service_url
-          - goreleaser_key
           - unstable
           - AWS_ACCESS_KEY_ID
           - AWS_SECRET_ACCESS_KEY
@@ -320,7 +325,6 @@ functions:
         <<: *go_options
         script: |
           set -Eeou pipefail
-          git checkout -- dist/.keep
           OUTPUT=$(git status --porcelain)
           if [ -z "$OUTPUT" ]; then
             echo "Git is clean"

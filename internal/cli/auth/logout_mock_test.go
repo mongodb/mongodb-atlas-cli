@@ -233,6 +233,44 @@ func (c *MockConfigDeleterDeleteCall) DoAndReturn(f func() error) *MockConfigDel
 	return c
 }
 
+// List mocks base method.
+func (m *MockConfigDeleter) List() []string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List")
+	ret0, _ := ret[0].([]string)
+	return ret0
+}
+
+// List indicates an expected call of List.
+func (mr *MockConfigDeleterMockRecorder) List() *MockConfigDeleterListCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockConfigDeleter)(nil).List))
+	return &MockConfigDeleterListCall{Call: call}
+}
+
+// MockConfigDeleterListCall wrap *gomock.Call
+type MockConfigDeleterListCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterListCall) Return(arg0 []string) *MockConfigDeleterListCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterListCall) Do(f func() []string) *MockConfigDeleterListCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterListCall) DoAndReturn(f func() []string) *MockConfigDeleterListCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // Name mocks base method.
 func (m *MockConfigDeleter) Name() string {
 	m.ctrl.T.Helper()

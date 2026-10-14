@@ -27,16 +27,13 @@ import (
 )
 
 const (
-	cloudgov                   = "cloudgov"
-	snapshotCloudRoleID        = "c0123456789abcdef012345c"
-	snapshotTestBucket         = "test-bucket"
-	snapshotFlexInstanceName   = "snapshotCluster0"
-	snapshotIdentityProviderID = "d0123456789abcdef012345d"
-	snapshotOrgID              = "a0123456789abcdef012345a"
-	snapshotProjectID          = "b0123456789abcdef012345b"
-	snapshotOpsManagerURL      = "http://localhost:8080/"
-	snapshotCluster1Name       = "snapshotCluster0"
-	snapshotCluster2Name       = "snapshotCluster1"
+	cloudgov                 = "cloudgov"
+	snapshotCloudRoleID      = "c0123456789abcdef012345c"
+	snapshotTestBucket       = "test-bucket"
+	snapshotFlexInstanceName = "snapshotCluster0"
+	snapshotOrgID            = "a0123456789abcdef012345a"
+	snapshotProjectID        = "b0123456789abcdef012345b"
+	snapshotOpsManagerURL    = "http://localhost:8080/"
 )
 
 type TestMode string
@@ -97,20 +94,6 @@ func SkipCleanup() bool {
 	}
 
 	return true
-}
-
-func IdentityProviderID() (string, error) {
-	mode, err := TestRunMode()
-	if err == nil && mode == TestModeReplay {
-		return snapshotIdentityProviderID, nil
-	}
-
-	idpID, ok := os.LookupEnv("IDENTITY_PROVIDER_ID")
-	if !ok || idpID == "" {
-		return "", errors.New("environment variable is missing: IDENTITY_PROVIDER_ID")
-	}
-
-	return idpID, nil
 }
 
 func FlexInstanceName() (string, error) {
@@ -241,25 +224,4 @@ func LocalDevImage() string {
 	}
 
 	return image
-}
-
-// TestClusterNames returns the name of the first cluster used for the test.
-// This is to support dyanically setting cluster to test against.
-func TestClusterNames() (string, string, error) {
-	mode, err := TestRunMode()
-	if err == nil && mode == TestModeReplay {
-		return snapshotCluster1Name, snapshotCluster2Name, nil
-	}
-
-	clusterName1, ok := os.LookupEnv("E2E_CLUSTER_1_NAME")
-	if !ok || clusterName1 == "" {
-		return "", "", errors.New("environment variable is missing: E2E_CLUSTER_1_NAME")
-	}
-
-	clusterName2, ok := os.LookupEnv("E2E_CLUSTER_2_NAME")
-	if !ok || clusterName2 == "" {
-		return "", "", errors.New("environment variable is missing: E2E_CLUSTER_2_NAME")
-	}
-
-	return clusterName1, clusterName2, nil
 }

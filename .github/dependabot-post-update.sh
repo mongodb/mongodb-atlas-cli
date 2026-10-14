@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2020 MongoDB Inc
+# Copyright 2026 MongoDB Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,25 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -euo pipefail
+# Runs from the apix-action Dependabot workflow after a dependency bump.
+# Only edit files here: the workflow stages the working tree and creates the
+# signed commit itself.
 
-VERSION="${1-}"
+set -Eeou pipefail
 
-if [[ -z "${VERSION}" ]]; then
-	echo "Please provide a tag version in the format 'atlascli/vX.Y.Z'"
-	exit 1
-fi
-
-if [[ "${VERSION}" != atlascli/v* ]]; then
-	echo "Please provide a tag version in the format  'atlascli/vX.Y.Z'"
-	exit 1
-fi
-
-read -p "Are you sure to release ${VERSION}? " -n 1 -r
-echo # (optional) move to a new line
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-	exit 1
-fi
-
-git tag -a -s "${VERSION}" -m "${VERSION}"
-git push origin "${VERSION}"
+# The Makefile pins GOTOOLCHAIN=local, but the runner image's Go can be older
+# than go.mod requires. Override it so Go downloads the pinned toolchain.
+make GOTOOLCHAIN=auto gen-purls

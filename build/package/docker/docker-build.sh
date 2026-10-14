@@ -16,7 +16,7 @@
 
 set -Eeou pipefail
 
-VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$("$(dirname "${BASH_SOURCE[0]}")/../git-version.sh")"
 
 FILE_EXT=deb
 if [[ "${image-}" =~ "rpm" ]]; then

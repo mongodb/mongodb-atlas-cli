@@ -1,0 +1,38 @@
+FROM 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/library/ubuntu:26.04
+
+ARG url
+ARG entrypoint
+ARG server_version
+ARG pgp_server_version
+
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		ca-certificates \
+		curl \
+		gnupg \
+		apt-transport-https \
+	; \
+	if ! command -v ps > /dev/null; then \
+		apt-get install -y --no-install-recommends procps; \
+	fi; \
+	install -d -m 0755 /usr/share/keyrings; \
+	curl -L https://www.mongodb.org/static/pgp/server-${pgp_server_version}.asc \
+		| gpg --dearmor -o /usr/share/keyrings/mongodb-server-${pgp_server_version}.gpg; \
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-${pgp_server_version}.gpg ] https://repo.mongodb.org/apt/ubuntu resolute/mongodb-org/${server_version} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${server_version}.list; \
+	rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+    curl --silent --show-error --fail --location --retry 3 \
+    --output ${entrypoint}.deb \
+    ${url}; \
+	apt-get update; \
+	apt-get install -y ./${entrypoint}.deb; \
+	rm -rf /var/lib/apt/lists/* ./${entrypoint}.deb
+
+RUN mongosh --version
+RUN ${entrypoint} --version
+
+ENV ENTRY=${entrypoint}
+
+ENTRYPOINT $ENTRY

@@ -18,6 +18,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -29,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312024/auth/clientcredentials"
+	"go.mongodb.org/atlas-sdk/v20250312026/auth/clientcredentials"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -37,6 +38,7 @@ import (
 
 type ConfigDeleter interface {
 	Delete() error
+	List() []string
 	Name() string
 	SetAccessToken(string)
 	SetRefreshToken(string)
@@ -163,6 +165,11 @@ func LogoutBuilder() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			if !slices.Contains(opts.config.List(), opts.config.Name()) {
+				_, _ = log.Warningf("Warning: profile %q does not exist, nothing to log out\n", opts.config.Name())
+				return nil
+			}
+
 			var message string
 
 			entry := opts.config.Name()

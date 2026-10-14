@@ -60,6 +60,23 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 	}
 }
 
+func TestLogoutNonexistentProfile(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode")
+	}
+
+	cliPath, err := internal.AtlasCLIBin()
+	require.NoError(t, err)
+
+	const missing = "e2e-profile-that-does-not-exist"
+	cmd := exec.Command(cliPath, authEntity, "logout", "--force", "--profile", missing)
+	cmd.Env = os.Environ()
+
+	resp, err := internal.RunAndGetStdOutAndErr(cmd)
+	require.NoError(t, err)
+	require.Contains(t, string(resp), `profile "`+missing+`" does not exist, nothing to log out`)
+}
+
 func TestProfile(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")

@@ -20,10 +20,9 @@ export GOROOT="${GOROOT:?}"
 export NOTARY_SERVICE_URL=${notary_service_url:?}
 export MACOS_NOTARY_KEY=${notary_service_key_id:?}
 export MACOS_NOTARY_SECRET=${notary_service_secret:?}
-export GORELEASER_KEY=${goreleaser_key:?}
 export VERSION_GIT
 
-VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_GIT="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 
 if [[ "${unstable-}" == "-unstable" ]]; then
 	# avoid race conditions on the notarization step by using `-p 1`

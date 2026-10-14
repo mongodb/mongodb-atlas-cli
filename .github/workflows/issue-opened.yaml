@@ -1,0 +1,17 @@
+# synced from apix-actions/.github/workflows/issue-opened.yaml
+name: Create Jira Ticket for New Issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions: {}
+
+jobs:
+  create-jira:
+    permissions:
+      contents: read
+      issues: write
+    uses: mongodb/apix-action/.github/workflows/_issue-opened.yaml@26969e1bb333b00a8c3a776f4f822a3ce01a667a
+    secrets:
+      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

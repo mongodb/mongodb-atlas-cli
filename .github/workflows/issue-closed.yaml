@@ -1,0 +1,17 @@
+# synced from apix-actions/.github/workflows/issue-closed.yaml
+name: Close Jira Ticket on Issue Close
+
+on:
+  issues:
+    types: [closed]
+
+permissions: {}
+
+jobs:
+  close-jira:
+    permissions:
+      contents: read
+      issues: read
+    uses: mongodb/apix-action/.github/workflows/_issue-closed.yaml@26969e1bb333b00a8c3a776f4f822a3ce01a667a
+    secrets:
+      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

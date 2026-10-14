@@ -38,7 +38,7 @@ func specToCommands(now time.Time, spec *openapi3.T) (api.GroupedAndSortedComman
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
-			command, err := operationToCommand(now, path, verb, operation)
+			command, err := operationToCommand(now, path, verb, operation, spec.Security)
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
 			}
@@ -143,7 +143,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 	return ext
 }
 
-func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation, rootSecurity openapi3.SecurityRequirements) (*api.Command, error) {
 	extensions := extractExtensionsFromOperation(operation)
 	if extensions.skip {
 		return nil, nil
@@ -193,6 +193,7 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 		ShortOperationID: shortOperationID,
 		Aliases:          aliases,
 		Description:      description,
+		Unauthenticated:  !operationRequiresAuthentication(operation, rootSecurity),
 		RequestParameters: api.RequestParameters{
 			URL:             path,
 			QueryParameters: parameters.query,
@@ -204,6 +205,14 @@ func operationToCommand(now time.Time, path, verb string, operation *openapi3.Op
 	}
 
 	return &command, nil
+}
+
+func operationRequiresAuthentication(operation *openapi3.Operation, rootSecurity openapi3.SecurityRequirements) bool {
+	if operation.Security != nil {
+		return len(*operation.Security) > 0
+	}
+
+	return len(rootSecurity) > 0
 }
 
 func buildDescription(operation *openapi3.Operation) (string, error) {

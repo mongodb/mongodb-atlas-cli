@@ -34,6 +34,7 @@ type Command struct {
 	ShortOperationID  string
 	Aliases           []string
 	Description       string
+	Unauthenticated   bool
 	RequestParameters RequestParameters
 	Versions          []CommandVersion
 	Watcher           *WatcherProperties

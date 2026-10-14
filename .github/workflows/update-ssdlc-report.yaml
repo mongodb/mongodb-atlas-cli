@@ -14,17 +14,17 @@ jobs:
   update-compliance-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      - uses: GitHubSecurityLab/actions-permissions/monitor@bf82d13b9b10051d224345ab9184f5ede0a94289 # v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@8549161120ce38b1e132ff833302a0ecbde58038
+        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: master
@@ -32,15 +32,17 @@ jobs:
         id: extract
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
-            # Expect input like 'atlascli/v1.42.2' or '1.42.2'
+            # Accept 'v1.42.2', 'atlascli/v1.42.2' or a full ref.
             TAG="${{ github.event.inputs.tag }}"
-            VERSION="${TAG#atlascli/v}"
             AUTHOR="${{ github.actor }}"
           else
-            # GITHUB_REF is refs/tags/atlascli/v1.42.2
-            VERSION="${GITHUB_REF#refs/tags/atlascli/v}"
+            # GITHUB_REF is refs/tags/v1.42.2
+            TAG="${GITHUB_REF#refs/tags/}"
             AUTHOR="${{ github.event.release.author.login }}"
           fi
+          # Normalize to a bare X.Y.Z, tolerating the legacy 'atlascli/' prefix.
+          TAG="${TAG##*/}"
+          VERSION="${TAG#v}"
           echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Run gen-ssdlc-report.sh

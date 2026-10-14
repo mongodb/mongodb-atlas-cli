@@ -1,0 +1,18 @@
+# synced from apix-actions/.github/workflows/close-jira.yaml
+name: Auto Close Jira
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions: {}
+
+jobs:
+  close-jira:
+    if: contains(github.event.pull_request.labels.*.name, 'auto_close_jira')
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: mongodb/apix-action/.github/workflows/_close-jira.yaml@26969e1bb333b00a8c3a776f4f822a3ce01a667a
+    secrets:
+      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

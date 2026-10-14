@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
 )
 
 const (
@@ -52,8 +52,9 @@ func TestAtlasTeamUsers(t *testing.T) {
 		}
 	}()
 
+	// the profile's own user is already a team member, so the test needs a second org user to add
 	username, userID, err := internal.OrgNUser(1)
-	require.NoError(t, err)
+	require.NoError(t, err, "atlasteamusers needs at least two users in the org")
 
 	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

@@ -15,7 +15,7 @@
 # limitations under the License.
 set -Eeou pipefail
 
-VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION="$("$(dirname "${BASH_SOURCE[0]}")/git-version.sh")"
 
 if [[ ${VERSION} =~ "-pre" ]]; then
   echo "Skipping generate download center manifest for pre-release version: ${VERSION}"

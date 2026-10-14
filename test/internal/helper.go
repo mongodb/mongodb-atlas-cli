@@ -36,7 +36,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312024/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -454,11 +454,12 @@ func NewAvailableRegion(projectID, tier, provider string) (string, error) {
 		return "", fmt.Errorf("error unmarshaling regions response for project %s, tier %s, provider %s: %w: %s", projectID, tier, provider, err, string(resp))
 	}
 
-	if cloudProviders.GetTotalCount() == 0 || len(cloudProviders.GetResults()[0].GetInstanceSizes()) == 0 {
+	results := cloudProviders.GetResults()
+	if len(results) == 0 || len(results[0].GetInstanceSizes()) == 0 || len(results[0].GetInstanceSizes()[0].GetAvailableRegions()) == 0 {
 		return "", fmt.Errorf("%w: no regions available for project %s, tier %s, provider %s", errNoRegions, projectID, tier, provider)
 	}
 
-	return cloudProviders.GetResults()[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
+	return results[0].GetInstanceSizes()[0].GetAvailableRegions()[0].GetName(), nil
 }
 
 func RandClusterName() (string, error) {
@@ -1405,7 +1406,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 	}
 
 	if len(users.GetResults()) <= n {
-		return "", "", fmt.Errorf("%w: %d for %d users", errInvalidIndex, n, len(users.GetResults()))
+		return "", "", fmt.Errorf("%w: %d for %d users, the org needs at least %d users", errInvalidIndex, n, len(users.GetResults()), n+1)
 	}
 
 	return users.GetResults()[n].Username, users.GetResults()[n].GetId(), nil

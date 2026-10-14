@@ -24,39 +24,39 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+)
+
+const (
+	versionV1 = "v1.0.0"
+	versionV2 = "v2.0.0"
 )
 
 func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 	f := false
-	atlasV := "atlascli/v2.0.0"
+	bareV := versionV2
 	tests := []struct {
 		currentVersion   string
 		expectNewVersion bool
 		release          *github.RepositoryRelease
 	}{
 		{
-			currentVersion:   "atlascli/v1.0.0",
+			// New bare tag format must render the upgrade notice.
+			currentVersion:   versionV1,
 			expectNewVersion: true,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v3.0.0",
+			// Already on the latest version: no notice.
+			currentVersion:   versionV2,
 			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
+			release:          &github.RepositoryRelease{TagName: &bareV, Prerelease: &f, Draft: &f},
 		},
 		{
-			currentVersion:   "v2.0.0",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
-		},
-		{
-			currentVersion:   "v2.0.0-123",
-			expectNewVersion: false,
-			release:          &github.RepositoryRelease{TagName: &atlasV, Prerelease: &f, Draft: &f},
-		},
-		{
-			currentVersion:   "v3.0.0-123",
+			// No release found: no notice.
+			currentVersion:   versionV1,
 			expectNewVersion: false,
 			release:          nil,
 		},
@@ -111,6 +111,36 @@ To disable this alert, run "atlas config set skip_update_check true"
 			if got := bufOut.String(); got != want {
 				t.Errorf("notifyIfApplicable() got = %v, want %v", got, want)
 			}
+		})
+	}
+}
+
+func TestShouldSetService(t *testing.T) {
+	build := func(names ...string) *cobra.Command {
+		parent := &cobra.Command{Use: atlas}
+		for _, n := range names {
+			child := &cobra.Command{Use: n}
+			parent.AddCommand(child)
+			parent = child
+		}
+		return parent
+	}
+
+	tests := []struct {
+		name string
+		cmd  *cobra.Command
+		want bool
+	}{
+		{name: "regular command", cmd: build("clusters", "list"), want: true},
+		{name: "config command", cmd: build("config", "set"), want: false},
+		{name: "completion command", cmd: build("completion", "bash"), want: false},
+		{name: "auth logout", cmd: build("auth", "logout"), want: false},
+		{name: "logout shortcut", cmd: build("logout"), want: false},
+		{name: "unrelated command named logout", cmd: build("foo", "logout"), want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, shouldSetService(tt.cmd))
 		})
 	}
 }

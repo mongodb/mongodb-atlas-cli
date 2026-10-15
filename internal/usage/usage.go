@@ -412,4 +412,6 @@ dbName and collection are required only for built-in roles.`
 	LoginPublicAPIKey          = "Public API key. Must be set together with --privateApiKey, --authType, and --output. If all are set, skips the credential prompt." //nolint:gosec // not a credential, a flag description
 	LoginPrivateAPIKey         = "Private API key. Must be set together with --publicApiKey, --authType, and --output. If all are set, skips the credential prompt." //nolint:gosec // not a credential, a flag description
 	LoginOutput                = "Default output format to save to the profile. Valid values are plaintext or json. If set, skips the output format prompt."
+	LoginOrgID                 = "Organization ID to save as the profile default. If set, skips the organization prompt."
+	LoginProjectID             = "Project ID to save as the profile default. If set, skips the project prompt."
 )

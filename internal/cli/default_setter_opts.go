@@ -136,6 +136,9 @@ func (opts *DefaultSetterOpts) orgs(ctx context.Context, filter string) (results
 		if errors.Is(err, orgsapi.ErrNotFound) {
 			return nil, errNoResults
 		}
+		if errors.Is(err, orgsapi.ErrUnauthorized) {
+			return nil, commonerrors.ErrUnauthorized
+		}
 		return nil, err
 	}
 	if orgs == nil {
@@ -165,6 +168,9 @@ func (opts *DefaultSetterOpts) ProjectExists(id string) bool {
 func (opts *DefaultSetterOpts) AskProject() error {
 	ids, names, err := opts.projects()
 	if err != nil {
+		if ok, c := isUnauthorized(err); ok {
+			return c
+		}
 		var target *atlas.ErrorResponse
 		switch {
 		case errors.Is(err, errNoResults):
@@ -226,6 +232,9 @@ func (opts *DefaultSetterOpts) AskOrg(ctx context.Context) error {
 func (opts *DefaultSetterOpts) askOrgWithFilter(ctx context.Context, filter string) error {
 	orgs, err := opts.orgs(ctx, filter)
 	if err != nil {
+		if ok, c := isUnauthorized(err); ok {
+			return c
+		}
 		applyFilter := false
 		var target *atlas.ErrorResponse
 		switch {
@@ -303,6 +312,47 @@ func (opts *DefaultSetterOpts) selectOrg(orgs []atlasv2.AtlasOrganization) error
 	opts.AskedOrgsOrProjects = true
 
 	return nil
+}
+
+func isUnauthorized(err error) (bool, error) {
+	c := commonerrors.Check(err)
+	return errors.Is(c, commonerrors.ErrUnauthorized), c
+}
+
+// OnlyOrgID returns the organization ID if the user can see exactly one, without prompting.
+func (opts *DefaultSetterOpts) OnlyOrgID(ctx context.Context) (string, error) {
+	orgs, err := opts.orgs(ctx, "")
+	if err != nil {
+		if errors.Is(err, errNoResults) || errors.Is(err, errTooManyResults) {
+			return "", nil
+		}
+		if ok, c := isUnauthorized(err); ok {
+			return "", c
+		}
+		return "", commonerrors.Check(err)
+	}
+	if len(orgs) == 1 {
+		return orgs[0].GetId(), nil
+	}
+	return "", nil
+}
+
+// OnlyProjectID returns the project ID if the user can see exactly one, without prompting.
+func (opts *DefaultSetterOpts) OnlyProjectID() (string, error) {
+	ids, _, err := opts.projects()
+	if err != nil {
+		if errors.Is(err, errNoResults) || errors.Is(err, errTooManyResults) {
+			return "", nil
+		}
+		if ok, c := isUnauthorized(err); ok {
+			return "", c
+		}
+		return "", commonerrors.Check(err)
+	}
+	if len(ids) == 1 {
+		return ids[0], nil
+	}
+	return "", nil
 }
 
 func (opts *DefaultSetterOpts) SetUpProject() {

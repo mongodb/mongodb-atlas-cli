@@ -16,6 +16,7 @@ package cli
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -55,7 +56,28 @@ func (opts *RefresherOpts) WithFlow(f Refresher) {
 }
 
 func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
-	current, err := config.Token()
+	return opts.refreshProfileAccessToken(ctx, config.Default())
+}
+
+func (opts *RefresherOpts) RefreshAccessTokenForProfile(ctx context.Context, profile *config.Profile) error {
+	if err := opts.refreshProfileAccessToken(ctx, profile); err != nil {
+		return err
+	}
+	if profile.AccessToken() == "" || profile.RefreshToken() != "" {
+		return nil
+	}
+	current, err := profile.ServiceAccountToken()
+	if err != nil {
+		return err
+	}
+	if current != nil && !current.Valid() {
+		return fmt.Errorf("access token for profile %s is expired and no refresh token is available", profile.Name())
+	}
+	return nil
+}
+
+func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profile *config.Profile) error {
+	current, err := profile.Token()
 	if current == nil {
 		return err
 	}
@@ -63,13 +85,18 @@ func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
 		TokenRefreshed = true
 		return nil
 	}
-	t, _, err := opts.flow.RefreshToken(ctx, config.RefreshToken())
+	if profile != config.Default() {
+		if err := opts.InitFlow(profile)(); err != nil {
+			return err
+		}
+	}
+	t, _, err := opts.flow.RefreshToken(ctx, profile.RefreshToken())
 	if err != nil {
 		return err
 	}
-	config.SetAccessToken(t.AccessToken)
-	config.SetRefreshToken(t.RefreshToken)
-	if err := config.Save(); err != nil {
+	profile.SetAccessToken(t.AccessToken)
+	profile.SetRefreshToken(t.RefreshToken)
+	if err := profile.Save(); err != nil {
 		return err
 	}
 	TokenRefreshed = true

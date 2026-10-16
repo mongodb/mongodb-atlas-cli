@@ -18,7 +18,7 @@ import "github.com/spf13/cobra"
 
 const jsonOutputFormat = "json"
 
-func Builder() *cobra.Command {
+func Builder(tokenRefresher TokenRefresher) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth",
 		Short: "Manage the CLI's authentication state.",
@@ -31,7 +31,7 @@ func Builder() *cobra.Command {
 		WhoAmIBuilder(),
 		LogoutBuilder(),
 		RegisterBuilder(),
-		TokenBuilder(),
+		TokenBuilder(tokenRefresher),
 	)
 
 	return cmd

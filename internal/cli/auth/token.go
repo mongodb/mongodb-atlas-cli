@@ -15,6 +15,7 @@
 package auth
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/mongodb/atlas-cli-core/config"
@@ -30,9 +31,14 @@ type TokenConfig interface {
 	Name() string
 }
 
+type TokenRefresher interface {
+	RefreshAccessTokenForProfile(context.Context, *config.Profile) error
+}
+
 type tokenOpts struct {
 	cli.OutputOpts
-	config TokenConfig
+	config    TokenConfig
+	refresher TokenRefresher
 }
 
 func (opts *tokenOpts) Run() error {
@@ -45,8 +51,8 @@ func (opts *tokenOpts) Run() error {
 	return err
 }
 
-func TokenBuilder() *cobra.Command {
-	opts := &tokenOpts{}
+func TokenBuilder(refresher TokenRefresher) *cobra.Command {
+	opts := &tokenOpts{refresher: refresher}
 	cmd := &cobra.Command{
 		Use:    "token",
 		Hidden: true,
@@ -65,12 +71,11 @@ func TokenBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			// If the profile is set in the context, use it instead of the default profile
 			profile, ok := config.ProfileFromContext(cmd.Context())
-			if ok {
-				opts.config = profile
-			} else {
-				opts.config = config.Default()
+			if !ok {
+				profile = config.Default()
 			}
-			return nil
+			opts.config = profile
+			return opts.refresher.RefreshAccessTokenForProfile(cmd.Context(), profile)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

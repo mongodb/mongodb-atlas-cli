@@ -16,14 +16,28 @@ package auth
 
 import (
 	"bytes"
+	"context"
+	"encoding/base64"
+	"errors"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/atlas-cli-core/mocks"
+	coreMocks "github.com/mongodb/atlas-cli-core/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasauth "go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
+
+type tokenRefresherFunc func(context.Context, *config.Profile) error
+
+func (f tokenRefresherFunc) RefreshAccessTokenForProfile(ctx context.Context, profile *config.Profile) error {
+	return f(ctx, profile)
+}
 
 func Test_tokenOpts_Run_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -66,25 +80,39 @@ func Test_tokenOpts_Run_NoToken(t *testing.T) {
 }
 
 func TestTokenBuilder_PreRunE_DefaultConfig(t *testing.T) {
-	cmd := TokenBuilder()
+	refreshCalls := 0
+	cmd := TokenBuilder(tokenRefresherFunc(func(_ context.Context, profile *config.Profile) error {
+		refreshCalls++
+		assert.Same(t, config.Default(), profile)
+		return nil
+	}))
 
 	// Test that PreRunE uses config.Default() when no profile in context
 	err := cmd.PreRunE(cmd, []string{})
 
 	// Should not error - just sets up the default config
 	require.NoError(t, err)
+	assert.Equal(t, 1, refreshCalls)
 }
 
 func TestTokenBuilder_PreRunE_ProfileFromContext(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockStore := mocks.NewMockStore(ctrl)
+	mockStore := coreMocks.NewMockStore(ctrl)
 
 	// Create a test profile
 	testProfile := config.NewProfile("test-profile", mockStore)
 
-	cmd := TokenBuilder()
+	refreshCalls := 0
+	cmd := TokenBuilder(tokenRefresherFunc(func(ctx context.Context, profile *config.Profile) error {
+		refreshCalls++
+		contextProfile, ok := config.ProfileFromContext(ctx)
+		assert.True(t, ok)
+		assert.Same(t, testProfile, contextProfile)
+		assert.Same(t, testProfile, profile)
+		return nil
+	}))
 
 	// Add profile to context and execute the command with that context
 	ctx := config.WithProfile(t.Context(), testProfile)
@@ -97,4 +125,117 @@ func TestTokenBuilder_PreRunE_ProfileFromContext(t *testing.T) {
 
 	err := cmd.PreRunE(cmd, []string{})
 	require.NoError(t, err)
+	assert.Equal(t, 1, refreshCalls)
+}
+
+func TestTokenBuilder_RefreshesExpiredTokenBeforePrinting(t *testing.T) {
+	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "old-refresh-token")
+	ctrl := gomock.NewController(t)
+	flow := mocks.NewMockRefresher(ctrl)
+	flow.EXPECT().RefreshToken(gomock.Any(), "old-refresh-token").Return(&atlasauth.Token{
+		AccessToken:  "new-access-token",
+		RefreshToken: "new-refresh-token",
+	}, nil, nil)
+
+	refresher := &cli.RefresherOpts{}
+	refresher.WithFlow(flow)
+	cmd := TokenBuilder(refresher)
+	cmd.SetContext(config.WithProfile(t.Context(), profile))
+	cmd.SilenceErrors = true
+	cmd.SilenceUsage = true
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+
+	require.NoError(t, cmd.Execute())
+	assert.Equal(t, "new-access-token\n", buf.String())
+	assert.Equal(t, "new-access-token", profile.AccessToken())
+	assert.Equal(t, "new-refresh-token", profile.RefreshToken())
+}
+
+func TestTokenBuilder_UsesContextProfileAndDoesNotRefreshValidToken(t *testing.T) {
+	setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "default-refresh-token")
+	accessToken := testAccessTokenWithExpiry(time.Now().Add(time.Hour))
+	profile := config.NewProfile("context-profile", config.NewInMemoryStore())
+	profile.SetAccessToken(accessToken)
+	ctrl := gomock.NewController(t)
+	flow := mocks.NewMockRefresher(ctrl)
+
+	refresher := &cli.RefresherOpts{}
+	refresher.WithFlow(flow)
+	cmd := TokenBuilder(refresher)
+	cmd.SetContext(config.WithProfile(t.Context(), profile))
+	cmd.SilenceErrors = true
+	cmd.SilenceUsage = true
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+
+	require.NoError(t, cmd.Execute())
+	assert.Equal(t, accessToken+"\n", buf.String())
+}
+
+func TestTokenBuilder_ExpiredTokenWithoutRefreshTokenDoesNotPrint(t *testing.T) {
+	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "")
+	ctrl := gomock.NewController(t)
+	flow := mocks.NewMockRefresher(ctrl)
+
+	refresher := &cli.RefresherOpts{}
+	refresher.WithFlow(flow)
+	cmd := TokenBuilder(refresher)
+	cmd.SetContext(config.WithProfile(t.Context(), profile))
+	cmd.SilenceErrors = true
+	cmd.SilenceUsage = true
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+
+	require.ErrorContains(t, cmd.Execute(), "expired and no refresh token is available")
+	assert.Empty(t, buf.String())
+}
+
+func TestTokenBuilder_RefreshErrorDoesNotPrintExpiredToken(t *testing.T) {
+	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "refresh-token")
+	ctrl := gomock.NewController(t)
+	flow := mocks.NewMockRefresher(ctrl)
+	refreshErr := errors.New("refresh failed")
+	flow.EXPECT().RefreshToken(gomock.Any(), "refresh-token").Return(nil, nil, refreshErr)
+
+	refresher := &cli.RefresherOpts{}
+	refresher.WithFlow(flow)
+	cmd := TokenBuilder(refresher)
+	cmd.SetContext(config.WithProfile(t.Context(), profile))
+	cmd.SilenceErrors = true
+	cmd.SilenceUsage = true
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+
+	require.ErrorIs(t, cmd.Execute(), refreshErr)
+	assert.Empty(t, buf.String())
+}
+
+func setDefaultProfile(t *testing.T, accessToken, refreshToken string) *config.Profile {
+	t.Helper()
+
+	previousProfile := config.Default()
+	profile := config.NewProfile("test-profile", config.NewInMemoryStore())
+	profile.SetAccessToken(accessToken)
+	profile.SetRefreshToken(refreshToken)
+	config.SetDefaultProfile(profile)
+	t.Cleanup(func() {
+		config.SetDefaultProfile(previousProfile)
+	})
+
+	previousTokenRefreshed := cli.TokenRefreshed
+	cli.TokenRefreshed = false
+	t.Cleanup(func() {
+		cli.TokenRefreshed = previousTokenRefreshed
+	})
+
+	return profile
+}
+
+func testAccessTokenWithExpiry(expiry time.Time) string {
+	header := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"HS256","typ":"JWT"}`))
+	claims := `{"exp":` + strconv.FormatInt(expiry.Unix(), 10) + `}`
+	payload := base64.RawURLEncoding.EncodeToString([]byte(claims))
+	signature := base64.RawURLEncoding.EncodeToString([]byte("signature"))
+	return header + "." + payload + "." + signature
 }

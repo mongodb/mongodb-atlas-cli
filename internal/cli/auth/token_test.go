@@ -16,7 +16,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 	"errors"
 	"strconv"
@@ -24,7 +23,6 @@ import (
 	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	coreMocks "github.com/mongodb/atlas-cli-core/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -32,12 +30,6 @@ import (
 	atlasauth "go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
-
-type tokenRefresherFunc func(context.Context, *config.Profile) error
-
-func (f tokenRefresherFunc) RefreshAccessTokenForProfile(ctx context.Context, profile *config.Profile) error {
-	return f(ctx, profile)
-}
 
 func Test_tokenOpts_Run_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -80,52 +72,13 @@ func Test_tokenOpts_Run_NoToken(t *testing.T) {
 }
 
 func TestTokenBuilder_PreRunE_DefaultConfig(t *testing.T) {
-	refreshCalls := 0
-	cmd := TokenBuilder(tokenRefresherFunc(func(_ context.Context, profile *config.Profile) error {
-		refreshCalls++
-		assert.Same(t, config.Default(), profile)
-		return nil
-	}))
+	cmd := TokenBuilder()
 
 	// Test that PreRunE uses config.Default() when no profile in context
 	err := cmd.PreRunE(cmd, []string{})
 
 	// Should not error - just sets up the default config
 	require.NoError(t, err)
-	assert.Equal(t, 1, refreshCalls)
-}
-
-func TestTokenBuilder_PreRunE_ProfileFromContext(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockStore := coreMocks.NewMockStore(ctrl)
-
-	// Create a test profile
-	testProfile := config.NewProfile("test-profile", mockStore)
-
-	refreshCalls := 0
-	cmd := TokenBuilder(tokenRefresherFunc(func(ctx context.Context, profile *config.Profile) error {
-		refreshCalls++
-		contextProfile, ok := config.ProfileFromContext(ctx)
-		assert.True(t, ok)
-		assert.Same(t, testProfile, contextProfile)
-		assert.Same(t, testProfile, profile)
-		return nil
-	}))
-
-	// Add profile to context and execute the command with that context
-	ctx := config.WithProfile(t.Context(), testProfile)
-	cmd.SetContext(ctx)
-
-	mockStore.EXPECT().
-		GetHierarchicalValue("test-profile", gomock.Any()).
-		Return("").
-		AnyTimes()
-
-	err := cmd.PreRunE(cmd, []string{})
-	require.NoError(t, err)
-	assert.Equal(t, 1, refreshCalls)
 }
 
 func TestTokenBuilder_RefreshesExpiredTokenBeforePrinting(t *testing.T) {
@@ -139,7 +92,7 @@ func TestTokenBuilder_RefreshesExpiredTokenBeforePrinting(t *testing.T) {
 
 	refresher := &cli.RefresherOpts{}
 	refresher.WithFlow(flow)
-	cmd := TokenBuilder(refresher)
+	cmd := newTokenBuilder(refresher)
 	cmd.SetContext(config.WithProfile(t.Context(), profile))
 	cmd.SilenceErrors = true
 	cmd.SilenceUsage = true
@@ -162,7 +115,7 @@ func TestTokenBuilder_UsesContextProfileAndDoesNotRefreshValidToken(t *testing.T
 
 	refresher := &cli.RefresherOpts{}
 	refresher.WithFlow(flow)
-	cmd := TokenBuilder(refresher)
+	cmd := newTokenBuilder(refresher)
 	cmd.SetContext(config.WithProfile(t.Context(), profile))
 	cmd.SilenceErrors = true
 	cmd.SilenceUsage = true
@@ -180,7 +133,7 @@ func TestTokenBuilder_ExpiredTokenWithoutRefreshTokenDoesNotPrint(t *testing.T) 
 
 	refresher := &cli.RefresherOpts{}
 	refresher.WithFlow(flow)
-	cmd := TokenBuilder(refresher)
+	cmd := newTokenBuilder(refresher)
 	cmd.SetContext(config.WithProfile(t.Context(), profile))
 	cmd.SilenceErrors = true
 	cmd.SilenceUsage = true
@@ -200,7 +153,7 @@ func TestTokenBuilder_RefreshErrorDoesNotPrintExpiredToken(t *testing.T) {
 
 	refresher := &cli.RefresherOpts{}
 	refresher.WithFlow(flow)
-	cmd := TokenBuilder(refresher)
+	cmd := newTokenBuilder(refresher)
 	cmd.SetContext(config.WithProfile(t.Context(), profile))
 	cmd.SilenceErrors = true
 	cmd.SilenceUsage = true

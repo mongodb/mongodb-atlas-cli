@@ -10,10 +10,8 @@
 package auth
 
 import (
-	context "context"
 	reflect "reflect"
 
-	config "github.com/mongodb/atlas-cli-core/config"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -113,68 +111,6 @@ func (c *MockTokenConfigNameCall) Do(f func() string) *MockTokenConfigNameCall {
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockTokenConfigNameCall) DoAndReturn(f func() string) *MockTokenConfigNameCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
-// MockTokenRefresher is a mock of TokenRefresher interface.
-type MockTokenRefresher struct {
-	ctrl     *gomock.Controller
-	recorder *MockTokenRefresherMockRecorder
-	isgomock struct{}
-}
-
-// MockTokenRefresherMockRecorder is the mock recorder for MockTokenRefresher.
-type MockTokenRefresherMockRecorder struct {
-	mock *MockTokenRefresher
-}
-
-// NewMockTokenRefresher creates a new mock instance.
-func NewMockTokenRefresher(ctrl *gomock.Controller) *MockTokenRefresher {
-	mock := &MockTokenRefresher{ctrl: ctrl}
-	mock.recorder = &MockTokenRefresherMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTokenRefresher) EXPECT() *MockTokenRefresherMockRecorder {
-	return m.recorder
-}
-
-// RefreshAccessTokenForProfile mocks base method.
-func (m *MockTokenRefresher) RefreshAccessTokenForProfile(arg0 context.Context, arg1 *config.Profile) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RefreshAccessTokenForProfile", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RefreshAccessTokenForProfile indicates an expected call of RefreshAccessTokenForProfile.
-func (mr *MockTokenRefresherMockRecorder) RefreshAccessTokenForProfile(arg0, arg1 any) *MockTokenRefresherRefreshAccessTokenForProfileCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshAccessTokenForProfile", reflect.TypeOf((*MockTokenRefresher)(nil).RefreshAccessTokenForProfile), arg0, arg1)
-	return &MockTokenRefresherRefreshAccessTokenForProfileCall{Call: call}
-}
-
-// MockTokenRefresherRefreshAccessTokenForProfileCall wrap *gomock.Call
-type MockTokenRefresherRefreshAccessTokenForProfileCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockTokenRefresherRefreshAccessTokenForProfileCall) Return(arg0 error) *MockTokenRefresherRefreshAccessTokenForProfileCall {
-	c.Call = c.Call.Return(arg0)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockTokenRefresherRefreshAccessTokenForProfileCall) Do(f func(context.Context, *config.Profile) error) *MockTokenRefresherRefreshAccessTokenForProfileCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockTokenRefresherRefreshAccessTokenForProfileCall) DoAndReturn(f func(context.Context, *config.Profile) error) *MockTokenRefresherRefreshAccessTokenForProfileCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

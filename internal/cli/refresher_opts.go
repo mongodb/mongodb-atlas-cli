@@ -85,7 +85,7 @@ func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profil
 		TokenRefreshed = true
 		return nil
 	}
-	if profile != config.Default() {
+	if opts.flow == nil || profile != config.Default() {
 		if err := opts.InitFlow(profile)(); err != nil {
 			return err
 		}

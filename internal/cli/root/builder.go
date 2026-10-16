@@ -175,7 +175,7 @@ Use the --help flag with any command for more info on that command.`,
 
 	rootCmd.AddCommand(
 		cliconfig.Builder(),
-		auth.Builder(opts),
+		auth.Builder(),
 		setup.Builder(),
 		projects.Builder(),
 		organizations.Builder(),

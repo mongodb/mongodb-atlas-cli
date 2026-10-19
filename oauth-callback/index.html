@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; img-src 'none'; media-src 'none'; object-src 'none'; script-src 'sha256-yLBq7cXfS/CaEoFL9CfiSTmxMlEMt8JecC5J2lP/3DQ='; style-src 'sha256-NpDBX5dGp6YkNnfTBy0hthhXFs7O3nZvR6MMC4/96Xw='">
+  <title>Atlas CLI authorization</title>
+  <style>
+body { font: 1rem/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1c2d38; }
+h1 { font-size: 1.4rem; }
+textarea { box-sizing: border-box; display: block; width: 100%; margin: .5rem 0; padding: .5rem; font: .9rem ui-monospace, monospace; }
+button { margin: .25rem 0; padding: .4rem .7rem; font: inherit; }
+[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <main id="callback-page" data-ready="false" data-query-cleared="false" data-result-kind="pending">
+    <h1>Finish authorization in the Atlas CLI</h1>
+    <p id="status" role="status" aria-live="polite">Reading the authorization response…</p>
+    <section id="payload-section" hidden>
+      <label for="payload">Response to paste into Atlas CLI</label>
+      <textarea id="payload" rows="5" readonly></textarea>
+      <button id="copy-payload" type="button">Copy response</button>
+      <span id="payload-copy-status" aria-live="polite"></span>
+    </section>
+    <section id="callback-section" hidden>
+      <label for="callback-url">Full callback URL fallback</label>
+      <textarea id="callback-url" rows="3" readonly></textarea>
+      <button id="copy-callback-url" type="button">Copy callback URL</button>
+      <span id="callback-copy-status" aria-live="polite"></span>
+    </section>
+  </main>
+  <noscript>
+    <h1>JavaScript is disabled</h1>
+    <p>Copy the complete URL from your browser’s address bar and paste it into the waiting Atlas CLI prompt. The CLI validates the response before exchanging the code.</p>
+  </noscript>
+<script>
+const INFO = "atlas-cli-paste";
+const CHECKSUM_CHARS = 4;
+const encoder = new TextEncoder();
+const b64urlNoPad = (bytes) => {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+};
+
+async function keystream(state, len) {
+  const key = await crypto.subtle.importKey("raw", encoder.encode(state), "HKDF", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({
+    name: "HKDF",
+    hash: "SHA-256",
+    salt: new Uint8Array(0),
+    info: encoder.encode(INFO),
+  }, key, len * 8);
+  return new Uint8Array(bits);
+}
+
+async function checksum(codeBytes) {
+  const digest = await crypto.subtle.digest("SHA-256", codeBytes);
+  return b64urlNoPad(new Uint8Array(digest)).slice(0, CHECKSUM_CHARS);
+}
+
+async function buildPasteValue(state, code, issuer) {
+  const codeBytes = encoder.encode(code);
+  const payloadBytes = encoder.encode(JSON.stringify({ code, iss: issuer }));
+  const ks = await keystream(state, payloadBytes.length);
+  const cipher = payloadBytes.map((byte, index) => byte ^ ks[index]);
+  return b64urlNoPad(cipher) + await checksum(codeBytes);
+}
+
+async function main() {
+  const responseFields = ["code", "state", "iss", "error", "error_description", "error_uri"];
+  const singleValueFields = new Set(["code", "state", "iss", "error"]);
+  const allowedFields = new Set(responseFields);
+  const params = new URLSearchParams(location.search);
+  let invalid = [...params.keys()].some((name) => !allowedFields.has(name));
+  const read = (name) => {
+    const values = params.getAll(name);
+    if (singleValueFields.has(name) && values.length > 1) invalid = true;
+    return values.length ? values[0] : null;
+  };
+  const response = Object.fromEntries(["code", "state", "iss", "error"].map((name) => [name, read(name)]));
+  if (response.error === null && (params.has("error_description") || params.has("error_uri"))) invalid = true;
+
+  let kind;
+  if (invalid) kind = "invalid";
+  else if (response.error !== null) kind = response.error !== "" && response.code === null ? "failure" : "invalid";
+  else if ([response.code, response.state, response.iss].every((value) => value === null)) kind = "missing";
+  else if ([response.code, response.state, response.iss].some((value) => value === null || value === "")) kind = "invalid";
+  else kind = "success";
+
+  const fallbackParams = new URLSearchParams();
+  for (const name of responseFields) for (const value of params.getAll(name)) fallbackParams.append(name, value);
+  let callbackURL = "";
+  if (fallbackParams.toString()) {
+    const url = new URL(location.pathname, location.origin);
+    url.search = fallbackParams.toString();
+    callbackURL = url.href;
+  }
+
+  history.replaceState(null, "", location.pathname);
+  const root = document.getElementById("callback-page");
+  root.dataset.queryCleared = String(location.search === "" && location.hash === "");
+  const status = document.getElementById("status");
+  const payloadSection = document.getElementById("payload-section");
+  const payload = document.getElementById("payload");
+  const callbackSection = document.getElementById("callback-section");
+  const callbackUrl = document.getElementById("callback-url");
+  payloadSection.hidden = true;
+  callbackSection.hidden = true;
+  callbackUrl.value = callbackURL;
+  const showCallbackFallback = () => {
+    if (!callbackURL) return;
+    callbackSection.hidden = false;
+  };
+
+  const copy = async (field, message) => {
+    try {
+      await navigator.clipboard.writeText(field.value);
+      message.textContent = "Copied.";
+    } catch {
+      field.focus();
+      field.select();
+      message.textContent = "Copy the selected text manually.";
+    }
+  };
+  if (callbackURL) document.getElementById("copy-callback-url").addEventListener("click", () => copy(callbackUrl, document.getElementById("callback-copy-status")));
+
+  if (kind === "success") {
+    try {
+      const paste = await buildPasteValue(response.state, response.code, response.iss);
+      payload.value = paste;
+      payloadSection.hidden = false;
+      status.textContent = "Your response is ready. Copy it and paste it back into Atlas CLI to finish signing in.";
+      document.getElementById("copy-payload").addEventListener("click", () => copy(payload, document.getElementById("payload-copy-status")));
+    } catch {
+      status.textContent = "The response could not be packaged. Paste the full callback URL into the CLI.";
+      showCallbackFallback();
+    }
+  } else {
+    status.textContent = "Authorization could not be completed. Return to the Atlas CLI and try again.";
+    showCallbackFallback();
+  }
+
+  root.dataset.resultKind = kind;
+  root.dataset.ready = "true";
+}
+
+main();
+  </script>
+</body>
+</html>

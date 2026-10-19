@@ -1,0 +1,126 @@
+import assert from "node:assert/strict";
+import { createHash, webcrypto } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { test } from "node:test";
+import vm from "node:vm";
+
+const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
+const nginx = await readFile(new URL("../kanopy/nginx.conf", import.meta.url), "utf8");
+const vectors = JSON.parse(await readFile(new URL("./testdata/paste-v1.json", import.meta.url), "utf8"));
+
+function inlineContent(tag) {
+  const opening = `<${tag}>`;
+  const start = html.indexOf(opening) + opening.length;
+  const end = html.indexOf(`</${tag}>`, start);
+  assert.notEqual(start, opening.length - 1, `missing inline ${tag}`);
+  assert.notEqual(end, -1, `unterminated inline ${tag}`);
+  return html.slice(start, end);
+}
+
+const inlineScript = inlineContent("script");
+
+function cspHash(content) {
+  return `sha256-${createHash("sha256").update(content, "utf8").digest("base64")}`;
+}
+
+async function renderCallbackPage(search) {
+  const ids = [
+    "callback-page",
+    "status",
+    "payload-section",
+    "payload",
+    "payload-copy-status",
+    "copy-payload",
+    "callback-section",
+    "callback-url",
+    "callback-copy-status",
+    "copy-callback-url",
+  ];
+  const elements = new Map(ids.map((id) => [id, {
+    dataset: {},
+    hidden: true,
+    value: "",
+    textContent: "",
+    addEventListener() {},
+    focus() {},
+    select() {},
+  }]));
+  const location = {
+    search,
+    hash: "#oauth-fragment",
+    origin: "https://callback.example.test",
+    pathname: "/atlas-cli/oauth-callback.html",
+  };
+
+  vm.runInNewContext(inlineScript, {
+    URL,
+    URLSearchParams,
+    TextEncoder,
+    crypto: webcrypto,
+    btoa: (value) => Buffer.from(value, "binary").toString("base64"),
+    navigator: { clipboard: { writeText: async () => {} } },
+    location,
+    history: {
+      replaceState(_state, _title, pathname) {
+        location.pathname = pathname;
+        location.search = "";
+        location.hash = "";
+      },
+    },
+    document: {
+      getElementById(id) {
+        assert.ok(elements.has(id), `missing page element: ${id}`);
+        return elements.get(id);
+      },
+    },
+  });
+
+  const root = elements.get("callback-page");
+  for (let attempt = 0; attempt < 100 && root.dataset.ready !== "true"; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  assert.equal(root.dataset.ready, "true", "callback page did not finish processing");
+  return { elements, location };
+}
+
+test("inline CSP hashes match the page assets and NGINX headers", () => {
+  for (const tag of ["script", "style"]) {
+    const hash = cspHash(inlineContent(tag));
+    assert.ok(html.includes(hash), `HTML CSP is missing the ${tag} hash`);
+    assert.ok(nginx.includes(hash), `NGINX CSP is missing the ${tag} hash`);
+  }
+  assert.match(nginx, /Cache-Control "no-store"/);
+  assert.match(nginx, /Referrer-Policy "no-referrer"/);
+  assert.match(html, /name="referrer" content="no-referrer"/);
+  assert.match(html, /name="robots" content="noindex, nofollow"/);
+  assert.match(html, /<noscript>[\s\S]*address bar[\s\S]*<\/noscript>/);
+  assert.ok(nginx.includes("$uri"), "NGINX access log must record only the query-free URI");
+  assert.ok(!nginx.includes("$request_uri") && !nginx.includes("$args"), "NGINX access log must not include query values");
+  assert.doesNotMatch(html, /<script\b[^>]*\bsrc=/i);
+  assert.doesNotMatch(inlineScript, /\b(?:fetch|XMLHttpRequest|sendBeacon)\s*\(/);
+});
+
+test("page encoder matches the shared Go decoder vector and clears the callback URL", async () => {
+  assert.equal(vectors.format, "atlas-cli-paste");
+  assert.equal(vectors.version, "1");
+  for (const vector of vectors.vectors) {
+    const query = new URLSearchParams({ code: vector.code, state: vector.state, iss: vector.issuer });
+    const page = await renderCallbackPage(`?${query}`);
+
+    assert.equal(page.elements.get("payload").value, vector.paste);
+    assert.equal(page.elements.get("payload-section").hidden, false);
+    assert.equal(page.elements.get("callback-section").hidden, true);
+    assert.equal(page.elements.get("callback-page").dataset.queryCleared, "true");
+  }
+});
+
+test("OAuth errors show a generic failure and retain a full-URL fallback", async () => {
+  const page = await renderCallbackPage("?error=access_denied&error_description=do-not-display&state=state-123");
+  const status = page.elements.get("status").textContent;
+
+  assert.equal(status, "Authorization could not be completed. Return to the Atlas CLI and try again.");
+  assert.equal(page.elements.get("callback-section").hidden, false);
+  assert.match(page.elements.get("callback-url").value, /error=access_denied/);
+  assert.doesNotMatch(status, /access_denied|do-not-display/);
+  assert.equal(page.elements.get("callback-page").dataset.queryCleared, "true");
+});

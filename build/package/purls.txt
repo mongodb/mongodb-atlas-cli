@@ -6,11 +6,11 @@ pkg:golang/cloud.google.com/go/kms@v1.35.0
 pkg:golang/cloud.google.com/go/longrunning@v1.2.0
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.23.3
-pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.14.1
+pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.15.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.13.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.5.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal@v1.2.0
-pkg:golang/github.com/AzureAD/microsoft-authentication-library-for-go@v1.8.0
+pkg:golang/github.com/AzureAD/microsoft-authentication-library-for-go@v1.10.1
 pkg:golang/github.com/Masterminds/semver/v3@v3.5.0
 pkg:golang/github.com/PaesslerAG/gval@v1.0.0
 pkg:golang/github.com/PaesslerAG/jsonpath@v0.1.1
@@ -58,7 +58,7 @@ pkg:golang/github.com/google/go-github/v61@v61.0.0
 pkg:golang/github.com/google/go-querystring@v1.1.0
 pkg:golang/github.com/google/s2a-go@v0.1.11
 pkg:golang/github.com/google/uuid@v1.6.0
-pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.22
+pkg:golang/github.com/googleapis/enterprise-certificate-proxy@v0.3.23
 pkg:golang/github.com/googleapis/gax-go/v2@v2.26.2
 pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7
 pkg:golang/github.com/iancoleman/strcase@v0.3.0
@@ -125,9 +125,9 @@ pkg:golang/golang.org/x/sys@v0.49.0
 pkg:golang/golang.org/x/term@v0.47.0
 pkg:golang/golang.org/x/text@v0.43.0
 pkg:golang/golang.org/x/time@v0.16.0
-pkg:golang/google.golang.org/api@v0.301.0
+pkg:golang/google.golang.org/api@v0.304.0
 pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20260715232425-e75dac1f907d
-pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260928230214-8a89bd6388cc
+pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20261005182115-fad411399dd8
 pkg:golang/google.golang.org/genproto@v0.0.0-20260715232425-e75dac1f907d
 pkg:golang/google.golang.org/grpc@v1.84.0
 pkg:golang/google.golang.org/protobuf@v1.36.12

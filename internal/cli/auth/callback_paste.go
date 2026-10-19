@@ -29,15 +29,14 @@ const (
 	maxStaticCallbackPayloadBytes    = 255 * sha256.Size
 )
 
-// ErrInvalidStaticCallbackPaste indicates that a compact callback response
-// could not be decoded or its copy-check checksum did not match.
+// ErrInvalidStaticCallbackPaste reports invalid paste data or checksum mismatch.
 var ErrInvalidStaticCallbackPaste = errors.New("invalid static callback paste value")
 
-// DecodeStaticCallbackPaste decodes the hosted callback page's v1 compact
-// response using the state from the active OAuth transaction. expectedIssuer
-// is the issuer from discovery when authorization_response_iss_parameter_supported
-// is true; pass an empty string when the server does not support the parameter.
-// The four-byte checksum detects copy errors only; it is not an integrity check.
+// DecodeStaticCallbackPaste decodes a paste using the transaction state.
+// Pass the discovered issuer when
+// authorization_response_iss_parameter_supported is true. Use an empty string
+// when it is false. The checksum detects copy errors.
+// TODO(CLOUDP-459032): Wire this into the new --noBrowser auth flow.
 func DecodeStaticCallbackPaste(value, state, expectedIssuer string) (string, error) {
 	if state == "" {
 		return "", ErrInvalidStaticCallbackPaste

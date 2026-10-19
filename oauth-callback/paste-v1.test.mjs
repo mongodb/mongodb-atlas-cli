@@ -103,8 +103,10 @@ test("inline CSP hashes match the page assets and NGINX headers", () => {
 test("page encoder matches the shared Go decoder vector and clears the callback URL", async () => {
   assert.equal(vectors.format, "atlas-cli-paste");
   assert.equal(vectors.version, "1");
+  assert.ok(vectors.vectors.some((vector) => vector.issuer === ""), "vectors must cover callbacks without an issuer");
   for (const vector of vectors.vectors) {
-    const query = new URLSearchParams({ code: vector.code, state: vector.state, iss: vector.issuer });
+    const query = new URLSearchParams({ code: vector.code, state: vector.state });
+    if (vector.issuer !== "") query.set("iss", vector.issuer);
     const page = await renderCallbackPage(`?${query}`);
 
     assert.equal(page.elements.get("payload").value, vector.paste);

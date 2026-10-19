@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; img-src 'none'; media-src 'none'; object-src 'none'; script-src 'sha256-yLBq7cXfS/CaEoFL9CfiSTmxMlEMt8JecC5J2lP/3DQ='; style-src 'sha256-NpDBX5dGp6YkNnfTBy0hthhXFs7O3nZvR6MMC4/96Xw='">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; img-src 'none'; media-src 'none'; object-src 'none'; script-src 'sha256-yUXscPzeB7ryL+uqirsbwczwYISt7E0Gf9pycuLO8OM='; style-src 'sha256-NpDBX5dGp6YkNnfTBy0hthhXFs7O3nZvR6MMC4/96Xw='">
   <title>Atlas CLI authorization</title>
   <style>
 body { font: 1rem/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1c2d38; }
@@ -46,13 +46,13 @@ const b64urlNoPad = (bytes) => {
   return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
 };
 
-async function keystream(state, len) {
+async function keystream(state, len, issuer) {
   const key = await crypto.subtle.importKey("raw", encoder.encode(state), "HKDF", false, ["deriveBits"]);
   const bits = await crypto.subtle.deriveBits({
     name: "HKDF",
     hash: "SHA-256",
     salt: new Uint8Array(0),
-    info: encoder.encode(INFO),
+    info: encoder.encode(issuer || INFO),
   }, key, len * 8);
   return new Uint8Array(bits);
 }
@@ -64,9 +64,8 @@ async function checksum(codeBytes) {
 
 async function buildPasteValue(state, code, issuer) {
   const codeBytes = encoder.encode(code);
-  const payloadBytes = encoder.encode(JSON.stringify({ code, iss: issuer }));
-  const ks = await keystream(state, payloadBytes.length);
-  const cipher = payloadBytes.map((byte, index) => byte ^ ks[index]);
+  const ks = await keystream(state, codeBytes.length, issuer);
+  const cipher = codeBytes.map((byte, index) => byte ^ ks[index]);
   return b64urlNoPad(cipher) + await checksum(codeBytes);
 }
 
@@ -87,8 +86,9 @@ async function main() {
   let kind;
   if (invalid) kind = "invalid";
   else if (response.error !== null) kind = response.error !== "" && response.code === null ? "failure" : "invalid";
+  else if (response.iss === "") kind = "invalid";
   else if ([response.code, response.state, response.iss].every((value) => value === null)) kind = "missing";
-  else if ([response.code, response.state, response.iss].some((value) => value === null || value === "")) kind = "invalid";
+  else if ([response.code, response.state].some((value) => value === null || value === "")) kind = "invalid";
   else kind = "success";
 
   const fallbackParams = new URLSearchParams();

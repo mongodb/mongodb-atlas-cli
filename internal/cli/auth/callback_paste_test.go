@@ -51,10 +51,9 @@ func loadStaticCallbackPasteVectors(t *testing.T) []staticCallbackPasteVector {
 func TestDecodeStaticCallbackPaste(t *testing.T) {
 	for _, vector := range loadStaticCallbackPasteVectors(t) {
 		t.Run(vector.Name, func(t *testing.T) {
-			got, err := DecodeStaticCallbackPaste(vector.Paste, vector.State)
+			got, err := DecodeStaticCallbackPaste(vector.Paste, vector.State, vector.Issuer)
 			require.NoError(t, err)
-			require.Equal(t, vector.Code, got.Code)
-			require.Equal(t, vector.Issuer, got.Issuer)
+			require.Equal(t, vector.Code, got)
 		})
 	}
 }
@@ -67,18 +66,20 @@ func TestDecodeStaticCallbackPasteRejectsInvalidValues(t *testing.T) {
 	}
 
 	tests := []struct {
-		name  string
-		paste string
-		state string
+		name   string
+		paste  string
+		state  string
+		issuer string
 	}{
-		{name: "empty state", paste: vector.Paste},
-		{name: "wrong state", paste: vector.Paste, state: vector.State + "wrong"},
-		{name: "invalid base64", paste: "!abcd", state: vector.State},
-		{name: "incorrect checksum", paste: badChecksum, state: vector.State},
+		{name: "empty state", paste: vector.Paste, issuer: vector.Issuer},
+		{name: "wrong state", paste: vector.Paste, state: vector.State + "wrong", issuer: vector.Issuer},
+		{name: "wrong issuer", paste: vector.Paste, state: vector.State, issuer: vector.Issuer + "/wrong"},
+		{name: "invalid base64", paste: "!abcd", state: vector.State, issuer: vector.Issuer},
+		{name: "incorrect checksum", paste: badChecksum, state: vector.State, issuer: vector.Issuer},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := DecodeStaticCallbackPaste(tt.paste, tt.state)
+			_, err := DecodeStaticCallbackPaste(tt.paste, tt.state, tt.issuer)
 			require.ErrorIs(t, err, ErrInvalidStaticCallbackPaste)
 		})
 	}

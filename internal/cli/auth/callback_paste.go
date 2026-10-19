@@ -15,20 +15,16 @@
 package auth
 
 import (
-	"bytes"
 	"crypto/hkdf"
 	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
-	"io"
 	"unicode/utf8"
 )
 
 const (
 	staticCallbackPasteFormat        = "atlas-cli-paste"
-	staticCallbackPasteInfo          = staticCallbackPasteFormat
 	staticCallbackPasteChecksumBytes = 4
 	maxStaticCallbackPayloadBytes    = 255 * sha256.Size
 )
@@ -37,43 +33,32 @@ const (
 // could not be decoded or its copy-check checksum did not match.
 var ErrInvalidStaticCallbackPaste = errors.New("invalid static callback paste value")
 
-// StaticCallbackResponse contains the authorization response fields packaged
-// by the hosted callback page. State and redirect validation remain the
-// responsibility of the active OAuth transaction.
-type StaticCallbackResponse struct {
-	Code   string
-	Issuer string
-}
-
-type staticCallbackPayload struct {
-	Code   string `json:"code"`
-	Issuer string `json:"iss"`
-}
-
 // DecodeStaticCallbackPaste decodes the hosted callback page's v1 compact
-// response using the state from the active OAuth transaction. The four-byte
-// checksum detects copy errors only; it is not an integrity check.
-func DecodeStaticCallbackPaste(value, state string) (StaticCallbackResponse, error) {
+// response using the state from the active OAuth transaction. expectedIssuer
+// is the issuer from discovery when authorization_response_iss_parameter_supported
+// is true; pass an empty string when the server does not support the parameter.
+// The four-byte checksum detects copy errors only; it is not an integrity check.
+func DecodeStaticCallbackPaste(value, state, expectedIssuer string) (string, error) {
 	if state == "" {
-		return StaticCallbackResponse{}, ErrInvalidStaticCallbackPaste
+		return "", ErrInvalidStaticCallbackPaste
 	}
 
-	payloadBytes, checksum, err := decryptStaticCallbackPaste(value, state)
+	codeBytes, checksum, err := decryptStaticCallbackPaste(value, state, expectedIssuer)
 	if err != nil {
-		return StaticCallbackResponse{}, err
+		return "", err
 	}
-	payload, err := decodeStaticCallbackPayload(payloadBytes)
-	if err != nil {
-		return StaticCallbackResponse{}, err
+	if !utf8.Valid(codeBytes) || len(codeBytes) == 0 {
+		return "", ErrInvalidStaticCallbackPaste
 	}
-	if !staticCallbackPasteChecksumMatches(payload.Code, checksum) {
-		return StaticCallbackResponse{}, ErrInvalidStaticCallbackPaste
+	code := string(codeBytes)
+	if !staticCallbackPasteChecksumMatches(code, checksum) {
+		return "", ErrInvalidStaticCallbackPaste
 	}
 
-	return StaticCallbackResponse(payload), nil
+	return code, nil
 }
 
-func decryptStaticCallbackPaste(value, state string) ([]byte, string, error) {
+func decryptStaticCallbackPaste(value, state, issuer string) ([]byte, string, error) {
 	encoded := value
 	maxEncodedBytes := base64.RawURLEncoding.EncodedLen(maxStaticCallbackPayloadBytes) + staticCallbackPasteChecksumBytes
 	if len(encoded) <= staticCallbackPasteChecksumBytes || len(encoded) > maxEncodedBytes {
@@ -87,36 +72,22 @@ func decryptStaticCallbackPaste(value, state string) ([]byte, string, error) {
 		return nil, "", ErrInvalidStaticCallbackPaste
 	}
 
-	stream, err := hkdf.Key(sha256.New, []byte(state), nil, staticCallbackPasteInfo, len(ciphertext))
+	stream, err := hkdf.Key(sha256.New, []byte(state), nil, staticCallbackPasteHKDFInfo(issuer), len(ciphertext))
 	if err != nil {
 		return nil, "", ErrInvalidStaticCallbackPaste
 	}
-	payloadBytes := make([]byte, len(ciphertext))
+	codeBytes := make([]byte, len(ciphertext))
 	for i, b := range ciphertext {
-		payloadBytes[i] = b ^ stream[i]
+		codeBytes[i] = b ^ stream[i]
 	}
-	return payloadBytes, checksum, nil
+	return codeBytes, checksum, nil
 }
 
-func decodeStaticCallbackPayload(payloadBytes []byte) (staticCallbackPayload, error) {
-	if !utf8.Valid(payloadBytes) {
-		return staticCallbackPayload{}, ErrInvalidStaticCallbackPaste
+func staticCallbackPasteHKDFInfo(issuer string) string {
+	if issuer != "" {
+		return issuer
 	}
-
-	decoder := json.NewDecoder(bytes.NewReader(payloadBytes))
-	decoder.DisallowUnknownFields()
-	var payload staticCallbackPayload
-	if err := decoder.Decode(&payload); err != nil {
-		return staticCallbackPayload{}, ErrInvalidStaticCallbackPaste
-	}
-	if err := decoder.Decode(&struct{}{}); !errors.Is(err, io.EOF) {
-		return staticCallbackPayload{}, ErrInvalidStaticCallbackPaste
-	}
-	if payload.Code == "" || payload.Issuer == "" {
-		return staticCallbackPayload{}, ErrInvalidStaticCallbackPaste
-	}
-
-	return payload, nil
+	return staticCallbackPasteFormat
 }
 
 func staticCallbackPasteChecksumMatches(code, checksum string) bool {

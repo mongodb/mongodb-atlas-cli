@@ -113,6 +113,35 @@ test("page encoder matches the shared Go decoder vector and clears the callback 
     assert.equal(page.elements.get("payload-section").hidden, false);
     assert.equal(page.elements.get("callback-section").hidden, true);
     assert.equal(page.elements.get("callback-page").dataset.queryCleared, "true");
+
+    if (vector.issuer === "") {
+      const blankIssuerQuery = new URLSearchParams(query);
+      blankIssuerQuery.set("iss", "");
+      const blankIssuerPage = await renderCallbackPage(`?${blankIssuerQuery}`);
+
+      assert.equal(blankIssuerPage.elements.get("payload").value, vector.paste);
+      assert.equal(blankIssuerPage.elements.get("callback-page").dataset.resultKind, "success");
+    }
+  }
+});
+
+test("malformed code and state parameters do not produce a paste", async () => {
+  const issuer = "https%3A%2F%2Fauthorize.mongodb.com";
+  const invalidResponses = [
+    ["missing code", `?state=state-123&iss=${issuer}`],
+    ["missing state", `?code=code-123&iss=${issuer}`],
+    ["empty code", `?code=&state=state-123&iss=${issuer}`],
+    ["empty state", `?code=code-123&state=&iss=${issuer}`],
+    ["duplicate code", `?code=first&code=second&state=state-123&iss=${issuer}`],
+    ["duplicate state", `?code=code-123&state=first&state=second&iss=${issuer}`],
+  ];
+
+  for (const [name, query] of invalidResponses) {
+    const page = await renderCallbackPage(query);
+
+    assert.equal(page.elements.get("callback-page").dataset.resultKind, "invalid", name);
+    assert.equal(page.elements.get("payload-section").hidden, true, name);
+    assert.equal(page.elements.get("status").textContent, "Authorization could not be completed. Return to the Atlas CLI and try again.", name);
   }
 });
 

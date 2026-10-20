@@ -75,7 +75,7 @@ jobs:
       - name: set Apix Bot token
         if: env.FILES_CHANGED == 'true'
         id: app-token
-        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/token@26969e1bb333b00a8c3a776f4f822a3ce01a667a
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

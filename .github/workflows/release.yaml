@@ -138,7 +138,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       - name: Set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/token@26969e1bb333b00a8c3a776f4f822a3ce01a667a
         with:
           app-id: ${{ steps.load-secrets.outputs.APP_ID }}
           private-key: ${{ steps.decode-app-secret.outputs.APP_PEM }}
@@ -174,7 +174,7 @@ jobs:
 
       - name: Find the rolling next fix version
         id: find-next-version
-        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
+        uses: mongodb/apix-action/get-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -205,7 +205,7 @@ jobs:
 
       - name: Find the release fix version
         id: find-release-version
-        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
+        uses: mongodb/apix-action/get-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -222,7 +222,7 @@ jobs:
       # after a partial failure does not rename the rolling version twice.
       - name: Rename the rolling next fix version to the release fix version
         if: steps.find-release-version.outputs.found != 'true'
-        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/update-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.next-version.outputs.id }}
@@ -232,7 +232,7 @@ jobs:
       # already there) so the next release has somewhere to go.
       - name: Find the rolling next fix version after the rename
         id: find-next-version-after
-        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
+        uses: mongodb/apix-action/get-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -259,7 +259,7 @@ jobs:
       - name: Create release ticket
         id: create-release
         if: steps.find-release.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -357,7 +357,7 @@ jobs:
 
       - name: Move still-open tickets back to the rolling next fix version
         if: steps.to-move.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/update-jira@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-keys.outputs.keys }}
@@ -386,7 +386,7 @@ jobs:
 
       - name: Move shipped tickets to the release fix version
         if: steps.to-move-shipped.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/update-jira@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-keys: ${{ steps.to-move-shipped-keys.outputs.keys }}
@@ -434,7 +434,7 @@ jobs:
       - name: Create release notes ticket
         id: create-notes
         if: steps.find-notes.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: DOCSP

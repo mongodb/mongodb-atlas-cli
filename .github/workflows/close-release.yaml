@@ -73,7 +73,7 @@ jobs:
 
       - name: Find the fix version
         id: find-version
-        uses: mongodb/apix-action/get-jira-version@6a3c7fba766bbb6c9c293d5c4a622e6a4c3c50f6
+        uses: mongodb/apix-action/get-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -111,7 +111,7 @@ jobs:
 
       - name: Mark the fix version released
         if: steps.find-version.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira-version@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/update-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.find-version.outputs.version-id }}

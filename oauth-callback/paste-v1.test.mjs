@@ -30,6 +30,7 @@ async function renderCallbackPage(search) {
     "payload-section",
     "payload",
     "payload-copy-status",
+    "cli-acceptance-hint",
     "copy-payload",
     "callback-section",
     "callback-url",
@@ -41,7 +42,10 @@ async function renderCallbackPage(search) {
     hidden: true,
     value: "",
     textContent: "",
-    addEventListener() {},
+    listeners: {},
+    addEventListener(event, callback) {
+      this.listeners[event] = callback;
+    },
     focus() {},
     select() {},
   }]));
@@ -123,6 +127,17 @@ test("page encoder matches the shared Go decoder vector and clears the callback 
       assert.equal(blankIssuerPage.elements.get("callback-page").dataset.resultKind, "success");
     }
   }
+});
+
+test("copying a response reveals the close hint", async () => {
+  const query = new URLSearchParams({ code: "synthetic", state: "synthetic", iss: "https://authorize.mongodb.com" });
+  const page = await renderCallbackPage(`?${query}`);
+  const hint = page.elements.get("cli-acceptance-hint");
+
+  assert.equal(hint.hidden, true);
+  await page.elements.get("copy-payload").listeners.click();
+  assert.equal(page.elements.get("payload-copy-status").textContent, "Copied.");
+  assert.equal(hint.hidden, false);
 });
 
 test("malformed code and state parameters do not produce a paste", async () => {

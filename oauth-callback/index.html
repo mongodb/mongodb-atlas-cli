@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; img-src 'none'; media-src 'none'; object-src 'none'; script-src 'sha256-2SskL11L68a9uZB0gDIlQfX77ZIXySOTPMYTtruakdc='; style-src 'sha256-NpDBX5dGp6YkNnfTBy0hthhXFs7O3nZvR6MMC4/96Xw='">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; img-src 'none'; media-src 'none'; object-src 'none'; script-src 'sha256-A+u22DIE/viB32WqqYNElG4nWm+B0ieHqYt3b7E+j+o='; style-src 'sha256-NpDBX5dGp6YkNnfTBy0hthhXFs7O3nZvR6MMC4/96Xw='">
   <title>Atlas CLI authorization</title>
   <style>
 body { font: 1rem/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1c2d38; }
@@ -20,10 +20,10 @@ button { margin: .25rem 0; padding: .4rem .7rem; font: inherit; }
     <h1>Finish authorization in the Atlas CLI</h1>
     <p id="status" role="status" aria-live="polite">Reading the authorization response…</p>
     <section id="payload-section" hidden>
-      <label for="payload">Response to paste into Atlas CLI</label>
-      <textarea id="payload" rows="5" readonly></textarea>
-      <button id="copy-payload" type="button">Copy response</button>
+      <textarea id="payload" aria-label="Authorization code to paste into Atlas CLI" rows="5" readonly></textarea>
+      <button id="copy-payload" type="button">Copy code</button>
       <span id="payload-copy-status" aria-live="polite"></span>
+      <p id="cli-acceptance-hint" hidden>You can close this page once the CLI accepts the code.</p>
     </section>
     <section id="callback-section" hidden>
       <label for="callback-url">Full callback URL fallback</label>
@@ -105,6 +105,8 @@ async function main() {
   const status = document.getElementById("status");
   const payloadSection = document.getElementById("payload-section");
   const payload = document.getElementById("payload");
+  const payloadCopyStatus = document.getElementById("payload-copy-status");
+  const cliAcceptanceHint = document.getElementById("cli-acceptance-hint");
   const callbackSection = document.getElementById("callback-section");
   const callbackUrl = document.getElementById("callback-url");
   payloadSection.hidden = true;
@@ -132,8 +134,11 @@ async function main() {
       const paste = await buildPasteValue(response.state, response.code, response.iss);
       payload.value = paste;
       payloadSection.hidden = false;
-      status.textContent = "Your response is ready. Copy it and paste it back into Atlas CLI to finish signing in.";
-      document.getElementById("copy-payload").addEventListener("click", () => copy(payload, document.getElementById("payload-copy-status")));
+      status.textContent = "Paste this code into the waiting Atlas CLI prompt:";
+      document.getElementById("copy-payload").addEventListener("click", async () => {
+        await copy(payload, payloadCopyStatus);
+        cliAcceptanceHint.hidden = false;
+      });
     } catch {
       status.textContent = "The response could not be packaged. Paste the full callback URL into the CLI.";
       showCallbackFallback();

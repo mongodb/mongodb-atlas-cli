@@ -42,7 +42,7 @@ func loadStaticCallbackPasteVectors(t *testing.T) []staticCallbackPasteVector {
 		Vectors []staticCallbackPasteVector `json:"vectors"`
 	}
 	require.NoError(t, json.Unmarshal(data, &fixture))
-	require.Equal(t, staticCallbackPasteFormat, fixture.Format)
+	require.Equal(t, fallbackHKDFInfo, fixture.Format)
 	require.Equal(t, "1", fixture.Version)
 	require.NotEmpty(t, fixture.Vectors)
 	return fixture.Vectors

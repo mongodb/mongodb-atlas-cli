@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	staticCallbackPasteFormat        = "atlas-cli-paste"
+	fallbackHKDFInfo                 = "atlas-cli-paste"
 	staticCallbackPasteChecksumBytes = 4
 	maxStaticCallbackPayloadBytes    = 255 * sha256.Size
 )
@@ -86,7 +86,7 @@ func staticCallbackPasteHKDFInfo(issuer string) string {
 	if issuer != "" {
 		return issuer
 	}
-	return staticCallbackPasteFormat
+	return fallbackHKDFInfo
 }
 
 func staticCallbackPasteChecksumMatches(code, checksum string) bool {

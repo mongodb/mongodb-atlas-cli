@@ -1,0 +1,4 @@
+replicaCount: 2
+ingress:
+  hosts:
+    - atlas-cli-oauth-callback.apix.prod.corp.mongodb.com

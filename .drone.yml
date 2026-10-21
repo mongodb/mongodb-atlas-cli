@@ -1,0 +1,103 @@
+kind: pipeline
+type: kubernetes
+name: pull-request-callback-tests
+platform:
+  arch: arm64
+
+trigger:
+  branch:
+    - master
+  event:
+    - pull_request
+  paths:
+    include:
+      - .drone.yml
+      - build/kanopy/**
+
+steps:
+  - name: test-callback-page
+    image: node:22-alpine
+    commands:
+      - node --test build/kanopy/tests/paste-v1.test.mjs
+
+---
+kind: pipeline
+type: kubernetes
+name: master-callback-deploy
+platform:
+  arch: arm64
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+  paths:
+    include:
+      - .drone.yml
+      - build/kanopy/Dockerfile
+      - build/kanopy/.dockerignore
+      - build/kanopy/nginx.conf
+      - build/kanopy/environments/**
+      - build/kanopy/oauth-callback/index.html
+
+steps:
+  - name: test-callback-page
+    image: node:22-alpine
+    commands:
+      - node --test build/kanopy/tests/paste-v1.test.mjs
+
+  - name: publish
+    image: plugins/kaniko-ecr
+    depends_on:
+      - test-callback-page
+    settings:
+      create_repository: true
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
+      repo: apix/atlas-cli-oauth-callback
+      dockerfile: build/kanopy/Dockerfile
+      context: build/kanopy
+      tags:
+        - git-${DRONE_COMMIT_SHA:0:7}
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+
+  - name: deploy-staging
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    depends_on:
+      - publish
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.37.1
+      add_repos:
+        - mongodb=https://10gen.github.io/helm-charts
+      namespace: apix
+      release: atlas-cli-oauth-callback
+      values_files:
+        - build/kanopy/environments/common.yaml
+        - build/kanopy/environments/staging.yaml
+      values: "image.tag=git-${DRONE_COMMIT_SHA:0:7},image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/apix/atlas-cli-oauth-callback"
+      api_server: https://api.staging.corp.mongodb.com
+      kubernetes_token:
+        from_secret: staging_kubernetes_token
+
+  - name: deploy-prod
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    depends_on:
+      - deploy-staging
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.37.1
+      add_repos:
+        - mongodb=https://10gen.github.io/helm-charts
+      namespace: apix
+      release: atlas-cli-oauth-callback
+      values_files:
+        - build/kanopy/environments/common.yaml
+        - build/kanopy/environments/production.yaml
+      values: "image.tag=git-${DRONE_COMMIT_SHA:0:7},image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/apix/atlas-cli-oauth-callback"
+      api_server: https://api.prod.corp.mongodb.com
+      kubernetes_token:
+        from_secret: prod_kubernetes_token

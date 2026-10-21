@@ -10,10 +10,13 @@
 package auth
 
 import (
+	context "context"
+	url "net/url"
 	reflect "reflect"
 
 	survey "github.com/AlecAivazis/survey/v2"
 	config "github.com/mongodb/atlas-cli-core/config"
+	code "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -75,6 +78,44 @@ func (c *MockSetSaverSaveCall) Do(f func() error) *MockSetSaverSaveCall {
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockSetSaverSaveCall) DoAndReturn(f func() error) *MockSetSaverSaveCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// Service mocks base method.
+func (m *MockSetSaver) Service() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Service")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Service indicates an expected call of Service.
+func (mr *MockSetSaverMockRecorder) Service() *MockSetSaverServiceCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Service", reflect.TypeOf((*MockSetSaver)(nil).Service))
+	return &MockSetSaverServiceCall{Call: call}
+}
+
+// MockSetSaverServiceCall wrap *gomock.Call
+type MockSetSaverServiceCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockSetSaverServiceCall) Return(arg0 string) *MockSetSaverServiceCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockSetSaverServiceCall) Do(f func() string) *MockSetSaverServiceCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockSetSaverServiceCall) DoAndReturn(f func() string) *MockSetSaverServiceCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -511,6 +552,42 @@ func (c *MockSetSaverSetServiceCall) DoAndReturn(f func(string)) *MockSetSaverSe
 	return c
 }
 
+// SetTokenExpiry mocks base method.
+func (m *MockSetSaver) SetTokenExpiry(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetTokenExpiry", arg0)
+}
+
+// SetTokenExpiry indicates an expected call of SetTokenExpiry.
+func (mr *MockSetSaverMockRecorder) SetTokenExpiry(arg0 any) *MockSetSaverSetTokenExpiryCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTokenExpiry", reflect.TypeOf((*MockSetSaver)(nil).SetTokenExpiry), arg0)
+	return &MockSetSaverSetTokenExpiryCall{Call: call}
+}
+
+// MockSetSaverSetTokenExpiryCall wrap *gomock.Call
+type MockSetSaverSetTokenExpiryCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockSetSaverSetTokenExpiryCall) Return() *MockSetSaverSetTokenExpiryCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockSetSaverSetTokenExpiryCall) Do(f func(string)) *MockSetSaverSetTokenExpiryCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockSetSaverSetTokenExpiryCall) DoAndReturn(f func(string)) *MockSetSaverSetTokenExpiryCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // MockLoginConfig is a mock of LoginConfig interface.
 type MockLoginConfig struct {
 	ctrl     *gomock.Controller
@@ -570,6 +647,83 @@ func (c *MockLoginConfigAccessTokenSubjectCall) Do(f func() (string, error)) *Mo
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockLoginConfigAccessTokenSubjectCall) DoAndReturn(f func() (string, error)) *MockLoginConfigAccessTokenSubjectCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// AuthServerMetadata mocks base method.
+func (m *MockLoginConfig) AuthServerMetadata() (*code.AuthServerMetadata, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthServerMetadata")
+	ret0, _ := ret[0].(*code.AuthServerMetadata)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthServerMetadata indicates an expected call of AuthServerMetadata.
+func (mr *MockLoginConfigMockRecorder) AuthServerMetadata() *MockLoginConfigAuthServerMetadataCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthServerMetadata", reflect.TypeOf((*MockLoginConfig)(nil).AuthServerMetadata))
+	return &MockLoginConfigAuthServerMetadataCall{Call: call}
+}
+
+// MockLoginConfigAuthServerMetadataCall wrap *gomock.Call
+type MockLoginConfigAuthServerMetadataCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigAuthServerMetadataCall) Return(arg0 *code.AuthServerMetadata, arg1 error) *MockLoginConfigAuthServerMetadataCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigAuthServerMetadataCall) Do(f func() (*code.AuthServerMetadata, error)) *MockLoginConfigAuthServerMetadataCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigAuthServerMetadataCall) DoAndReturn(f func() (*code.AuthServerMetadata, error)) *MockLoginConfigAuthServerMetadataCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// AuthServerURL mocks base method.
+func (m *MockLoginConfig) AuthServerURL() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthServerURL")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AuthServerURL indicates an expected call of AuthServerURL.
+func (mr *MockLoginConfigMockRecorder) AuthServerURL() *MockLoginConfigAuthServerURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthServerURL", reflect.TypeOf((*MockLoginConfig)(nil).AuthServerURL))
+	return &MockLoginConfigAuthServerURLCall{Call: call}
+}
+
+// MockLoginConfigAuthServerURLCall wrap *gomock.Call
+type MockLoginConfigAuthServerURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigAuthServerURLCall) Return(arg0 string) *MockLoginConfigAuthServerURLCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigAuthServerURLCall) Do(f func() string) *MockLoginConfigAuthServerURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigAuthServerURLCall) DoAndReturn(f func() string) *MockLoginConfigAuthServerURLCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -688,6 +842,44 @@ func (c *MockLoginConfigSaveCall) DoAndReturn(f func() error) *MockLoginConfigSa
 	return c
 }
 
+// Service mocks base method.
+func (m *MockLoginConfig) Service() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Service")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Service indicates an expected call of Service.
+func (mr *MockLoginConfigMockRecorder) Service() *MockLoginConfigServiceCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Service", reflect.TypeOf((*MockLoginConfig)(nil).Service))
+	return &MockLoginConfigServiceCall{Call: call}
+}
+
+// MockLoginConfigServiceCall wrap *gomock.Call
+type MockLoginConfigServiceCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigServiceCall) Return(arg0 string) *MockLoginConfigServiceCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigServiceCall) Do(f func() string) *MockLoginConfigServiceCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigServiceCall) DoAndReturn(f func() string) *MockLoginConfigServiceCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // SetAccessToken mocks base method.
 func (m *MockLoginConfig) SetAccessToken(arg0 string) {
 	m.ctrl.T.Helper()
@@ -720,6 +912,80 @@ func (c *MockLoginConfigSetAccessTokenCall) Do(f func(string)) *MockLoginConfigS
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockLoginConfigSetAccessTokenCall) DoAndReturn(f func(string)) *MockLoginConfigSetAccessTokenCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetAuthServerMetadata mocks base method.
+func (m *MockLoginConfig) SetAuthServerMetadata(arg0 *code.AuthServerMetadata) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetAuthServerMetadata", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetAuthServerMetadata indicates an expected call of SetAuthServerMetadata.
+func (mr *MockLoginConfigMockRecorder) SetAuthServerMetadata(arg0 any) *MockLoginConfigSetAuthServerMetadataCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthServerMetadata", reflect.TypeOf((*MockLoginConfig)(nil).SetAuthServerMetadata), arg0)
+	return &MockLoginConfigSetAuthServerMetadataCall{Call: call}
+}
+
+// MockLoginConfigSetAuthServerMetadataCall wrap *gomock.Call
+type MockLoginConfigSetAuthServerMetadataCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetAuthServerMetadataCall) Return(arg0 error) *MockLoginConfigSetAuthServerMetadataCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetAuthServerMetadataCall) Do(f func(*code.AuthServerMetadata) error) *MockLoginConfigSetAuthServerMetadataCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetAuthServerMetadataCall) DoAndReturn(f func(*code.AuthServerMetadata) error) *MockLoginConfigSetAuthServerMetadataCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetAuthServerURL mocks base method.
+func (m *MockLoginConfig) SetAuthServerURL(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAuthServerURL", arg0)
+}
+
+// SetAuthServerURL indicates an expected call of SetAuthServerURL.
+func (mr *MockLoginConfigMockRecorder) SetAuthServerURL(arg0 any) *MockLoginConfigSetAuthServerURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthServerURL", reflect.TypeOf((*MockLoginConfig)(nil).SetAuthServerURL), arg0)
+	return &MockLoginConfigSetAuthServerURLCall{Call: call}
+}
+
+// MockLoginConfigSetAuthServerURLCall wrap *gomock.Call
+type MockLoginConfigSetAuthServerURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetAuthServerURLCall) Return() *MockLoginConfigSetAuthServerURLCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetAuthServerURLCall) Do(f func(string)) *MockLoginConfigSetAuthServerURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetAuthServerURLCall) DoAndReturn(f func(string)) *MockLoginConfigSetAuthServerURLCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -1120,6 +1386,42 @@ func (c *MockLoginConfigSetServiceCall) DoAndReturn(f func(string)) *MockLoginCo
 	return c
 }
 
+// SetTokenExpiry mocks base method.
+func (m *MockLoginConfig) SetTokenExpiry(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetTokenExpiry", arg0)
+}
+
+// SetTokenExpiry indicates an expected call of SetTokenExpiry.
+func (mr *MockLoginConfigMockRecorder) SetTokenExpiry(arg0 any) *MockLoginConfigSetTokenExpiryCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTokenExpiry", reflect.TypeOf((*MockLoginConfig)(nil).SetTokenExpiry), arg0)
+	return &MockLoginConfigSetTokenExpiryCall{Call: call}
+}
+
+// MockLoginConfigSetTokenExpiryCall wrap *gomock.Call
+type MockLoginConfigSetTokenExpiryCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockLoginConfigSetTokenExpiryCall) Return() *MockLoginConfigSetTokenExpiryCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockLoginConfigSetTokenExpiryCall) Do(f func(string)) *MockLoginConfigSetTokenExpiryCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockLoginConfigSetTokenExpiryCall) DoAndReturn(f func(string)) *MockLoginConfigSetTokenExpiryCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // MockTrackAsker is a mock of TrackAsker interface.
 type MockTrackAsker struct {
 	ctrl     *gomock.Controller
@@ -1226,6 +1528,185 @@ func (c *MockTrackAskerTrackAskOneCall) Do(f func(survey.Prompt, any, ...survey.
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockTrackAskerTrackAskOneCall) DoAndReturn(f func(survey.Prompt, any, ...survey.AskOpt) error) *MockTrackAskerTrackAskOneCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// MockAuthorizationCodeFlow is a mock of AuthorizationCodeFlow interface.
+type MockAuthorizationCodeFlow struct {
+	ctrl     *gomock.Controller
+	recorder *MockAuthorizationCodeFlowMockRecorder
+	isgomock struct{}
+}
+
+// MockAuthorizationCodeFlowMockRecorder is the mock recorder for MockAuthorizationCodeFlow.
+type MockAuthorizationCodeFlowMockRecorder struct {
+	mock *MockAuthorizationCodeFlow
+}
+
+// NewMockAuthorizationCodeFlow creates a new mock instance.
+func NewMockAuthorizationCodeFlow(ctrl *gomock.Controller) *MockAuthorizationCodeFlow {
+	mock := &MockAuthorizationCodeFlow{ctrl: ctrl}
+	mock.recorder = &MockAuthorizationCodeFlowMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockAuthorizationCodeFlow) EXPECT() *MockAuthorizationCodeFlowMockRecorder {
+	return m.recorder
+}
+
+// AuthServerURL mocks base method.
+func (m *MockAuthorizationCodeFlow) AuthServerURL() *url.URL {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthServerURL")
+	ret0, _ := ret[0].(*url.URL)
+	return ret0
+}
+
+// AuthServerURL indicates an expected call of AuthServerURL.
+func (mr *MockAuthorizationCodeFlowMockRecorder) AuthServerURL() *MockAuthorizationCodeFlowAuthServerURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthServerURL", reflect.TypeOf((*MockAuthorizationCodeFlow)(nil).AuthServerURL))
+	return &MockAuthorizationCodeFlowAuthServerURLCall{Call: call}
+}
+
+// MockAuthorizationCodeFlowAuthServerURLCall wrap *gomock.Call
+type MockAuthorizationCodeFlowAuthServerURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAuthorizationCodeFlowAuthServerURLCall) Return(arg0 *url.URL) *MockAuthorizationCodeFlowAuthServerURLCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAuthorizationCodeFlowAuthServerURLCall) Do(f func() *url.URL) *MockAuthorizationCodeFlowAuthServerURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAuthorizationCodeFlowAuthServerURLCall) DoAndReturn(f func() *url.URL) *MockAuthorizationCodeFlowAuthServerURLCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// AuthorizationURL mocks base method.
+func (m *MockAuthorizationCodeFlow) AuthorizationURL(metadata *code.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthorizationURL", metadata, redirectURI, state, codeVerifier)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthorizationURL indicates an expected call of AuthorizationURL.
+func (mr *MockAuthorizationCodeFlowMockRecorder) AuthorizationURL(metadata, redirectURI, state, codeVerifier any) *MockAuthorizationCodeFlowAuthorizationURLCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthorizationURL", reflect.TypeOf((*MockAuthorizationCodeFlow)(nil).AuthorizationURL), metadata, redirectURI, state, codeVerifier)
+	return &MockAuthorizationCodeFlowAuthorizationURLCall{Call: call}
+}
+
+// MockAuthorizationCodeFlowAuthorizationURLCall wrap *gomock.Call
+type MockAuthorizationCodeFlowAuthorizationURLCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAuthorizationCodeFlowAuthorizationURLCall) Return(arg0 string, arg1 error) *MockAuthorizationCodeFlowAuthorizationURLCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAuthorizationCodeFlowAuthorizationURLCall) Do(f func(*code.AuthServerMetadata, string, string, string) (string, error)) *MockAuthorizationCodeFlowAuthorizationURLCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAuthorizationCodeFlowAuthorizationURLCall) DoAndReturn(f func(*code.AuthServerMetadata, string, string, string) (string, error)) *MockAuthorizationCodeFlowAuthorizationURLCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// DiscoverAuthServer mocks base method.
+func (m *MockAuthorizationCodeFlow) DiscoverAuthServer(arg0 context.Context) (*code.AuthServerMetadata, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DiscoverAuthServer", arg0)
+	ret0, _ := ret[0].(*code.AuthServerMetadata)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DiscoverAuthServer indicates an expected call of DiscoverAuthServer.
+func (mr *MockAuthorizationCodeFlowMockRecorder) DiscoverAuthServer(arg0 any) *MockAuthorizationCodeFlowDiscoverAuthServerCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DiscoverAuthServer", reflect.TypeOf((*MockAuthorizationCodeFlow)(nil).DiscoverAuthServer), arg0)
+	return &MockAuthorizationCodeFlowDiscoverAuthServerCall{Call: call}
+}
+
+// MockAuthorizationCodeFlowDiscoverAuthServerCall wrap *gomock.Call
+type MockAuthorizationCodeFlowDiscoverAuthServerCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAuthorizationCodeFlowDiscoverAuthServerCall) Return(arg0 *code.AuthServerMetadata, arg1 error) *MockAuthorizationCodeFlowDiscoverAuthServerCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAuthorizationCodeFlowDiscoverAuthServerCall) Do(f func(context.Context) (*code.AuthServerMetadata, error)) *MockAuthorizationCodeFlowDiscoverAuthServerCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAuthorizationCodeFlowDiscoverAuthServerCall) DoAndReturn(f func(context.Context) (*code.AuthServerMetadata, error)) *MockAuthorizationCodeFlowDiscoverAuthServerCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// ExchangeCode mocks base method.
+func (m *MockAuthorizationCodeFlow) ExchangeCode(ctx context.Context, metadata *code.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*code.Token, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExchangeCode", ctx, metadata, authorizationCode, redirectURI, codeVerifier)
+	ret0, _ := ret[0].(*code.Token)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ExchangeCode indicates an expected call of ExchangeCode.
+func (mr *MockAuthorizationCodeFlowMockRecorder) ExchangeCode(ctx, metadata, authorizationCode, redirectURI, codeVerifier any) *MockAuthorizationCodeFlowExchangeCodeCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExchangeCode", reflect.TypeOf((*MockAuthorizationCodeFlow)(nil).ExchangeCode), ctx, metadata, authorizationCode, redirectURI, codeVerifier)
+	return &MockAuthorizationCodeFlowExchangeCodeCall{Call: call}
+}
+
+// MockAuthorizationCodeFlowExchangeCodeCall wrap *gomock.Call
+type MockAuthorizationCodeFlowExchangeCodeCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAuthorizationCodeFlowExchangeCodeCall) Return(arg0 *code.Token, arg1 error) *MockAuthorizationCodeFlowExchangeCodeCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAuthorizationCodeFlowExchangeCodeCall) Do(f func(context.Context, *code.AuthServerMetadata, string, string, string) (*code.Token, error)) *MockAuthorizationCodeFlowExchangeCodeCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAuthorizationCodeFlowExchangeCodeCall) DoAndReturn(f func(context.Context, *code.AuthServerMetadata, string, string, string) (*code.Token, error)) *MockAuthorizationCodeFlowExchangeCodeCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -56,6 +56,7 @@ func NewDefaultMigrator() *Migrator {
 
 	migrations := []MigrationFunc{
 		NewMigrateToVersion2(),
+		NewMigrateToVersion3(),
 	}
 
 	return NewMigrator(dependencies, migrations)

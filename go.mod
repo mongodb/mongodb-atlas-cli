@@ -206,3 +206,7 @@ tool (
 	go.uber.org/mock/mockgen
 	gotest.tools/gotestsum
 )
+
+replace github.com/mongodb/atlas-cli-core => ../atlas-cli-core
+
+replace go.mongodb.org/atlas-sdk/v20250312027 => ../atlas-sdk-go

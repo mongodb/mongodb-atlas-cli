@@ -103,7 +103,7 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	}
 
 	switch opts.config.AuthType() {
-	case config.UserAccount:
+	case config.UserAccount, config.UserAccountLegacy:
 		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
 		if err != nil {
 			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
@@ -180,7 +180,7 @@ func LogoutBuilder() *cobra.Command {
 				message = logoutMessage + " with public API key " + opts.config.PublicAPIKey() + "?"
 			case config.ServiceAccount:
 				message = logoutMessage + " with service account " + opts.config.ClientID() + "?"
-			case config.UserAccount:
+			case config.UserAccount, config.UserAccountLegacy:
 				subject, err := opts.config.AccessTokenSubject()
 				if err != nil {
 					return err

@@ -12,14 +12,13 @@ trigger:
   paths:
     include:
       - .drone.yml
-      - kanopy/**
-      - oauth-callback/**
+      - build/kanopy/**
 
 steps:
   - name: test-callback-page
     image: node:22-alpine
     commands:
-      - node --test oauth-callback/paste-v1.test.mjs
+      - node --test build/kanopy/tests/paste-v1.test.mjs
 
 ---
 kind: pipeline
@@ -36,35 +35,28 @@ trigger:
   paths:
     include:
       - .drone.yml
-      - kanopy/Dockerfile
-      - kanopy/nginx.conf
-      - kanopy/prepare-context.sh
-      - kanopy/environments/**
-      - oauth-callback/index.html
+      - build/kanopy/Dockerfile
+      - build/kanopy/.dockerignore
+      - build/kanopy/nginx.conf
+      - build/kanopy/environments/**
+      - build/kanopy/oauth-callback/index.html
 
 steps:
   - name: test-callback-page
     image: node:22-alpine
     commands:
-      - node --test oauth-callback/paste-v1.test.mjs
-
-  - name: prepare-image-context
-    image: alpine:3.22
-    depends_on:
-      - test-callback-page
-    commands:
-      - sh kanopy/prepare-context.sh
+      - node --test build/kanopy/tests/paste-v1.test.mjs
 
   - name: publish
     image: plugins/kaniko-ecr
     depends_on:
-      - prepare-image-context
+      - test-callback-page
     settings:
       create_repository: true
       registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
       repo: apix/atlas-cli-oauth-callback
-      dockerfile: kanopy/.context/Dockerfile
-      context: kanopy/.context
+      dockerfile: build/kanopy/Dockerfile
+      context: build/kanopy
       tags:
         - git-${DRONE_COMMIT_SHA:0:7}
       access_key:
@@ -84,8 +76,8 @@ steps:
       namespace: apix
       release: atlas-cli-oauth-callback
       values_files:
-        - kanopy/environments/common.yaml
-        - kanopy/environments/staging.yaml
+        - build/kanopy/environments/common.yaml
+        - build/kanopy/environments/staging.yaml
       values: "image.tag=git-${DRONE_COMMIT_SHA:0:7},image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/apix/atlas-cli-oauth-callback"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
@@ -103,8 +95,8 @@ steps:
       namespace: apix
       release: atlas-cli-oauth-callback
       values_files:
-        - kanopy/environments/common.yaml
-        - kanopy/environments/production.yaml
+        - build/kanopy/environments/common.yaml
+        - build/kanopy/environments/production.yaml
       values: "image.tag=git-${DRONE_COMMIT_SHA:0:7},image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/apix/atlas-cli-oauth-callback"
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:

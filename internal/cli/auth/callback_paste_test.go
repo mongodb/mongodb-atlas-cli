@@ -34,7 +34,7 @@ type staticCallbackPasteVector struct {
 func loadStaticCallbackPasteVectors(t *testing.T) []staticCallbackPasteVector {
 	t.Helper()
 
-	data, err := os.ReadFile("../../../oauth-callback/testdata/paste-v1.json")
+	data, err := os.ReadFile("../../../build/kanopy/testdata/paste-v1.json")
 	require.NoError(t, err)
 	var fixture struct {
 		Format  string                      `json:"format"`

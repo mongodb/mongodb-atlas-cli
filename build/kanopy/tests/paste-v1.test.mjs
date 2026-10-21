@@ -4,9 +4,9 @@ import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import vm from "node:vm";
 
-const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
-const nginx = await readFile(new URL("../kanopy/nginx.conf", import.meta.url), "utf8");
-const vectors = JSON.parse(await readFile(new URL("./testdata/paste-v1.json", import.meta.url), "utf8"));
+const html = await readFile(new URL("../oauth-callback/index.html", import.meta.url), "utf8");
+const nginx = await readFile(new URL("../nginx.conf", import.meta.url), "utf8");
+const vectors = JSON.parse(await readFile(new URL("../testdata/paste-v1.json", import.meta.url), "utf8"));
 
 function inlineContent(tag) {
   const opening = `<${tag}>`;

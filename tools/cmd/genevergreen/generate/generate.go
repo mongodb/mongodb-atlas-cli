@@ -38,7 +38,6 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"9.0": {"ubuntu2604"},
 		"8.3": {"suse16"},
 		"8.2": {"ubuntu2604", "suse16"},
 		"8.0": {"suse16"},

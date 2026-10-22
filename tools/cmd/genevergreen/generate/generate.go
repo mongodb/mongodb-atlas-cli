@@ -183,10 +183,6 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 				continue
 			}
 
-			if sv == "9.0" {
-				continue // TODO: CLOUDP-452069 Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
-			}
-
 			t := &shrub.Task{
 				Name: "pkg_test_atlascli_meta_docker_" + sv + "_" + os,
 			}

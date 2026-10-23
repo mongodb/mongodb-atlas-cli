@@ -41,7 +41,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	atlasBuilder := root.Builder()
+	atlasBuilder := root.Builder(true)
 
 	atlasBuilder.InitDefaultCompletionCmd()
 

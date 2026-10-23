@@ -1,0 +1,116 @@
+.. _atlas-skills-install:
+
+====================
+atlas skills install
+====================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Install MongoDB agent skills for Claude Code or Codex.
+
+Install a standalone MongoDB agent skill to the selected agent's personal skills directory.
+Use --all to install every standalone skill available in the upstream repository.
+Use --plugin mongodb-atlas to install the native Atlas plugin for Claude Code or Codex.
+Codex plugin/app installation is separate from its direct MCP server registry.
+Use a named skill or --all to install standalone Codex skills.
+
+Syntax
+------
+
+.. code-block::
+   :caption: Command Syntax
+
+   atlas skills install [skill-name] [options]
+
+.. Code end marker, please don't delete this comment
+
+Arguments
+---------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - skill-name
+     - string
+     - false
+     - Name of the standalone MongoDB agent skill to install.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - --agent
+     - string
+     - true
+     - Coding agent to install the skill for. Supported values are claude and codex.
+   * - --all
+     - 
+     - false
+     - Flag that installs all standalone skills available in the upstream repository.
+   * - -h, --help
+     - 
+     - false
+     - help for install
+   * - -o, --output
+     - string
+     - false
+     - Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option.
+   * - --plugin
+     - string
+     - false
+     - Name of the bundled agent plugin to install. Currently only mongodb-atlas is supported. Claude Code requires 2.1.281 or later; Codex uses its native plugin/app integration.
+
+Examples
+--------
+
+.. code-block::
+   :copyable: false
+
+   # Install one skill for Claude Code:
+   atlas skills install mongodb-schema-design --agent claude
+
+   
+.. code-block::
+   :copyable: false
+
+   # Install one skill for Codex:
+   atlas skills install mongodb-schema-design --agent codex
+
+   
+.. code-block::
+   :copyable: false
+
+   # Install all standalone skills for Codex:
+   atlas skills install --all --agent codex
+
+   
+.. code-block::
+   :copyable: false
+
+   # Install the Atlas plugin and its MCP server configuration:
+   atlas skills install --plugin mongodb-atlas --agent claude
+
+   
+.. code-block::
+   :copyable: false
+
+   # Install the Atlas plugin for Codex:
+   atlas skills install --plugin mongodb-atlas --agent codex

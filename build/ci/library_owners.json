@@ -53,6 +53,8 @@
 	"golang.org/x/net": "apix-devtools",
 	"golang.org/x/oauth2": "apix-devtools",
 	"golang.org/x/sys": "apix-devtools",
+	"golang.org/x/term": "apix-devtools",
+	"golang.org/x/text": "apix-devtools",
 	"golang.org/x/tools": "apix-devtools",
 	"google.golang.org/api": "apix-devtools",
 	"google.golang.org/grpc": "apix-devtools",

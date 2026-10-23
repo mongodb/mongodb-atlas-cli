@@ -59,7 +59,7 @@ func generateCmds(cmd *cobra.Command) map[string]cmdData {
 }
 
 func generateCmdRun(output io.Writer) error {
-	cliCmd := root.Builder()
+	cliCmd := root.Builder(true)
 	data := generateCmds(cliCmd)
 	return json.NewEncoder(output).Encode(data)
 }

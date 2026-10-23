@@ -1,0 +1,47 @@
+.. _atlas-skills:
+
+============
+atlas skills
+============
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Discover and install MongoDB agent skills for Claude Code or Codex.
+
+List MongoDB agent skills from the upstream repository and install them for Claude Code or Codex.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for skills
+
+Related Commands
+----------------
+
+* :ref:`atlas-skills-install` - Install MongoDB agent skills for Claude Code or Codex.
+* :ref:`atlas-skills-list` - List MongoDB agent skills available upstream.
+
+
+.. toctree::
+   :titlesonly:
+
+   install </command/atlas-skills-install>
+   list </command/atlas-skills-list>
+

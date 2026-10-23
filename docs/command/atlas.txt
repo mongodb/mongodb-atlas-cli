@@ -83,6 +83,7 @@ Related Commands
 * :ref:`atlas-projects` - Manage your Atlas projects.
 * :ref:`atlas-security` - Manage security configuration for your project.
 * :ref:`atlas-setup` - Login, authenticate, create, and access an Atlas cluster.
+* :ref:`atlas-skills` - Discover and install MongoDB agent skills for Claude Code or Codex.
 * :ref:`atlas-streams` - Manage your Atlas Stream Processing deployments.
 * :ref:`atlas-teams` - Manage your Atlas teams.
 * :ref:`atlas-users` - Manage your Atlas users.
@@ -124,6 +125,7 @@ Related Commands
    projects </command/atlas-projects>
    security </command/atlas-security>
    setup </command/atlas-setup>
+   skills </command/atlas-skills>
    streams </command/atlas-streams>
    teams </command/atlas-teams>
    users </command/atlas-users>

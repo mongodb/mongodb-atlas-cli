@@ -32,7 +32,7 @@ import (
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func execute(ctx context.Context, rootCmd *cobra.Command) {
+func execute(ctx context.Context, rootCmd *cobra.Command, skillsInvocation bool) {
 	// append here to avoid a recursive link on generated docs
 	rootCmd.Long += `
 
@@ -40,13 +40,12 @@ To learn more, see our documentation: https://www.mongodb.com/docs/atlas/cli/sta
 	if cmd, err := rootCmd.ExecuteContextC(ctx); err != nil {
 		err := commonerrors.Check(err)
 		rootCmd.PrintErrln(rootCmd.ErrPrefix(), err)
-		if !telemetry.StartedTrackingCommand() {
-			telemetry.StartTrackingCommand(cmd, os.Args[1:])
+		if !skillsInvocation {
+			if !telemetry.StartedTrackingCommand() {
+				telemetry.StartTrackingCommand(cmd, os.Args[1:])
+			}
+			telemetry.FinishTrackingCommand(telemetry.TrackOptions{Err: err})
 		}
-
-		telemetry.FinishTrackingCommand(telemetry.TrackOptions{
-			Err: err,
-		})
 		os.Exit(1)
 	}
 }
@@ -76,9 +75,33 @@ func trackInitError(e error, rootCmd *cobra.Command) {
 	log.Print(e)
 }
 
-func initTrack(rootCmd *cobra.Command) {
+func initTrack(rootCmd *cobra.Command, skillsInvocation bool) {
+	if skillsInvocation {
+		// Skills commands skip Atlas config and must not start service-bound telemetry.
+		return
+	}
 	cmd, args, _ := rootCmd.Find(os.Args[1:])
 	telemetry.StartTrackingCommand(cmd, args)
+}
+
+func isAgentSkillsInvocation(args []string) bool {
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
+		switch {
+		case arg == "--profile" || arg == "-P":
+			i++
+		case strings.HasPrefix(arg, "-") && !strings.HasPrefix(arg, "--") && strings.Contains(arg[1:], "P"):
+			shortFlags := arg[1:]
+			if strings.LastIndexByte(shortFlags, 'P') == len(shortFlags)-1 {
+				i++
+			}
+		case strings.HasPrefix(arg, "-"):
+			continue
+		default:
+			return arg == "skills" || arg == "skill"
+		}
+	}
+	return false
 }
 
 func main() {
@@ -87,18 +110,26 @@ func main() {
 		core.DisableColor = true
 	}
 
-	// Load config
-	profile, loadProfileErr := loadConfig()
+	skillsInvocation := isAgentSkillsInvocation(os.Args[1:])
+	var profile *config.Profile
+	var loadProfileErr error
+	// Agent skills use GitHub and local agent config, not an Atlas profile.
+	if !skillsInvocation {
+		profile, loadProfileErr = loadConfig()
+	}
 
-	rootCmd := root.Builder()
-	initTrack(rootCmd)
+	rootCmd := root.Builder(!skillsInvocation)
+	initTrack(rootCmd, skillsInvocation)
 	trackInitError(loadProfileErr, rootCmd)
 
 	// Initialize context, attach
 	// - telemetry
 	// - profile
 	ctx := telemetry.NewContext()
-	config.WithProfile(ctx, profile)
+	// Keep skill commands independent of a loaded Atlas profile.
+	if !skillsInvocation {
+		config.WithProfile(ctx, profile)
+	}
 
-	execute(ctx, rootCmd)
+	execute(ctx, rootCmd, skillsInvocation)
 }

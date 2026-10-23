@@ -322,6 +322,8 @@ const (
 	InitDB                                        = "initdb"                                        // InitDB flag
 	AutoScalingMode                               = "autoScalingMode"                               // AutoScalingMode flag
 	AuthType                                      = "authType"                                      // AuthType flag
+	Agent                                         = "agent"                                         // Agent flag
+	Plugin                                        = "plugin"                                        // Plugin flag
 	ClientSecret                                  = "clientSecret"                                  // ClientSecret flag
 	PublicAPIKey                                  = "publicApiKey"                                  // PublicAPIKey flag
 	PrivateAPIKey                                 = "privateApiKey"                                 // PrivateAPIKey flag

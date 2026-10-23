@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"syscall"
@@ -58,6 +59,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/security"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/skills"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/teams"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/users"
@@ -73,9 +75,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20250312027/detectaiagent"
 )
 
 const atlas = "atlas"
+
+const (
+	agentSkillsWarningCacheFile       = "mongodb/atlas-cli/agent-skills-warning"
+	agentSkillsWarningDirectoryMode   = os.FileMode(0o700)
+	agentSkillsWarningFilePermissions = os.FileMode(0o600)
+)
 
 type Notifier struct {
 	currentVersion string
@@ -94,8 +103,73 @@ func handleSignal() {
 	}, os.Interrupt, syscall.SIGTERM)
 }
 
-// Builder conditionally adds children commands as needed.
-func Builder() *cobra.Command {
+func isAgentSkillsCommand(cmd *cobra.Command) bool {
+	return cmd.CommandPath() == atlas+" skills" || strings.HasPrefix(cmd.CommandPath(), atlas+" skills ")
+}
+
+func notifyAgentSkillsIfApplicable(writer io.Writer, filesystem afero.Fs, homeDir, claudeConfigDir, codexHomeDir, cacheDir string, agentDetected bool) error {
+	if !agentDetected {
+		return nil
+	}
+	installed, err := skills.HasInstalledMongoDBSkills(filesystem, homeDir, claudeConfigDir, codexHomeDir)
+	if err != nil {
+		return err
+	}
+	if installed {
+		return nil
+	}
+	warningPath := filepath.Join(cacheDir, filepath.FromSlash(agentSkillsWarningCacheFile))
+	if err := filesystem.MkdirAll(filepath.Dir(warningPath), agentSkillsWarningDirectoryMode); err != nil {
+		return err
+	}
+	if _, err := filesystem.Stat(warningPath); err == nil {
+		return nil
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	_, err = fmt.Fprintln(writer, `Warning: MongoDB agent skills are not installed for Claude Code or Codex.
+To install all standalone skills for Claude Code, run:
+  atlas skills install --all --agent claude
+To install all standalone skills for Codex, run:
+  atlas skills install --all --agent codex
+To install the Atlas plugin for Claude Code, run:
+  atlas skills install --plugin mongodb-atlas --agent claude
+To install the Atlas plugin for Codex, run:
+  atlas skills install --plugin mongodb-atlas --agent codex`)
+	if err != nil {
+		return err
+	}
+	return afero.WriteFile(filesystem, warningPath, []byte("shown"), agentSkillsWarningFilePermissions)
+}
+
+func isShellCompletionCommand(cmd *cobra.Command) bool {
+	path := cmd.CommandPath()
+	return strings.HasPrefix(path, atlas+" completion") || strings.HasPrefix(path, atlas+" __complete")
+}
+
+func maybeWarnAboutAgentSkills(cmd *cobra.Command) {
+	if isShellCompletionCommand(cmd) {
+		return
+	}
+	if ctx := cmd.Context(); ctx != nil && ctx.Err() != nil {
+		return
+	}
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return
+	}
+	cacheDir, err := os.UserCacheDir()
+	if err != nil {
+		return
+	}
+	_, agentDetected := detectaiagent.Detect()
+	if err := notifyAgentSkillsIfApplicable(cmd.ErrOrStderr(), afero.NewOsFs(), homeDir, os.Getenv("CLAUDE_CONFIG_DIR"), os.Getenv("CODEX_HOME"), cacheDir, agentDetected); err != nil {
+		_, _ = log.Debugf("agent skills discovery warning failed: %v\n", err)
+	}
+}
+
+// Builder constructs the Atlas command tree and optionally registers installed Atlas CLI plugin commands.
+func Builder(registerPluginCommands bool) *cobra.Command {
 	var (
 		profile    string
 		debugLevel bool
@@ -121,13 +195,15 @@ Use the --help flag with any command for more info on that command.`,
 			if debugLevel {
 				log.SetLevel(log.DebugLevel)
 			}
+			if isAgentSkillsCommand(cmd) {
+				return nil
+			}
 
 			if err := config.InitProfile(profile); err != nil {
 				return err
 			}
 
 			telemetry.StartTrackingCommand(cmd, args)
-
 			handleSignal()
 
 			if shouldSetService(cmd) {
@@ -138,6 +214,10 @@ Use the --help flag with any command for more info on that command.`,
 		},
 		// PersistentPostRun only runs if the command is successful
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
+			maybeWarnAboutAgentSkills(cmd)
+			if isAgentSkillsCommand(cmd) {
+				return
+			}
 			// we don't run the release alert feature on the completion command
 			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {
 				return
@@ -154,7 +234,7 @@ Use the --help flag with any command for more info on that command.`,
 				writer:         w,
 			}
 
-			if check, isHb := notifier.shouldCheck(); check {
+			if check, isHb := notifier.shouldCheck(); check && cmd.Context().Err() == nil {
 				_ = notifier.notifyIfApplicable(isHb)
 			}
 			telemetry.FinishTrackingCommand(telemetry.TrackOptions{})
@@ -196,6 +276,7 @@ Use the --help flag with any command for more info on that command.`,
 		privateendpoints.Builder(),
 		networking.Builder(),
 		security.Builder(),
+		skills.Builder(),
 		integrations.Builder(),
 		maintenance.Builder(),
 		customdns.Builder(),
@@ -214,7 +295,9 @@ Use the --help flag with any command for more info on that command.`,
 		apiCmd.Builder(),
 	)
 
-	pluginCmd.RegisterCommands(rootCmd)
+	if registerPluginCommands {
+		pluginCmd.RegisterCommands(rootCmd)
+	}
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

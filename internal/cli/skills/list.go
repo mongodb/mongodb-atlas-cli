@@ -30,18 +30,25 @@ import (
 	"golang.org/x/term"
 )
 
-const listTemplate = `NAME	DESCRIPTION{{range valueOrEmptySlice .}}
-{{.Name}}	{{.Description}}{{end}}
+const listTemplate = `NAME	TYPE	DESCRIPTION{{range valueOrEmptySlice .}}
+{{.Name}}	{{.Type}}	{{.Description}}{{end}}
 `
 
 const (
-	defaultSkillsListWidth = 100
-	skillsListColumnGap    = 3
+	defaultSkillsListWidth     = 100
+	skillsListColumnGap        = 3
+	atlasPluginListDescription = "Install with atlas skills install --plugin mongodb-atlas --agent claude or atlas skills install --plugin mongodb-atlas --agent codex."
 )
 
 // Skill describes an installable MongoDB agent skill.
 type Skill struct {
 	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+}
+
+type skillListEntry struct {
+	Name        string `json:"name"`
+	Type        string `json:"type"`
 	Description string `json:"description,omitempty"`
 }
 
@@ -55,7 +62,13 @@ func (opts *skillListOpts) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	for i, available := range snapshot.skills {
+	entries := make([]skillListEntry, 0, len(snapshot.skills)+1)
+	entries = append(entries, skillListEntry{
+		Name:        atlasPluginName,
+		Type:        "plugin",
+		Description: atlasPluginListDescription,
+	})
+	for _, available := range snapshot.skills {
 		files, err := snapshot.filesForSkill(available.Name)
 		if err != nil {
 			return err
@@ -78,19 +91,23 @@ func (opts *skillListOpts) Run(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("could not read metadata from %s: %w", files[skillFileIndex].repositoryPath, err)
 		}
-		snapshot.skills[i].Description = description
+		entries = append(entries, skillListEntry{
+			Name:        available.Name,
+			Type:        "skill",
+			Description: description,
+		})
 	}
 
 	if !opts.IsPlainOutput() {
-		return opts.Print(snapshot.skills)
+		return opts.Print(entries)
 	}
 
-	for i := range snapshot.skills {
-		snapshot.skills[i].Description = singleLine(snapshot.skills[i].Description)
+	for i := range entries {
+		entries[i].Description = singleLine(entries[i].Description)
 	}
 
 	writer := opts.ConfigWriter()
-	_, err = io.WriteString(writer, renderSkillTable(snapshot.skills, skillsListOutputWidth(writer)))
+	_, err = io.WriteString(writer, renderSkillTable(entries, skillsListOutputWidth(writer)))
 	return err
 }
 
@@ -109,32 +126,40 @@ func skillsListOutputWidth(writer io.Writer) int {
 	return defaultSkillsListWidth
 }
 
-func renderSkillTable(skills []Skill, width int) string {
+func renderSkillTable(skills []skillListEntry, width int) string {
 	if width <= 0 {
 		width = defaultSkillsListWidth
 	}
 
 	nameWidth := utf8.RuneCountInString("NAME")
+	typeWidth := utf8.RuneCountInString("TYPE")
 	for _, skill := range skills {
 		if skillWidth := utf8.RuneCountInString(skill.Name); skillWidth > nameWidth {
 			nameWidth = skillWidth
 		}
+		if skillTypeWidth := utf8.RuneCountInString(skill.Type); skillTypeWidth > typeWidth {
+			typeWidth = skillTypeWidth
+		}
 	}
 
-	descriptionWidth := width - nameWidth - skillsListColumnGap
+	descriptionWidth := width - nameWidth - typeWidth - skillsListColumnGap - skillsListColumnGap
 	if descriptionWidth < 1 {
 		descriptionWidth = 1
 	}
 	columnGap := strings.Repeat(" ", skillsListColumnGap)
-	continuationIndent := strings.Repeat(" ", nameWidth+skillsListColumnGap)
+	continuationIndent := strings.Repeat(" ", nameWidth+typeWidth+skillsListColumnGap+skillsListColumnGap)
 
 	var output strings.Builder
 	output.WriteString(padRight("NAME", nameWidth))
+	output.WriteString(columnGap)
+	output.WriteString(padRight("TYPE", typeWidth))
 	output.WriteString(columnGap)
 	output.WriteString("DESCRIPTION\n")
 	for _, skill := range skills {
 		lines := wrapDescription(skill.Description, descriptionWidth)
 		output.WriteString(padRight(skill.Name, nameWidth))
+		output.WriteString(columnGap)
+		output.WriteString(padRight(skill.Type, typeWidth))
 		output.WriteString(columnGap)
 		output.WriteString(lines[0])
 		output.WriteByte('\n')
@@ -217,9 +242,9 @@ func buildListCommand(source skillSource) *cobra.Command {
 	opts := &skillListOpts{source: source}
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "List MongoDB agent skills available upstream.",
-		Long:  "List the standalone MongoDB agent skills available in the public mongodb/agent-skills repository.",
-		Example: `  # List available MongoDB agent skills:
+		Short: "List MongoDB agent skills and plugins available upstream.",
+		Long:  "List the standalone MongoDB agent skills and bundled mongodb-atlas plugin available for Claude Code or Codex.",
+		Example: `  # List available MongoDB agent skills and plugins:
   atlas skills list
 
   # List skills as JSON:

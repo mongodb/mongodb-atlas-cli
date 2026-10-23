@@ -12,9 +12,9 @@ atlas skills list
    :depth: 1
    :class: singlecol
 
-List MongoDB agent skills available upstream.
+List MongoDB agent skills and plugins available upstream.
 
-List the standalone MongoDB agent skills available in the public mongodb/agent-skills repository.
+List the standalone MongoDB agent skills and bundled mongodb-atlas plugin available for Claude Code or Codex.
 
 Syntax
 ------
@@ -52,7 +52,7 @@ Examples
 .. code-block::
    :copyable: false
 
-   # List available MongoDB agent skills:
+   # List available MongoDB agent skills and plugins:
    atlas skills list
 
    

@@ -67,7 +67,7 @@ func TestListBuilderJSON(t *testing.T) {
 	cmd.SetArgs([]string{"--output", jsonOutputFormat})
 
 	require.NoError(t, cmd.Execute())
-	assert.JSONEq(t, `[{"name":"mongodb-schema-design","description":"Design schemas."}]`, output.String())
+	assert.JSONEq(t, `[{"name":"mongodb-atlas","type":"plugin","description":"Install with atlas skills install --plugin mongodb-atlas --agent claude or atlas skills install --plugin mongodb-atlas --agent codex."},{"name":"mongodb-schema-design","type":"skill","description":"Design schemas."}]`, output.String())
 }
 
 func TestListBuilderPlainTextFlattensDescriptions(t *testing.T) {
@@ -88,36 +88,22 @@ func TestListBuilderPlainTextFlattensDescriptions(t *testing.T) {
 	cmd.SetArgs([]string{"--output", "plaintext"})
 
 	require.NoError(t, cmd.Execute())
-	lines := strings.Split(strings.TrimSuffix(output.String(), "\n"), "\n")
-	require.Len(t, lines, 2)
-	assert.Equal(t, "mongodb-mcp-setup   Line one Line two with a tab.", lines[1])
+	assert.Contains(t, output.String(), "mongodb-atlas")
+	assert.Contains(t, output.String(), "plugin")
+	assert.Contains(t, output.String(), "--plugin")
+	assert.Contains(t, output.String(), "mongodb-mcp-setup")
+	assert.Contains(t, output.String(), "Line one Line two with a tab.")
 }
 
 func TestListBuilderPlainTextWrapsDescriptionsUnderDescriptionColumn(t *testing.T) {
 	const skillName = "mongodb-mcp-setup"
 	description := strings.TrimSpace(strings.Repeat("word ", 20))
-	cmd := buildListCommand(stubCatalog{
-		snapshot: &skillSnapshot{
-			commitSHA: "commit",
-			skills:    []Skill{{Name: skillName}},
-			filesByName: map[string][]skillFile{
-				skillName: {{repositoryPath: "skills/mongodb-mcp-setup/SKILL.md", relativePath: "SKILL.md"}},
-			},
-		},
-		files: map[string][]byte{
-			"skills/mongodb-mcp-setup/SKILL.md": []byte("---\ndescription: " + description + "\n---\n"),
-		},
-	})
-	output := new(bytes.Buffer)
-	cmd.SetOut(output)
-	cmd.SetArgs([]string{"--output", "plaintext"})
-
-	require.NoError(t, cmd.Execute())
-	lines := strings.Split(strings.TrimSuffix(output.String(), "\n"), "\n")
+	output := renderSkillTable([]skillListEntry{{Name: skillName, Type: "skill", Description: description}}, defaultSkillsListWidth)
+	lines := strings.Split(strings.TrimSuffix(output, "\n"), "\n")
 	require.Len(t, lines, 3)
-	assert.Equal(t, "NAME"+strings.Repeat(" ", 16)+"DESCRIPTION", lines[0])
-	assert.Equal(t, skillName+"   "+strings.TrimSpace(strings.Repeat("word ", 16)), lines[1])
-	assert.Equal(t, strings.Repeat(" ", 20)+strings.TrimSpace(strings.Repeat("word ", 4)), lines[2])
+	assert.Equal(t, "NAME"+strings.Repeat(" ", 16)+"TYPE"+strings.Repeat(" ", 4)+"DESCRIPTION", lines[0])
+	assert.Equal(t, skillName+"   skill   "+strings.TrimSpace(strings.Repeat("word ", 14)), lines[1])
+	assert.Equal(t, strings.Repeat(" ", 28)+strings.TrimSpace(strings.Repeat("word ", 6)), lines[2])
 }
 
 func TestSingleLineRemovesControlAndFormatSeparators(t *testing.T) {

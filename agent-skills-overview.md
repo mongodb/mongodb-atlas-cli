@@ -17,7 +17,8 @@ atlas skills install --plugin mongodb-atlas --agent codex
 ## Demo results
 
 - `atlas skills list --output json` returned the eight standalone skills from
-  `mongodb/agent-skills` at the resolved `main` snapshot.
+  `mongodb/agent-skills` at the resolved `main` snapshot and the supported
+  `mongodb-atlas` plugin entry.
 - Named install placed `mongodb-schema-design` under the isolated Claude home
   at `.claude/skills/mongodb-schema-design`.
 - `--all` installed all eight standalone skills under a second isolated Claude

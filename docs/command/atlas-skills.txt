@@ -36,7 +36,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-skills-install` - Install MongoDB agent skills for Claude Code or Codex.
-* :ref:`atlas-skills-list` - List MongoDB agent skills available upstream.
+* :ref:`atlas-skills-list` - List MongoDB agent skills and plugins available upstream.
 
 
 .. toctree::

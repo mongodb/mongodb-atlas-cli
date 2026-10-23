@@ -19,12 +19,14 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"slices"
 	"strings"
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -35,9 +37,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
+	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -55,12 +59,18 @@ type SetSaver interface {
 	SetProjectID(string)
 	SetOpsManagerURL(string)
 	SetService(string)
+	Service() string
+	SetTokenExpiry(string)
 	Save() error
 	SetGlobal(string, any)
 }
 
 type LoginConfig interface {
 	SetSaver
+	AuthServerURL() string
+	AuthServerMetadata() (*authcode.AuthServerMetadata, error)
+	SetAuthServerURL(string)
+	SetAuthServerMetadata(*authcode.AuthServerMetadata) error
 	AccessTokenSubject() (string, error)
 	OrgID() string
 	ProjectID() string
@@ -72,21 +82,54 @@ type TrackAsker interface {
 }
 
 const (
-	userAccountAuth = "UserAccount"
-	atlasName       = "atlas"
+	userAccountAuth        = "UserAccount"
+	userAccountLegacyAuth  = "UserAccountLegacy"
+	atlasName              = "atlas"
+	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy`."
+	userAccountDeprecation = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
 )
 
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, userAccountLegacyAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	outputFormatOptions  = []string{"plaintext", "json"}
 	authTypeDescription  = map[string]string{
 		userAccountAuth:           "(best for getting started)",
+		userAccountLegacyAuth:     "(deprecated device-code flow)",
 		prompt.ServiceAccountAuth: "(best for automation)",
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
+
+// AuthorizationCodeFlow is the Authorization Code + PKCE surface the login flow needs.
+// The default implementation wraps *authcode.Config.
+type AuthorizationCodeFlow interface {
+	AuthServerURL() *url.URL
+	DiscoverAuthServer(context.Context) (*authcode.AuthServerMetadata, error)
+	AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error)
+	ExchangeCode(ctx context.Context, metadata *authcode.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*authcode.Token, error)
+}
+
+type authCodeConfig struct {
+	cfg *authcode.Config
+}
+
+func (a authCodeConfig) AuthServerURL() *url.URL { return a.cfg.AuthServerURL }
+
+func (a authCodeConfig) DiscoverAuthServer(ctx context.Context) (*authcode.AuthServerMetadata, error) {
+	metadata, _, err := a.cfg.DiscoverAuthServer(ctx)
+	return metadata, err
+}
+
+func (a authCodeConfig) AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error) {
+	return a.cfg.AuthorizationURL(metadata, redirectURI, state, codeVerifier)
+}
+
+func (a authCodeConfig) ExchangeCode(ctx context.Context, metadata *authcode.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*authcode.Token, error) {
+	token, _, err := a.cfg.ExchangeCode(ctx, metadata, authorizationCode, redirectURI, codeVerifier)
+	return token, err
+}
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
@@ -107,6 +150,7 @@ type LoginOpts struct {
 	SkipConfig       bool
 	config           LoginConfig
 	Asker            TrackAsker
+	authCode         AuthorizationCodeFlow
 }
 
 func (opts *LoginOpts) validateOutput() error {
@@ -203,8 +247,16 @@ func (opts *LoginOpts) promptOutput() error {
 }
 
 func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
-	if err := opts.oauthFlow(ctx); err != nil {
-		return err
+	switch opts.authType {
+	case userAccountAuth:
+		if err := opts.authCodeFlow(ctx); err != nil {
+			return err
+		}
+	case userAccountLegacyAuth:
+		_, _ = fmt.Fprintln(opts.OutWriter, userAccountDeprecation)
+		if err := opts.oauthFlow(ctx); err != nil {
+			return err
+		}
 	}
 	// Sync config with OAuth tokens
 	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
@@ -268,7 +320,7 @@ Enter [?] on any option to get help.
 
 func (opts *LoginOpts) setUpCredentials(ctx context.Context) error {
 	switch opts.authType {
-	case userAccountAuth:
+	case userAccountAuth, userAccountLegacyAuth:
 		return opts.setUserAccountCredentials(ctx)
 	case prompt.ServiceAccountAuth, prompt.APIKeysAuth:
 		return opts.setProgrammaticCredentials()
@@ -355,6 +407,8 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
 		opts.config.SetAuthType(config.UserAccount)
+	case userAccountLegacyAuth:
+		opts.config.SetAuthType(config.UserAccountLegacy)
 	case prompt.ServiceAccountAuth:
 		opts.config.SetAuthType(config.ServiceAccount)
 	case prompt.APIKeysAuth:
@@ -636,6 +690,102 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
+// authCodeFlow runs the Authorization Code + PKCE login through the SDK loopback
+// callback server and persists the token via the shared core write path.
+func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
+	flow := opts.authCode
+	if flow == nil {
+		cfg, err := transport.FlowForAuthServer(opts.config, &http.Client{Transport: transport.Default()}, version.Version)
+		if err != nil {
+			return err
+		}
+		flow = authCodeConfig{cfg}
+		opts.authCode = flow
+	}
+	metadata, err := opts.discoverAuthServerMetadata(ctx, flow)
+	if err != nil {
+		return err
+	}
+
+	state, err := authcode.GenerateState()
+	if err != nil {
+		return err
+	}
+	verifier := authcode.GenerateVerifier()
+
+	server, err := authcode.StartCallbackServer(state)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = server.Close() }()
+
+	authURL, err := flow.AuthorizationURL(metadata, server.RedirectURI(), state, verifier)
+	if err != nil {
+		return err
+	}
+
+	_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
+	if opts.NoBrowser {
+		_, _ = fmt.Fprintf(opts.OutWriter, "To continue, go to %s\n", authURL)
+	} else {
+		opts.handleBrowser(authURL)
+	}
+
+	authorizationCode, err := server.WaitForCallback(ctx)
+	if err != nil {
+		return err
+	}
+
+	token, err := flow.ExchangeCode(ctx, metadata, authorizationCode, server.RedirectURI(), verifier)
+	if err != nil {
+		return err
+	}
+	opts.AccessToken = token.AccessToken
+	opts.RefreshToken = token.RefreshToken
+
+	return opts.saveAuthCodeToken(token, metadata)
+}
+
+// saveAuthCodeToken persists the Authorization Code token, its expiry and its
+// issuer binding; it mirrors the core user_account write path.
+func (opts *LoginOpts) saveAuthCodeToken(token *authcode.Token, metadata *authcode.AuthServerMetadata) error {
+	opts.config.SetAccessToken(token.AccessToken)
+	opts.config.SetRefreshToken(token.RefreshToken)
+	opts.config.SetTokenExpiry(token.Expiry.Format(time.RFC3339))
+	opts.config.SetAuthServerURL(metadata.Issuer)
+	if err := opts.config.SetAuthServerMetadata(metadata); err != nil {
+		return err
+	}
+	return opts.config.Save()
+}
+
+// discoverAuthServerMetadata returns cached metadata, discovering and caching
+// fresh metadata when missing, expired, or bound to a different issuer.
+// A discovery failure falls back to stale cached metadata for the same issuer.
+func (opts *LoginOpts) discoverAuthServerMetadata(ctx context.Context, flow AuthorizationCodeFlow) (*authcode.AuthServerMetadata, error) {
+	metadata, err := opts.config.AuthServerMetadata()
+	if err != nil {
+		return nil, err
+	}
+	if metadata != nil && metadata.Issuer == flow.AuthServerURL().String() &&
+		(metadata.CacheExpiry.IsZero() || metadata.CacheExpiry.After(time.Now())) {
+		return metadata, nil
+	}
+
+	discovered, err := flow.DiscoverAuthServer(ctx)
+	if err != nil {
+		if metadata != nil && metadata.Issuer == flow.AuthServerURL().String() {
+			return metadata, nil
+		}
+		return nil, err
+	}
+	if err := opts.config.SetAuthServerMetadata(discovered); err != nil {
+		// The cache is best-effort and must not block login.
+		_, _ = log.Warningln("There was an issue caching the authorization server metadata")
+	}
+	return discovered, nil
+}
+
 func (opts *LoginOpts) shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
@@ -677,6 +827,8 @@ func LoginBuilder() *cobra.Command {
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
 		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
+
+User Account login uses the Authorization Code + PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy`" + `.
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 

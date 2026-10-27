@@ -98,6 +98,20 @@ func TestDeduplicateConflictingPaths(t *testing.T) {
 	assert.Equal(t, "name", remaining.Get.Parameters[1].Value.Name, "merged path parameters should match the retained path")
 }
 
+func TestNormalizePathParameterNamesDoesNotCascade(t *testing.T) {
+	operation := &openapi3.Operation{
+		Parameters: openapi3.Parameters{
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "a", In: "path"}},
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "b", In: "path"}},
+		},
+	}
+
+	normalizePathParameterNames(operation, "/groups/{a}/{b}", "/groups/{b}/{c}")
+
+	assert.Equal(t, "b", operation.Parameters[0].Value.Name)
+	assert.Equal(t, "c", operation.Parameters[1].Value.Name)
+}
+
 // To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...
 func TestSnapshots(t *testing.T) {
 	const FixtureDirectory = "./testdata/fixtures/"

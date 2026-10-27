@@ -183,25 +183,31 @@ func normalizePathParameterNames(operation *openapi3.Operation, sourcePath, targ
 		return
 	}
 
+	parameterNames := make(map[string]string, len(sourceParams))
 	for i, sourceParam := range sourceParams {
 		sourceName := strings.Trim(sourceParam, "{}")
 		targetName := strings.Trim(targetParams[i], "{}")
-		if sourceName == targetName {
+		if sourceName != targetName {
+			parameterNames[sourceName] = targetName
+		}
+	}
+
+	for j, parameterRef := range operation.Parameters {
+		if parameterRef == nil || parameterRef.Value == nil || parameterRef.Value.In != pathParameterLocation {
 			continue
 		}
 
-		for j, parameterRef := range operation.Parameters {
-			if parameterRef == nil || parameterRef.Value == nil || parameterRef.Value.In != pathParameterLocation || parameterRef.Value.Name != sourceName {
-				continue
-			}
-
-			// Clone the references so shared component parameters aren't changed by validation.
-			parameterRefCopy := *parameterRef
-			parameterCopy := *parameterRef.Value
-			parameterCopy.Name = targetName
-			parameterRefCopy.Value = &parameterCopy
-			operation.Parameters[j] = &parameterRefCopy
+		targetName, ok := parameterNames[parameterRef.Value.Name]
+		if !ok {
+			continue
 		}
+
+		// Clone the references so shared component parameters aren't changed by validation.
+		parameterRefCopy := *parameterRef
+		parameterCopy := *parameterRef.Value
+		parameterCopy.Name = targetName
+		parameterRefCopy.Value = &parameterCopy
+		operation.Parameters[j] = &parameterRefCopy
 	}
 }
 

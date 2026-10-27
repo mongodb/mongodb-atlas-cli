@@ -102,7 +102,7 @@ jobs:
 
       - name: Resolve the release ticket
         if: steps.find-release.outputs.found == 'true' && steps.release-status.outputs.status != 'Resolved' && steps.release-status.outputs.status != 'Closed'
-        uses: mongodb/apix-action/transition-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/transition-jira@36e94d0b98906c6102fb1513807ed5d113307c09
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.find-release.outputs.issue-key }}

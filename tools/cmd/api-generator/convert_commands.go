@@ -248,6 +248,8 @@ For more information and examples, see: %s`, apiURL, cmdURL)
 	return description, nil
 }
 
+const pathParameterLocation = "path"
+
 // Struct to hold both types of parameters.
 type parameterSet struct {
 	query []api.Parameter
@@ -371,7 +373,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		case "query":
 			queryParameters = append(queryParameters, apiParameter)
 			parameterNames[parameterName] = struct{}{}
-		case "path":
+		case pathParameterLocation:
 			urlParameters = append(urlParameters, apiParameter)
 			parameterNames[parameterName] = struct{}{}
 		case "header":

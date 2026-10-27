@@ -122,7 +122,8 @@ func (m *Migrator) Migrate() error {
 		}
 
 		// In case the migration succeeds, update the config version.
-		if err := m.saveConfigVersion(currentVersion + 1); err != nil {
+		currentVersion++
+		if err := m.saveConfigVersion(currentVersion); err != nil {
 			return fmt.Errorf("failed to set current config version: %w", err)
 		}
 	}

@@ -19,7 +19,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 	"slices"
 	"strings"
 	"time"
@@ -45,7 +44,7 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth -source=login.go
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . SetSaver,LoginConfig,TrackAsker,AuthorizationCodeFlow
 
 type SetSaver interface {
 	SetAuthType(config.AuthMechanism)
@@ -59,18 +58,13 @@ type SetSaver interface {
 	SetProjectID(string)
 	SetOpsManagerURL(string)
 	SetService(string)
-	Service() string
-	SetTokenExpiry(string)
 	Save() error
 	SetGlobal(string, any)
 }
 
 type LoginConfig interface {
 	SetSaver
-	AuthServerURL() string
-	AuthServerMetadata() (*authcode.AuthServerMetadata, error)
-	SetAuthServerURL(string)
-	SetAuthServerMetadata(*authcode.AuthServerMetadata) error
+	transport.ProfileProvider
 	AccessTokenSubject() (string, error)
 	OrgID() string
 	ProjectID() string
@@ -85,6 +79,7 @@ const (
 	userAccountAuth        = "UserAccount"
 	userAccountLegacyAuth  = "UserAccountLegacy"
 	atlasName              = "atlas"
+	authCodeCallbackPath   = "/atlas-cli/callback"
 	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy`."
 	userAccountDeprecation = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
 )
@@ -105,8 +100,7 @@ var (
 // AuthorizationCodeFlow is the Authorization Code + PKCE surface the login flow needs.
 // The default implementation wraps *authcode.Config.
 type AuthorizationCodeFlow interface {
-	AuthServerURL() *url.URL
-	DiscoverAuthServer(context.Context) (*authcode.AuthServerMetadata, error)
+	ResolveAuthServerMetadata(ctx context.Context, cached *authcode.AuthServerMetadata) (*authcode.AuthServerMetadata, error)
 	AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error)
 	ExchangeCode(ctx context.Context, metadata *authcode.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*authcode.Token, error)
 }
@@ -115,12 +109,17 @@ type authCodeConfig struct {
 	cfg *authcode.Config
 }
 
-func (a authCodeConfig) AuthServerURL() *url.URL { return a.cfg.AuthServerURL }
-
-func (a authCodeConfig) DiscoverAuthServer(ctx context.Context) (*authcode.AuthServerMetadata, error) {
-	metadata, _, err := a.cfg.DiscoverAuthServer(ctx)
-	return metadata, err
+func (a authCodeConfig) ResolveAuthServerMetadata(ctx context.Context, cached *authcode.AuthServerMetadata) (*authcode.AuthServerMetadata, error) {
+	return transport.ResolveAuthServerMetadata(ctx, a.cfg, cached, false)
 }
+
+// loginAuthServer ignores the stored issuer so --gov and MONGODB_ATLAS_AUTH_SERVER_URL apply on re-login.
+type loginAuthServer struct {
+	service string
+}
+
+func (s loginAuthServer) Service() string        { return s.service }
+func (loginAuthServer) AuthServerIssuer() string { return "" }
 
 func (a authCodeConfig) AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error) {
 	return a.cfg.AuthorizationURL(metadata, redirectURI, state, codeVerifier)
@@ -695,14 +694,14 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	flow := opts.authCode
 	if flow == nil {
-		cfg, err := transport.FlowForAuthServer(opts.config, &http.Client{Transport: transport.Default()}, version.Version)
+		cfg, err := transport.FlowForAuthServer(loginAuthServer{service: opts.config.Service()}, &http.Client{Transport: transport.Default()}, version.Version)
 		if err != nil {
 			return err
 		}
 		flow = authCodeConfig{cfg}
 		opts.authCode = flow
 	}
-	metadata, err := opts.discoverAuthServerMetadata(ctx, flow)
+	metadata, err := flow.ResolveAuthServerMetadata(ctx, opts.config.AuthServerMetadata())
 	if err != nil {
 		return err
 	}
@@ -713,7 +712,7 @@ func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	}
 	verifier := authcode.GenerateVerifier()
 
-	server, err := authcode.StartCallbackServer(state)
+	server, err := authcode.StartCallbackServer(state, authCodeCallbackPath, metadata)
 	if err != nil {
 		return err
 	}
@@ -743,47 +742,7 @@ func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	opts.AccessToken = token.AccessToken
 	opts.RefreshToken = token.RefreshToken
 
-	return opts.saveAuthCodeToken(token, metadata)
-}
-
-// saveAuthCodeToken persists the Authorization Code token, its expiry and its
-// issuer binding; it mirrors the core user_account write path.
-func (opts *LoginOpts) saveAuthCodeToken(token *authcode.Token, metadata *authcode.AuthServerMetadata) error {
-	opts.config.SetAccessToken(token.AccessToken)
-	opts.config.SetRefreshToken(token.RefreshToken)
-	opts.config.SetTokenExpiry(token.Expiry.Format(time.RFC3339))
-	opts.config.SetAuthServerURL(metadata.Issuer)
-	if err := opts.config.SetAuthServerMetadata(metadata); err != nil {
-		return err
-	}
-	return opts.config.Save()
-}
-
-// discoverAuthServerMetadata returns cached metadata, discovering and caching
-// fresh metadata when missing, expired, or bound to a different issuer.
-// A discovery failure falls back to stale cached metadata for the same issuer.
-func (opts *LoginOpts) discoverAuthServerMetadata(ctx context.Context, flow AuthorizationCodeFlow) (*authcode.AuthServerMetadata, error) {
-	metadata, err := opts.config.AuthServerMetadata()
-	if err != nil {
-		return nil, err
-	}
-	if metadata != nil && metadata.Issuer == flow.AuthServerURL().String() &&
-		(metadata.CacheExpiry.IsZero() || metadata.CacheExpiry.After(time.Now())) {
-		return metadata, nil
-	}
-
-	discovered, err := flow.DiscoverAuthServer(ctx)
-	if err != nil {
-		if metadata != nil && metadata.Issuer == flow.AuthServerURL().String() {
-			return metadata, nil
-		}
-		return nil, err
-	}
-	if err := opts.config.SetAuthServerMetadata(discovered); err != nil {
-		// The cache is best-effort and must not block login.
-		_, _ = log.Warningln("There was an issue caching the authorization server metadata")
-	}
-	return discovered, nil
+	return transport.SaveUserAccountToken(opts.config, token, metadata)
 }
 
 func (opts *LoginOpts) shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {

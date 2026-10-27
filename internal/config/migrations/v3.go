@@ -41,11 +41,12 @@ func NewMigrateToVersion3() MigrationFunc {
 	}
 }
 
+// renameUserAccountProfiles reads the stored value directly; Profile.AuthType() can
+// return another mechanism based on the default profile's credentials.
 func renameUserAccountProfiles(store config.Store) {
 	for _, name := range store.GetProfileNames() {
-		profile := config.NewProfile(name, store)
-		if profile.AuthType() == config.UserAccount {
-			profile.SetAuthType(config.UserAccountLegacy)
+		if authType, _ := store.GetProfileValue(name, config.AuthTypeField).(string); authType == string(config.UserAccount) {
+			store.SetProfileValue(name, config.AuthTypeField, string(config.UserAccountLegacy))
 		}
 	}
 }

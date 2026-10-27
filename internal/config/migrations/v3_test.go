@@ -101,3 +101,21 @@ func Test_MigrateToVersion3_idempotent(t *testing.T) {
 
 	require.Equal(t, config.UserAccountLegacy, p.AuthType())
 }
+
+func Test_MigrateToVersion3_ignoresDefaultProfileCredentials(t *testing.T) {
+	defaultStore := config.NewInMemoryStore()
+	defaultProfile := config.NewProfile(config.DefaultProfile, defaultStore)
+	defaultProfile.SetClientID("id")
+	defaultProfile.SetClientSecret("secret")
+	previous := config.Default()
+	config.SetDefaultProfile(defaultProfile)
+	t.Cleanup(func() { config.SetDefaultProfile(previous) })
+
+	store := config.NewInMemoryStore()
+	p := config.NewProfile("test", store)
+	p.SetAuthType(config.UserAccount)
+
+	renameUserAccountProfiles(store)
+
+	require.Equal(t, string(config.UserAccountLegacy), store.GetProfileValue("test", config.AuthTypeField))
+}

@@ -28,6 +28,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -180,10 +181,9 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 		Issuer:      issuer.String(),
 		CacheExpiry: time.Now().Add(time.Hour),
 	}
-	mockAuthCode.EXPECT().AuthServerURL().Return(issuer).AnyTimes()
-	mockAuthCode.EXPECT().DiscoverAuthServer(ctx).Return(metadata, nil).Times(1)
-	mockConfig.EXPECT().AuthServerMetadata().Return(nil, nil).Times(1)
-	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Return(nil).AnyTimes()
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).Times(1)
+	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
+	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Times(1)
 
 	// Complete the callback in place of a browser: hit the loopback server with
 	// the expected state and a fake authorization code.
@@ -194,6 +194,9 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 			callbackURL, err := url.Parse(redirectURI)
 			if err != nil {
 				return "", err
+			}
+			if callbackURL.Hostname() != "127.0.0.1" || callbackURL.Path != authCodeCallbackPath {
+				return "", fmt.Errorf("unexpected redirect URI %q", redirectURI)
 			}
 			q := callbackURL.Query()
 			q.Set("state", state)
@@ -228,7 +231,7 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	mockConfig.EXPECT().SetAccessToken("asdf").AnyTimes()
 	mockConfig.EXPECT().SetRefreshToken("querty").AnyTimes()
 	mockConfig.EXPECT().SetTokenExpiry(tokenExpiry.Format(time.RFC3339)).Times(1)
-	mockConfig.EXPECT().SetAuthServerURL(metadata.Issuer).Times(1)
+	mockConfig.EXPECT().SetAuthServerIssuer(metadata.Issuer).Times(1)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
@@ -939,4 +942,11 @@ func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
 
 	err := opts.setUpProfile(t.Context())
 	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+func Test_loginAuthServer_ignoresStoredIssuer(t *testing.T) {
+	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
+	cfg, err := transport.FlowForAuthServer(loginAuthServer{service: config.CloudGovService}, http.DefaultClient, "test")
+	require.NoError(t, err)
+	assert.Equal(t, "https://authorize.mongodbgov.com", cfg.AuthServerURL.String())
 }

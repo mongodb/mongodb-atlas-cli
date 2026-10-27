@@ -40,7 +40,7 @@ require (
 	github.com/mattn/go-isatty v0.0.24
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20260903092437-898487293572
+	github.com/mongodb/atlas-cli-core v0.0.0-20261027162229-1f413cc2bb1d
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.9
@@ -55,7 +55,7 @@ require (
 	github.com/zalando/go-keyring v0.2.8
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312027 v20250312027.0.0
+	go.mongodb.org/atlas-sdk/v20250312027 v20250312027.1.0
 	go.mongodb.org/mongo-driver v1.17.10
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.42.0
@@ -206,7 +206,3 @@ tool (
 	go.uber.org/mock/mockgen
 	gotest.tools/gotestsum
 )
-
-replace github.com/mongodb/atlas-cli-core => ../atlas-cli-core
-
-replace go.mongodb.org/atlas-sdk/v20250312027 => ../atlas-sdk-go

@@ -460,7 +460,7 @@ jobs:
         # Only when the notes ticket was just created, so a re-run does not add a
         # duplicate link.
         if: steps.create-notes.outcome == 'success'
-        uses: mongodb/apix-action/link-jira@6b1aa6770badd9beddf1060a5b60cee9d1183571
+        uses: mongodb/apix-action/link-jira@e7551326cacca665760d81262207259c1ea7330e
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           inward-issue: ${{ steps.release-ticket.outputs.key }}

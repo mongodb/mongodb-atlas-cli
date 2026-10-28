@@ -785,7 +785,7 @@ func LoginBuilder() *cobra.Command {
 		Short: "Authenticate with MongoDB Atlas.",
 		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
 
-User Account login uses the Authorization Code + PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy --output plaintext`" + `.
+User Account login uses the Authorization Code and PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy --output plaintext`" + `.
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 

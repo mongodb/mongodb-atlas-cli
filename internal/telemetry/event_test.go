@@ -159,7 +159,7 @@ func TestWithAuthMethod(t *testing.T) {
 			cfg: &configMock{
 				authType: config.UserAccountLegacy,
 			},
-			expected: "oauth",
+			expected: "device-code",
 		},
 		{
 			name: "service account",

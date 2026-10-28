@@ -228,7 +228,9 @@ func withAuthMethod(c Authenticator) EventOpt {
 			event.Properties["auth_method"] = "api_key"
 			return
 		case config.UserAccount:
-			event.Properties["auth_method"] = "oauth"
+			event.Properties["auth_method"] = "auth-code"
+		case config.UserAccountLegacy:
+			event.Properties["auth_method"] = "device-code"
 		case config.ServiceAccount:
 			event.Properties["auth_method"] = "service_account"
 		case config.NoAuth:

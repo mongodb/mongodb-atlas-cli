@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"errors"
 	"os"
 	"testing"
 
@@ -27,7 +28,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func Test_logoutOpts_Run_UserAccount(t *testing.T) {
+func Test_logoutOpts_Run_UserAccountLegacy(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := NewMockRevoker(ctrl)
 	mockConfig := NewMockConfigDeleter(ctrl)
@@ -47,12 +48,17 @@ func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 	mockConfig.
 		EXPECT().
 		AuthType().
-		Return(config.UserAccount).
+		Return(config.UserAccountLegacy).
+		Times(1)
+	mockConfig.
+		EXPECT().
+		RefreshToken().
+		Return("refresh").
 		Times(1)
 
 	mockFlow.
 		EXPECT().
-		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		RevokeToken(ctx, "refresh", "refresh_token").
 		Return(nil, nil).
 		Times(1)
 
@@ -65,6 +71,77 @@ func Test_logoutOpts_Run_UserAccount(t *testing.T) {
 		Return(nil).
 		Times(1)
 	require.NoError(t, opts.Run(ctx))
+}
+
+func Test_logoutOpts_Run_UserAccount(t *testing.T) {
+	tests := []struct {
+		name      string
+		revokeErr error
+	}{
+		{name: "revoked"},
+		{name: "revocation fails", revokeErr: errors.New("revocation failed")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockFlow := NewMockRevoker(ctrl)
+			mockConfig := NewMockConfigDeleter(ctrl)
+
+			revoked := 0
+			opts := logoutOpts{
+				OutWriter: new(bytes.Buffer),
+				config:    mockConfig,
+				flow:      mockFlow,
+				DeleteOpts: &cli.DeleteOpts{
+					Confirm: true,
+				},
+				revokeUserAccountToken: func() error {
+					revoked++
+					return tt.revokeErr
+				},
+			}
+
+			mockConfig.
+				EXPECT().
+				AuthType().
+				Return(config.UserAccount).
+				Times(1)
+			// The device-flow revoker must not receive Authorization Code tokens.
+			mockFlow.
+				EXPECT().
+				RevokeToken(gomock.Any(), gomock.Any(), gomock.Any()).
+				Times(0)
+
+			mockConfigCleanUp(mockConfig)
+			mockProjectAndOrgCleanUp(mockConfig)
+
+			mockConfig.
+				EXPECT().
+				Delete().
+				Return(nil).
+				Times(1)
+			require.NoError(t, opts.Run(t.Context()))
+			require.Equal(t, 1, revoked)
+		})
+	}
+}
+
+func TestLogoutBuilder_PreRunE_InitsFlowForOAuthAuthTypes(t *testing.T) {
+	for _, authType := range []config.AuthMechanism{config.UserAccount, config.UserAccountLegacy, config.ServiceAccount} {
+		t.Run(string(authType), func(t *testing.T) {
+			store := config.NewInMemoryStore()
+			profile := config.NewProfile("test-profile", store)
+			profile.SetAuthType(authType)
+
+			opts := &logoutOpts{DeleteOpts: cli.NewDeleteOpts("", "")}
+			cmd := newLogoutBuilder(opts)
+			cmd.SetContext(config.WithProfile(t.Context(), profile))
+			require.NoError(t, cmd.PreRunE(cmd, []string{}))
+			require.NotNil(t, opts.flow)
+			require.NotNil(t, opts.revokeUserAccountToken)
+			require.NotNil(t, opts.revokeServiceAccountToken)
+		})
+	}
 }
 
 func Test_logoutOpts_Run_APIKeys(t *testing.T) {
@@ -136,7 +213,7 @@ func Test_logoutOpts_Run_ServiceAccount(t *testing.T) {
 	require.NoError(t, opts.Run(ctx))
 }
 
-func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
+func Test_logoutOpts_Run_Keep_UserAccountLegacy(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := NewMockRevoker(ctrl)
 	mockConfig := NewMockConfigDeleter(ctrl)
@@ -156,12 +233,17 @@ func Test_logoutOpts_Run_Keep_UserAccount(t *testing.T) {
 	mockConfig.
 		EXPECT().
 		AuthType().
-		Return(config.UserAccount).
+		Return(config.UserAccountLegacy).
+		Times(1)
+	mockConfig.
+		EXPECT().
+		RefreshToken().
+		Return("refresh").
 		Times(1)
 
 	mockFlow.
 		EXPECT().
-		RevokeToken(ctx, gomock.Any(), gomock.Any()).
+		RevokeToken(ctx, "refresh", "refresh_token").
 		Return(nil, nil).
 		Times(1)
 
@@ -291,6 +373,18 @@ func mockConfigCleanUp(mockConfig *MockConfigDeleter) {
 	mockConfig.
 		EXPECT().
 		SetPrivateAPIKey("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetTokenExpiry("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetAuthServerIssuer("").
+		Times(1)
+	mockConfig.
+		EXPECT().
+		SetAuthServerMetadata(nil).
 		Times(1)
 
 	mockConfig.

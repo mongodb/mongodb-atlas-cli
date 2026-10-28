@@ -244,6 +244,7 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	err := opts.LoginRun(ctx)
 	require.NoError(t, err)
 	assert.Contains(t, buf.String(), authCodeLoginNotice)
+	assert.Contains(t, buf.String(), "To continue, go to https://authorize.mongodb.com/authorize")
 	assert.Contains(t, buf.String(), "Successfully logged in as test@10gen.com")
 }
 

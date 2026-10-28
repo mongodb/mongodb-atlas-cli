@@ -80,7 +80,7 @@ const (
 	userAccountLegacyAuth  = "UserAccountLegacy"
 	atlasName              = "atlas"
 	authCodeCallbackPath   = "/atlas-cli/callback"
-	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy`."
+	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy --output plaintext`."
 	userAccountDeprecation = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
 )
 
@@ -724,11 +724,9 @@ func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	}
 
 	_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
-	if opts.NoBrowser {
-		_, _ = fmt.Fprintf(opts.OutWriter, "To continue, go to %s\n", authURL)
-	} else {
-		opts.handleBrowser(authURL)
-	}
+	// Always print the URL so login can finish if the browser cannot open.
+	_, _ = fmt.Fprintf(opts.OutWriter, "To continue, go to %s\n", authURL)
+	opts.handleBrowser(authURL)
 
 	authorizationCode, err := server.WaitForCallback(ctx)
 	if err != nil {
@@ -787,7 +785,7 @@ func LoginBuilder() *cobra.Command {
 		Short: "Authenticate with MongoDB Atlas.",
 		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
 
-User Account login uses the Authorization Code + PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy`" + `.
+User Account login uses the Authorization Code + PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy --output plaintext`" + `.
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 

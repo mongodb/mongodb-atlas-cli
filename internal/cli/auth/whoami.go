@@ -54,7 +54,12 @@ func authTypeAndSubject() (string, string, string, error) {
 		if subject == "" {
 			return "", "", "", ErrUnauthenticated
 		}
-		return "account", subject, config.TokenExpiry(), nil
+		// token_expiry is only written by the Authorization Code flow; a legacy profile may hold a stale one.
+		var tokenExpiry string
+		if config.AuthType() == config.UserAccount {
+			tokenExpiry = config.TokenExpiry()
+		}
+		return "account", subject, tokenExpiry, nil
 	case config.NoAuth:
 		return "", "", "", ErrUnauthenticated
 	}

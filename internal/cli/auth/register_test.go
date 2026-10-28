@@ -94,7 +94,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
-	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccountLegacy).Times(1)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()

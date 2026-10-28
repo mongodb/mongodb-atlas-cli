@@ -25,10 +25,10 @@ import (
 )
 
 const (
-	missingAuthTypeWarning = "Warning: an access and refresh token are set but no auth type is, so they are not used. " +
+	missingAuthTypeWarning = "Warning: tokens are ignored without an auth type. " +
 		"Set MONGODB_ATLAS_AUTH_TYPE to user_account, or user_account_legacy for device-code tokens.\n"
-	deviceCodeTokenWarning = "Warning: the access token was not issued by the User Account authorization server, " +
-		"so refreshing it will fail. If it came from the device-code flow, set MONGODB_ATLAS_AUTH_TYPE=user_account_legacy.\n"
+	deviceCodeTokenWarning = "Warning: these tokens are not from the User Account auth server and will fail to refresh. " +
+		"For device-code tokens, set MONGODB_ATLAS_AUTH_TYPE=user_account_legacy.\n"
 )
 
 // WarnOnTokenAuthTypeMismatch warns when the profile's tokens cannot work with its auth type.

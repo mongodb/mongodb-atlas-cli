@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -949,4 +950,43 @@ func Test_loginAuthServer_ignoresStoredIssuer(t *testing.T) {
 	cfg, err := transport.FlowForAuthServer(loginAuthServer{service: config.CloudGovService}, http.DefaultClient, "test")
 	require.NoError(t, err)
 	assert.Equal(t, "https://authorize.mongodbgov.com", cfg.AuthServerURL.String())
+}
+
+func Test_loginOpts_LoginPreRun_UserAccountRefresh(t *testing.T) {
+	tests := []struct {
+		name       string
+		refreshErr error
+		wantErr    bool
+	}{
+		{name: "refreshed"},
+		{name: "credentials cleared", refreshErr: fmt.Errorf("refresh: %w", transport.ErrNotLoggedIn)},
+		{name: "other failure", refreshErr: errors.New("network down"), wantErr: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			previous := config.Default()
+			profile := config.NewProfile("test-profile", config.NewInMemoryStore())
+			profile.SetAuthType(config.UserAccount)
+			profile.SetAccessToken(testAccessTokenWithExpiry(time.Now().Add(-time.Hour)))
+			profile.SetRefreshToken("refresh-token")
+			config.SetDefaultProfile(profile)
+			t.Cleanup(func() { config.SetDefaultProfile(previous) })
+
+			ctrl := gomock.NewController(t)
+			mockConfig := NewMockLoginConfig(ctrl)
+			opts := &LoginOpts{config: mockConfig}
+			opts.WithFlow(mocks.NewMockRefresher(ctrl))
+			opts.WithUserAccountRefresher(func(context.Context, *config.Profile) error { return tt.refreshErr })
+			if tt.refreshErr != nil {
+				mockConfig.EXPECT().SetAccessToken("").Times(1)
+			}
+
+			err := opts.LoginPreRun(t.Context())()
+			if tt.wantErr {
+				require.ErrorIs(t, err, tt.refreshErr)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
 }

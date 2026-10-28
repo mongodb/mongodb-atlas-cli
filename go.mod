@@ -40,7 +40,7 @@ require (
 	github.com/mattn/go-isatty v0.0.24
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20261027162229-1f413cc2bb1d
+	github.com/mongodb/atlas-cli-core v0.0.0-20261027173910-2e75ef6d4f05
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.9

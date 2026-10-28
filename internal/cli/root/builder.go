@@ -125,6 +125,7 @@ Use the --help flag with any command for more info on that command.`,
 			if err := config.InitProfile(profile); err != nil {
 				return err
 			}
+			auth.WarnOnTokenAuthTypeMismatch(config.Default())
 
 			telemetry.StartTrackingCommand(cmd, args)
 

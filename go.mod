@@ -34,6 +34,7 @@ require (
 	github.com/evergreen-ci/shrub v0.0.0-20250506131348-39cf0eb2b3dc
 	github.com/getkin/kin-openapi v0.151.0
 	github.com/go-test/deep v1.1.2
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.20.3
@@ -78,7 +79,6 @@ require (
 	github.com/dnephin/pflag v1.0.7 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
-	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.1 // indirect

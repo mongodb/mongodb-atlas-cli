@@ -94,6 +94,7 @@ func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profil
 	if profile.AuthType() == config.UserAccount {
 		return opts.refreshUserAccountToken(ctx, profile)
 	}
+	// UserAccountLegacy: refresh through the device-code flow.
 	if opts.flow == nil || profile != config.Default() {
 		if err := opts.InitFlow(profile)(); err != nil {
 			return err

@@ -29,6 +29,8 @@ const (
 		"Set MONGODB_ATLAS_AUTH_TYPE to user_account, or user_account_legacy for device-code tokens.\n"
 	deviceCodeTokenWarning = "Warning: these tokens are not from the User Account auth server and will fail to refresh. " +
 		"For device-code tokens, set MONGODB_ATLAS_AUTH_TYPE=user_account_legacy.\n"
+	authCodeTokenWarning = "Warning: these tokens are from the User Account auth server and will fail to refresh with user_account_legacy. " +
+		"Set MONGODB_ATLAS_AUTH_TYPE=user_account.\n"
 )
 
 // WarnOnTokenAuthTypeMismatch warns when the profile's tokens cannot work with its auth type.
@@ -40,15 +42,28 @@ func WarnOnTokenAuthTypeMismatch(profile *config.Profile) {
 	case "":
 		_, _ = log.Warning(missingAuthTypeWarning)
 	case config.UserAccount:
-		issuer, ok := accessTokenIssuer(profile.AccessToken())
-		if !ok {
-			return
-		}
-		if expected, ok := expectedAuthServerIssuer(profile); ok && issuer != expected {
+		if fromAuthServer, ok := issuedByAuthServer(profile); ok && !fromAuthServer {
 			_, _ = log.Warning(deviceCodeTokenWarning)
 		}
-	case config.UserAccountLegacy, config.ServiceAccount, config.APIKeys, config.NoAuth:
+	case config.UserAccountLegacy:
+		if fromAuthServer, ok := issuedByAuthServer(profile); ok && fromAuthServer {
+			_, _ = log.Warning(authCodeTokenWarning)
+		}
+	case config.ServiceAccount, config.APIKeys, config.NoAuth:
 	}
+}
+
+// issuedByAuthServer reports whether the access token's iss is the Authorization Server; ok is false when unknown.
+func issuedByAuthServer(profile *config.Profile) (fromAuthServer, ok bool) {
+	issuer, ok := accessTokenIssuer(profile.AccessToken())
+	if !ok {
+		return false, false
+	}
+	expected, ok := expectedAuthServerIssuer(profile)
+	if !ok {
+		return false, false
+	}
+	return issuer == expected, true
 }
 
 // accessTokenIssuer reads iss without verifying the signature; it only selects a warning.

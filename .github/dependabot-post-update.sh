@@ -20,6 +20,6 @@
 
 set -Eeou pipefail
 
-# The Makefile pins GOTOOLCHAIN=local, but the runner image's Go can be older
-# than go.mod requires. Override it so Go downloads the pinned toolchain.
+# The runner image's Go can be older than go.mod requires, so allow Go to
+# download the required toolchain when regenerating PURLs.
 make GOTOOLCHAIN=auto gen-purls

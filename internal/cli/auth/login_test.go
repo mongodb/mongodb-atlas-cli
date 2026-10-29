@@ -16,7 +16,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,11 +24,9 @@ import (
 	"net/url"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -38,7 +35,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
-	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 	"golang.org/x/oauth2"
@@ -78,7 +74,7 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	}
 }
 
-func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
+func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
@@ -100,7 +96,7 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 		TrackAskOne(gomock.Any(), gomock.Any()).
 		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
 			if s, ok := answer.(*string); ok {
-				*s = userAccountLegacyAuth
+				*s = userAccountAuth
 			}
 			return nil
 		})
@@ -133,7 +129,7 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().SetAuthType(config.UserAccountLegacy).Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
@@ -147,105 +143,6 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 
 	err := opts.LoginRun(ctx)
 	require.NoError(t, err)
-}
-
-func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockConfig := NewMockLoginConfig(ctrl)
-	mockAuthCode := NewMockAuthorizationCodeFlow(ctrl)
-	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
-	mockAsker := NewMockTrackAsker(ctrl)
-
-	buf := new(bytes.Buffer)
-
-	opts := &LoginOpts{
-		config:    mockConfig,
-		Asker:     mockAsker,
-		NoBrowser: true,
-		authCode:  mockAuthCode,
-	}
-	opts.OutWriter = buf
-	opts.Store = mockStore
-
-	mockAsker.EXPECT().
-		TrackAskOne(gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
-			if s, ok := answer.(*string); ok {
-				*s = userAccountAuth
-			}
-			return nil
-		})
-
-	ctx := t.Context()
-	issuer := &url.URL{Scheme: "https", Host: "authorize.mongodb.com"}
-	metadata := &authcode.AuthServerMetadata{
-		Issuer:      issuer.String(),
-		CacheExpiry: time.Now().Add(time.Hour),
-	}
-	mockConfig.EXPECT().AuthServerMetadata().Return(nil).Times(1)
-	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
-	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Times(1)
-
-	// Complete the callback in place of a browser: hit the loopback server with
-	// the expected state and a fake authorization code.
-	const authorizationCode = "auth-code-123"
-	mockAuthCode.EXPECT().
-		AuthorizationURL(metadata, gomock.Any(), gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ *authcode.AuthServerMetadata, redirectURI, state, _ string) (string, error) {
-			callbackURL, err := url.Parse(redirectURI)
-			if err != nil {
-				return "", err
-			}
-			if callbackURL.Hostname() != "127.0.0.1" || callbackURL.Path != authCodeCallbackPath {
-				return "", fmt.Errorf("unexpected redirect URI %q", redirectURI)
-			}
-			q := callbackURL.Query()
-			q.Set("state", state)
-			q.Set("code", authorizationCode)
-			callbackURL.RawQuery = q.Encode()
-			req, err := http.NewRequestWithContext(ctx, http.MethodGet, callbackURL.String(), nil)
-			if err != nil {
-				return "", err
-			}
-			resp, err := http.DefaultClient.Do(req) //nolint:gosec // test loopback URL
-			if err != nil {
-				return "", err
-			}
-			defer resp.Body.Close()
-			return "https://authorize.mongodb.com/authorize", nil
-		}).
-		Times(1)
-
-	tokenExpiry := time.Now().Add(time.Hour).UTC()
-	token := &authcode.Token{
-		AccessToken:  "asdf",
-		RefreshToken: "querty",
-		Expiry:       tokenExpiry,
-	}
-	mockAuthCode.EXPECT().
-		ExchangeCode(ctx, metadata, authorizationCode, gomock.Any(), gomock.Any()).
-		Return(token, nil).
-		Times(1)
-
-	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
-	mockConfig.EXPECT().SetService("cloud").AnyTimes()
-	mockConfig.EXPECT().SetAccessToken("asdf").AnyTimes()
-	mockConfig.EXPECT().SetRefreshToken("querty").AnyTimes()
-	mockConfig.EXPECT().SetTokenExpiry(tokenExpiry.Format(time.RFC3339)).Times(1)
-	mockConfig.EXPECT().SetAuthServerIssuer(metadata.Issuer).Times(1)
-	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
-	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
-	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
-	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
-	mockConfig.EXPECT().Save().Return(nil).Times(2)
-
-	opts.SkipConfig = true
-
-	err := opts.LoginRun(ctx)
-	require.NoError(t, err)
-	assert.Contains(t, buf.String(), authCodeLoginNotice)
-	assert.Contains(t, buf.String(), "To continue, go to https://authorize.mongodb.com/authorize")
-	assert.Contains(t, buf.String(), "Successfully logged in as test@10gen.com")
 }
 
 func TestLoginRun_APIKeys_Success(t *testing.T) {
@@ -694,9 +591,9 @@ func orgsResponse(t *testing.T, mockExecutor *api.MockCommandExecutor, orgs ...a
 		Times(1)
 }
 
-func apiError(status int) error {
+func apiError(code int) error {
 	err := &admin.GenericOpenAPIError{}
-	err.SetModel(admin.ApiError{Error: status})
+	err.SetModel(admin.ApiError{Error: code})
 	return err
 }
 
@@ -944,50 +841,4 @@ func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
 
 	err := opts.setUpProfile(t.Context())
 	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
-}
-
-func Test_loginAuthServer_ignoresStoredIssuer(t *testing.T) {
-	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
-	cfg, err := transport.FlowForAuthServer(loginAuthServer{service: config.CloudGovService}, http.DefaultClient, "test")
-	require.NoError(t, err)
-	assert.Equal(t, "https://authorize.mongodbgov.com", cfg.AuthServerURL.String())
-}
-
-func Test_loginOpts_LoginPreRun_UserAccountRefresh(t *testing.T) {
-	tests := []struct {
-		name       string
-		refreshErr error
-		wantErr    bool
-	}{
-		{name: "refreshed"},
-		{name: "credentials cleared", refreshErr: fmt.Errorf("refresh: %w", transport.ErrNotLoggedIn)},
-		{name: "other failure", refreshErr: errors.New("network down"), wantErr: true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			previous := config.Default()
-			profile := config.NewProfile("test-profile", config.NewInMemoryStore())
-			profile.SetAuthType(config.UserAccount)
-			profile.SetAccessToken(testAccessTokenWithExpiry(time.Now().Add(-time.Hour)))
-			profile.SetRefreshToken("refresh-token")
-			config.SetDefaultProfile(profile)
-			t.Cleanup(func() { config.SetDefaultProfile(previous) })
-
-			ctrl := gomock.NewController(t)
-			mockConfig := NewMockLoginConfig(ctrl)
-			opts := &LoginOpts{config: mockConfig}
-			opts.WithFlow(mocks.NewMockRefresher(ctrl))
-			opts.WithUserAccountRefresher(func(context.Context, *config.Profile) error { return tt.refreshErr })
-			if tt.refreshErr != nil {
-				mockConfig.EXPECT().SetAccessToken("").Times(1)
-			}
-
-			err := opts.LoginPreRun(t.Context())()
-			if tt.wantErr {
-				require.ErrorIs(t, err, tt.refreshErr)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
 }

@@ -16,7 +16,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 	"errors"
 	"strconv"
@@ -192,79 +191,4 @@ func testAccessTokenWithExpiry(expiry time.Time) string {
 	payload := base64.RawURLEncoding.EncodeToString([]byte(claims))
 	signature := base64.RawURLEncoding.EncodeToString([]byte("signature"))
 	return header + "." + payload + "." + signature
-}
-
-func TestTokenBuilder_UserAccountRefreshesThroughAuthServer(t *testing.T) {
-	tests := []struct {
-		name       string
-		refreshErr error
-	}{
-		{name: "refreshed"},
-		{name: "refresh fails", refreshErr: errors.New("refresh failed")},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "refresh-token")
-			profile.SetAuthType(config.UserAccount)
-			ctrl := gomock.NewController(t)
-			// The device flow must never receive Authorization Code tokens.
-			flow := mocks.NewMockRefresher(ctrl)
-
-			calls := 0
-			refresher := &cli.RefresherOpts{}
-			refresher.WithFlow(flow)
-			refresher.WithUserAccountRefresher(func(_ context.Context, p *config.Profile) error {
-				calls++
-				require.Same(t, profile, p)
-				if tt.refreshErr != nil {
-					return tt.refreshErr
-				}
-				p.SetAccessToken("new-access-token")
-				return nil
-			})
-			cmd := newTokenBuilder(refresher)
-			cmd.SetContext(config.WithProfile(t.Context(), profile))
-			cmd.SilenceErrors = true
-			cmd.SilenceUsage = true
-			buf := new(bytes.Buffer)
-			cmd.SetOut(buf)
-
-			err := cmd.Execute()
-			require.Equal(t, 1, calls)
-			if tt.refreshErr != nil {
-				require.ErrorIs(t, err, tt.refreshErr)
-				assert.Empty(t, buf.String())
-				return
-			}
-			require.NoError(t, err)
-			assert.Equal(t, "new-access-token\n", buf.String())
-		})
-	}
-}
-
-func TestTokenBuilder_UserAccountLegacyRefreshesThroughDeviceFlow(t *testing.T) {
-	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "old-refresh-token")
-	profile.SetAuthType(config.UserAccountLegacy)
-	ctrl := gomock.NewController(t)
-	flow := mocks.NewMockRefresher(ctrl)
-	flow.EXPECT().RefreshToken(gomock.Any(), "old-refresh-token").Return(&atlasauth.Token{
-		AccessToken:  "new-access-token",
-		RefreshToken: "new-refresh-token",
-	}, nil, nil)
-
-	refresher := &cli.RefresherOpts{}
-	refresher.WithFlow(flow)
-	refresher.WithUserAccountRefresher(func(context.Context, *config.Profile) error {
-		t.Fatal("legacy profiles must not use the Authorization Server refresher")
-		return nil
-	})
-	cmd := newTokenBuilder(refresher)
-	cmd.SetContext(config.WithProfile(t.Context(), profile))
-	cmd.SilenceErrors = true
-	cmd.SilenceUsage = true
-	buf := new(bytes.Buffer)
-	cmd.SetOut(buf)
-
-	require.NoError(t, cmd.Execute())
-	assert.Equal(t, "new-access-token\n", buf.String())
 }

@@ -16,10 +16,7 @@ package store
 
 import (
 	"context"
-	"encoding/base64"
-	"fmt"
 	"testing"
-	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/stretchr/testify/require"
@@ -144,12 +141,7 @@ func TestWithAuthentication(t *testing.T) {
 			name: "user account",
 			setTestProfile: func(p *config.Profile) {
 				p.SetAuthType(config.UserAccount)
-				// Token() requires both tokens and a parseable JWT.
-				claims := fmt.Sprintf(`{"sub":"user","exp":%d}`, time.Now().Add(time.Hour).Unix())
-				jwt := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"none"}`)) + "." +
-					base64.RawURLEncoding.EncodeToString([]byte(claims)) + "."
-				p.SetAccessToken(jwt)
-				p.SetRefreshToken("refresh")
+				p.SetAccessToken("token")
 			},
 		},
 	}

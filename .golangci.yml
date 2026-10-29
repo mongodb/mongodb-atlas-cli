@@ -129,8 +129,6 @@ linters:
           alias: atlas
         - pkg: go.mongodb.org/atlas/auth
           alias: atlasauth
-        - pkg: go.mongodb.org/atlas-sdk/v20250312027/auth/code
-          alias: authcode
         - pkg: github.com/AlecAivazis/survey/v2/core
           alias: survey
         - pkg: github.com/creack/pty

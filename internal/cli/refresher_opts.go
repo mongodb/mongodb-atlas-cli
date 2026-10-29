@@ -29,8 +29,7 @@ import (
 var TokenRefreshed bool
 
 type RefresherOpts struct {
-	flow               Refresher
-	refreshUserAccount func(context.Context, *config.Profile) error
+	flow Refresher
 }
 
 //go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_refresher.go -package=mocks -source=refresher_opts.go
@@ -54,11 +53,6 @@ func (opts *RefresherOpts) InitFlow(c transport.ServiceGetter) func() error {
 // WithFlow set a flow for testing.
 func (opts *RefresherOpts) WithFlow(f Refresher) {
 	opts.flow = f
-}
-
-// WithUserAccountRefresher set the user_account refresher for testing.
-func (opts *RefresherOpts) WithUserAccountRefresher(f func(context.Context, *config.Profile) error) {
-	opts.refreshUserAccount = f
 }
 
 func (opts *RefresherOpts) RefreshAccessToken(ctx context.Context) error {
@@ -91,10 +85,6 @@ func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profil
 		TokenRefreshed = true
 		return nil
 	}
-	if profile.AuthType() == config.UserAccount {
-		return opts.refreshUserAccountToken(ctx, profile)
-	}
-	// UserAccountLegacy: refresh through the device-code flow.
 	if opts.flow == nil || profile != config.Default() {
 		if err := opts.InitFlow(profile)(); err != nil {
 			return err
@@ -107,21 +97,6 @@ func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profil
 	profile.SetAccessToken(t.AccessToken)
 	profile.SetRefreshToken(t.RefreshToken)
 	if err := profile.Save(); err != nil {
-		return err
-	}
-	TokenRefreshed = true
-	return nil
-}
-
-// refreshUserAccountToken refreshes through the Authorization Server; the device flow must never see these tokens.
-func (opts *RefresherOpts) refreshUserAccountToken(ctx context.Context, profile *config.Profile) error {
-	refresh := opts.refreshUserAccount
-	if refresh == nil {
-		refresh = func(ctx context.Context, p *config.Profile) error {
-			return transport.RefreshUserAccountToken(ctx, p, version.Version)
-		}
-	}
-	if err := refresh(ctx, profile); err != nil {
 		return err
 	}
 	TokenRefreshed = true

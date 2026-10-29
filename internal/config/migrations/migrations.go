@@ -56,7 +56,6 @@ func NewDefaultMigrator() *Migrator {
 
 	migrations := []MigrationFunc{
 		NewMigrateToVersion2(),
-		NewMigrateToVersion3(),
 	}
 
 	return NewMigrator(dependencies, migrations)
@@ -122,8 +121,7 @@ func (m *Migrator) Migrate() error {
 		}
 
 		// In case the migration succeeds, update the config version.
-		currentVersion++
-		if err := m.saveConfigVersion(currentVersion); err != nil {
+		if err := m.saveConfigVersion(currentVersion + 1); err != nil {
 			return fmt.Errorf("failed to set current config version: %w", err)
 		}
 	}

@@ -47,7 +47,7 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	}
 
 	// Without this, the profile has no AuthType, and the HTTP client never attaches the token.
-	opts.config.SetAuthType(config.UserAccountLegacy)
+	opts.config.SetAuthType(config.UserAccount)
 
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {

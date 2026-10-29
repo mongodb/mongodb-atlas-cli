@@ -582,7 +582,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 	switch config.AuthType() {
 	case config.APIKeys, config.ServiceAccount:
 		return nil
-	case config.UserAccount, config.UserAccountLegacy:
+	case config.UserAccount:
 		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
 			return nil
 		}

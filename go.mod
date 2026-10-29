@@ -1,6 +1,6 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
-go 1.26.7
+go 1.26.10
 
 replace (
 	// Security fix for VULN-1041 (GO-2022-0493): force vulnerable golang.org/x/sys to fixed version

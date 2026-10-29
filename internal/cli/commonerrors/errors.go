@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/atlas-cli-core/transport"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -187,11 +186,7 @@ func IsCannotUseFlexWithClusterApis(err error) bool {
 	return apiError.GetErrorCode() == "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 }
 
-// IsInvalidRefreshToken reports a rejected refresh token from either the device flow or the Authorization Server.
 func IsInvalidRefreshToken(err error) bool {
-	if errors.Is(err, transport.ErrNotLoggedIn) {
-		return true
-	}
 	errCode := getErrorCode(err)
 	return errCode == invalidRefreshTokenErrorCode
 }

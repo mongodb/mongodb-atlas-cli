@@ -25,7 +25,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
-	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -36,15 +35,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
-	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . SetSaver,LoginConfig,TrackAsker,AuthorizationCodeFlow
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth -source=login.go
 
 type SetSaver interface {
 	SetAuthType(config.AuthMechanism)
@@ -64,7 +61,6 @@ type SetSaver interface {
 
 type LoginConfig interface {
 	SetSaver
-	transport.ProfileProvider
 	AccessTokenSubject() (string, error)
 	OrgID() string
 	ProjectID() string
@@ -76,59 +72,21 @@ type TrackAsker interface {
 }
 
 const (
-	userAccountAuth        = "UserAccount"
-	userAccountLegacyAuth  = "UserAccountLegacy"
-	atlasName              = "atlas"
-	authCodeCallbackPath   = "/atlas-cli/callback"
-	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy --output plaintext`."
-	userAccountDeprecation = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
+	userAccountAuth = "UserAccount"
+	atlasName       = "atlas"
 )
 
 var (
 	ErrProjectIDNotFound = errors.New("project is inaccessible. You either don't have access to this project or the project doesn't exist")
 	ErrOrgIDNotFound     = errors.New("organization is inaccessible. You don't have access to this organization or the organization doesn't exist")
-	authTypeOptions      = []string{userAccountAuth, userAccountLegacyAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
+	authTypeOptions      = []string{userAccountAuth, prompt.ServiceAccountAuth, prompt.APIKeysAuth}
 	outputFormatOptions  = []string{"plaintext", "json"}
 	authTypeDescription  = map[string]string{
 		userAccountAuth:           "(best for getting started)",
-		userAccountLegacyAuth:     "(deprecated device-code flow)",
 		prompt.ServiceAccountAuth: "(best for automation)",
 		prompt.APIKeysAuth:        "(for existing automations)",
 	}
 )
-
-// AuthorizationCodeFlow is the Authorization Code + PKCE surface the login flow needs.
-// The default implementation wraps *authcode.Config.
-type AuthorizationCodeFlow interface {
-	ResolveAuthServerMetadata(ctx context.Context, cached *authcode.AuthServerMetadata) (*authcode.AuthServerMetadata, error)
-	AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error)
-	ExchangeCode(ctx context.Context, metadata *authcode.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*authcode.Token, error)
-}
-
-type authCodeConfig struct {
-	cfg *authcode.Config
-}
-
-func (a authCodeConfig) ResolveAuthServerMetadata(ctx context.Context, cached *authcode.AuthServerMetadata) (*authcode.AuthServerMetadata, error) {
-	return transport.ResolveAuthServerMetadata(ctx, a.cfg, cached, false)
-}
-
-// loginAuthServer ignores the stored issuer so --gov and MONGODB_ATLAS_AUTH_SERVER_URL apply on re-login.
-type loginAuthServer struct {
-	service string
-}
-
-func (s loginAuthServer) Service() string        { return s.service }
-func (loginAuthServer) AuthServerIssuer() string { return "" }
-
-func (a authCodeConfig) AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error) {
-	return a.cfg.AuthorizationURL(metadata, redirectURI, state, codeVerifier)
-}
-
-func (a authCodeConfig) ExchangeCode(ctx context.Context, metadata *authcode.AuthServerMetadata, authorizationCode, redirectURI, codeVerifier string) (*authcode.Token, error) {
-	token, _, err := a.cfg.ExchangeCode(ctx, metadata, authorizationCode, redirectURI, codeVerifier)
-	return token, err
-}
 
 type LoginOpts struct {
 	cli.DefaultSetterOpts
@@ -149,7 +107,6 @@ type LoginOpts struct {
 	SkipConfig       bool
 	config           LoginConfig
 	Asker            TrackAsker
-	authCode         AuthorizationCodeFlow
 }
 
 func (opts *LoginOpts) validateOutput() error {
@@ -246,16 +203,8 @@ func (opts *LoginOpts) promptOutput() error {
 }
 
 func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
-	switch opts.authType {
-	case userAccountAuth:
-		if err := opts.authCodeFlow(ctx); err != nil {
-			return err
-		}
-	case userAccountLegacyAuth:
-		_, _ = fmt.Fprintln(opts.OutWriter, userAccountDeprecation)
-		if err := opts.oauthFlow(ctx); err != nil {
-			return err
-		}
+	if err := opts.oauthFlow(ctx); err != nil {
+		return err
 	}
 	// Sync config with OAuth tokens
 	if err := opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
@@ -319,7 +268,7 @@ Enter [?] on any option to get help.
 
 func (opts *LoginOpts) setUpCredentials(ctx context.Context) error {
 	switch opts.authType {
-	case userAccountAuth, userAccountLegacyAuth:
+	case userAccountAuth:
 		return opts.setUserAccountCredentials(ctx)
 	case prompt.ServiceAccountAuth, prompt.APIKeysAuth:
 		return opts.setProgrammaticCredentials()
@@ -406,8 +355,6 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
 		opts.config.SetAuthType(config.UserAccount)
-	case userAccountLegacyAuth:
-		opts.config.SetAuthType(config.UserAccountLegacy)
 	case prompt.ServiceAccountAuth:
 		opts.config.SetAuthType(config.ServiceAccount)
 	case prompt.APIKeysAuth:
@@ -689,60 +636,6 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 	}
 }
 
-// authCodeFlow runs the Authorization Code + PKCE login through the SDK loopback
-// callback server and persists the token via the shared core write path.
-func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
-	flow := opts.authCode
-	if flow == nil {
-		cfg, err := transport.FlowForAuthServer(loginAuthServer{service: opts.config.Service()}, &http.Client{Transport: transport.Default()}, version.Version)
-		if err != nil {
-			return err
-		}
-		flow = authCodeConfig{cfg}
-		opts.authCode = flow
-	}
-	metadata, err := flow.ResolveAuthServerMetadata(ctx, opts.config.AuthServerMetadata())
-	if err != nil {
-		return err
-	}
-
-	state, err := authcode.GenerateState()
-	if err != nil {
-		return err
-	}
-	verifier := authcode.GenerateVerifier()
-
-	server, err := authcode.StartCallbackServer(state, authCodeCallbackPath, metadata)
-	if err != nil {
-		return err
-	}
-	defer func() { _ = server.Close() }()
-
-	authURL, err := flow.AuthorizationURL(metadata, server.RedirectURI(), state, verifier)
-	if err != nil {
-		return err
-	}
-
-	_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
-	// Always print the URL so login can finish if the browser cannot open.
-	_, _ = fmt.Fprintf(opts.OutWriter, "To continue, go to %s\n", authURL)
-	opts.handleBrowser(authURL)
-
-	authorizationCode, err := server.WaitForCallback(ctx)
-	if err != nil {
-		return err
-	}
-
-	token, err := flow.ExchangeCode(ctx, metadata, authorizationCode, server.RedirectURI(), verifier)
-	if err != nil {
-		return err
-	}
-	opts.AccessToken = token.AccessToken
-	opts.RefreshToken = token.RefreshToken
-
-	return transport.SaveUserAccountToken(opts.config, token, metadata)
-}
-
 func (opts *LoginOpts) shouldRetryAuthenticate(err error, p survey.Prompt) (retry bool, errSurvey error) {
 	if err == nil || !auth.IsTimeoutErr(err) {
 		return false, nil
@@ -784,8 +677,6 @@ func LoginBuilder() *cobra.Command {
 		Use:   "login",
 		Short: "Authenticate with MongoDB Atlas.",
 		Long: `This command allows you to authenticate with MongoDB Atlas using User Account, Service Account, or API Key authentication methods.
-
-User Account login uses the Authorization Code and PKCE flow with a local callback server. To use the deprecated device-code flow instead, run ` + "`atlas auth login --authType=UserAccountLegacy --output plaintext`" + `.
 
 Note: If you have credentials set in environment variables, they take precedence over the values you provide during authentication. To learn more, see ` + commonerrors.EnvVarsDocsURL + `.
 

@@ -163,12 +163,51 @@ func deduplicateConflictingPaths(spec *openapi3.T) {
 			first := spec.Paths.Value(firstPath)
 			duplicate := spec.Paths.Value(path)
 			for verb, op := range duplicate.Operations() {
+				normalizePathParameterNames(op, path, firstPath)
 				first.SetOperation(verb, op)
 			}
 			spec.Paths.Delete(path)
 		} else {
 			seen[normalized] = path
 		}
+	}
+}
+
+// normalizePathParameterNames rewrites an operation's path parameter names to match the path it
+// is merged into. This is only applied to the validation copy, so command generation can retain
+// each operation's original parameter names.
+func normalizePathParameterNames(operation *openapi3.Operation, sourcePath, targetPath string) {
+	sourceParams := pathParamPattern.FindAllString(sourcePath, -1)
+	targetParams := pathParamPattern.FindAllString(targetPath, -1)
+	if len(sourceParams) != len(targetParams) {
+		return
+	}
+
+	parameterNames := make(map[string]string, len(sourceParams))
+	for i, sourceParam := range sourceParams {
+		sourceName := strings.Trim(sourceParam, "{}")
+		targetName := strings.Trim(targetParams[i], "{}")
+		if sourceName != targetName {
+			parameterNames[sourceName] = targetName
+		}
+	}
+
+	for j, parameterRef := range operation.Parameters {
+		if parameterRef == nil || parameterRef.Value == nil || parameterRef.Value.In != pathParameterLocation {
+			continue
+		}
+
+		targetName, ok := parameterNames[parameterRef.Value.Name]
+		if !ok {
+			continue
+		}
+
+		// Clone the references so shared component parameters aren't changed by validation.
+		parameterRefCopy := *parameterRef
+		parameterCopy := *parameterRef.Value
+		parameterCopy.Name = targetName
+		parameterRefCopy.Value = &parameterCopy
+		operation.Parameters[j] = &parameterRefCopy
 	}
 }
 

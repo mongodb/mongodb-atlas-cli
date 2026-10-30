@@ -62,8 +62,20 @@ func testSpec(t *testing.T, name, specPath string) {
 }
 
 func TestDeduplicateConflictingPaths(t *testing.T) {
-	getOp := &openapi3.Operation{OperationID: "getGroupSampleDatasetLoad"}
-	postOp := &openapi3.Operation{OperationID: "requestGroupSampleDatasetLoad"}
+	getOp := &openapi3.Operation{
+		OperationID: "getGroupSampleDatasetLoad",
+		Parameters: openapi3.Parameters{
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "groupId", In: "path"}},
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "sampleDatasetId", In: "path"}},
+		},
+	}
+	postOp := &openapi3.Operation{
+		OperationID: "requestGroupSampleDatasetLoad",
+		Parameters: openapi3.Parameters{
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "groupId", In: "path"}},
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "name", In: "path"}},
+		},
+	}
 
 	spec := &openapi3.T{
 		Paths: openapi3.NewPaths(
@@ -83,6 +95,21 @@ func TestDeduplicateConflictingPaths(t *testing.T) {
 	require.NotNil(t, remaining, "expected first path to be kept")
 	assert.Equal(t, postOp, remaining.Post, "POST operation should be preserved")
 	assert.Equal(t, getOp, remaining.Get, "GET operation should be merged from duplicate")
+	assert.Equal(t, "name", remaining.Get.Parameters[1].Value.Name, "merged path parameters should match the retained path")
+}
+
+func TestNormalizePathParameterNamesDoesNotCascade(t *testing.T) {
+	operation := &openapi3.Operation{
+		Parameters: openapi3.Parameters{
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "a", In: "path"}},
+			&openapi3.ParameterRef{Value: &openapi3.Parameter{Name: "b", In: "path"}},
+		},
+	}
+
+	normalizePathParameterNames(operation, "/groups/{a}/{b}", "/groups/{b}/{c}")
+
+	assert.Equal(t, "b", operation.Parameters[0].Value.Name)
+	assert.Equal(t, "c", operation.Parameters[1].Value.Name)
 }
 
 // To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...

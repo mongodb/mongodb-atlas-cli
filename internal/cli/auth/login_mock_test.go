@@ -1229,3 +1229,65 @@ func (c *MockTrackAskerTrackAskOneCall) DoAndReturn(f func(survey.Prompt, any, .
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
+
+// MockProfileValueGetter is a mock of ProfileValueGetter interface.
+type MockProfileValueGetter struct {
+	ctrl     *gomock.Controller
+	recorder *MockProfileValueGetterMockRecorder
+	isgomock struct{}
+}
+
+// MockProfileValueGetterMockRecorder is the mock recorder for MockProfileValueGetter.
+type MockProfileValueGetterMockRecorder struct {
+	mock *MockProfileValueGetter
+}
+
+// NewMockProfileValueGetter creates a new mock instance.
+func NewMockProfileValueGetter(ctrl *gomock.Controller) *MockProfileValueGetter {
+	mock := &MockProfileValueGetter{ctrl: ctrl}
+	mock.recorder = &MockProfileValueGetterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockProfileValueGetter) EXPECT() *MockProfileValueGetterMockRecorder {
+	return m.recorder
+}
+
+// GetProfileValue mocks base method.
+func (m *MockProfileValueGetter) GetProfileValue(profileName, propertyName string) any {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProfileValue", profileName, propertyName)
+	ret0, _ := ret[0].(any)
+	return ret0
+}
+
+// GetProfileValue indicates an expected call of GetProfileValue.
+func (mr *MockProfileValueGetterMockRecorder) GetProfileValue(profileName, propertyName any) *MockProfileValueGetterGetProfileValueCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfileValue", reflect.TypeOf((*MockProfileValueGetter)(nil).GetProfileValue), profileName, propertyName)
+	return &MockProfileValueGetterGetProfileValueCall{Call: call}
+}
+
+// MockProfileValueGetterGetProfileValueCall wrap *gomock.Call
+type MockProfileValueGetterGetProfileValueCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockProfileValueGetterGetProfileValueCall) Return(arg0 any) *MockProfileValueGetterGetProfileValueCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockProfileValueGetterGetProfileValueCall) Do(f func(string, string) any) *MockProfileValueGetterGetProfileValueCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockProfileValueGetterGetProfileValueCall) DoAndReturn(f func(string, string) any) *MockProfileValueGetterGetProfileValueCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}

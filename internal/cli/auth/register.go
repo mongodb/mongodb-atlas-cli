@@ -32,6 +32,10 @@ type RegisterOpts struct {
 }
 
 func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
+	if err := opts.checkNoOtherCredentials(userAccountAuth); err != nil {
+		return err
+	}
+
 	c, _, err := opts.RegistrationConfig(ctx)
 	if err != nil {
 		return err

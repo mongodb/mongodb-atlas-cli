@@ -16,10 +16,12 @@ package commonerrors
 
 import (
 	"errors"
+	"fmt"
 	"slices"
 	"strings"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/transport"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -245,6 +247,30 @@ func TestGetErrorCode(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			if got := getErrorCode(tc.err); got != tc.want {
 				t.Errorf("GetErrorCode(%v) = %v, want %v", tc.err, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestIsInvalidRefreshToken(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+		want bool
+	}{
+		{name: "nil", err: nil, want: false},
+		{name: "other error", err: errors.New("network down"), want: false},
+		{name: "auth code credentials cleared", err: fmt.Errorf("refresh: %w", transport.ErrNotLoggedIn), want: true},
+		{
+			name: "device flow invalid refresh token",
+			err:  &atlas.ErrorResponse{ErrorCode: invalidRefreshTokenErrorCode},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsInvalidRefreshToken(tt.err); got != tt.want {
+				t.Errorf("IsInvalidRefreshToken() = %v, want %v", got, tt.want)
 			}
 		})
 	}

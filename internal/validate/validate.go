@@ -38,6 +38,7 @@ const (
 var (
 	ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")
 	ErrAlreadyAuthenticatedToken   = errors.New("already authenticated with an account")
+	ErrAlreadyAuthenticatedSA      = errors.New("already authenticated with a service account")
 	ErrInvalidPath                 = errors.New("invalid path")
 	ErrInvalidClusterName          = errors.New("invalid cluster name")
 	ErrInvalidDBUsername           = errors.New("invalid db username")

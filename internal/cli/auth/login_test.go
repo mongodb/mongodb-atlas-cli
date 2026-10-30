@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
@@ -84,9 +85,10 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		config:    mockConfig,
-		Asker:     mockAsker,
-		NoBrowser: true,
+		config:       mockConfig,
+		Asker:        mockAsker,
+		NoBrowser:    true,
+		savedProfile: savedProfileWith(nil),
 	}
 	opts.WithFlow(mockFlow)
 	opts.OutWriter = buf
@@ -152,8 +154,9 @@ func TestLoginRun_APIKeys_Success(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	opts := &LoginOpts{
-		config: mockConfig,
-		Asker:  mockAsker,
+		config:       mockConfig,
+		Asker:        mockAsker,
+		savedProfile: savedProfileWith(nil),
 	}
 	opts.OutWriter = new(bytes.Buffer)
 	opts.Store = mockStore
@@ -841,4 +844,92 @@ func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
 
 	err := opts.setUpProfile(t.Context())
 	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+type savedProfileStub map[string]string
+
+func (s savedProfileStub) GetProfileValue(_ string, property string) any {
+	if v, ok := s[property]; ok {
+		return v
+	}
+	return nil
+}
+
+func savedProfileWith(values map[string]string) func() (ProfileValueGetter, error) {
+	return func() (ProfileValueGetter, error) { return savedProfileStub(values), nil }
+}
+
+func Test_loginOpts_checkNoOtherCredentials(t *testing.T) {
+	apiKeys := map[string]string{publicAPIKeyField: "pub", privateAPIKeyField: "priv"}
+	serviceAccount := map[string]string{config.ClientIDField: "mdb_sa_id_1", config.ClientSecretField: "secret"}
+	userAccount := map[string]string{config.AccessTokenField: "at", config.RefreshTokenField: "rt"}
+
+	tests := []struct {
+		name     string
+		saved    map[string]string
+		authType string
+		wantErr  error
+	}{
+		{name: "empty profile", authType: userAccountAuth},
+		{name: "api keys relogin", saved: apiKeys, authType: prompt.APIKeysAuth},
+		{name: "service account relogin", saved: serviceAccount, authType: prompt.ServiceAccountAuth},
+		{name: "user account relogin", saved: userAccount, authType: userAccountAuth},
+		{name: "custom oauth client id only", saved: map[string]string{config.ClientIDField: "0oacustom"}, authType: userAccountAuth},
+		{name: "half api key pair", saved: map[string]string{publicAPIKeyField: "pub"}, authType: userAccountAuth},
+		{name: "access token without refresh token", saved: map[string]string{config.AccessTokenField: "sa-token"}, authType: prompt.APIKeysAuth},
+		{name: "service account then user account", saved: serviceAccount, authType: userAccountAuth, wantErr: validate.ErrAlreadyAuthenticatedSA},
+		{name: "service account then api keys", saved: serviceAccount, authType: prompt.APIKeysAuth, wantErr: validate.ErrAlreadyAuthenticatedSA},
+		{name: "api keys then service account", saved: apiKeys, authType: prompt.ServiceAccountAuth, wantErr: validate.ErrAlreadyAuthenticatedAPIKeys},
+		{name: "api keys then user account", saved: apiKeys, authType: userAccountAuth, wantErr: validate.ErrAlreadyAuthenticatedAPIKeys},
+		{name: "user account then service account", saved: userAccount, authType: prompt.ServiceAccountAuth, wantErr: validate.ErrAlreadyAuthenticatedToken},
+		{name: "user account then api keys", saved: userAccount, authType: prompt.APIKeysAuth, wantErr: validate.ErrAlreadyAuthenticatedToken},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &LoginOpts{savedProfile: savedProfileWith(tt.saved)}
+			err := opts.checkNoOtherCredentials(tt.authType)
+			if tt.wantErr == nil {
+				require.NoError(t, err)
+				return
+			}
+			require.ErrorIs(t, err, tt.wantErr)
+			assert.Contains(t, err.Error(), "atlas auth logout")
+		})
+	}
+}
+
+func Test_loginOpts_checkNoOtherCredentials_secretNotLeaked(t *testing.T) {
+	opts := &LoginOpts{savedProfile: savedProfileWith(map[string]string{
+		config.ClientIDField:     "mdb_sa_id_1",
+		config.ClientSecretField: "super-secret",
+	})}
+	err := opts.checkNoOtherCredentials(userAccountAuth)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "mdb_sa_id_1")
+	assert.NotContains(t, err.Error(), "super-secret")
+}
+
+func Test_loginOpts_checkNoOtherCredentials_storeError(t *testing.T) {
+	opts := &LoginOpts{savedProfile: func() (ProfileValueGetter, error) { return nil, errors.New("boom") }}
+	require.ErrorContains(t, opts.checkNoOtherCredentials(userAccountAuth), "boom")
+}
+
+func Test_loginOpts_LoginRun_OtherCredentialsBlocksBeforeFlow(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
+	opts := &LoginOpts{
+		config:   mockConfig,
+		authType: userAccountAuth,
+		savedProfile: savedProfileWith(map[string]string{
+			config.ClientIDField:     "mdb_sa_id_1",
+			config.ClientSecretField: "secret",
+		}),
+	}
+	opts.Output = jsonOutputFormat
+	opts.WithFlow(mockFlow)
+
+	// No config writes and no device code request expected.
+	require.ErrorIs(t, opts.LoginRun(t.Context()), validate.ErrAlreadyAuthenticatedSA)
 }

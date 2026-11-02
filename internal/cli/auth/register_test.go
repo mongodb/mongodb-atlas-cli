@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )

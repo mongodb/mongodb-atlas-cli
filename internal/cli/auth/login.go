@@ -37,7 +37,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 	"go.mongodb.org/atlas/auth"
 )
 

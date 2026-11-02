@@ -38,7 +38,6 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"9.0": {"ubuntu2604"},
 		"8.3": {"suse16"},
 		"8.2": {"ubuntu2604", "suse16"},
 		"8.0": {"suse16"},
@@ -181,10 +180,6 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue
-			}
-
-			if sv == "9.0" {
-				continue // TODO: CLOUDP-452069 Enable MongoDB 9.0 meta package tests after the first release publishes to the 9.0 repos
 			}
 
 			t := &shrub.Task{

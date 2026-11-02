@@ -36,7 +36,7 @@ else
 endif
 export TERM := linux-m
 export GO111MODULE := on
-export GOTOOLCHAIN := local
+export GOTOOLCHAIN := auto
 
 .PHONY: pre-commit
 pre-commit:  ## Run pre-commit hook

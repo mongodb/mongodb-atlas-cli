@@ -54,8 +54,8 @@ func TestDBUserWithFlags(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+	g := internal.NewAtlasE2ETestGenerator(t)
+	username := internal.Must(internal.RandUsername())
 
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
@@ -174,8 +174,8 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+	g := internal.NewAtlasE2ETestGenerator(t)
+	username := internal.Must(internal.RandUsername())
 
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 

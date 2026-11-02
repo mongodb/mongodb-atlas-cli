@@ -41,7 +41,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, er := internal.AtlasCLIBin()
 	require.NoError(t, er)
 
@@ -52,7 +52,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		require.NoError(t, internal.DeleteOrgAPIKey(apiKeyID))
 	})
 
-	n := g.MemoryRand("rand", 255)
+	n := internal.Must(internal.RandInt(255))
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

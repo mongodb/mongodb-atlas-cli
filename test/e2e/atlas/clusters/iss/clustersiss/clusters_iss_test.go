@@ -45,16 +45,16 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
 	g.GenerateProject("clustersIss")
 
-	issClusterName := g.Memory("issClusterName", internal.Must(internal.RandClusterName())).(string)
+	issClusterName := internal.Must(internal.RandClusterName())
 
-	issDbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	issDbUserUsername := internal.Must(internal.RandUsername())
 
 	issDbUserPassword := issDbUserUsername + "~PwD"
 
@@ -264,13 +264,6 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		connectionString := strings.TrimSpace(string(resp))
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
-
-		mode, err := internal.TestRunMode()
-		req.NoError(err)
-
-		if mode != internal.TestModeLive {
-			t.Skip("skipping actual MongoDB connection in snapshot mode")
-		}
 
 		client, err = mongo.Connect(
 			ctx,

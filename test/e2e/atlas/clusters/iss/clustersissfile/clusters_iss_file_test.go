@@ -36,13 +36,13 @@ func TestISSClustersFile(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterIssFileName := g.Memory("clusterIssFileName", internal.Must(internal.RandClusterName())).(string)
+	clusterIssFileName := internal.Must(internal.RandClusterName())
 
 	g.Run("Create ISS Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

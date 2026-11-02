@@ -39,14 +39,14 @@ func TestClustersFile(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("clustersFile")
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName := g.Memory("clusterFileName", internal.Must(internal.RandClusterName())).(string)
+	clusterFileName := internal.Must(internal.RandClusterName())
 
 	mdbVersion, err := internal.MongoDBMajorVersion()
 	req.NoError(err)
@@ -206,10 +206,6 @@ func TestClustersFile(t *testing.T) {
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
 		assert.Equal(t, expected, string(resp))
 	})
-
-	if internal.SkipCleanup() {
-		return
-	}
 
 	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

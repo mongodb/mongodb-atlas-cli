@@ -37,7 +37,7 @@ func TestAtlasUsers(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	var (
@@ -113,7 +113,7 @@ func TestAtlasUsers(t *testing.T) {
 			t.Skip("Skipping test in Gov environment")
 		}
 
-		n := g.MemoryRand("rand", 10000)
+		n := internal.Must(internal.RandInt(10000))
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {
 			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)

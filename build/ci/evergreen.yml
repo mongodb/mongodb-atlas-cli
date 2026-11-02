@@ -190,7 +190,6 @@ functions:
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           MONGODB_ATLAS_SILENCE_STORAGE_WARNING: "true"
           DO_NOT_TRACK: "1"
-          TEST_MODE: live
           LOCALDEV_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/mongodb/mongodb-atlas-local
         command: make e2e-test
   "generate evergreen":

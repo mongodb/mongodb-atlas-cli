@@ -27,39 +27,8 @@ import (
 )
 
 const (
-	cloudgov                 = "cloudgov"
-	snapshotCloudRoleID      = "c0123456789abcdef012345c"
-	snapshotTestBucket       = "test-bucket"
-	snapshotFlexInstanceName = "snapshotCluster0"
-	snapshotOrgID            = "a0123456789abcdef012345a"
-	snapshotProjectID        = "b0123456789abcdef012345b"
-	snapshotOpsManagerURL    = "http://localhost:8080/"
+	cloudgov = "cloudgov"
 )
-
-type TestMode string
-
-const (
-	TestModeLive   TestMode = "live"   // run tests against a live Atlas instance (this do not replay or record snapshots)
-	TestModeRecord TestMode = "record" // record snapshots
-	TestModeReplay TestMode = "replay" // replay snapshots
-)
-
-func TestRunMode() (TestMode, error) {
-	mode := os.Getenv("TEST_MODE")
-	if mode == "" || strings.EqualFold(mode, "live") {
-		return TestModeLive, nil
-	}
-
-	if strings.EqualFold(mode, "record") {
-		return TestModeRecord, nil
-	}
-
-	if strings.EqualFold(mode, "replay") {
-		return TestModeReplay, nil
-	}
-
-	return TestModeLive, fmt.Errorf("invalid value for environment variable TEST_MODE: %s, expected 'live', 'record' or 'replay'", mode)
-}
 
 func ProfileName() string {
 	profileName := os.Getenv("E2E_PROFILE_NAME")
@@ -67,12 +36,7 @@ func ProfileName() string {
 		return profileName
 	}
 
-	mode, err := TestRunMode()
-	if err != nil || mode != TestModeReplay {
-		return "__e2e"
-	}
-
-	return "__e2e_snapshot"
+	return "__e2e"
 }
 
 func ProfileProjectID() string {
@@ -83,25 +47,7 @@ func ProfileProjectID() string {
 	return profile["project_id"]
 }
 
-func SkipCleanup() bool {
-	mode, err := TestRunMode()
-	if err != nil {
-		return false
-	}
-
-	if mode == TestModeLive {
-		return false
-	}
-
-	return true
-}
-
 func FlexInstanceName() (string, error) {
-	mode, err := TestRunMode()
-	if err == nil && mode == TestModeReplay {
-		return snapshotFlexInstanceName, nil
-	}
-
 	instanceName, ok := os.LookupEnv("E2E_FLEX_INSTANCE_NAME")
 	if !ok || instanceName == "" {
 		return "", errors.New("environment variable is missing: E2E_FLEX_INSTANCE_NAME")
@@ -111,11 +57,6 @@ func FlexInstanceName() (string, error) {
 }
 
 func CloudRoleID() (string, error) {
-	mode, err := TestRunMode()
-	if err == nil && mode == TestModeReplay {
-		return snapshotCloudRoleID, nil
-	}
-
 	roleID, ok := os.LookupEnv("E2E_CLOUD_ROLE_ID")
 	if !ok || roleID == "" {
 		return "", errors.New("environment variable is missing: E2E_CLOUD_ROLE_ID")
@@ -125,11 +66,6 @@ func CloudRoleID() (string, error) {
 }
 
 func TestBucketName() (string, error) {
-	mode, err := TestRunMode()
-	if err == nil && mode == TestModeReplay {
-		return snapshotTestBucket, nil
-	}
-
 	bucketName, ok := os.LookupEnv("E2E_TEST_BUCKET")
 	if !ok || bucketName == "" {
 		return "", errors.New("environment variable is missing: E2E_TEST_BUCKET")
@@ -165,14 +101,6 @@ func AtlasCLIBin() (string, error) {
 	}
 
 	return filepath.Join(repo, "bin", "atlas"), nil
-}
-
-func snapshotBasePath() (string, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(wd, "testdata", ".snapshots"), nil
 }
 
 func ProfileData() (map[string]string, error) {

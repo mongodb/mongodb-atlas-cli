@@ -19,6 +19,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 	"slices"
 	"strings"
 	"time"
@@ -113,13 +115,42 @@ func (a authCodeConfig) ResolveAuthServerMetadata(ctx context.Context, cached *a
 	return transport.ResolveAuthServerMetadata(ctx, a.cfg, cached, false)
 }
 
-// loginAuthServer ignores the stored issuer so --gov and MONGODB_ATLAS_AUTH_SERVER_URL apply on re-login.
+const authServerURLEnvVar = "MONGODB_ATLAS_AUTH_SERVER_URL"
+
+// loginAuthServer ignores the stored issuer so --gov, ops_manager_url and MONGODB_ATLAS_AUTH_SERVER_URL apply on re-login.
 type loginAuthServer struct {
 	service string
+	issuer  string
 }
 
-func (s loginAuthServer) Service() string        { return s.service }
-func (loginAuthServer) AuthServerIssuer() string { return "" }
+func (s loginAuthServer) Service() string          { return s.service }
+func (s loginAuthServer) AuthServerIssuer() string { return s.issuer }
+
+// newLoginAuthServer resolves the issuer: MONGODB_ATLAS_AUTH_SERVER_URL, then ops_manager_url, then the gov and prod defaults.
+func newLoginAuthServer(service, opsManagerURL string) (loginAuthServer, error) {
+	s := loginAuthServer{service: service}
+	if os.Getenv(authServerURLEnvVar) != "" || opsManagerURL == "" {
+		return s, nil
+	}
+	issuer, err := authServerFromOpsManagerURL(opsManagerURL)
+	if err != nil {
+		return s, err
+	}
+	s.issuer = issuer
+	return s, nil
+}
+
+// authServerFromOpsManagerURL swaps the leading cloud in the host for authorize, e.g. cloud-dev.mongodb.com to authorize-dev.mongodb.com.
+func authServerFromOpsManagerURL(opsManagerURL string) (string, error) {
+	u, err := url.Parse(opsManagerURL)
+	if err == nil && u.Hostname() != "" {
+		label, _, _ := strings.Cut(u.Hostname(), ".")
+		if label == "cloud" || strings.HasPrefix(label, "cloud-") {
+			return (&url.URL{Scheme: u.Scheme, Host: "authorize" + strings.TrimPrefix(u.Host, "cloud")}).String(), nil
+		}
+	}
+	return "", fmt.Errorf("cannot infer the Authorization Server from ops_manager_url %q; set %s to its issuer URL", opsManagerURL, authServerURLEnvVar)
+}
 
 func (a authCodeConfig) AuthorizationURL(metadata *authcode.AuthServerMetadata, redirectURI, state, codeVerifier string) (string, error) {
 	return a.cfg.AuthorizationURL(metadata, redirectURI, state, codeVerifier)
@@ -694,7 +725,11 @@ func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
 func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	flow := opts.authCode
 	if flow == nil {
-		cfg, err := transport.FlowForAuthServer(loginAuthServer{service: opts.config.Service()}, &http.Client{Transport: transport.Default()}, version.Version)
+		authServer, err := newLoginAuthServer(opts.config.Service(), opts.config.OpsManagerURL())
+		if err != nil {
+			return err
+		}
+		cfg, err := transport.FlowForAuthServer(authServer, &http.Client{Transport: transport.Default()}, version.Version)
 		if err != nil {
 			return err
 		}

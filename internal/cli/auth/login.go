@@ -71,16 +71,9 @@ type TrackAsker interface {
 	TrackAskOne(survey.Prompt, any, ...survey.AskOpt) error
 }
 
-// ProfileValueGetter reads values saved in a profile, without environment variables.
-type ProfileValueGetter interface {
-	GetProfileValue(profileName string, propertyName string) any
-}
-
 const (
-	userAccountAuth    = "UserAccount"
-	atlasName          = "atlas"
-	publicAPIKeyField  = "public_api_key"
-	privateAPIKeyField = "private_api_key"
+	userAccountAuth = "UserAccount"
+	atlasName       = "atlas"
 )
 
 var (
@@ -114,15 +107,14 @@ type LoginOpts struct {
 	SkipConfig       bool
 	config           LoginConfig
 	Asker            TrackAsker
-	savedProfile     func() (ProfileValueGetter, error)
+	savedProfile     func() (validate.ProfileValueGetter, error)
 }
 
-func defaultSavedProfile() (ProfileValueGetter, error) {
+func defaultSavedProfile() (validate.ProfileValueGetter, error) {
 	return config.NewStoreWithEnvOption(false)
 }
 
-// checkNoOtherCredentials rejects login when the saved profile holds credentials of another auth type.
-func (opts *LoginOpts) checkNoOtherCredentials(authType string) error {
+func (opts *LoginOpts) checkNoOtherCredentials(authType config.AuthMechanism) error {
 	getSaved := opts.savedProfile
 	if getSaved == nil {
 		getSaved = defaultSavedProfile
@@ -131,35 +123,7 @@ func (opts *LoginOpts) checkNoOtherCredentials(authType string) error {
 	if err != nil {
 		return fmt.Errorf("could not read profile: %w", err)
 	}
-	name := config.Name()
-	saved := func(property string) string {
-		v, _ := store.GetProfileValue(name, property).(string)
-		return v
-	}
-
-	switch {
-	case authType != prompt.APIKeysAuth && saved(publicAPIKeyField) != "" && saved(privateAPIKeyField) != "":
-		return alreadyAuthenticatedError(validate.ErrAlreadyAuthenticatedAPIKeys, name, saved(publicAPIKeyField))
-	case authType != prompt.ServiceAccountAuth && saved(config.ClientIDField) != "" && saved(config.ClientSecretField) != "":
-		return alreadyAuthenticatedError(validate.ErrAlreadyAuthenticatedSA, name, saved(config.ClientIDField))
-	case authType != userAccountAuth && saved(config.RefreshTokenField) != "":
-		return alreadyAuthenticatedError(validate.ErrAlreadyAuthenticatedToken, name, "")
-	}
-	return nil
-}
-
-func alreadyAuthenticatedError(err error, profile, id string) error {
-	if id != "" {
-		err = fmt.Errorf("%w (%s)", err, id)
-	}
-	logout := "atlas auth logout"
-	if profile != config.DefaultProfile {
-		logout += " --" + flag.Profile + " " + profile
-	}
-	return fmt.Errorf(`%w
-
-To log out, run: %s
-To log in on a new profile, run: atlas auth login --%s <profile_name>`, err, logout, flag.Profile)
+	return validate.NoOtherCredentials(store, config.Name(), authType)
 }
 
 func (opts *LoginOpts) validateOutput() error {
@@ -405,20 +369,22 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
-	if err := opts.checkNoOtherCredentials(opts.authType); err != nil {
-		return err
-	}
-
+	var authType config.AuthMechanism
 	switch opts.authType {
 	case userAccountAuth:
-		opts.config.SetAuthType(config.UserAccount)
+		authType = config.UserAccount
 	case prompt.ServiceAccountAuth:
-		opts.config.SetAuthType(config.ServiceAccount)
+		authType = config.ServiceAccount
 	case prompt.APIKeysAuth:
-		opts.config.SetAuthType(config.APIKeys)
+		authType = config.APIKeys
 	default:
 		return errors.New("no authentication type selected")
 	}
+
+	if err := opts.checkNoOtherCredentials(authType); err != nil {
+		return err
+	}
+	opts.config.SetAuthType(authType)
 
 	if err := opts.setUpCredentials(ctx); err != nil {
 		return err

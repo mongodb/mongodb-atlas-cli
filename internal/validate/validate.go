@@ -33,6 +33,8 @@ const (
 	clusterWideScaling      = "clusterWideScaling"
 	independentShardScaling = "independentShardScaling"
 	clientIDLength          = 34
+	publicAPIKeyField       = "public_api_key"
+	privateAPIKeyField      = "private_api_key"
 )
 
 var (
@@ -144,6 +146,46 @@ To authenticate using your Atlas username and password on a new profile, run: at
 		ErrAlreadyAuthenticatedAPIKeys,
 		config.PublicAPIKey(),
 	)
+}
+
+// ProfileValueGetter reads values saved in a profile, without environment variables.
+type ProfileValueGetter interface {
+	GetProfileValue(profileName string, propertyName string) any
+}
+
+// NoOtherCredentials rejects login when the saved profile holds credentials of another auth type.
+func NoOtherCredentials(store ProfileValueGetter, profile string, authType config.AuthMechanism) error {
+	value := func(property string) string {
+		v, _ := store.GetProfileValue(profile, property).(string)
+		return v
+	}
+	isSaved := func(property string) bool {
+		return value(property) != ""
+	}
+
+	switch {
+	case authType != config.APIKeys && (isSaved(publicAPIKeyField) || isSaved(privateAPIKeyField)):
+		return alreadyAuthenticated(ErrAlreadyAuthenticatedAPIKeys, profile, value(publicAPIKeyField))
+	case authType != config.ServiceAccount && isSaved(config.ClientSecretField):
+		return alreadyAuthenticated(ErrAlreadyAuthenticatedSA, profile, value(config.ClientIDField))
+	case authType != config.UserAccount && isSaved(config.RefreshTokenField):
+		return alreadyAuthenticated(ErrAlreadyAuthenticatedToken, profile, "")
+	}
+	return nil
+}
+
+func alreadyAuthenticated(err error, profile, id string) error {
+	if id != "" {
+		err = fmt.Errorf("%w (%s)", err, id)
+	}
+	logout := "atlas auth logout"
+	if profile != config.DefaultProfile {
+		logout += " --profile " + profile
+	}
+	return fmt.Errorf(`%w
+
+To log out, run: %s
+To log in on a new profile, run: atlas auth login --profile <profile_name>`, err, logout)
 }
 
 func AutoScalingMode(autoScalingMode string) func() error {

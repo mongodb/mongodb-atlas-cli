@@ -946,11 +946,76 @@ func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
 	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
 }
 
-func Test_loginAuthServer_ignoresStoredIssuer(t *testing.T) {
+func Test_newLoginAuthServer(t *testing.T) {
+	tests := []struct {
+		name          string
+		service       string
+		opsManagerURL string
+		envIssuer     string
+		want          string
+		wantErr       bool
+	}{
+		{name: "prod", service: config.CloudService, opsManagerURL: "https://cloud.mongodb.com/", want: "https://authorize.mongodb.com"},
+		{name: "dev", service: config.CloudService, opsManagerURL: "https://cloud-dev.mongodb.com/", want: "https://authorize-dev.mongodb.com"},
+		{name: "qa", service: config.CloudService, opsManagerURL: "https://cloud-qa.mongodb.com/", want: "https://authorize-qa.mongodb.com"},
+		{name: "stage", service: config.CloudService, opsManagerURL: "https://cloud-stage.mongodb.com/", want: "https://authorize-stage.mongodb.com"},
+		{name: "gov", service: config.CloudGovService, opsManagerURL: "https://cloud.mongodbgov.com/", want: "https://authorize.mongodbgov.com"},
+		{name: "gov-qa", service: config.CloudGovService, opsManagerURL: "https://cloud-qa.mongodbgov.com/", want: "https://authorize-qa.mongodbgov.com"},
+		{name: "gov-dev", service: config.CloudGovService, opsManagerURL: "https://cloud-dev.mongodbgov.com/", want: "https://authorize-dev.mongodbgov.com"},
+		{name: "env var overrides ops_manager_url", service: config.CloudService, opsManagerURL: "https://cloud-dev.mongodb.com/", envIssuer: "https://authorize-qa.mongodb.com", want: "https://authorize-qa.mongodb.com"},
+		{name: "env var with non-cloud host", service: config.CloudService, opsManagerURL: "https://atlas.example.com/", envIssuer: "https://authorize-qa.mongodb.com", want: "https://authorize-qa.mongodb.com"},
+		{name: "non-cloud host", service: config.CloudService, opsManagerURL: "https://atlas.example.com/", wantErr: true},
+		{name: "cloud prefix without separator", service: config.CloudService, opsManagerURL: "https://cloudy.example.com/", wantErr: true},
+		{name: "no scheme", service: config.CloudService, opsManagerURL: "cloud-dev.mongodb.com", wantErr: true},
+		{name: "empty ops_manager_url prod", service: config.CloudService, want: "https://authorize.mongodb.com"},
+		{name: "empty ops_manager_url gov", service: config.CloudGovService, want: "https://authorize.mongodbgov.com"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", tt.envIssuer)
+			authServer, err := newLoginAuthServer(tt.service, tt.opsManagerURL)
+			if tt.wantErr {
+				require.ErrorContains(t, err, "MONGODB_ATLAS_AUTH_SERVER_URL")
+				return
+			}
+			require.NoError(t, err)
+			cfg, err := transport.FlowForAuthServer(authServer, http.DefaultClient, "test")
+			require.NoError(t, err)
+			assert.Equal(t, tt.want, cfg.AuthServerURL.String())
+		})
+	}
+}
+
+func Test_loginOpts_authCodeFlow_ignoresStoredIssuer(t *testing.T) {
 	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
-	cfg, err := transport.FlowForAuthServer(loginAuthServer{service: config.CloudGovService}, http.DefaultClient, "test")
-	require.NoError(t, err)
-	assert.Equal(t, "https://authorize.mongodbgov.com", cfg.AuthServerURL.String())
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockConfig.EXPECT().Service().Return(config.CloudService).AnyTimes()
+	mockConfig.EXPECT().OpsManagerURL().Return("https://cloud-dev.mongodb.com/").AnyTimes()
+	mockConfig.EXPECT().AuthServerIssuer().Return("https://authorize.mongodb.com").AnyTimes()
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).AnyTimes()
+	opts := &LoginOpts{config: mockConfig}
+
+	// A cancelled context stops discovery before any request is sent.
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+	require.Error(t, opts.authCodeFlow(ctx))
+
+	flow, ok := opts.authCode.(authCodeConfig)
+	require.True(t, ok)
+	assert.Equal(t, "https://authorize-dev.mongodb.com", flow.cfg.AuthServerURL.String())
+}
+
+func Test_loginOpts_authCodeFlow_nonCloudHost(t *testing.T) {
+	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockConfig.EXPECT().Service().Return(config.CloudService).AnyTimes()
+	mockConfig.EXPECT().OpsManagerURL().Return("https://atlas.example.com/").AnyTimes()
+	opts := &LoginOpts{config: mockConfig}
+
+	require.ErrorContains(t, opts.authCodeFlow(t.Context()), "MONGODB_ATLAS_AUTH_SERVER_URL")
+	assert.Nil(t, opts.authCode)
 }
 
 func Test_loginOpts_LoginPreRun_UserAccountRefresh(t *testing.T) {

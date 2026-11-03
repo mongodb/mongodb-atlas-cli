@@ -46,6 +46,7 @@ scripts/                — Utility scripts
 - Commands use the [Cobra framework](https://github.com/spf13/cobra). Each command has `*Opts` struct + `Run()` method + `*Builder()` function.
 - API integration uses [atlas-sdk-go](https://github.com/mongodb/atlas-sdk-go) via `internal/store/` interfaces.
 - New commands are registered in `internal/cli/root/builder.go`.
+- **E2E tests that never call the Atlas API** (local commands, plugins from GitHub releases, config, shell completion) go under `test/e2e/noapi/`. Everything else under `test/e2e/` is assumed to hit the API and needs cloud credentials; the mms e2e cron excludes the whole `noapi/` tree with a single skip pattern.
 
 ## Before Submitting Changes
 

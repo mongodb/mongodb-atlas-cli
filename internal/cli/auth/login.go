@@ -117,7 +117,6 @@ func (a authCodeConfig) ResolveAuthServerMetadata(ctx context.Context, cached *a
 
 const authServerURLEnvVar = "MONGODB_ATLAS_AUTH_SERVER_URL"
 
-// loginAuthServer ignores the stored issuer so --gov, ops_manager_url and MONGODB_ATLAS_AUTH_SERVER_URL apply on re-login.
 type loginAuthServer struct {
 	service string
 	issuer  string

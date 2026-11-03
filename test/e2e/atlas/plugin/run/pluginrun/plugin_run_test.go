@@ -34,8 +34,6 @@ func TestPluginRun(t *testing.T) {
 	}
 
 	_ = internal.TempConfigFolder(t)
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -46,7 +44,7 @@ func TestPluginRun(t *testing.T) {
 	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
-	g.Run("Hello", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Hello", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"example",
 			"hello")
@@ -60,7 +58,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	g.Run("Echo", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Echo", func(t *testing.T) {
 		echoString := "lorem ipsum dolor sit amet --test=true --debug --profile nunc nunc vel urna"
 		cmd := exec.Command(cliPath,
 			"example",
@@ -76,7 +74,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	g.Run("Printenv", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Printenv", func(t *testing.T) {
 		var sb strings.Builder
 
 		for _, env := range os.Environ() {
@@ -95,7 +93,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	g.Run("Stdinreader", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Stdinreader", func(t *testing.T) {
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)

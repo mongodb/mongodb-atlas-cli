@@ -107,6 +107,23 @@ type LoginOpts struct {
 	SkipConfig       bool
 	config           LoginConfig
 	Asker            TrackAsker
+	savedProfile     func() (validate.ProfileValueGetter, error)
+}
+
+func defaultSavedProfile() (validate.ProfileValueGetter, error) {
+	return config.NewStoreWithEnvOption(false)
+}
+
+func (opts *LoginOpts) checkNoOtherCredentials(authType config.AuthMechanism) error {
+	getSaved := opts.savedProfile
+	if getSaved == nil {
+		getSaved = defaultSavedProfile
+	}
+	store, err := getSaved()
+	if err != nil {
+		return fmt.Errorf("could not read profile: %w", err)
+	}
+	return validate.NoOtherCredentials(store, config.Name(), authType)
 }
 
 func (opts *LoginOpts) validateOutput() error {
@@ -352,16 +369,22 @@ func (opts *LoginOpts) LoginRun(ctx context.Context) error {
 		return fmt.Errorf("failed to select authentication type: %w", err)
 	}
 
+	var authType config.AuthMechanism
 	switch opts.authType {
 	case userAccountAuth:
-		opts.config.SetAuthType(config.UserAccount)
+		authType = config.UserAccount
 	case prompt.ServiceAccountAuth:
-		opts.config.SetAuthType(config.ServiceAccount)
+		authType = config.ServiceAccount
 	case prompt.APIKeysAuth:
-		opts.config.SetAuthType(config.APIKeys)
+		authType = config.APIKeys
 	default:
 		return errors.New("no authentication type selected")
 	}
+
+	if err := opts.checkNoOtherCredentials(authType); err != nil {
+		return err
+	}
+	opts.config.SetAuthType(authType)
 
 	if err := opts.setUpCredentials(ctx); err != nil {
 		return err

@@ -111,7 +111,7 @@ jobs:
 
       - name: Mark the fix version released
         if: steps.find-version.outputs.found == 'true'
-        uses: mongodb/apix-action/update-jira-version@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
+        uses: mongodb/apix-action/update-jira-version@653549bea47615ca90da0a1282ecee8668e31e6f
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           version-id: ${{ steps.find-version.outputs.version-id }}

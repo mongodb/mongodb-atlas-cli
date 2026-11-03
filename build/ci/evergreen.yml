@@ -1064,7 +1064,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/migration/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
 buildvariants:
   - name: code_health
     display_name: "Code Health"

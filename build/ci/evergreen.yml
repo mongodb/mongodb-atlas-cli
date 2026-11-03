@@ -394,28 +394,28 @@ tasks:
     commands:
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugininstall/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/install/...
   - name: atlas_plugin_run
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/pluginrun/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/run/...
   - name: atlas_plugin_uninstall
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/pluginuninstall/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/uninstall/...
   - name: atlas_plugin_update
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
     commands:
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/pluginupdate/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/update/...
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true

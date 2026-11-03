@@ -35,8 +35,6 @@ func TestAtlasTeams(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -47,7 +45,7 @@ func TestAtlasTeams(t *testing.T) {
 	teamName := fmt.Sprintf("teams%v", n)
 	var teamID string
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		username, _, err := internal.OrgNUser(0)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -76,7 +74,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 	require.NotEmpty(t, teamID)
 
-	g.Run("Describe By ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe By ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"describe",
@@ -95,7 +93,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamID, team.GetId())
 	})
 
-	g.Run("Describe By Name", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe By Name", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"describe",
@@ -113,7 +111,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamName, team.GetName())
 	})
 
-	g.Run("Rename", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Rename", func(t *testing.T) {
 		teamName += "_renamed"
 		cmd := exec.Command(cliPath,
 			teamsEntity,
@@ -135,7 +133,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamName, team.GetName())
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"ls",
@@ -152,7 +150,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.NotEmpty(t, teams.Results)
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"ls",
@@ -170,7 +168,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.NotEmpty(t, teams)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"delete",

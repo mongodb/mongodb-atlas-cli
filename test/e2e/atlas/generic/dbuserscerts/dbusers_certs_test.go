@@ -37,14 +37,12 @@ func TestDBUserCerts(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	n := internal.Must(internal.RandInt(1000))
 	username := fmt.Sprintf("user%v", n)
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
-	g.Run("Create DBUser", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create DBUser", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"create",
@@ -64,7 +62,7 @@ func TestDBUserCerts(t *testing.T) {
 		assert.Equal(t, username, user.Username)
 	})
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			certsEntity,
@@ -78,7 +76,7 @@ func TestDBUserCerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			certsEntity,
@@ -96,7 +94,7 @@ func TestDBUserCerts(t *testing.T) {
 		assert.NotEmpty(t, users.Results)
 	})
 
-	g.Run("Delete User", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete User", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"delete",

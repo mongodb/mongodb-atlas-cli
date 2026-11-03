@@ -36,8 +36,6 @@ func TestDataFederationQueryLimit(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -51,7 +49,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 	limitName := "bytesProcessed.query"
 
-	g.Run("Create Data Federation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create Data Federation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"create",
@@ -75,7 +73,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(dataFederationName, dataLake.GetName())
 	})
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -101,7 +99,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(dataFederationName, *r.TenantName)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -122,7 +120,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(limitName, r.Name)
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -143,7 +141,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.NotEmpty(r)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -164,7 +162,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	g.Run("Delete Data Federation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete Data Federation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"delete",

@@ -43,15 +43,13 @@ func TestISSClustersFile(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t)
-
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
 	clusterIssFileName := internal.Must(internal.RandClusterName())
 
-	g.Run("Create ISS Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create ISS Cluster via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -71,7 +69,7 @@ func TestISSClustersFile(t *testing.T) {
 		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 10, false)
 	})
 
-	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Get ISS cluster autoScalingMode", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"autoScalingConfig",
@@ -90,7 +88,7 @@ func TestISSClustersFile(t *testing.T) {
 		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
 	})
 
-	g.Run("Watch ISS cluster", func(_ *testing.T) {
+	t.Run("Watch ISS cluster", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
@@ -104,7 +102,7 @@ func TestISSClustersFile(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	g.Run("Pause ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Pause ISS cluster", func(t *testing.T) {
 		// A freshly provisioned ISS cluster can still report replication lag on a secondary
 		// after it reaches the IDLE state, and Atlas refuses to pause until that clears
 		// (OPERATION_INVALID_MEMBER_REPLICATION_LAG). This has been observed to take around 10 minutes.
@@ -142,7 +140,7 @@ func TestISSClustersFile(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
-	g.Run("Start ISS cluster", func(_ *testing.T) {
+	t.Run("Start ISS cluster", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"start",
@@ -163,7 +161,7 @@ func TestISSClustersFile(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
-	g.Run("Update ISS cluster with file", func(_ *testing.T) {
+	t.Run("Update ISS cluster with file", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"update",
@@ -184,7 +182,7 @@ func TestISSClustersFile(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
-	g.Run("Delete ISS Cluster - created via file", func(_ *testing.T) {
+	t.Run("Delete ISS Cluster - created via file", func(_ *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			clustersEntity,

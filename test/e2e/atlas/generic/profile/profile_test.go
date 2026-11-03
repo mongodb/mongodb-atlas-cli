@@ -81,18 +81,16 @@ func TestProfile(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("profile name valid", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("profile name valid", func(t *testing.T) {
 		validateProfile(t, cliPath, "default", true)
 		validateProfile(t, cliPath, "default-123", true)
 		validateProfile(t, cliPath, "default-test", true)
 	})
 
-	g.Run("profile name invalid", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("profile name invalid", func(t *testing.T) {
 		validateProfile(t, cliPath, "d.efault", false)
 		validateProfile(t, cliPath, "default.123", false)
 		validateProfile(t, cliPath, "default.test", false)

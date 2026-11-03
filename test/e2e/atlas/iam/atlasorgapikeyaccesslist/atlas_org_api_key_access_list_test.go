@@ -40,8 +40,6 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, er := internal.AtlasCLIBin()
 	require.NoError(t, er)
 
@@ -55,7 +53,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	n := internal.Must(internal.RandInt(255))
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -76,7 +74,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		assert.NotEmpty(t, key.Results)
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -94,11 +92,11 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		assert.NotEmpty(t, key.Results)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 
-	g.Run("Create Current IP", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create Current IP", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -119,7 +117,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		entry = *key.GetResults()[0].IpAddress
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 }

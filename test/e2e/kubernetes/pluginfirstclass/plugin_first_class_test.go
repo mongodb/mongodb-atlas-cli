@@ -31,12 +31,10 @@ func TestPluginKubernetes(t *testing.T) {
 
 	_ = internal.TempConfigFolder(t)
 
-	g := internal.NewAtlasE2ETestGenerator(t)
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("should install kubernetes plugin", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("should install kubernetes plugin", func(t *testing.T) {
 		removeFirstClassPlugin(t, "atlas-cli-plugin-kubernetes", cliPath)
 
 		cmd := exec.Command(cliPath,

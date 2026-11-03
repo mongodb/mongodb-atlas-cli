@@ -42,7 +42,7 @@ func TestFlexBackup(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -281,17 +281,13 @@ func generateFlexCluster(t *testing.T, g *internal.AtlasE2ETestGenerator) {
 		t.Fatal("unexpected error: project must be generated")
 	}
 
-	g.ClusterName = g.Memory("generateFlexClusterName", internal.Must(internal.RandClusterName())).(string)
+	g.ClusterName = internal.Must(internal.RandClusterName())
 
 	err := deployFlexClusterForProject(g.ProjectID, g.ClusterName)
 	if err != nil {
 		t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
 	t.Logf("flexClusterName=%s", g.ClusterName)
-
-	if internal.SkipCleanup() {
-		return
-	}
 
 	t.Cleanup(func() {
 		_ = internal.DeleteClusterForProject(g.ProjectID, g.ClusterName)

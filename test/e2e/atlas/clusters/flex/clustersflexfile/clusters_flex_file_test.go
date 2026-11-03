@@ -39,12 +39,12 @@ func TestFlexClustersFile(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName := g.Memory("clusterFileName", internal.Must(internal.RandClusterName())).(string)
+	clusterFileName := internal.Must(internal.RandClusterName())
 
 	g.Run("Create Flex Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

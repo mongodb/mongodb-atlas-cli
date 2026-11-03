@@ -37,16 +37,7 @@ func TestDecryptWithGCP(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	mode, err := internal.TestRunMode()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
-	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	_ = internal.NewAtlasE2ETestGenerator(t)
 	req := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()

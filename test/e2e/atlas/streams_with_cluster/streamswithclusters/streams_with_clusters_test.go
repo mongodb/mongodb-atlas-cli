@@ -33,7 +33,7 @@ func TestStreamsWithClusters(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	if internal.IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
@@ -44,7 +44,7 @@ func TestStreamsWithClusters(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName := g.Memory("instanceName", internal.Must(internal.RandEntityWithRevision("instance"))).(string)
+	instanceName := internal.Must(internal.RandEntityWithRevision("instance"))
 
 	g.GenerateCluster()
 

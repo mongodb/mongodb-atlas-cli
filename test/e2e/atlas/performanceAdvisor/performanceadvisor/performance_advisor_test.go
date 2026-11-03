@@ -36,7 +36,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotNameFunc(internal.SnapshotHashedName))
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProjectAndCluster("performanceAdvisor")
 
 	cliPath, err := internal.AtlasCLIBin()

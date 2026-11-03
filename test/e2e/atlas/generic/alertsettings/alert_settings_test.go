@@ -44,7 +44,7 @@ func TestAlertConfig(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	var alertID string
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -170,7 +170,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	g.Run("Update Setting using file input", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("rand", 1000)
+		n := internal.Must(internal.RandInt(1000))
 		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
 			"eventTypeName": %q,

@@ -44,7 +44,7 @@ func TestIdentityProviders(t *testing.T) {
 		t.Skip("Skipping test in Gov environment")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	req := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()

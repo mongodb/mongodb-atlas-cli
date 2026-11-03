@@ -41,14 +41,14 @@ func TestSearch(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProjectAndCluster("search")
 	r := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	r.NoError(err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -423,7 +423,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("arrayRand", 1000)
+		n := internal.Must(internal.RandInt(1000))
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
@@ -490,14 +490,14 @@ func TestSearchDeprecated(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProjectAndCluster("search")
 	r := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	r.NoError(err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -864,7 +864,7 @@ func TestSearchDeprecated(t *testing.T) {
 	})
 
 	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("arrayRand", 1000)
+		n := internal.Must(internal.RandInt(1000))
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)

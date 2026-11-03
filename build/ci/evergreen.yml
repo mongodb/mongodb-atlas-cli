@@ -297,7 +297,7 @@ tasks:
     commands:
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/... ./test/e2e/noapi/brew/... ./test/e2e/noapi/config/autocomplete/... ./test/e2e/noapi/config/config/... ./test/e2e/noapi/profile/...
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true

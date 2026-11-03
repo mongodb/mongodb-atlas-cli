@@ -1064,6 +1064,34 @@ tasks:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
+  - name: atlas_noapi_brew_e2e
+    tags: ["e2e","noapi"]
+    must_have_test_results: true
+    commands:
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/brew/...
+  - name: atlas_noapi_autocomplete_e2e
+    tags: ["e2e","noapi"]
+    must_have_test_results: true
+    commands:
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/autocomplete/...
+  - name: atlas_noapi_config_e2e
+    tags: ["e2e","noapi"]
+    must_have_test_results: true
+    commands:
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/config/...
+  - name: atlas_noapi_profile_e2e
+    tags: ["e2e","noapi"]
+    must_have_test_results: true
+    commands:
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/profile/...
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1257,6 +1285,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .plugin"
+  - name: e2e_noapi
+    display_name: "E2E No API Tests"
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .noapi"
   - name: e2e_local_deployments_rhel9
     display_name: "E2E Local Deployments Tests (rhel9/podman)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

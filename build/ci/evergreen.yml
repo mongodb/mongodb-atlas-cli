@@ -1047,7 +1047,6 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
-  # 
   - name: atlas_config_migration_e2e
     tags: ["e2e","config-migration"]
     must_have_test_results: true

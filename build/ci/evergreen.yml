@@ -62,17 +62,19 @@ functions:
   # the checkout's go.mod/go.sum contents, so pin bumps that don't change dependencies reuse
   # the cache; v1 is a manual flush knob (bump it to invalidate every cached module set, e.g.
   # after a GOPATH layout change) and distro_arch scopes it per platform, since GOTOOLCHAIN=auto
-  # puts a compiled toolchain inside the cached dir. remote_path sits inside the project's
-  # mciuploads namespace but without version scoping, so the same content is shared across
-  # versions.
+  # puts a compiled toolchain inside the cached dir. Uses the project's existing
+  # mongodb-mongocli-build bucket credentials (same as the s3.put for generated tasks) rather
+  # than a role assumed from another project, under ${project}/go-mod-cache without version
+  # scoping so the same content is shared across versions.
   "cache go modules":
     - command: cache.restore
       type: setup
       params: &go_mod_cache_params
         name: go-mods
-        bucket: github-cache-ek5ksminkwn5qq-us-east-1
-        role_arn: "arn:aws:iam::557821124784:role/github-cache-5acc0f27b4729f1c0e95b3334f"
-        remote_path: "${mciuploads_dir|mongodb-atlas-cli-master}/go-mod-cache"
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mongodb-mongocli-build
+        remote_path: ${project}/go-mod-cache
         key_files:
           - src/github.com/mongodb/mongodb-atlas-cli/go.mod
           - src/github.com/mongodb/mongodb-atlas-cli/go.sum

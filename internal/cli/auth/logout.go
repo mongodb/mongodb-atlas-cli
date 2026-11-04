@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
@@ -81,7 +80,7 @@ func (opts *logoutOpts) initFlow(ctx context.Context, profile *config.Profile) e
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
-	opts.flow, err = legacyauth.FlowWithConfig(profile, client, version.Version)
+	opts.flow, err = transport.FlowWithConfig(profile, client, version.Version)
 	opts.revokeServiceAccountToken = func() error {
 		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
 	}

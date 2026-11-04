@@ -46,7 +46,6 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 
 	// oauth config might have changed,
 	// re-sync config profile with login opts
-	opts.authType = userAccountLegacyAuth
 	if err = opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
 		return err
 	}

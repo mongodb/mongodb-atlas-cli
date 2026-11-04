@@ -24,7 +24,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -101,7 +100,6 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
-	mockConfig.EXPECT().SetClientID(legacyauth.ClientIDForOpsManagerURL(profile.OpsManagerURL())).Times(1)
 	mockConfig.EXPECT().SetAuthType(config.UserAccountLegacy).Times(1)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()

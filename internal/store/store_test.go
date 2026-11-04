@@ -174,7 +174,7 @@ func TestWithAuthentication(t *testing.T) {
 	}
 }
 
-func TestWithAuthentication_UserAccountLegacyRefreshUsesPersistedClientID(t *testing.T) {
+func TestWithAuthentication_UserAccountLegacyRefreshInfersClientID(t *testing.T) {
 	t.Setenv("MCLI_CLIENT_ID", "")
 	var (
 		mu               sync.Mutex
@@ -214,7 +214,6 @@ func TestWithAuthentication_UserAccountLegacyRefreshUsesPersistedClientID(t *tes
 	profile.SetAuthType(config.UserAccountLegacy)
 	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
 	profile.Set(config.AccountURLField, server.URL+"/")
-	profile.SetClientID("0oadn4hoajpzxeSEy357")
 	claims := fmt.Sprintf(`{"sub":"user","exp":%d}`, time.Now().Add(-time.Hour).Unix())
 	accessToken := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"none"}`)) + "." +
 		base64.RawURLEncoding.EncodeToString([]byte(claims)) + "."

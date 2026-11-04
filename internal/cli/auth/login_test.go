@@ -32,7 +32,6 @@ import (
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
@@ -78,16 +77,6 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 			require.NoError(t, opts.SyncWithOAuthAccessProfile(mockConfig)())
 		})
 	}
-}
-
-func Test_loginOpts_SyncWithOAuthAccessProfile_PersistsInferredLegacyClientID(t *testing.T) {
-	t.Setenv("MCLI_CLIENT_ID", "")
-	profile := setDefaultProfile(t, "", "")
-	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
-
-	opts := &LoginOpts{authType: userAccountLegacyAuth}
-	require.NoError(t, opts.SyncWithOAuthAccessProfile(profile)())
-	assert.Equal(t, legacyauth.ClientIDForOpsManagerURL(profile.OpsManagerURL()), profile.ClientID())
 }
 
 func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
@@ -154,7 +143,7 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
-	mockConfig.EXPECT().SetClientID(legacyauth.ClientIDForOpsManagerURL(profile.OpsManagerURL())).Times(1)
+	mockConfig.EXPECT().SetClientID(gomock.Any()).Times(0)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()

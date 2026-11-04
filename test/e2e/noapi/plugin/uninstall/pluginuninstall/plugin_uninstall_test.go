@@ -33,21 +33,19 @@ func TestPluginUninstall(t *testing.T) {
 	}
 
 	_ = internal.TempConfigFolder(t)
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	runPluginUninstallTest(t, g, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
-	runPluginUninstallTest(t, g, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
-	runPluginUninstallTest(t, g, cliPath, "Plugin could not be found", true, "invalid plugin")
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
+	runPluginUninstallTest(t, cliPath, "Plugin could not be found", true, "invalid plugin")
 }
 
-func runPluginUninstallTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
+func runPluginUninstallTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {
 	t.Helper()
 
 	internal.InstallExamplePlugin(t, cliPath, "latest")
-	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run(testName, func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"plugin",
 			"uninstall",

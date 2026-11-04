@@ -31,12 +31,10 @@ func TestPluginLocal(t *testing.T) {
 
 	_ = internal.TempConfigFolder(t)
 
-	g := internal.NewAtlasE2ETestGenerator(t)
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("should install local plugin", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("should install local plugin", func(t *testing.T) {
 		removeFirstClassPlugin(t, "atlas-local-plugin", cliPath)
 
 		cmd := exec.Command(cliPath,

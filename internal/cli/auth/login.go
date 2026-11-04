@@ -295,7 +295,8 @@ func (opts *LoginOpts) promptOutput() error {
 func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
-		if err := opts.authCodeFlow(ctx); err != nil {
+		_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
+		if err := opts.authCodeFlow(ctx, nil); err != nil {
 			return err
 		}
 	case userAccountLegacyAuth:
@@ -744,7 +745,8 @@ func (opts *LoginOpts) legacyDeviceCodeFlow(ctx context.Context) error {
 
 // authCodeFlow runs the Authorization Code + PKCE login through the SDK loopback
 // callback server and persists the token via the shared core write path.
-func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
+// landingURL, if set, maps the authorize URL to the URL shown to the user.
+func (opts *LoginOpts) authCodeFlow(ctx context.Context, landingURL func(authURL string) string) error {
 	flow := opts.authCode
 	if flow == nil {
 		authServer, err := newLoginAuthServer(opts.config.Service(), opts.config.OpsManagerURL())
@@ -779,8 +781,10 @@ func (opts *LoginOpts) authCodeFlow(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	if landingURL != nil {
+		authURL = landingURL(authURL)
+	}
 
-	_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
 	// Always print the URL so login can finish if the browser cannot open.
 	_, _ = fmt.Fprintf(opts.OutWriter, "To continue, go to %s\n", authURL)
 	opts.handleBrowser(authURL)

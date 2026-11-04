@@ -40,8 +40,6 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -51,7 +49,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	var orgInvitationID string
 	var orgInvitationIDFile string // For the file-based invite test
 
-	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -76,7 +74,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationID = invitation.GetId()
 	})
 
-	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite with File", func(t *testing.T) {
 		a := assert.New(t)
 		// Create a unique email for this test
 		nFile := internal.Must(internal.RandInt(1000))
@@ -110,7 +108,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
 	})
 
-	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite with File", func(t *testing.T) {
 		a := assert.New(t)
 		// Create a unique email for this test
 		nFile := internal.Must(internal.RandInt(1000))
@@ -144,7 +142,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -164,7 +162,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.NotEmpty(invitations)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -186,7 +184,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 	})
 
-	g.Run("Update by email", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -211,7 +209,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	g.Run("Update by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -236,7 +234,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 	const OrgGroupCreator = "ORG_GROUP_CREATOR"
 
-	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update with File", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
@@ -271,7 +269,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		// Add assertions for GroupRoleAssignments if included in updateData
 	})
 
-	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update with File", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
@@ -306,7 +304,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		// Add assertions for GroupRoleAssignments if included in updateData
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -324,7 +322,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	g.Run("Delete Invitation from File Test", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete Invitation from File Test", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationIDFile, "orgInvitationIDFile must be set by Invite with File test")
 		cmd := exec.Command(cliPath,
 			orgEntity,

@@ -37,11 +37,9 @@ func TestEvents(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
-	g.Run("List Project Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Project Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			projectEntity,
@@ -60,7 +58,7 @@ func TestEvents(t *testing.T) {
 		assert.NotEmpty(t, events.GetResults())
 	})
 
-	g.Run("List Organization Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Organization Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			orgEntity,

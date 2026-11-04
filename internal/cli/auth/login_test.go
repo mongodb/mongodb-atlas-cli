@@ -151,6 +151,33 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// completeAuthCodeCallback hits the loopback server with the expected state and code, in place of a browser.
+func completeAuthCodeCallback(ctx context.Context, authorizationCode string) func(*authcode.AuthServerMetadata, string, string, string) (string, error) {
+	return func(_ *authcode.AuthServerMetadata, redirectURI, state, _ string) (string, error) {
+		callbackURL, err := url.Parse(redirectURI)
+		if err != nil {
+			return "", err
+		}
+		if callbackURL.Hostname() != "127.0.0.1" || callbackURL.Path != authCodeCallbackPath {
+			return "", fmt.Errorf("unexpected redirect URI %q", redirectURI)
+		}
+		q := callbackURL.Query()
+		q.Set("state", state)
+		q.Set("code", authorizationCode)
+		callbackURL.RawQuery = q.Encode()
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, callbackURL.String(), nil)
+		if err != nil {
+			return "", err
+		}
+		resp, err := http.DefaultClient.Do(req) //nolint:gosec // test loopback URL
+		if err != nil {
+			return "", err
+		}
+		defer resp.Body.Close()
+		return "https://authorize.mongodb.com/authorize", nil
+	}
+}
+
 func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockConfig := NewMockLoginConfig(ctrl)
@@ -188,34 +215,10 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
 	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Times(1)
 
-	// Complete the callback in place of a browser: hit the loopback server with
-	// the expected state and a fake authorization code.
 	const authorizationCode = "auth-code-123"
 	mockAuthCode.EXPECT().
 		AuthorizationURL(metadata, gomock.Any(), gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ *authcode.AuthServerMetadata, redirectURI, state, _ string) (string, error) {
-			callbackURL, err := url.Parse(redirectURI)
-			if err != nil {
-				return "", err
-			}
-			if callbackURL.Hostname() != "127.0.0.1" || callbackURL.Path != authCodeCallbackPath {
-				return "", fmt.Errorf("unexpected redirect URI %q", redirectURI)
-			}
-			q := callbackURL.Query()
-			q.Set("state", state)
-			q.Set("code", authorizationCode)
-			callbackURL.RawQuery = q.Encode()
-			req, err := http.NewRequestWithContext(ctx, http.MethodGet, callbackURL.String(), nil)
-			if err != nil {
-				return "", err
-			}
-			resp, err := http.DefaultClient.Do(req) //nolint:gosec // test loopback URL
-			if err != nil {
-				return "", err
-			}
-			defer resp.Body.Close()
-			return "https://authorize.mongodb.com/authorize", nil
-		}).
+		DoAndReturn(completeAuthCodeCallback(ctx, authorizationCode)).
 		Times(1)
 
 	tokenExpiry := time.Now().Add(time.Hour).UTC()
@@ -1002,7 +1005,7 @@ func Test_loginOpts_authCodeFlow_ignoresStoredIssuer(t *testing.T) {
 	// A cancelled context stops discovery before any request is sent.
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
-	require.Error(t, opts.authCodeFlow(ctx))
+	require.Error(t, opts.authCodeFlow(ctx, nil))
 
 	flow, ok := opts.authCode.(authCodeConfig)
 	require.True(t, ok)
@@ -1017,7 +1020,7 @@ func Test_loginOpts_authCodeFlow_nonCloudHost(t *testing.T) {
 	mockConfig.EXPECT().OpsManagerURL().Return("https://atlas.example.com/").AnyTimes()
 	opts := &LoginOpts{config: mockConfig}
 
-	require.ErrorContains(t, opts.authCodeFlow(t.Context()), "MONGODB_ATLAS_AUTH_SERVER_URL")
+	require.ErrorContains(t, opts.authCodeFlow(t.Context(), nil), "MONGODB_ATLAS_AUTH_SERVER_URL")
 	assert.Nil(t, opts.authCode)
 }
 

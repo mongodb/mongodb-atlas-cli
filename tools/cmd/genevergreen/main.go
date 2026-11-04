@@ -52,6 +52,14 @@ func run() error {
 		generate.PublishSnapshotTasks(c)
 	case "publish":
 		generate.PublishStableTasks(c)
+	case "e2e-waterfall":
+		if err := generate.E2EWaterfallTasks(c); err != nil {
+			return err
+		}
+	case "e2e-pr":
+		if err := generate.E2EPRTasks(c); err != nil {
+			return err
+		}
 	default:
 		return errors.New("-tasks is invalid")
 	}

@@ -124,7 +124,7 @@ func RegisterBuilder() *cobra.Command {
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
 				opts.SyncWithOAuthAccessProfile(defaultProfile),
-				opts.InitFlow(defaultProfile),
+				opts.InitLegacyDeviceCodeFlow(defaultProfile),
 				opts.LoginPreRun(cmd.Context()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken)

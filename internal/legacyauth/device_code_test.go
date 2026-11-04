@@ -32,7 +32,9 @@ func TestFlowWithConfig_ClientIDInference(t *testing.T) {
 		opsManagerURL string
 		clientID      string
 		envClientID   string
+		accountURL    string
 		wantClientID  string
+		wantAuthURL   string
 	}{
 		{
 			name:          "local Bazel",
@@ -51,18 +53,21 @@ func TestFlowWithConfig_ClientIDInference(t *testing.T) {
 			service:       config.CloudService,
 			opsManagerURL: "https://cloud-dev.mongodb.com",
 			wantClientID:  devClientID,
+			wantAuthURL:   "https://cloud-dev.mongodb.com",
 		},
 		{
 			name:          "cloud QA",
 			service:       config.CloudService,
 			opsManagerURL: "https://cloud-qa.mongodb.com/",
 			wantClientID:  devClientID,
+			wantAuthURL:   "https://cloud-qa.mongodb.com/",
 		},
 		{
 			name:          "cloud internal",
 			service:       config.CloudService,
 			opsManagerURL: "https://cloud-internal.mongodb.com/",
 			wantClientID:  internalClientID,
+			wantAuthURL:   "https://cloud-internal.mongodb.com/",
 		},
 		{
 			name:          "cloud production keeps default",
@@ -105,9 +110,24 @@ func TestFlowWithConfig_ClientIDInference(t *testing.T) {
 			wantClientID:  "environment-client-id",
 		},
 		{
-			name:          "unknown Ops Manager URL keeps default",
+			name:          "cloud stage keeps Ops Manager URL and production client ID",
 			service:       config.CloudService,
 			opsManagerURL: "https://cloud-stage.mongodb.com/",
+			wantClientID:  transport.ClientID,
+			wantAuthURL:   "https://cloud-stage.mongodb.com/",
+		},
+		{
+			name:          "explicit account URL overrides Ops Manager URL",
+			service:       config.CloudService,
+			opsManagerURL: "https://cloud-stage.mongodb.com/",
+			accountURL:    "https://account-stage.mongodb.com/",
+			wantClientID:  transport.ClientID,
+			wantAuthURL:   "https://account-stage.mongodb.com/",
+		},
+		{
+			name:          "unknown Ops Manager URL keeps default",
+			service:       config.CloudService,
+			opsManagerURL: "https://cloud-unlisted.mongodb.com/",
 			wantClientID:  transport.ClientID,
 		},
 	}
@@ -119,11 +139,15 @@ func TestFlowWithConfig_ClientIDInference(t *testing.T) {
 				service:       tt.service,
 				opsManagerURL: tt.opsManagerURL,
 				clientID:      tt.clientID,
+				accountURL:    tt.accountURL,
 			}
 
 			flow, err := FlowWithConfig(profile, &http.Client{Transport: transport.Default()}, "test")
 			require.NoError(t, err)
 			assert.Equal(t, tt.wantClientID, flow.ClientID)
+			if tt.wantAuthURL != "" {
+				assert.Equal(t, tt.wantAuthURL, flow.AuthURL.String())
+			}
 		})
 	}
 }

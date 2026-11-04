@@ -42,7 +42,8 @@ type Refresher interface {
 	RegistrationConfig(ctx context.Context) (*atlasauth.RegistrationConfig, *atlas.Response, error)
 }
 
-func (opts *RefresherOpts) InitFlow(c transport.ServiceGetter) func() error {
+// InitLegacyDeviceCodeFlow initializes the deprecated UserAccountLegacy flow.
+func (opts *RefresherOpts) InitLegacyDeviceCodeFlow(c transport.ServiceGetter) func() error {
 	return func() error {
 		var err error
 		client := http.DefaultClient
@@ -84,6 +85,11 @@ func (opts *RefresherOpts) RefreshAccessTokenForProfile(ctx context.Context, pro
 }
 
 func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profile *config.Profile) error {
+	authType := profile.AuthType()
+	if authType != config.UserAccount && authType != config.UserAccountLegacy {
+		return nil
+	}
+
 	current, err := profile.Token()
 	if current == nil {
 		return err
@@ -92,12 +98,12 @@ func (opts *RefresherOpts) refreshProfileAccessToken(ctx context.Context, profil
 		TokenRefreshed = true
 		return nil
 	}
-	if profile.AuthType() == config.UserAccount {
+	if authType == config.UserAccount {
 		return opts.refreshUserAccountToken(ctx, profile)
 	}
 	// UserAccountLegacy: refresh through the device-code flow.
 	if opts.flow == nil || profile != config.Default() {
-		if err := opts.InitFlow(profile)(); err != nil {
+		if err := opts.InitLegacyDeviceCodeFlow(profile)(); err != nil {
 			return err
 		}
 	}

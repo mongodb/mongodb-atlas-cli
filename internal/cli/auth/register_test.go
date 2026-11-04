@@ -17,9 +17,11 @@ package auth
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
@@ -31,6 +33,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
+	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
@@ -41,10 +44,13 @@ func Test_newRegisterOpts_setsAsker(t *testing.T) {
 	assert.IsType(t, &telemetry.Ask{}, opts.Asker)
 }
 
+const testRegistrationURL = "https://account.mongodb.com/account/register/cli"
+
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
+	mockAuthCode := NewMockAuthorizationCodeFlow(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 	mockAsker := NewMockTrackAsker(ctrl)
 
@@ -58,50 +64,45 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.Store = mockStore
 	opts.Asker = mockAsker
 	opts.savedProfile = savedProfileWith(nil)
+	opts.authCode = mockAuthCode
 	opts.WithFlow(mockFlow)
 
-	expectedCode := &auth.DeviceCode{
-		UserCode:        "12345678",
-		VerificationURI: "http://localhost",
-		DeviceCode:      "123",
-		ExpiresIn:       300,
-		Interval:        10,
-	}
-
-	mockFlow.
-		EXPECT().
-		RequestCode(ctx).
-		Return(expectedCode, nil, nil).
-		Times(1)
-
-	expectedToken := &auth.Token{
-		AccessToken:  "asdf",
-		RefreshToken: "querty",
-		Scope:        "openid",
-		IDToken:      "1",
-		TokenType:    "Bearer",
-		ExpiresIn:    3600,
-	}
-	mockFlow.
-		EXPECT().
+	mockFlow.EXPECT().
 		RegistrationConfig(ctx).
-		Return(&auth.RegistrationConfig{RegistrationURL: "https://localhost/account/register/cli"}, nil, nil).
-		Times(1)
-	mockFlow.
-		EXPECT().
-		PollToken(ctx, expectedCode).
-		Return(expectedToken, nil, nil).
+		Return(&auth.RegistrationConfig{RegistrationURL: testRegistrationURL}, nil, nil).
 		Times(1)
 
+	metadata := &authcode.AuthServerMetadata{
+		Issuer:      "https://authorize.mongodb.com",
+		CacheExpiry: time.Now().Add(time.Hour),
+	}
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).Times(1)
+	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
+	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Times(1)
+
+	const authorizationCode = "auth-code-123"
+	mockAuthCode.EXPECT().
+		AuthorizationURL(metadata, gomock.Any(), gomock.Any(), gomock.Any()).
+		DoAndReturn(completeAuthCodeCallback(ctx, authorizationCode)).
+		Times(1)
+
+	tokenExpiry := time.Now().Add(time.Hour).UTC()
+	mockAuthCode.EXPECT().
+		ExchangeCode(ctx, metadata, authorizationCode, gomock.Any(), gomock.Any()).
+		Return(&authcode.Token{AccessToken: "asdf", RefreshToken: "querty", Expiry: tokenExpiry}, nil).
+		Times(1)
+
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
 	mockConfig.EXPECT().SetService("cloud").Times(1)
-	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
-	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
-	mockConfig.EXPECT().SetAuthType(config.UserAccountLegacy).Times(1)
+	mockConfig.EXPECT().SetAccessToken("asdf").Times(2)
+	mockConfig.EXPECT().SetRefreshToken("querty").Times(2)
+	mockConfig.EXPECT().SetTokenExpiry(tokenExpiry.Format(time.RFC3339)).Times(1)
+	mockConfig.EXPECT().SetAuthServerIssuer(metadata.Issuer).Times(1)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
 	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
-	mockConfig.EXPECT().Save().Return(nil).Times(2)
+	mockConfig.EXPECT().Save().Return(nil).Times(3)
 
 	orgsBody, err := json.Marshal(&admin.PaginatedOrganization{
 		TotalCount: pointer.Get(1),
@@ -142,15 +143,59 @@ func Test_registerOpts_Run(t *testing.T) {
 		})
 
 	require.NoError(t, opts.RegisterRun(ctx))
-	assert.Equal(t, `
-To verify your account, copy your one-time verification code:
-1234-5678
-
-Paste the code in the browser when prompted to activate your Atlas CLI. Your code will expire after 5 minutes.
-
-To continue, go to https://localhost/account/register/cli
+	assert.Equal(t, `To continue, go to https://account.mongodb.com/account/register?n=https%3A%2F%2Fauthorize.mongodb.com%2Fauthorize
 Successfully logged in as test@10gen.com.
 `, buf.String())
+}
+
+func Test_registerOpts_Run_ExchangeFailsDoesNotSave(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAuthCode := NewMockAuthorizationCodeFlow(ctrl)
+
+	buf := new(bytes.Buffer)
+	ctx := t.Context()
+
+	opts := &RegisterOpts{}
+	opts.NoBrowser = true
+	opts.config = mockConfig
+	opts.OutWriter = buf
+	opts.savedProfile = savedProfileWith(nil)
+	opts.authCode = mockAuthCode
+	opts.WithFlow(mockFlow)
+
+	mockFlow.EXPECT().
+		RegistrationConfig(ctx).
+		Return(&auth.RegistrationConfig{RegistrationURL: testRegistrationURL}, nil, nil).
+		Times(1)
+
+	metadata := &authcode.AuthServerMetadata{
+		Issuer:      "https://authorize.mongodb.com",
+		CacheExpiry: time.Now().Add(time.Hour),
+	}
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).Times(1)
+	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+
+	const authorizationCode = "auth-code-123"
+	mockAuthCode.EXPECT().
+		AuthorizationURL(metadata, gomock.Any(), gomock.Any(), gomock.Any()).
+		DoAndReturn(completeAuthCodeCallback(ctx, authorizationCode)).
+		Times(1)
+
+	errExchange := errors.New("invalid_grant")
+	mockAuthCode.EXPECT().
+		ExchangeCode(ctx, metadata, authorizationCode, gomock.Any(), gomock.Any()).
+		Return(nil, errExchange).
+		Times(1)
+
+	mockConfig.EXPECT().Save().Times(0)
+	mockConfig.EXPECT().SetAccessToken(gomock.Any()).Times(0)
+	mockConfig.EXPECT().SetRefreshToken(gomock.Any()).Times(0)
+
+	require.ErrorIs(t, opts.RegisterRun(ctx), errExchange)
+	assert.NotContains(t, buf.String(), "Successfully logged in")
 }
 
 func Test_registerOpts_Run_OtherCredentialsBlocksBeforeFlow(t *testing.T) {
@@ -166,4 +211,96 @@ func Test_registerOpts_Run_OtherCredentialsBlocksBeforeFlow(t *testing.T) {
 	opts.WithFlow(mockFlow)
 
 	require.ErrorIs(t, opts.RegisterRun(t.Context()), validate.ErrAlreadyAuthenticatedSA)
+}
+
+func Test_registerOpts_Run_UnexpectedRegistrationURLFailsBeforeFlow(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
+
+	buf := new(bytes.Buffer)
+	ctx := t.Context()
+
+	opts := &RegisterOpts{}
+	opts.config = mockConfig
+	opts.OutWriter = buf
+	opts.savedProfile = savedProfileWith(nil)
+	opts.authCode = NewMockAuthorizationCodeFlow(ctrl)
+	opts.WithFlow(mockFlow)
+
+	mockFlow.EXPECT().
+		RegistrationConfig(ctx).
+		Return(&auth.RegistrationConfig{RegistrationURL: "https://account.example.com/account/register/cli"}, nil, nil).
+		Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().Save().Times(0)
+
+	require.ErrorIs(t, opts.RegisterRun(ctx), errUnexpectedRegistrationURL)
+	assert.Empty(t, buf.String())
+}
+
+func Test_registerOpts_Run_RegistrationConfigFails(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
+
+	opts := &RegisterOpts{}
+	opts.config = mockConfig
+	opts.savedProfile = savedProfileWith(nil)
+	opts.WithFlow(mockFlow)
+
+	errRegistration := errors.New("registration config unavailable")
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockFlow.EXPECT().RegistrationConfig(gomock.Any()).Return(nil, nil, errRegistration).Times(1)
+	mockConfig.EXPECT().Save().Times(0)
+
+	require.ErrorIs(t, opts.RegisterRun(t.Context()), errRegistration)
+}
+
+func Test_registerOpts_Run_EmptyRegistrationConfig(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
+
+	opts := &RegisterOpts{}
+	opts.config = mockConfig
+	opts.savedProfile = savedProfileWith(nil)
+	opts.WithFlow(mockFlow)
+
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockFlow.EXPECT().RegistrationConfig(gomock.Any()).Return(nil, nil, nil).Times(1)
+	mockConfig.EXPECT().Save().Times(0)
+
+	require.ErrorIs(t, opts.RegisterRun(t.Context()), errUnexpectedRegistrationURL)
+}
+
+func Test_accountRegisterURL(t *testing.T) {
+	tests := []struct {
+		name            string
+		registrationURL string
+		want            string
+		wantErr         bool
+	}{
+		{name: "prod", registrationURL: "https://account.mongodb.com/account/register/cli", want: "https://account.mongodb.com/account/register"},
+		{name: "gov", registrationURL: "https://account.mongodbgov.com/account/register/cli", want: "https://account.mongodbgov.com/account/register"},
+		{name: "drops query", registrationURL: "https://account-dev.mongodb.com/account/register/cli?n=https%3A%2F%2Fevil.example.com", want: "https://account-dev.mongodb.com/account/register"},
+		{name: "http", registrationURL: "http://account.mongodb.com/account/register/cli", wantErr: true},
+		{name: "other host", registrationURL: "https://account.example.com/account/register/cli", wantErr: true},
+		{name: "suffix without dot", registrationURL: "https://evilmongodb.com/account/register/cli", wantErr: true},
+		{name: "mongodb host as subdomain", registrationURL: "https://account.mongodb.com.example.com/register", wantErr: true},
+		{name: "userinfo", registrationURL: "https://account.mongodb.com@example.com/register", wantErr: true},
+		{name: "empty", registrationURL: "", wantErr: true},
+		{name: "unparseable", registrationURL: "https://account.mongodb.com/%zz", wantErr: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := accountRegisterURL(tt.registrationURL)
+			if tt.wantErr {
+				require.ErrorIs(t, err, errUnexpectedRegistrationURL)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.want, got.String())
+		})
+	}
 }

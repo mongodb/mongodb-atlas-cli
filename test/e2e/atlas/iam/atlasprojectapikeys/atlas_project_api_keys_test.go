@@ -36,8 +36,6 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -46,7 +44,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 	var ID string
 
 	// This test must run first to grab the ID of the project to later describe
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		const desc = "e2e-test"
 		cmd := exec.Command(cliPath,
 			projectsEntity,
@@ -76,7 +74,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		}
 	}()
 
-	g.Run("Assign", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Assign", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,
@@ -92,7 +90,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,
@@ -114,7 +112,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys.Results)
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,
@@ -137,7 +135,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			apiKeysEntity,

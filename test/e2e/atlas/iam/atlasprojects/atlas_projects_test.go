@@ -38,8 +38,6 @@ func TestAtlasProjects(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -49,7 +47,7 @@ func TestAtlasProjects(t *testing.T) {
 	projectName := fmt.Sprintf("e2e-proj-%d", n)
 
 	var projectID string
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		// This depends on a ORG_ID ENV
 		cmd := exec.Command(cliPath,
 			projectsEntity,
@@ -74,7 +72,7 @@ func TestAtlasProjects(t *testing.T) {
 		projectID = project.GetId()
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"ls",
@@ -88,7 +86,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"describe",
@@ -103,7 +101,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("Tags", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Tags", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"describe",
@@ -161,7 +159,7 @@ func TestAtlasProjects(t *testing.T) {
 		},
 	}
 	for _, tt := range updateTests {
-		g.Run("Update_"+tt.name, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		t.Run("Update_"+tt.name, func(t *testing.T) {
 			filename := fmt.Sprintf("update_project_%s.json", tt.name)
 			testTmpl, err := os.ReadFile(tt.filename)
 			tpl := template.Must(template.New("").Parse(string(testTmpl)))
@@ -223,7 +221,7 @@ func TestAtlasProjects(t *testing.T) {
 		})
 	}
 
-	g.Run("Users", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			usersEntity,
@@ -239,7 +237,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"delete",

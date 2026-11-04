@@ -338,7 +338,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/... ./test/e2e/noapi/brew/... ./test/e2e/noapi/config/autocomplete/... ./test/e2e/noapi/config/config/... ./test/e2e/noapi/profile/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/generic/... ./test/e2e/pr/noapi/brew/... ./test/e2e/pr/noapi/config/autocomplete/... ./test/e2e/pr/noapi/config/config/... ./test/e2e/pr/noapi/profile/...
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -351,7 +351,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/generic/...
   # This is all about cluster which tends to be slow to get a healthy one
   - name: atlas_clusters_flags_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
@@ -460,7 +460,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/install/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/plugin/install/...
   - name: atlas_plugin_run
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
@@ -472,7 +472,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/run/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/plugin/run/...
   - name: atlas_plugin_uninstall
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
@@ -484,7 +484,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/uninstall/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/plugin/uninstall/...
   - name: atlas_plugin_update
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
@@ -496,7 +496,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/update/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/plugin/update/...
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -523,7 +523,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/kubernetes/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/kubernetes/...
   - name: atlas_local_plugin
     tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
     must_have_test_results: true
@@ -535,7 +535,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/local/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/local/...
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -574,7 +574,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/serviceAccount/...
   - name: atlas_auth_login_e2e
     tags: ["e2e","generic","atlas"]
     must_have_test_results: true
@@ -586,7 +586,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/auth/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/auth/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
@@ -911,7 +911,7 @@ tasks:
       - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/iam/...
   - name: atlas_gov_iam_e2e
     tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -924,7 +924,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/iam/...
     # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
   - name: atlas_live_migrations_link_token_e2e
     tags: ["e2e","atlas","livemigrations","foliage_check_task_only"]
@@ -1272,7 +1272,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
+          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/config/migration/...
 buildvariants:
   - name: code_health
     display_name: "Code Health"

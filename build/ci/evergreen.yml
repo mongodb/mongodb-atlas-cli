@@ -641,14 +641,12 @@ tasks:
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/config/migration/...
   - name: e2e_waterfall_generate
-    patchable: false
     stepback: false
     commands:
       - func: "generate evergreen"
         vars:
           task_type: e2e-waterfall
   - name: e2e_pr_generate
-    patchable: false
     stepback: false
     commands:
       - func: "generate evergreen"

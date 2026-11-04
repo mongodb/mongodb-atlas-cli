@@ -26,11 +26,11 @@ import (
 const (
 	e2eExecTimeoutSecs = 11400
 
-	e2eWaterfallVariant = "e2e"
+	e2eWaterfallVariant = "e2e_waterfall"
 	e2ePRVariant        = "e2e_pr"
 
-	e2eWaterfallDisplay = "E2E Tests Waterfall"
-	e2ePRDisplay        = "E2E Tests PR"
+	e2eWaterfallDisplay = "E2E Waterfall"
+	e2ePRDisplay        = "E2E PR"
 
 	e2eWaterfallPkgPrefix = "test/e2e/atlas/"
 	e2ePRPkgPrefix        = "test/e2e/pr/"

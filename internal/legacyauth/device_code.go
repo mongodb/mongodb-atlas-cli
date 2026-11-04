@@ -52,7 +52,7 @@ func (c legacyDeviceCodeServiceGetter) ClientID() string {
 	if clientID := c.profile.ClientID(); clientID != "" {
 		return clientID
 	}
-	return clientIDForOpsManagerURL(c.profile.OpsManagerURL())
+	return ClientIDForOpsManagerURL(c.profile.OpsManagerURL())
 }
 
 // FlowWithConfig constructs the legacy device-code flow using the supplied profile.
@@ -60,7 +60,9 @@ func FlowWithConfig(profile ServiceConfig, client *http.Client, version string) 
 	return transport.FlowWithConfig(legacyDeviceCodeServiceGetter{profile: profile}, client, version)
 }
 
-func clientIDForOpsManagerURL(opsManagerURL string) string {
+// ClientIDForOpsManagerURL returns the legacy device-code client ID for a known environment.
+// An empty result means the core transport's production or Gov default should be used.
+func ClientIDForOpsManagerURL(opsManagerURL string) string {
 	switch strings.TrimRight(opsManagerURL, "/") {
 	case "https://localhost:8080", "http://cloud-local.mmscloudteam.com", "https://cloud-dev.mongodb.com", "https://cloud-qa.mongodb.com":
 		return devClientID
@@ -68,6 +70,10 @@ func clientIDForOpsManagerURL(opsManagerURL string) string {
 		return internalClientID
 	case "https://cloud-dev.mongodbgov.com":
 		return govDevClientID
+	case "https://cloud.mongodb.com":
+		return transport.ClientID
+	case "https://cloud.mongodbgov.com":
+		return transport.GovClientID
 	default:
 		// Leave the client ID unset so transport.FlowWithConfig uses its production default.
 		return ""

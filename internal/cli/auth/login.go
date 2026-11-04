@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
@@ -424,8 +425,9 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		if opts.RefreshToken != "" {
 			opts.config.SetRefreshToken(opts.RefreshToken)
 		}
-		if config.ClientID() != "" {
-			opts.config.SetClientID(config.ClientID())
+		clientID := config.ClientID()
+		if clientID != "" {
+			opts.config.SetClientID(clientID)
 		}
 
 		// sync OpsManagerURL from command opts (higher priority)
@@ -435,6 +437,12 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		}
 		if config.OpsManagerURL() != "" {
 			opts.OpsManagerURL = config.OpsManagerURL()
+		}
+		if opts.authType == userAccountLegacyAuth && clientID == "" {
+			// Core's HTTP client reads the legacy refresh client ID from the profile.
+			if inferred := legacyauth.ClientIDForOpsManagerURL(opts.OpsManagerURL); inferred != "" {
+				opts.config.SetClientID(inferred)
+			}
 		}
 
 		return nil

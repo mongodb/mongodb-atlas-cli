@@ -391,6 +391,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -403,6 +406,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -415,6 +421,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -427,6 +436,9 @@ tasks:
     tags: ["e2e","clusters","atlas", "iss","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -438,6 +450,10 @@ tasks:
   - name: atlas_plugin_install
     tags: ["e2e","atlas","plugin","install","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -446,6 +462,10 @@ tasks:
   - name: atlas_plugin_run
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -454,6 +474,10 @@ tasks:
   - name: atlas_plugin_uninstall
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -462,6 +486,10 @@ tasks:
   - name: atlas_plugin_update
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -471,6 +499,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -482,6 +513,10 @@ tasks:
   - name: atlas_kubernetes_plugin
     tags: ["e2e","atlas","plugin","kubernetes","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -490,6 +525,10 @@ tasks:
   - name: atlas_local_plugin
     tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "restore go modules"
       - func: "e2e test"
@@ -499,6 +538,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -560,6 +602,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -573,6 +618,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -587,6 +635,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -600,6 +651,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -612,6 +666,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -626,6 +683,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -638,6 +698,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -652,6 +715,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -664,6 +730,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -678,6 +747,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -691,6 +763,9 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -703,6 +778,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -718,6 +796,9 @@ tasks:
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -731,6 +812,9 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
@@ -744,6 +828,9 @@ tasks:
     tags: ["e2e","clusters","atlas", "foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
@@ -1060,6 +1147,10 @@ tasks:
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
@@ -1074,6 +1165,10 @@ tasks:
     tags: ["e2e","deployments","local","seed"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
@@ -1088,6 +1183,10 @@ tasks:
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
@@ -1102,6 +1201,10 @@ tasks:
     tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
@@ -1116,6 +1219,10 @@ tasks:
     tags: ["e2e","deployments","local","auth","deprecated"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"

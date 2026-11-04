@@ -18,6 +18,10 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"sync"
 	"testing"
 	"time"
 
@@ -168,6 +172,69 @@ func TestWithAuthentication(t *testing.T) {
 			require.NotEqual(t, c.transport(), c.httpClient.Transport) // Check transport is not default
 		})
 	}
+}
+
+func TestWithAuthentication_UserAccountLegacyRefreshUsesInferredClientID(t *testing.T) {
+	t.Setenv("MCLI_CLIENT_ID", "")
+	var (
+		mu               sync.Mutex
+		gotClientID      string
+		gotAuthorization string
+	)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/private/unauth/account/device/token":
+			if err := r.ParseForm(); err != nil {
+				t.Errorf("ParseForm() error = %v", err)
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			mu.Lock()
+			gotClientID = r.Form.Get("client_id")
+			mu.Unlock()
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = io.WriteString(w, `{"access_token":"refreshed-access","refresh_token":"refreshed-refresh","token_type":"Bearer","expires_in":3600}`)
+		case "/resource":
+			mu.Lock()
+			gotAuthorization = r.Header.Get("Authorization")
+			mu.Unlock()
+			w.WriteHeader(http.StatusNoContent)
+		default:
+			t.Errorf("unexpected request path %q", r.URL.Path)
+			http.NotFound(w, r)
+		}
+	}))
+	defer server.Close()
+
+	previous := config.Default()
+	profile := config.NewProfile("legacy", config.NewInMemoryStore())
+	profile.SetService(config.CloudService)
+	profile.SetAuthType(config.UserAccountLegacy)
+	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
+	profile.Set(config.AccountURLField, server.URL+"/")
+	claims := fmt.Sprintf(`{"sub":"user","exp":%d}`, time.Now().Add(-time.Hour).Unix())
+	accessToken := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"none"}`)) + "." +
+		base64.RawURLEncoding.EncodeToString([]byte(claims)) + "."
+	profile.SetAccessToken(accessToken)
+	profile.SetRefreshToken("old-refresh")
+	config.SetDefaultProfile(profile)
+	t.Cleanup(func() { config.SetDefaultProfile(previous) })
+
+	s, err := New(AuthenticatedPreset(profile))
+	require.NoError(t, err)
+	request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, server.URL+"/resource", nil)
+	require.NoError(t, err)
+	response, err := s.httpClient.Do(request) //nolint:gosec // G704: URL comes from httptest.NewServer, not user input
+	require.NoError(t, err)
+	require.NoError(t, response.Body.Close())
+
+	mu.Lock()
+	clientID, authorization := gotClientID, gotAuthorization
+	mu.Unlock()
+	require.Equal(t, "0oadn4hoajpzxeSEy357", clientID)
+	require.Equal(t, "Bearer refreshed-access", authorization)
+	require.Equal(t, "refreshed-access", profile.AccessToken())
+	require.Equal(t, "refreshed-refresh", profile.RefreshToken())
 }
 
 func TestWithContext(t *testing.T) {

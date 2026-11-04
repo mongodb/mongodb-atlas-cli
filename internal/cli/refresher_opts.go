@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
@@ -46,7 +47,7 @@ func (opts *RefresherOpts) InitFlow(c transport.ServiceGetter) func() error {
 		var err error
 		client := http.DefaultClient
 		client.Transport = transport.Default()
-		opts.flow, err = transport.FlowWithConfig(c, client, version.Version)
+		opts.flow, err = legacyauth.FlowWithConfig(c, client, version.Version)
 		return err
 	}
 }

@@ -813,7 +813,7 @@ github_pr_aliases:
   - variant: "code_health"
     task_tags: ["code_health"]
   - variant: "e2e_pr"
-    task_tags: ["*"]
+    task: ["*"]
 git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"

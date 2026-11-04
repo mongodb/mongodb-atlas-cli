@@ -36,14 +36,8 @@ func TestDecryptWithAzure(t *testing.T) {
 	}
 
 	req := require.New(t)
-	mode, err := internal.TestRunMode()
-	req.NoError(err)
 
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
-	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	_ = internal.NewAtlasE2ETestGenerator(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)

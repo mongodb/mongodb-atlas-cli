@@ -44,15 +44,15 @@ func TestShardedCluster(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("shardedClusters")
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	shardedClusterName := g.Memory("shardedClusterName", internal.Must(internal.RandClusterName())).(string)
-	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	shardedClusterName := internal.Must(internal.RandClusterName())
+	dbUserUsername := internal.Must(internal.RandUsername())
 	dbUserPassword := dbUserUsername + "~PassWord"
 
 	var client *mongo.Client
@@ -127,13 +127,6 @@ func TestShardedCluster(t *testing.T) {
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
 
-		mode, err := internal.TestRunMode()
-		req.NoError(err)
-
-		if mode != internal.TestModeLive {
-			t.Skip("skipping actual MongoDB connection in snapshot mode")
-		}
-
 		client, err = mongo.Connect(
 			ctx,
 			options.Client().
@@ -170,10 +163,6 @@ func TestShardedCluster(t *testing.T) {
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
-
-	if internal.SkipCleanup() {
-		return
-	}
 
 	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

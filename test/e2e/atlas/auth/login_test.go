@@ -172,12 +172,6 @@ func TestLoginServiceAccount(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -235,12 +229,6 @@ func TestLoginServiceAccount(t *testing.T) {
 func TestLoginAPIKeys(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
-	}
-
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
 	}
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -324,12 +312,6 @@ func TestLoginMultipleProjectsNoFlags(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -369,12 +351,6 @@ func TestLoginInaccessibleOrg(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -401,12 +377,6 @@ func TestLoginInaccessibleOrg(t *testing.T) {
 func TestLoginInvalidCredentials(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
-	}
-
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
 	}
 
 	cliPath, err := internal.AtlasCLIBin()

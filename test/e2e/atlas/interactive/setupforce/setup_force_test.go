@@ -16,6 +16,7 @@ package setupforce
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -39,20 +40,20 @@ func TestSetup(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
 
-	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandClusterName())).(string)
+	dbUserUsername := internal.Must(internal.RandClusterName())
 
 	tagKey := "env"
 	tagValue := "e2etest"
 
-	arbitraryAccessListIP := g.MemoryRandIP("randIPSetupForce")
+	arbitraryAccessListIP := fmt.Sprintf("192.168.0.%d", internal.Must(internal.RandInt(255)))
 
 	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

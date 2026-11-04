@@ -37,11 +37,11 @@ func TestAtlasTeamUsers(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 
 	teamName := fmt.Sprintf("teams%v", n)
 	teamID, err := internal.CreateTeam(teamName)

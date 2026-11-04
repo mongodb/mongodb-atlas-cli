@@ -18,6 +18,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 )
@@ -517,4 +518,72 @@ func TestWeakPassword(t *testing.T) {
 			wantErr(t, WeakPassword(val))
 		})
 	}
+}
+
+type savedProfileStub map[string]string
+
+func (s savedProfileStub) GetProfileValue(_ string, property string) any {
+	if v, ok := s[property]; ok {
+		return v
+	}
+	return nil
+}
+
+func TestNoOtherCredentials(t *testing.T) {
+	apiKeys := savedProfileStub{publicAPIKeyField: "pub", privateAPIKeyField: "priv"}
+	serviceAccount := savedProfileStub{config.ClientIDField: "mdb_sa_id_1", config.ClientSecretField: "secret"}
+	userAccount := savedProfileStub{config.AccessTokenField: "at", config.RefreshTokenField: "rt"}
+
+	tests := []struct {
+		name     string
+		saved    savedProfileStub
+		authType config.AuthMechanism
+		wantErr  error
+	}{
+		{name: "empty profile", authType: config.UserAccount},
+		{name: "api keys relogin", saved: apiKeys, authType: config.APIKeys},
+		{name: "service account relogin", saved: serviceAccount, authType: config.ServiceAccount},
+		{name: "user account relogin", saved: userAccount, authType: config.UserAccount},
+		{name: "custom oauth client id only", saved: savedProfileStub{config.ClientIDField: "0oacustom"}, authType: config.UserAccount},
+		{name: "access token without refresh token", saved: savedProfileStub{config.AccessTokenField: "sa-token"}, authType: config.APIKeys},
+		{name: "service account then user account", saved: serviceAccount, authType: config.UserAccount, wantErr: ErrAlreadyAuthenticatedSA},
+		{name: "service account then api keys", saved: serviceAccount, authType: config.APIKeys, wantErr: ErrAlreadyAuthenticatedSA},
+		{name: "client secret only", saved: savedProfileStub{config.ClientSecretField: "secret"}, authType: config.UserAccount, wantErr: ErrAlreadyAuthenticatedSA},
+		{name: "api keys then service account", saved: apiKeys, authType: config.ServiceAccount, wantErr: ErrAlreadyAuthenticatedAPIKeys},
+		{name: "api keys then user account", saved: apiKeys, authType: config.UserAccount, wantErr: ErrAlreadyAuthenticatedAPIKeys},
+		{name: "public api key only", saved: savedProfileStub{publicAPIKeyField: "pub"}, authType: config.UserAccount, wantErr: ErrAlreadyAuthenticatedAPIKeys},
+		{name: "private api key only", saved: savedProfileStub{privateAPIKeyField: "priv"}, authType: config.ServiceAccount, wantErr: ErrAlreadyAuthenticatedAPIKeys},
+		{name: "user account then service account", saved: userAccount, authType: config.ServiceAccount, wantErr: ErrAlreadyAuthenticatedToken},
+		{name: "user account then api keys", saved: userAccount, authType: config.APIKeys, wantErr: ErrAlreadyAuthenticatedToken},
+		{name: "user account legacy relogin", saved: userAccount, authType: config.UserAccountLegacy},
+		{name: "service account then user account legacy", saved: serviceAccount, authType: config.UserAccountLegacy, wantErr: ErrAlreadyAuthenticatedSA},
+		{name: "api keys then user account legacy", saved: apiKeys, authType: config.UserAccountLegacy, wantErr: ErrAlreadyAuthenticatedAPIKeys},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := NoOtherCredentials(tt.saved, "default", tt.authType)
+			if tt.wantErr == nil {
+				require.NoError(t, err)
+				return
+			}
+			require.ErrorIs(t, err, tt.wantErr)
+			require.Contains(t, err.Error(), "To log out, run: atlas auth logout\n")
+		})
+	}
+}
+
+func TestNoOtherCredentials_secretsNotLeaked(t *testing.T) {
+	err := NoOtherCredentials(savedProfileStub{
+		config.ClientIDField:     "mdb_sa_id_1",
+		config.ClientSecretField: "sa-secret",
+		privateAPIKeyField:       "api-secret",
+	}, "default", config.UserAccount)
+	require.Error(t, err)
+	require.NotContains(t, err.Error(), "sa-secret")
+	require.NotContains(t, err.Error(), "api-secret")
+}
+
+func TestNoOtherCredentials_namedProfile(t *testing.T) {
+	err := NoOtherCredentials(savedProfileStub{config.ClientSecretField: "secret"}, "work", config.UserAccount)
+	require.ErrorContains(t, err, "To log out, run: atlas auth logout --profile work")
 }

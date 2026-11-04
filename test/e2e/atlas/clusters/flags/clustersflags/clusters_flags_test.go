@@ -45,14 +45,14 @@ func TestClustersFlags(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("clustersFlags")
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
 
 	tier := internal.E2eTier()
 	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)

@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
@@ -56,6 +57,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	opts.OutWriter = buf
 	opts.Store = mockStore
 	opts.Asker = mockAsker
+	opts.savedProfile = savedProfileWith(nil)
 	opts.WithFlow(mockFlow)
 
 	expectedCode := &auth.DeviceCode{
@@ -149,4 +151,19 @@ Paste the code in the browser when prompted to activate your Atlas CLI. Your cod
 To continue, go to https://localhost/account/register/cli
 Successfully logged in as test@10gen.com.
 `, buf.String())
+}
+
+func Test_registerOpts_Run_OtherCredentialsBlocksBeforeFlow(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
+	opts := &RegisterOpts{}
+	opts.config = NewMockLoginConfig(ctrl)
+	opts.savedProfile = savedProfileWith(map[string]string{
+		config.ClientIDField:     "mdb_sa_id_1",
+		config.ClientSecretField: "secret",
+	})
+	opts.WithFlow(mockFlow)
+
+	require.ErrorIs(t, opts.RegisterRun(t.Context()), validate.ErrAlreadyAuthenticatedSA)
 }

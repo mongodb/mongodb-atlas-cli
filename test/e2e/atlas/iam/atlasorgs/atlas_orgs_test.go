@@ -37,7 +37,7 @@ func TestAtlasOrgs(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -98,7 +98,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, userID)
 
-	n := g.MemoryRand("rand", 255)
+	n := internal.Must(internal.RandInt(255))
 	orgName := fmt.Sprintf("e2e-org-%v", n)
 	var (
 		publicAPIKey  string

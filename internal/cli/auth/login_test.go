@@ -35,6 +35,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prompt"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
@@ -88,9 +89,10 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	opts := &LoginOpts{
-		config:    mockConfig,
-		Asker:     mockAsker,
-		NoBrowser: true,
+		config:       mockConfig,
+		Asker:        mockAsker,
+		NoBrowser:    true,
+		savedProfile: savedProfileWith(nil),
 	}
 	opts.WithFlow(mockFlow)
 	opts.OutWriter = buf
@@ -255,8 +257,9 @@ func TestLoginRun_APIKeys_Success(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	opts := &LoginOpts{
-		config: mockConfig,
-		Asker:  mockAsker,
+		config:       mockConfig,
+		Asker:        mockAsker,
+		savedProfile: savedProfileWith(nil),
 	}
 	opts.OutWriter = new(bytes.Buffer)
 	opts.Store = mockStore
@@ -1055,4 +1058,42 @@ func Test_loginOpts_LoginPreRun_UserAccountRefresh(t *testing.T) {
 			require.NoError(t, err)
 		})
 	}
+}
+
+type savedProfileStub map[string]string
+
+func (s savedProfileStub) GetProfileValue(_ string, property string) any {
+	if v, ok := s[property]; ok {
+		return v
+	}
+	return nil
+}
+
+func savedProfileWith(values map[string]string) func() (validate.ProfileValueGetter, error) {
+	return func() (validate.ProfileValueGetter, error) { return savedProfileStub(values), nil }
+}
+
+func Test_loginOpts_checkNoOtherCredentials_storeError(t *testing.T) {
+	opts := &LoginOpts{savedProfile: func() (validate.ProfileValueGetter, error) { return nil, errors.New("boom") }}
+	require.ErrorContains(t, opts.checkNoOtherCredentials(config.UserAccount), "boom")
+}
+
+func Test_loginOpts_LoginRun_OtherCredentialsBlocksBeforeFlow(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
+	opts := &LoginOpts{
+		config:   mockConfig,
+		authType: userAccountAuth,
+		savedProfile: savedProfileWith(map[string]string{
+			config.ClientIDField:     "mdb_sa_id_1",
+			config.ClientSecretField: "secret",
+		}),
+	}
+	opts.Output = jsonOutputFormat
+	opts.WithFlow(mockFlow)
+
+	// No config writes and no device code request expected.
+	require.ErrorIs(t, opts.LoginRun(t.Context()), validate.ErrAlreadyAuthenticatedSA)
 }

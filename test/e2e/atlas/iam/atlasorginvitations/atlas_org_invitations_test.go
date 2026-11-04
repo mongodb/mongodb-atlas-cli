@@ -41,11 +41,11 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 
 	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string
@@ -79,7 +79,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.MemoryRand("randFile", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -113,7 +113,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.MemoryRand("randFile2", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -240,7 +240,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.MemoryRand("randFile3", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -275,7 +275,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.MemoryRand("randFile4", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator

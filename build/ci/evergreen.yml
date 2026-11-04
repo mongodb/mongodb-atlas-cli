@@ -785,16 +785,16 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .config-migration"
-  - name: e2e_waterfall_generator
-    display_name: "E2E Waterfall Generator"
+  - name: e2e_waterfall
+    display_name: "E2E Waterfall"
     run_on:
       - rhel80-small
     expansions:
       <<: *go_linux_version
     tasks:
       - name: e2e_waterfall_generate
-  - name: e2e_pr_generator
-    display_name: "E2E PR Generator"
+  - name: e2e_pr
+    display_name: "E2E PR"
     run_on:
       - rhel80-small
     expansions:
@@ -814,6 +814,8 @@ patch_aliases:
 github_pr_aliases:
   - variant: "code_health"
     task_tags: ["code_health"]
+  - variant: "e2e_pr"
+    task_tags: ["*"]
 git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"

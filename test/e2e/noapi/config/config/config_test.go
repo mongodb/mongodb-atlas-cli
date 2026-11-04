@@ -60,6 +60,10 @@ func TestConfig(t *testing.T) {
 		// We use garbage credentials to verify flow will ask for org and project IDs to be asked manually.
 		// We expect this flow to fail with an error message about project being inaccessible. The profile is still saved.
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
+		// Point at an unreachable local address so the org-listing call fails fast offline,
+		// otherwise the validation call against the real API rejects the garbage keys early
+		// and the manual-entry prompts never appear.
+		t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", "http://127.0.0.1:1")
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)
@@ -67,7 +71,7 @@ func TestConfig(t *testing.T) {
 
 		term := vt10x.New(vt10x.WithWriter(tty))
 		// To debug add os.Stdout to expect.WithStdout
-		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(term), expect.WithCloser(pty, tty))
+		c, err := expect.NewConsole(expect.WithStdin(pty), expect.WithStdout(os.Stdout), expect.WithStdout(term), expect.WithCloser(pty, tty))
 		if err != nil {
 			t.Fatalf("failed to create console: %v", err)
 		}

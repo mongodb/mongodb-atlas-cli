@@ -47,10 +47,6 @@ func Test_newRegisterOpts_setsAsker(t *testing.T) {
 const testRegistrationURL = "https://account.mongodb.com/account/register/cli"
 
 func Test_registerOpts_Run(t *testing.T) {
-	t.Setenv("MCLI_CLIENT_ID", "")
-	profile := setDefaultProfile(t, "", "")
-	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
-
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)

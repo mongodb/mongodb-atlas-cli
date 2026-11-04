@@ -29,9 +29,6 @@ const (
 	e2eWaterfallVariant = "e2e_waterfall"
 	e2ePRVariant        = "e2e_pr"
 
-	e2eWaterfallDisplay = "E2E Waterfall"
-	e2ePRDisplay        = "E2E PR"
-
 	e2eWaterfallPkgPrefix = "test/e2e/atlas/"
 	e2ePRPkgPrefix        = "test/e2e/pr/"
 
@@ -39,31 +36,22 @@ const (
 	e2ePRTaskPrefix        = "e2e_pr_"
 )
 
-var goExpansions = map[string]any{
-	"go_root":      "/opt/golang/go1.26",
-	"go_bin":       "/opt/golang/go1.26/bin",
-	"go_base_path": "",
-}
-
 func E2EWaterfallTasks(c *shrub.Configuration) error {
-	return e2eTasks(c, e2eWaterfallVariant, e2eWaterfallDisplay, e2eWaterfallPkgPrefix, e2eWaterfallTaskPrefix)
+	return e2eTasks(c, e2eWaterfallVariant, e2eWaterfallPkgPrefix, e2eWaterfallTaskPrefix)
 }
 
 func E2EPRTasks(c *shrub.Configuration) error {
-	return e2eTasks(c, e2ePRVariant, e2ePRDisplay, e2ePRPkgPrefix, e2ePRTaskPrefix)
+	return e2eTasks(c, e2ePRVariant, e2ePRPkgPrefix, e2ePRTaskPrefix)
 }
 
-func e2eTasks(c *shrub.Configuration, variantName, displayName, pkgPrefix, taskPrefix string) error {
+func e2eTasks(c *shrub.Configuration, variantName, pkgPrefix, taskPrefix string) error {
 	packages, err := e2ePackages(pkgPrefix)
 	if err != nil {
 		return err
 	}
 
 	v := &shrub.Variant{
-		BuildName:        variantName,
-		BuildDisplayName: displayName,
-		DistroRunOn:      []string{runOn},
-		Expansions:       goExpansions,
+		BuildName: variantName,
 	}
 
 	for _, pkg := range packages {

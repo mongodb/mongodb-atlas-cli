@@ -61,7 +61,9 @@ func testE2ETasks(t *testing.T, generateTasks func(*shrub.Configuration) error, 
 	assert.Len(t, c.Variants, 1)
 	v := c.Variants[0]
 	assert.Equal(t, variantName, v.BuildName)
-	assert.NotEmpty(t, v.DistroRunOn)
+	assert.Empty(t, v.BuildDisplayName)
+	assert.Empty(t, v.DistroRunOn)
+	assert.Empty(t, v.Expansions)
 	assert.Len(t, v.TaskSpecs, len(c.Tasks))
 
 	assert.NotEmpty(t, c.Tasks)

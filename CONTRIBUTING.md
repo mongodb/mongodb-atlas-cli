@@ -129,7 +129,6 @@ Review and replace the atlas settings.
 ```json
 {
   "go.testEnvVars": {
-    "TEST_MODE": "live", // optional default is 'live'
     "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
     "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended
     "E2E_CLOUD_ROLE_ID": "<value here>", // needed just for a few tests

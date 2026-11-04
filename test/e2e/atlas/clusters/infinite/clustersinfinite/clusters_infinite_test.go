@@ -33,13 +33,13 @@ func TestClustersInfinite(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	req := require.New(t)
 
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
 	g.GenerateProject("ClustersInfinite")
 
 	// databaseEdition is exposed on the createGroupCluster 2024-10-23 schema.

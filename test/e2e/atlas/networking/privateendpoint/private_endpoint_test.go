@@ -44,7 +44,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("privateEndpointsAWS")
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -151,10 +151,6 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	if internal.SkipCleanup() {
-		return
-	}
-
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -180,7 +176,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("privateEndpointsAzure")
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -290,10 +286,6 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	if internal.SkipCleanup() {
-		return
-	}
-
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -318,7 +310,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("privateEndpointsGPC")
 
 	region := regionGCP
@@ -424,10 +416,6 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	if internal.SkipCleanup() {
-		return
-	}
-
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -453,7 +441,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("regionalizedPrivateEndpointsSettings")
 
 	cliPath, err := internal.AtlasCLIBin()

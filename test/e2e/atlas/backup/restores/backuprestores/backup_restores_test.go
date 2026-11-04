@@ -42,7 +42,7 @@ func TestRestores(t *testing.T) {
 
 	var snapshotID, restoreJobID string
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithBackup())
 	g.GenerateProjectAndCluster("backupRestores")
 	require.NotEmpty(t, g.ClusterName)
 
@@ -265,10 +265,6 @@ func TestRestores(t *testing.T) {
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
-
-	if internal.SkipCleanup() {
-		return
-	}
 
 	g.Run("Watch snapshot deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

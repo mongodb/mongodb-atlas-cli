@@ -38,7 +38,7 @@ func TestEvents(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	g.Run("List Project Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

@@ -44,7 +44,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProjectAndCluster("ldap")
 
 	cliPath, err := internal.AtlasCLIBin()
@@ -175,7 +175,7 @@ func TestLDAPWithStdin(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProjectAndCluster("ldap")
 
 	cliPath, err := internal.AtlasCLIBin()

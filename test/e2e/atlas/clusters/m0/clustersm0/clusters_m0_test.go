@@ -44,15 +44,15 @@ func TestClustersM0Flags(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("clustersM0")
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
-	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
+	dbUserUsername := internal.Must(internal.RandUsername())
 	dbUserPassword := dbUserUsername + "~PwD"
 
 	var client *mongo.Client
@@ -152,13 +152,6 @@ func TestClustersM0Flags(t *testing.T) {
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
 
-		mode, err := internal.TestRunMode()
-		req.NoError(err)
-
-		if mode != internal.TestModeLive {
-			t.Skip("skipping actual MongoDB connection in snapshot mode")
-		}
-
 		client, err = mongo.Connect(
 			ctx,
 			options.Client().
@@ -196,10 +189,6 @@ func TestClustersM0Flags(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
-
-	if internal.SkipCleanup() {
-		return
-	}
 
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

@@ -30,12 +30,6 @@ func TestCreateOrgServiceAccount(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	mode, err := internal.TestRunMode()
-	require.NoError(t, err)
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 

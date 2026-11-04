@@ -18,15 +18,12 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
@@ -202,86 +199,6 @@ func TestNewDefaultHTTPClient_AuthenticatedAPICommandUsesCredentials(t *testing.
 	}, api.Command{})
 
 	require.ErrorIs(t, err, expectedErr)
-}
-
-func TestNewDefaultHTTPClient_UserAccountLegacyRefreshUsesInferredClientID(t *testing.T) {
-	var gotClientID string
-	var gotRefreshToken string
-	var gotAuthorization string
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case "/api/private/unauth/account/device/token":
-			if err := r.ParseForm(); err != nil {
-				t.Errorf("ParseForm() error = %v", err)
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-			gotClientID = r.Form.Get("client_id")
-			gotRefreshToken = r.Form.Get("refresh_token")
-			w.Header().Set("Content-Type", "application/json")
-			_, _ = io.WriteString(w, `{"access_token":"refreshed-access","refresh_token":"refreshed-refresh","token_type":"Bearer","expires_in":3600}`)
-		case "/resource":
-			gotAuthorization = r.Header.Get("Authorization")
-			w.WriteHeader(http.StatusNoContent)
-		default:
-			t.Errorf("unexpected request path %q", r.URL.Path)
-			http.NotFound(w, r)
-		}
-	}))
-	defer server.Close()
-
-	profile := &legacyTestProfileProvider{
-		testProfileProvider: testProfileProvider{authType: config.UserAccountLegacy},
-		token: &auth.Token{
-			AccessToken:  "expired-access",
-			RefreshToken: "old-refresh",
-			Expiry:       time.Now().Add(-time.Hour),
-		},
-		service:       config.CloudService,
-		opsManagerURL: "https://cloud-dev.mongodb.com/",
-		accountURL:    server.URL + "/",
-	}
-
-	client, err := newDefaultHTTPClient(profile, api.Command{})
-	require.NoError(t, err)
-	request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, server.URL+"/resource", nil)
-	require.NoError(t, err)
-	response, err := client.Do(request) //nolint:gosec // G704: URL comes from httptest.NewServer, not user input
-	require.NoError(t, err)
-	assert.NoError(t, response.Body.Close())
-
-	assert.Equal(t, "0oadn4hoajpzxeSEy357", gotClientID)
-	assert.Equal(t, "old-refresh", gotRefreshToken)
-	assert.Equal(t, "Bearer refreshed-access", gotAuthorization)
-	assert.Equal(t, "refreshed-access", profile.savedAccessToken)
-	assert.Equal(t, "refreshed-refresh", profile.savedRefreshToken)
-	assert.Equal(t, 1, profile.saveCalls)
-}
-
-type legacyTestProfileProvider struct {
-	testProfileProvider
-	token             *auth.Token
-	service           string
-	opsManagerURL     string
-	clientID          string
-	accountURL        string
-	savedAccessToken  string
-	savedRefreshToken string
-	saveCalls         int
-}
-
-func (p *legacyTestProfileProvider) Token() (*auth.Token, error) { return p.token, nil }
-func (p *legacyTestProfileProvider) Service() string             { return p.service }
-func (p *legacyTestProfileProvider) OpsManagerURL() string       { return p.opsManagerURL }
-func (p *legacyTestProfileProvider) ClientID() string            { return p.clientID }
-func (p *legacyTestProfileProvider) AccountURL() string          { return p.accountURL }
-func (p *legacyTestProfileProvider) SetAccessToken(token string) { p.savedAccessToken = token }
-func (p *legacyTestProfileProvider) SetRefreshToken(token string) {
-	p.savedRefreshToken = token
-}
-func (p *legacyTestProfileProvider) Save() error {
-	p.saveCalls++
-	return nil
 }
 
 func TestExecutorHTTPClientFactoryUsesRequestCommand(t *testing.T) {

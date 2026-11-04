@@ -15,11 +15,9 @@
 package legacyauth
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
-	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
@@ -60,43 +58,6 @@ func (c legacyDeviceCodeServiceGetter) ClientID() string {
 // FlowWithConfig constructs the legacy device-code flow using the supplied profile.
 func FlowWithConfig(profile ServiceConfig, client *http.Client, version string) (*atlasauth.Config, error) {
 	return transport.FlowWithConfig(legacyDeviceCodeServiceGetter{profile: profile}, client, version)
-}
-
-// HTTPClientFromProfile creates an HTTP client using the profile's authentication settings.
-func HTTPClientFromProfile(profile transport.ProfileProvider, version string, base http.RoundTripper) (*http.Client, error) {
-	if profile.AuthType() != config.UserAccountLegacy {
-		return transport.HTTPClientFromProfile(profile, version, base)
-	}
-
-	token, err := profile.Token()
-	if err != nil {
-		return nil, err
-	}
-	if token == nil {
-		return &http.Client{Transport: base}, nil
-	}
-
-	accessTokenTransport, err := newLegacyAccessTokenTransport(profile, token, base, version, func(t *atlasauth.Token) error {
-		profile.SetAccessToken(t.AccessToken)
-		profile.SetRefreshToken(t.RefreshToken)
-		return profile.Save()
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &http.Client{Transport: accessTokenTransport}, nil
-}
-
-func newLegacyAccessTokenTransport(profile ServiceConfig, token *atlasauth.Token, base http.RoundTripper, version string, saveToken func(*atlasauth.Token) error) (http.RoundTripper, error) {
-	if token == nil {
-		return nil, errors.New("token is nil")
-	}
-	client := &http.Client{Transport: transport.Default()}
-	flow, err := FlowWithConfig(profile, client, version)
-	if err != nil {
-		return nil, err
-	}
-	return transport.NewAccessTokenTransportWithConfig(token, base, flow, saveToken)
 }
 
 func clientIDForOpsManagerURL(opsManagerURL string) string {

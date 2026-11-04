@@ -25,7 +25,6 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -119,7 +118,7 @@ type CredentialsGetter interface {
 // WithAuthentication sets the store credentials.
 func WithAuthentication() Option {
 	return func(s *Store) error {
-		client, err := legacyauth.HTTPClientFromProfile(config.Default(), version.Version, s.transport())
+		client, err := transport.HTTPClientFromProfile(config.Default(), version.Version, s.transport())
 		if err != nil {
 			return err
 		}

@@ -22,7 +22,6 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/atlas-cli-core/transport"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/legacyauth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
@@ -115,7 +114,7 @@ func newDefaultHTTPClient(profile transport.ProfileProvider, command shared_api.
 	if command.Unauthenticated {
 		return &http.Client{Transport: transport.Default()}, nil
 	}
-	return legacyauth.HTTPClientFromProfile(profile, version.Version, transport.Default())
+	return transport.HTTPClientFromProfile(profile, version.Version, transport.Default())
 }
 
 func (e *Executor) ensureInitialized() {

@@ -1,0 +1,5 @@
+groups:
+  []
+requirements:
+  - aws_role
+  - s3_bucket

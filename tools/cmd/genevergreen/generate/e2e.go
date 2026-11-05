@@ -15,12 +15,21 @@
 package generate
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
+	"io/fs"
+	"os"
 	"os/exec"
+	"path/filepath"
+	"slices"
+	"sort"
 	"strings"
+	"time"
 
 	"github.com/evergreen-ci/shrub"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -28,52 +37,169 @@ const (
 
 	e2eWaterfallVariant = "e2e_waterfall"
 	e2ePRVariant        = "e2e_pr"
-
-	e2eWaterfallPkgPrefix = "test/e2e/atlas/"
-	e2ePRPkgPrefix        = "test/e2e/pr/"
+	e2eGovVariant       = "e2e_gov"
 
 	e2eWaterfallTaskPrefix = "e2e_waterfall_"
 	e2ePRTaskPrefix        = "e2e_pr_"
+	e2eGovTaskPrefix       = "e2e_gov_"
+
+	e2eGovProfile = "__e2e_gov"
+
+	e2eSidecarName = "e2e.yaml"
+
+	e2eAtlasTreePrefix = "test/e2e/atlas/"
+	e2ePRTreePrefix    = "test/e2e/pr/"
+
+	e2eFlagsPackage = "test/e2e/atlas/clusters/flags/clustersflags"
 )
 
-func E2EWaterfallTasks(c *shrub.Configuration) error {
-	return e2eTasks(c, e2eWaterfallVariant, e2eWaterfallPkgPrefix, e2eWaterfallTaskPrefix)
+var e2eGroups = map[string]bool{
+	"pr":    true,
+	"gov":   true,
+	"noapi": true,
 }
 
-func E2EPRTasks(c *shrub.Configuration) error {
-	return e2eTasks(c, e2ePRVariant, e2ePRPkgPrefix, e2ePRTaskPrefix)
+var e2eRequirementVars = map[string]map[string]string{
+	"aws_role": {
+		"E2E_CLOUD_ROLE_ID": "${e2e_cloud_role_id}",
+	},
+	"s3_bucket": {
+		"E2E_TEST_BUCKET": "${e2e_test_bucket}",
+	},
+	"flex_instance": {
+		"E2E_FLEX_INSTANCE_NAME": "${e2e_flex_instance_name}",
+	},
+	"kms_aws": { //nolint:gosec // Evergreen expansion references, not credentials
+		"AWS_ACCESS_KEY":        "${logs_decrypt_aws_access_key}",
+		"AWS_SECRET_ACCESS_KEY": "${logs_decrypt_aws_secret_access_key}",
+	},
+	"kms_azure": { //nolint:gosec // Evergreen expansion references, not credentials
+		"AZURE_TENANT_ID":     "${logs_decrypt_azure_tenant_id}",
+		"AZURE_CLIENT_ID":     "${logs_decrypt_azure_client_id}",
+		"AZURE_CLIENT_SECRET": "${logs_decrypt_azure_client_secret}",
+	},
+	"kms_gcp": { //nolint:gosec // Evergreen expansion references, not credentials
+		"GCP_CREDENTIALS": "${logs_decrypt_gcp_credentials}",
+	},
 }
 
-func e2eTasks(c *shrub.Configuration, variantName, pkgPrefix, taskPrefix string) error {
-	packages, err := e2ePackages(pkgPrefix)
+var e2eStructuralRequirements = map[string]bool{
+	"cluster":             true,
+	"docker":              true,
+	"flex_mtm":            true,
+	"m0_mtm":              true,
+	"flex_snapshot":       true,
+	"federation_settings": true,
+}
+
+var e2eDockerFunctions = []string{
+	"install mongodb database tools",
+	"increase inotify limits",
+	"authenticate to ecr",
+}
+
+type e2eManifest struct {
+	Groups       []string `yaml:"groups"`
+	Requirements []string `yaml:"requirements"`
+	Timeout      string   `yaml:"timeout"`
+}
+
+type e2ePackage struct {
+	path     string
+	manifest e2eManifest
+}
+
+func (p e2ePackage) hasGroup(group string) bool {
+	return slices.Contains(p.manifest.Groups, group)
+}
+
+func (p e2ePackage) hasRequirement(requirement string) bool {
+	return slices.Contains(p.manifest.Requirements, requirement)
+}
+
+type E2EOptions struct {
+	Variant             string
+	TaskPrefix          string
+	Profile             string
+	IncludeAnyGroups    []string
+	ExcludeGroups       []string
+	ExcludeRequirements []string
+}
+
+func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
+	if opts.Variant == "" {
+		return errors.New("e2e generation requires a variant")
+	}
+	if opts.TaskPrefix == "" {
+		opts.TaskPrefix = opts.Variant + "_"
+	}
+
+	packages, err := loade2ePackages()
 	if err != nil {
 		return err
 	}
 
-	v := &shrub.Variant{
-		BuildName: variantName,
+	for _, group := range append(opts.IncludeAnyGroups, opts.ExcludeGroups...) {
+		if !e2eGroups[group] {
+			return fmt.Errorf("unknown e2e group: %s", group)
+		}
 	}
 
-	for _, pkg := range packages {
-		name := taskPrefix + strings.ReplaceAll(strings.TrimPrefix(pkg, pkgPrefix), "/", "_")
-
-		dependency := shrub.TaskDependency{Name: "compile", Variant: "code_health"}
-		dependency.SetPatchOptional(true)
-
-		t := &shrub.Task{
-			Name: name,
+	for _, requirement := range opts.ExcludeRequirements {
+		if !e2eStructuralRequirements[requirement] {
+			if _, ok := e2eRequirementVars[requirement]; !ok {
+				return fmt.Errorf("unknown e2e requirement to exclude: %s", requirement)
+			}
 		}
+	}
 
-		t = t.Tag("e2e").
-			MustHaveTestResults(true).
-			ExecTimeout(e2eExecTimeoutSecs).
-			Dependency(dependency).
-			Function("install mongodb database tools").
-			Function("increase inotify limits").
-			Function("authenticate to ecr").
-			Function("restore go modules").
-			FunctionWithVars("e2e test", e2eTestVars(pkg))
+	selected := make([]e2ePackage, 0, len(packages))
+	for _, pkg := range packages {
+		if !e2eSelected(pkg, opts) {
+			continue
+		}
+		selected = append(selected, pkg)
+	}
+	if len(selected) == 0 {
+		return fmt.Errorf("no e2e packages selected for variant %s", opts.Variant)
+	}
 
+	needsFlags := false
+	for _, pkg := range selected {
+		if pkg.hasRequirement("cluster") {
+			needsFlags = true
+			break
+		}
+	}
+	if needsFlags {
+		flagsSelected := false
+		for _, pkg := range selected {
+			if pkg.path == e2eFlagsPackage {
+				flagsSelected = true
+				break
+			}
+		}
+		if !flagsSelected {
+			return fmt.Errorf("packages require a cluster but %s is not generated for variant %s", e2eFlagsPackage, opts.Variant)
+		}
+	}
+
+	v := &shrub.Variant{
+		BuildName: opts.Variant,
+	}
+
+	names := make(map[string]bool, len(selected))
+	for _, pkg := range selected {
+		name, err := e2eTaskName(pkg, opts.TaskPrefix)
+		if err != nil {
+			return err
+		}
+		if names[name] {
+			return fmt.Errorf("duplicate generated task name: %s", name)
+		}
+		names[name] = true
+
+		t := e2eTask(pkg, name, opts)
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
 	}
@@ -83,52 +209,230 @@ func e2eTasks(c *shrub.Configuration, variantName, pkgPrefix, taskPrefix string)
 	return nil
 }
 
-func e2eTestVars(pkg string) map[string]string {
-	return map[string]string{ //nolint:gosec // Evergreen expansion references, not credentials
-		"E2E_TEST_PACKAGES":      "./" + pkg + "/...",
-		"E2E_CLOUD_ROLE_ID":      "${e2e_cloud_role_id}",
-		"E2E_TEST_BUCKET":        "${e2e_test_bucket}",
-		"E2E_FLEX_INSTANCE_NAME": "${e2e_flex_instance_name}",
-		"E2E_TIMEOUT":            "3h",
-		"GCP_CREDENTIALS":        "${logs_decrypt_gcp_credentials}",
-		"AWS_ACCESS_KEY":         "${logs_decrypt_aws_access_key}",
-		"AWS_SECRET_ACCESS_KEY":  "${logs_decrypt_aws_secret_access_key}",
-		"AZURE_TENANT_ID":        "${logs_decrypt_azure_tenant_id}",
-		"AZURE_CLIENT_ID":        "${logs_decrypt_azure_client_id}",
-		"AZURE_CLIENT_SECRET":    "${logs_decrypt_azure_client_secret}",
+func e2eSelected(pkg e2ePackage, opts E2EOptions) bool {
+	for _, group := range opts.ExcludeGroups {
+		if pkg.hasGroup(group) {
+			return false
+		}
 	}
+	for _, requirement := range opts.ExcludeRequirements {
+		if pkg.hasRequirement(requirement) {
+			return false
+		}
+	}
+	if len(opts.IncludeAnyGroups) == 0 {
+		return true
+	}
+	for _, group := range opts.IncludeAnyGroups {
+		if pkg.hasGroup(group) {
+			return true
+		}
+	}
+	return false
 }
 
-func e2ePackages(pkgPrefix string) ([]string, error) {
-	moduleOut, err := exec.CommandContext(context.Background(), "go", "list", "-m").Output()
-	if err != nil {
-		return nil, fmt.Errorf("getting module path: %w", err)
+func e2eTaskName(pkg e2ePackage, prefix string) (string, error) {
+	var rel string
+	switch {
+	case strings.HasPrefix(pkg.path, e2eAtlasTreePrefix):
+		rel = strings.TrimPrefix(pkg.path, e2eAtlasTreePrefix)
+	case strings.HasPrefix(pkg.path, e2ePRTreePrefix):
+		rel = strings.TrimPrefix(pkg.path, e2ePRTreePrefix)
+	default:
+		return "", fmt.Errorf("e2e package outside the atlas/pr trees: %s", pkg.path)
 	}
-	module := strings.TrimSpace(string(moduleOut))
+	return prefix + strings.ReplaceAll(rel, "/", "_"), nil
+}
 
-	listOut, err := exec.CommandContext(context.Background(), "go", "list", module+"/test/...").Output() //nolint:gosec // module comes from `go list -m` in this module
-	if err != nil {
-		return nil, fmt.Errorf("listing test packages: %w", err)
+func e2eTask(pkg e2ePackage, name string, opts E2EOptions) *shrub.Task {
+	compileDependency := shrub.TaskDependency{Name: "compile", Variant: "code_health"}
+	compileDependency.SetPatchOptional(true)
+
+	dependencies := []shrub.TaskDependency{compileDependency}
+	if pkg.hasRequirement("cluster") {
+		clusterDependency := shrub.TaskDependency{
+			Name:    opts.TaskPrefix + "clusters_flags_clustersflags",
+			Variant: opts.Variant,
+		}
+		clusterDependency.SetPatchOptional(true)
+		dependencies = append(dependencies, clusterDependency)
 	}
 
-	var packages []string
+	t := &shrub.Task{
+		Name: name,
+	}
+
+	t = t.Tag("e2e").
+		MustHaveTestResults(true).
+		Dependency(dependencies...)
+
+	if pkg.hasRequirement("docker") {
+		t = t.Function(e2eDockerFunctions...)
+	}
+
+	vars := map[string]string{
+		"E2E_TEST_PACKAGES": "./" + pkg.path + "/...",
+	}
+	if opts.Profile != "" {
+		vars["E2E_PROFILE_NAME"] = opts.Profile
+	}
+	if pkg.manifest.Timeout != "" {
+		vars["E2E_TIMEOUT"] = pkg.manifest.Timeout
+	}
+	for _, requirement := range pkg.manifest.Requirements {
+		for key, value := range e2eRequirementVars[requirement] {
+			vars[key] = value
+		}
+	}
+
+	t = t.Function("restore go modules").
+		FunctionWithVars("e2e test", vars)
+
+	if pkg.manifest.Timeout != "" {
+		t = t.ExecTimeout(e2eExecTimeoutSecs)
+	}
+
+	return t
+}
+
+func loade2ePackages() ([]e2ePackage, error) {
+	module, err := e2eModulePath()
+	if err != nil {
+		return nil, err
+	}
+
+	listOut, err := exec.CommandContext(context.Background(), "go", "list", "-f", "{{.ImportPath}} {{.Dir}}", module+"/test/e2e/...").Output() //nolint:gosec // module comes from `go list -m` in this module
+	if err != nil {
+		return nil, fmt.Errorf("listing e2e packages: %w", err)
+	}
+
+	repoRoot, err := e2eRepoRoot()
+	if err != nil {
+		return nil, err
+	}
+
+	var packages []e2ePackage
+	packageDirs := make(map[string]bool)
+	var missing []string
 	for _, line := range strings.Split(strings.TrimSpace(string(listOut)), "\n") {
-		pkg := strings.TrimPrefix(line, module+"/")
-		if pkg == line {
+		importPath, dir, found := strings.Cut(line, " ")
+		if !found || dir == "" {
 			continue
 		}
-		if strings.HasPrefix(pkg, "test/internal") {
+		pkg := e2ePackage{path: strings.TrimPrefix(importPath, module+"/")}
+		packageDirs[dir] = true
+
+		manifest, err := loade2eManifest(filepath.Join(dir, e2eSidecarName))
+		if err != nil {
+			return nil, fmt.Errorf("%s: %w", pkg.path, err)
+		}
+		if manifest == nil {
+			missing = append(missing, pkg.path)
 			continue
 		}
-		if !strings.HasPrefix(pkg, pkgPrefix) {
-			continue
-		}
+		pkg.manifest = *manifest
 		packages = append(packages, pkg)
 	}
 
-	if len(packages) == 0 {
-		return nil, fmt.Errorf("no e2e packages found under %s", pkgPrefix)
+	if len(missing) > 0 {
+		return nil, fmt.Errorf("e2e packages without %s: %s", e2eSidecarName, strings.Join(missing, ", "))
 	}
 
+	if err := checkOrphanSidecars(filepath.Join(repoRoot, "test", "e2e"), packageDirs); err != nil {
+		return nil, err
+	}
+
+	sort.Slice(packages, func(i, j int) bool {
+		return packages[i].path < packages[j].path
+	})
+
 	return packages, nil
+}
+
+func loade2eManifest(path string) (*e2eManifest, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	decoder := yaml.NewDecoder(bytes.NewReader(content))
+	decoder.KnownFields(true)
+
+	var manifest e2eManifest
+	if err := decoder.Decode(&manifest); err != nil {
+		return nil, fmt.Errorf("parsing %s: %w", e2eSidecarName, err)
+	}
+
+	if err := validateE2EManifest(manifest); err != nil {
+		return nil, err
+	}
+
+	return &manifest, nil
+}
+
+func validateE2EManifest(manifest e2eManifest) error {
+	for _, group := range manifest.Groups {
+		if !e2eGroups[group] {
+			return fmt.Errorf("unknown e2e group: %s", group)
+		}
+	}
+	for _, requirement := range manifest.Requirements {
+		if !e2eStructuralRequirements[requirement] {
+			if _, ok := e2eRequirementVars[requirement]; !ok {
+				return fmt.Errorf("unknown e2e requirement: %s", requirement)
+			}
+		}
+	}
+	if manifest.Timeout != "" {
+		if _, err := time.ParseDuration(manifest.Timeout); err != nil {
+			return fmt.Errorf("invalid timeout %q: %w", manifest.Timeout, err)
+		}
+	}
+	return nil
+}
+
+func checkOrphanSidecars(root string, packageDirs map[string]bool) error {
+	var orphans []string
+	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !entry.IsDir() {
+			return nil
+		}
+		if _, err := os.Stat(filepath.Join(path, e2eSidecarName)); err == nil && !packageDirs[path] {
+			orphans = append(orphans, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if len(orphans) > 0 {
+		return fmt.Errorf("orphan %s files in non-package directories: %s", e2eSidecarName, strings.Join(orphans, ", "))
+	}
+	return nil
+}
+
+func e2eModulePath() (string, error) {
+	out, err := exec.CommandContext(context.Background(), "go", "list", "-m").Output()
+	if err != nil {
+		return "", fmt.Errorf("getting module path: %w", err)
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
+func e2eRepoRoot() (string, error) {
+	out, err := exec.CommandContext(context.Background(), "go", "env", "GOMOD").Output()
+	if err != nil {
+		return "", fmt.Errorf("getting go.mod path: %w", err)
+	}
+	gomod := strings.TrimSpace(string(out))
+	if gomod == "" {
+		return "", errors.New("go env GOMOD returned an empty path")
+	}
+	return filepath.Dir(gomod), nil
 }

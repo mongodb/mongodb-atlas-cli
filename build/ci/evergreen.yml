@@ -240,6 +240,12 @@ functions:
           - go_base_path
           - workdir
           - task_type
+          - e2e_variant
+          - e2e_task_prefix
+          - e2e_include_groups
+          - e2e_exclude_groups
+          - e2e_exclude
+          - e2e_profile
         binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put
       params:
@@ -645,13 +651,26 @@ tasks:
     commands:
       - func: "generate evergreen"
         vars:
-          task_type: e2e-waterfall
+          task_type: e2e
+          e2e_variant: e2e_waterfall
+          e2e_exclude_groups: pr
   - name: e2e_pr_generate
     stepback: false
     commands:
       - func: "generate evergreen"
         vars:
-          task_type: e2e-pr
+          task_type: e2e
+          e2e_variant: e2e_pr
+          e2e_include_groups: pr
+  - name: e2e_gov_generate
+    stepback: false
+    commands:
+      - func: "generate evergreen"
+        vars:
+          task_type: e2e
+          e2e_variant: e2e_gov
+          e2e_include_groups: gov
+          e2e_profile: __e2e_gov
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -799,6 +818,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: e2e_pr_generate
+  - name: e2e_gov
+    display_name: "E2E Gov"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: e2e_gov_generate
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]

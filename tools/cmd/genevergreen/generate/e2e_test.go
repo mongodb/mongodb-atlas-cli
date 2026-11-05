@@ -30,7 +30,7 @@ func TestLoadE2EPackages(t *testing.T) {
 
 	var flags, pr, gov int
 	for _, pkg := range packages {
-		assert.True(t, strings.HasPrefix(pkg.path, "test/e2e/atlas/") || strings.HasPrefix(pkg.path, "test/e2e/pr/"), pkg.path)
+		assert.True(t, strings.HasPrefix(pkg.path, "test/e2e/atlas/") || strings.HasPrefix(pkg.path, "test/e2e/noapi/"), pkg.path)
 		if pkg.path == e2eFlagsPackage {
 			flags++
 			assert.True(t, pkg.hasRequirement("cluster"))

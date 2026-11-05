@@ -344,7 +344,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/pr/generic/...
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
@@ -482,7 +482,7 @@ tasks:
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/pr/iam/...
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
@@ -645,7 +645,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/pr/noapi/config/migration/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
   - name: e2e_waterfall_generate
     stepback: false
     commands:

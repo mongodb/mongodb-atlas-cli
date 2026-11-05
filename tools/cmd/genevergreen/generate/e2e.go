@@ -48,7 +48,7 @@ const (
 	e2eSidecarName = "e2e.yaml"
 
 	e2eAtlasTreePrefix = "test/e2e/atlas/"
-	e2ePRTreePrefix    = "test/e2e/pr/"
+	e2eNoAPITreePrefix = "test/e2e/noapi/"
 
 	e2eFlagsPackage = "test/e2e/atlas/clusters/flags/clustersflags"
 )
@@ -236,10 +236,10 @@ func e2eTaskName(pkg e2ePackage, prefix string) (string, error) {
 	switch {
 	case strings.HasPrefix(pkg.path, e2eAtlasTreePrefix):
 		rel = strings.TrimPrefix(pkg.path, e2eAtlasTreePrefix)
-	case strings.HasPrefix(pkg.path, e2ePRTreePrefix):
-		rel = strings.TrimPrefix(pkg.path, e2ePRTreePrefix)
+	case strings.HasPrefix(pkg.path, e2eNoAPITreePrefix):
+		rel = strings.TrimPrefix(pkg.path, e2eNoAPITreePrefix)
 	default:
-		return "", fmt.Errorf("e2e package outside the atlas/pr trees: %s", pkg.path)
+		return "", fmt.Errorf("e2e package outside the atlas/noapi trees: %s", pkg.path)
 	}
 	return prefix + strings.ReplaceAll(rel, "/", "_"), nil
 }

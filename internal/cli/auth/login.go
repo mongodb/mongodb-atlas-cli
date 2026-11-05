@@ -301,7 +301,7 @@ func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
 		}
 	case userAccountLegacyAuth:
 		_, _ = fmt.Fprintln(opts.OutWriter, userAccountDeprecation)
-		if err := opts.oauthFlow(ctx); err != nil {
+		if err := opts.legacyDeviceCodeFlow(ctx); err != nil {
 			return err
 		}
 	}
@@ -425,8 +425,9 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		if opts.RefreshToken != "" {
 			opts.config.SetRefreshToken(opts.RefreshToken)
 		}
-		if config.ClientID() != "" {
-			opts.config.SetClientID(config.ClientID())
+		clientID := config.ClientID()
+		if clientID != "" {
+			opts.config.SetClientID(clientID)
 		}
 
 		// sync OpsManagerURL from command opts (higher priority)
@@ -437,7 +438,6 @@ func (opts *LoginOpts) SyncWithOAuthAccessProfile(c LoginConfig) func() error {
 		if config.OpsManagerURL() != "" {
 			opts.OpsManagerURL = config.OpsManagerURL()
 		}
-
 		return nil
 	}
 }
@@ -713,7 +713,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 	}
 }
 
-func (opts *LoginOpts) oauthFlow(ctx context.Context) error {
+func (opts *LoginOpts) legacyDeviceCodeFlow(ctx context.Context) error {
 	askedToOpenBrowser := false
 	for {
 		code, _, err := opts.RequestCode(ctx)
@@ -870,7 +870,7 @@ Without --orgId or --projectId, a default is saved only if the credentials can a
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
 				opts.SyncWithOAuthAccessProfile(defaultProfile),
-				opts.InitFlow(defaultProfile),
+				opts.InitLegacyDeviceCodeFlow(defaultProfile),
 				opts.LoginPreRun(cmd.Context()),
 				validate.NoAccessToken,
 			)

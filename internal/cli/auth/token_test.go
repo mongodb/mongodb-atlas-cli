@@ -84,6 +84,7 @@ func TestTokenBuilder_PreRunE_DefaultConfig(t *testing.T) {
 
 func TestTokenBuilder_RefreshesExpiredTokenBeforePrinting(t *testing.T) {
 	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "old-refresh-token")
+	profile.SetAuthType(config.UserAccountLegacy)
 	ctrl := gomock.NewController(t)
 	flow := mocks.NewMockRefresher(ctrl)
 	flow.EXPECT().RefreshToken(gomock.Any(), "old-refresh-token").Return(&atlasauth.Token{
@@ -147,6 +148,7 @@ func TestTokenBuilder_ExpiredTokenWithoutRefreshTokenDoesNotPrint(t *testing.T) 
 
 func TestTokenBuilder_RefreshErrorDoesNotPrintExpiredToken(t *testing.T) {
 	profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "refresh-token")
+	profile.SetAuthType(config.UserAccountLegacy)
 	ctrl := gomock.NewController(t)
 	flow := mocks.NewMockRefresher(ctrl)
 	refreshErr := errors.New("refresh failed")
@@ -267,4 +269,58 @@ func TestTokenBuilder_UserAccountLegacyRefreshesThroughDeviceFlow(t *testing.T) 
 
 	require.NoError(t, cmd.Execute())
 	assert.Equal(t, "new-access-token\n", buf.String())
+}
+
+func TestRefresherOpts_SkipsLegacyRefreshForOtherAuthTypes(t *testing.T) {
+	tests := []struct {
+		name     string
+		authType config.AuthMechanism
+		setup    func(*config.Profile)
+	}{
+		{
+			name:     "API keys",
+			authType: config.APIKeys,
+			setup: func(profile *config.Profile) {
+				profile.SetPublicAPIKey("public")
+				profile.SetPrivateAPIKey("private")
+			},
+		},
+		{
+			name:     "service account",
+			authType: config.ServiceAccount,
+			setup: func(profile *config.Profile) {
+				profile.SetClientID("client-id")
+				profile.SetClientSecret("client-secret")
+			},
+		},
+		{name: "no auth", authType: config.NoAuth},
+		{name: "unset auth type"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("MCLI_AUTH_TYPE", "")
+			t.Setenv("MCLI_CLIENT_ID", "")
+			t.Setenv("MCLI_CLIENT_SECRET", "")
+			t.Setenv("MCLI_PUBLIC_API_KEY", "")
+			t.Setenv("MCLI_PRIVATE_API_KEY", "")
+			profile := setDefaultProfile(t, testAccessTokenWithExpiry(time.Now().Add(-time.Hour)), "stale-refresh-token")
+			profile.SetAuthType(tt.authType)
+			if tt.setup != nil {
+				tt.setup(profile)
+			}
+
+			ctrl := gomock.NewController(t)
+			flow := mocks.NewMockRefresher(ctrl)
+			flow.EXPECT().RefreshToken(gomock.Any(), gomock.Any()).Times(0)
+
+			refresher := &cli.RefresherOpts{}
+			refresher.WithFlow(flow)
+			refresher.WithUserAccountRefresher(func(context.Context, *config.Profile) error {
+				t.Fatal("non-user-account profiles must not use the Authorization Server refresher")
+				return nil
+			})
+			require.NoError(t, refresher.RefreshAccessTokenForProfile(t.Context(), profile))
+		})
+	}
 }

@@ -80,6 +80,10 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 }
 
 func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
+	t.Setenv("MCLI_CLIENT_ID", "")
+	profile := setDefaultProfile(t, "", "")
+	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
+
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
@@ -139,6 +143,7 @@ func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
+	mockConfig.EXPECT().SetClientID(gomock.Any()).Times(0)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()

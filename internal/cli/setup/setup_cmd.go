@@ -437,7 +437,7 @@ func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error 
 	return opts.PreRunE(
 		opts.initStore(ctx),
 		opts.login.SyncWithOAuthAccessProfile(defaultProfile),
-		opts.login.InitFlow(defaultProfile),
+		opts.login.InitLegacyDeviceCodeFlow(defaultProfile),
 		opts.InitOutput(outWriter, ""),
 	)
 }
@@ -673,7 +673,7 @@ func Builder() *cobra.Command {
 			if err := opts.login.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
 				return err
 			}
-			if err := opts.login.InitFlow(defaultProfile)(); err != nil {
+			if err := opts.login.InitLegacyDeviceCodeFlow(defaultProfile)(); err != nil {
 				return err
 			}
 			if err := opts.PreRun(cmd.Context()); err != nil {

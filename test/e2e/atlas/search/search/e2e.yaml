@@ -1,5 +1,7 @@
 groups:
   - gov
-requirements:
+fixtures:
   - cluster
+needs:
+  - test/e2e/atlas/clusters/flags/clustersflags
 timeout: 3h

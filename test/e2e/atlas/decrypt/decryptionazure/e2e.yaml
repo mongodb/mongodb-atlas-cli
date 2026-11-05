@@ -1,4 +1,4 @@
 groups:
   []
-requirements:
+fixtures:
   - kms_azure

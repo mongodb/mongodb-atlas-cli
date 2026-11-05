@@ -47,10 +47,7 @@ const (
 
 	e2eSidecarName = "e2e.yaml"
 
-	e2eAtlasTreePrefix = "test/e2e/atlas/"
-	e2eNoAPITreePrefix = "test/e2e/noapi/"
-
-	e2eFlagsPackage = "test/e2e/atlas/clusters/flags/clustersflags"
+	e2eTreePrefix = "test/e2e/"
 )
 
 var e2eGroups = map[string]bool{
@@ -59,7 +56,7 @@ var e2eGroups = map[string]bool{
 	"noapi": true,
 }
 
-var e2eRequirementVars = map[string]map[string]string{
+var e2eFixtureVars = map[string]map[string]string{
 	"aws_role": {
 		"E2E_CLOUD_ROLE_ID": "${e2e_cloud_role_id}",
 	},
@@ -83,7 +80,7 @@ var e2eRequirementVars = map[string]map[string]string{
 	},
 }
 
-var e2eStructuralRequirements = map[string]bool{
+var e2eStructuralFixtures = map[string]bool{
 	"cluster":             true,
 	"docker":              true,
 	"flex_mtm":            true,
@@ -99,9 +96,10 @@ var e2eDockerFunctions = []string{
 }
 
 type e2eManifest struct {
-	Groups       []string `yaml:"groups"`
-	Requirements []string `yaml:"requirements"`
-	Timeout      string   `yaml:"timeout"`
+	Groups   []string `yaml:"groups"`
+	Fixtures []string `yaml:"fixtures"`
+	Needs    []string `yaml:"needs"`
+	Timeout  string   `yaml:"timeout"`
 }
 
 type e2ePackage struct {
@@ -113,17 +111,17 @@ func (p e2ePackage) hasGroup(group string) bool {
 	return slices.Contains(p.manifest.Groups, group)
 }
 
-func (p e2ePackage) hasRequirement(requirement string) bool {
-	return slices.Contains(p.manifest.Requirements, requirement)
+func (p e2ePackage) hasFixture(fixture string) bool {
+	return slices.Contains(p.manifest.Fixtures, fixture)
 }
 
 type E2EOptions struct {
-	Variant             string
-	TaskPrefix          string
-	Profile             string
-	IncludeAnyGroups    []string
-	ExcludeGroups       []string
-	ExcludeRequirements []string
+	Variant          string
+	TaskPrefix       string
+	Profile          string
+	IncludeAnyGroups []string
+	ExcludeGroups    []string
+	ExcludeFixtures  []string
 }
 
 func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
@@ -145,10 +143,10 @@ func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
 		}
 	}
 
-	for _, requirement := range opts.ExcludeRequirements {
-		if !e2eStructuralRequirements[requirement] {
-			if _, ok := e2eRequirementVars[requirement]; !ok {
-				return fmt.Errorf("unknown e2e requirement to exclude: %s", requirement)
+	for _, fixture := range opts.ExcludeFixtures {
+		if !e2eStructuralFixtures[fixture] {
+			if _, ok := e2eFixtureVars[fixture]; !ok {
+				return fmt.Errorf("unknown e2e fixture to exclude: %s", fixture)
 			}
 		}
 	}
@@ -164,24 +162,19 @@ func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
 		return fmt.Errorf("no e2e packages selected for variant %s", opts.Variant)
 	}
 
-	needsFlags := false
+	byPath := make(map[string]e2ePackage, len(selected))
+	nameByPath := make(map[string]string, len(selected))
 	for _, pkg := range selected {
-		if pkg.hasRequirement("cluster") {
-			needsFlags = true
-			break
+		name, err := e2eTaskName(pkg, opts.TaskPrefix)
+		if err != nil {
+			return err
 		}
+		byPath[pkg.path] = pkg
+		nameByPath[pkg.path] = name
 	}
-	if needsFlags {
-		flagsSelected := false
-		for _, pkg := range selected {
-			if pkg.path == e2eFlagsPackage {
-				flagsSelected = true
-				break
-			}
-		}
-		if !flagsSelected {
-			return fmt.Errorf("packages require a cluster but %s is not generated for variant %s", e2eFlagsPackage, opts.Variant)
-		}
+
+	if err := validateE2ENeeds(byPath, opts.Variant); err != nil {
+		return err
 	}
 
 	v := &shrub.Variant{
@@ -190,16 +183,20 @@ func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
 
 	names := make(map[string]bool, len(selected))
 	for _, pkg := range selected {
-		name, err := e2eTaskName(pkg, opts.TaskPrefix)
-		if err != nil {
-			return err
-		}
+		name := nameByPath[pkg.path]
 		if names[name] {
 			return fmt.Errorf("duplicate generated task name: %s", name)
 		}
 		names[name] = true
 
-		t := e2eTask(pkg, name, opts)
+		needs := make([]shrub.TaskDependency, 0, len(pkg.manifest.Needs))
+		for _, needed := range pkg.manifest.Needs {
+			dependency := shrub.TaskDependency{Name: nameByPath[needed], Variant: opts.Variant}
+			dependency.SetPatchOptional(true)
+			needs = append(needs, dependency)
+		}
+
+		t := e2eTask(pkg, name, opts, needs)
 		c.Tasks = append(c.Tasks, t)
 		v.AddTasks(t.Name)
 	}
@@ -209,14 +206,53 @@ func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
 	return nil
 }
 
+func validateE2ENeeds(byPath map[string]e2ePackage, variant string) error {
+	for path, pkg := range byPath {
+		for _, needed := range pkg.manifest.Needs {
+			if needed == path {
+				return fmt.Errorf("e2e package %s cannot need itself", path)
+			}
+			if _, ok := byPath[needed]; !ok {
+				return fmt.Errorf("%s needs %s, which is not generated for variant %s", path, needed, variant)
+			}
+		}
+	}
+
+	const visiting, done = 1, 2
+	state := make(map[string]int, len(byPath))
+	var visit func(path string) error
+	visit = func(path string) error {
+		switch state[path] {
+		case visiting:
+			return fmt.Errorf("circular e2e needs involving %s", path)
+		case done:
+			return nil
+		}
+		state[path] = visiting
+		for _, needed := range byPath[path].manifest.Needs {
+			if err := visit(needed); err != nil {
+				return err
+			}
+		}
+		state[path] = done
+		return nil
+	}
+	for path := range byPath {
+		if err := visit(path); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func e2eSelected(pkg e2ePackage, opts E2EOptions) bool {
 	for _, group := range opts.ExcludeGroups {
 		if pkg.hasGroup(group) {
 			return false
 		}
 	}
-	for _, requirement := range opts.ExcludeRequirements {
-		if pkg.hasRequirement(requirement) {
+	for _, fixture := range opts.ExcludeFixtures {
+		if pkg.hasFixture(fixture) {
 			return false
 		}
 	}
@@ -232,31 +268,17 @@ func e2eSelected(pkg e2ePackage, opts E2EOptions) bool {
 }
 
 func e2eTaskName(pkg e2ePackage, prefix string) (string, error) {
-	var rel string
-	switch {
-	case strings.HasPrefix(pkg.path, e2eAtlasTreePrefix):
-		rel = strings.TrimPrefix(pkg.path, e2eAtlasTreePrefix)
-	case strings.HasPrefix(pkg.path, e2eNoAPITreePrefix):
-		rel = strings.TrimPrefix(pkg.path, e2eNoAPITreePrefix)
-	default:
-		return "", fmt.Errorf("e2e package outside the atlas/noapi trees: %s", pkg.path)
+	if !strings.HasPrefix(pkg.path, e2eTreePrefix) {
+		return "", fmt.Errorf("e2e package outside %s: %s", e2eTreePrefix, pkg.path)
 	}
-	return prefix + strings.ReplaceAll(rel, "/", "_"), nil
+	return prefix + strings.ReplaceAll(strings.TrimPrefix(pkg.path, e2eTreePrefix), "/", "_"), nil
 }
 
-func e2eTask(pkg e2ePackage, name string, opts E2EOptions) *shrub.Task {
+func e2eTask(pkg e2ePackage, name string, opts E2EOptions, needs []shrub.TaskDependency) *shrub.Task {
 	compileDependency := shrub.TaskDependency{Name: "compile", Variant: "code_health"}
 	compileDependency.SetPatchOptional(true)
 
-	dependencies := []shrub.TaskDependency{compileDependency}
-	if pkg.hasRequirement("cluster") {
-		clusterDependency := shrub.TaskDependency{
-			Name:    opts.TaskPrefix + "clusters_flags_clustersflags",
-			Variant: opts.Variant,
-		}
-		clusterDependency.SetPatchOptional(true)
-		dependencies = append(dependencies, clusterDependency)
-	}
+	dependencies := append([]shrub.TaskDependency{compileDependency}, needs...)
 
 	t := &shrub.Task{
 		Name: name,
@@ -266,7 +288,7 @@ func e2eTask(pkg e2ePackage, name string, opts E2EOptions) *shrub.Task {
 		MustHaveTestResults(true).
 		Dependency(dependencies...)
 
-	if pkg.hasRequirement("docker") {
+	if pkg.hasFixture("docker") {
 		t = t.Function(e2eDockerFunctions...)
 	}
 
@@ -279,8 +301,8 @@ func e2eTask(pkg e2ePackage, name string, opts E2EOptions) *shrub.Task {
 	if pkg.manifest.Timeout != "" {
 		vars["E2E_TIMEOUT"] = pkg.manifest.Timeout
 	}
-	for _, requirement := range pkg.manifest.Requirements {
-		for key, value := range e2eRequirementVars[requirement] {
+	for _, fixture := range pkg.manifest.Fixtures {
+		for key, value := range e2eFixtureVars[fixture] {
 			vars[key] = value
 		}
 	}
@@ -379,11 +401,16 @@ func validateE2EManifest(manifest e2eManifest) error {
 			return fmt.Errorf("unknown e2e group: %s", group)
 		}
 	}
-	for _, requirement := range manifest.Requirements {
-		if !e2eStructuralRequirements[requirement] {
-			if _, ok := e2eRequirementVars[requirement]; !ok {
-				return fmt.Errorf("unknown e2e requirement: %s", requirement)
+	for _, fixture := range manifest.Fixtures {
+		if !e2eStructuralFixtures[fixture] {
+			if _, ok := e2eFixtureVars[fixture]; !ok {
+				return fmt.Errorf("unknown e2e fixture: %s", fixture)
 			}
+		}
+	}
+	for _, needed := range manifest.Needs {
+		if !strings.HasPrefix(needed, e2eTreePrefix) {
+			return fmt.Errorf("needs must reference an e2e package path: %s", needed)
 		}
 	}
 	if manifest.Timeout != "" {

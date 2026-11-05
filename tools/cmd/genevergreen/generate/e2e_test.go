@@ -30,10 +30,10 @@ func TestLoadE2EPackages(t *testing.T) {
 
 	var flags, pr, gov int
 	for _, pkg := range packages {
-		assert.True(t, strings.HasPrefix(pkg.path, "test/e2e/atlas/") || strings.HasPrefix(pkg.path, "test/e2e/noapi/"), pkg.path)
-		if pkg.path == e2eFlagsPackage {
+		assert.True(t, strings.HasPrefix(pkg.path, "test/e2e/"), pkg.path)
+		if pkg.path == "test/e2e/atlas/clusters/flags/clustersflags" {
 			flags++
-			assert.True(t, pkg.hasRequirement("cluster"))
+			assert.True(t, pkg.hasFixture("cluster"))
 			assert.True(t, pkg.hasGroup("gov"))
 		}
 		if pkg.hasGroup("pr") {
@@ -50,15 +50,33 @@ func TestLoadE2EPackages(t *testing.T) {
 
 func TestValidateE2EManifest(t *testing.T) {
 	valid := e2eManifest{
-		Groups:       []string{"pr", "gov", "noapi"},
-		Requirements: []string{"cluster", "docker", "aws_role", "flex_mtm"},
-		Timeout:      "3h",
+		Groups:   []string{"pr", "gov", "noapi"},
+		Fixtures: []string{"cluster", "docker", "aws_role", "flex_mtm"},
+		Needs:    []string{"test/e2e/atlas/clusters/flags/clustersflags"},
+		Timeout:  "3h",
 	}
 	require.NoError(t, validateE2EManifest(valid))
 
 	require.Error(t, validateE2EManifest(e2eManifest{Groups: []string{"wat"}}))
-	require.Error(t, validateE2EManifest(e2eManifest{Requirements: []string{"wat"}}))
+	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"wat"}}))
+	require.Error(t, validateE2EManifest(e2eManifest{Needs: []string{"wat"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Timeout: "forever"}))
+}
+
+func TestValidateE2ENeeds(t *testing.T) {
+	a := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
+	b := e2ePackage{path: "test/e2e/b"}
+	require.NoError(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": a, "test/e2e/b": b}, "v"))
+
+	missing := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/gone"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": missing}, "v"), "which is not generated")
+
+	self := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": self}, "v"), "cannot need itself")
+
+	c1 := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
+	c2 := e2ePackage{path: "test/e2e/b", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": c1, "test/e2e/b": c2}, "v"), "circular")
 }
 
 func TestE2EWaterfallTasks(t *testing.T) {
@@ -99,6 +117,7 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 	require.NoError(t, err)
 
 	expected := make(map[string]e2ePackage)
+	nameByPath := make(map[string]string, len(packages))
 	for _, pkg := range packages {
 		if !selected(pkg) {
 			continue
@@ -106,6 +125,7 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 		name, err := e2eTaskName(pkg, opts.TaskPrefix)
 		require.NoError(t, err)
 		expected[name] = pkg
+		nameByPath[pkg.path] = name
 	}
 	require.NotEmpty(t, expected)
 
@@ -113,7 +133,6 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 	require.NoError(t, E2ETasks(c, opts))
 
 	variantName := opts.Variant
-	taskPrefix := opts.TaskPrefix
 
 	assert.Len(t, c.Variants, 1)
 	v := c.Variants[0]
@@ -139,18 +158,26 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 		assert.NotNil(t, task.MustHaveResults, name)
 		assert.True(t, *task.MustHaveResults, name)
 
-		compileDep := false
-		clusterDep := false
-		for _, dep := range task.Dependencies {
-			switch dep.Name {
-			case "compile":
-				compileDep = dep.Variant == "code_health"
-			case taskPrefix + "clusters_flags_clustersflags":
-				clusterDep = dep.Variant == variantName
-			}
+		expectedDeps := map[string]bool{"compile": false}
+		for _, needed := range pkg.manifest.Needs {
+			expectedDeps[nameByPath[needed]] = false
 		}
-		assert.True(t, compileDep, name)
-		assert.Equal(t, pkg.hasRequirement("cluster"), clusterDep, name)
+		require.Len(t, task.Dependencies, len(expectedDeps), name)
+		for _, dep := range task.Dependencies {
+			if dep.Name == "compile" {
+				require.Equal(t, "code_health", dep.Variant, name)
+			} else {
+				require.Equal(t, variantName, dep.Variant, name)
+			}
+			require.NotNil(t, dep.PatchOptional, name)
+			require.True(t, *dep.PatchOptional, name)
+			_, ok := expectedDeps[dep.Name]
+			require.True(t, ok, "%s: unexpected dependency %s", name, dep.Name)
+			expectedDeps[dep.Name] = true
+		}
+		for depName, found := range expectedDeps {
+			require.True(t, found, "%s: missing dependency %s", name, depName)
+		}
 
 		var functions []string
 		var e2eTest *shrub.CommandDefinition
@@ -167,7 +194,7 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 				dockerIdx = i
 			}
 		}
-		assert.Equal(t, pkg.hasRequirement("docker"), dockerIdx != -1, name)
+		assert.Equal(t, pkg.hasFixture("docker"), dockerIdx != -1, name)
 		if dockerIdx != -1 {
 			assert.Equal(t, e2eDockerFunctions, functions[dockerIdx:dockerIdx+len(e2eDockerFunctions)], name)
 		}
@@ -188,9 +215,9 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 		} else {
 			assert.Zero(t, task.ExecTimeoutSecs, name)
 		}
-		for _, requirement := range pkg.manifest.Requirements {
-			for key, value := range e2eRequirementVars[requirement] {
-				assert.Equal(t, value, vars[key], "%s (%s)", name, requirement)
+		for _, fixture := range pkg.manifest.Fixtures {
+			for key, value := range e2eFixtureVars[fixture] {
+				assert.Equal(t, value, vars[key], "%s (%s)", name, fixture)
 			}
 		}
 	}
@@ -205,7 +232,7 @@ func TestE2EExclusions(t *testing.T) {
 	for _, pkg := range packages {
 		if pkg.hasGroup("pr") {
 			prCount++
-			if pkg.hasRequirement("federation_settings") {
+			if pkg.hasFixture("federation_settings") {
 				federationCount++
 			}
 		}
@@ -214,10 +241,10 @@ func TestE2EExclusions(t *testing.T) {
 
 	c := &shrub.Configuration{}
 	require.NoError(t, E2ETasks(c, E2EOptions{
-		Variant:             e2ePRVariant,
-		TaskPrefix:          e2ePRTaskPrefix,
-		IncludeAnyGroups:    []string{"pr"},
-		ExcludeRequirements: []string{"federation_settings"},
+		Variant:          e2ePRVariant,
+		TaskPrefix:       e2ePRTaskPrefix,
+		IncludeAnyGroups: []string{"pr"},
+		ExcludeFixtures:  []string{"federation_settings"},
 	}))
 	assert.Len(t, c.Tasks, prCount-federationCount)
 	for _, task := range c.Tasks {
@@ -226,22 +253,22 @@ func TestE2EExclusions(t *testing.T) {
 
 	c = &shrub.Configuration{}
 	require.NoError(t, E2ETasks(c, E2EOptions{
-		Variant:             e2eWaterfallVariant,
-		TaskPrefix:          e2eWaterfallTaskPrefix,
-		ExcludeGroups:       []string{"pr"},
-		ExcludeRequirements: []string{"docker"},
+		Variant:         e2eWaterfallVariant,
+		TaskPrefix:      e2eWaterfallTaskPrefix,
+		ExcludeGroups:   []string{"pr"},
+		ExcludeFixtures: []string{"docker"},
 	}))
 	for _, task := range c.Tasks {
 		assert.NotContains(t, task.Name, "deployments_local", task.Name)
 	}
 
 	err = E2ETasks(&shrub.Configuration{}, E2EOptions{
-		Variant:             e2eWaterfallVariant,
-		TaskPrefix:          e2eWaterfallTaskPrefix,
-		ExcludeGroups:       []string{"pr"},
-		ExcludeRequirements: []string{"wat"},
+		Variant:         e2eWaterfallVariant,
+		TaskPrefix:      e2eWaterfallTaskPrefix,
+		ExcludeGroups:   []string{"pr"},
+		ExcludeFixtures: []string{"wat"},
 	})
-	require.ErrorContains(t, err, "unknown e2e requirement to exclude: wat")
+	require.ErrorContains(t, err, "unknown e2e fixture to exclude: wat")
 
 	err = E2ETasks(&shrub.Configuration{}, E2EOptions{
 		Variant:          e2ePRVariant,

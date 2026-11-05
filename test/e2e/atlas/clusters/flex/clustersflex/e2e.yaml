@@ -1,5 +1,7 @@
 groups:
   []
-requirements:
+fixtures:
   - cluster
   - flex_mtm
+needs:
+  - test/e2e/atlas/clusters/flags/clustersflags

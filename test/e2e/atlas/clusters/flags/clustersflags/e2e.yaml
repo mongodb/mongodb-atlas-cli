@@ -1,4 +1,4 @@
 groups:
   - gov
-requirements:
+fixtures:
   - cluster

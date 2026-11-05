@@ -44,7 +44,7 @@ func run() error {
 	flag.StringVar(&taskPrefix, "task-prefix", "", "e2e: prefix for generated task names (defaults to variant + \"_\")")
 	flag.StringVar(&includeGroups, "include-groups", "", "e2e: comma-separated groups to include (packages with any of these groups)")
 	flag.StringVar(&excludeGroups, "exclude-groups", "", "e2e: comma-separated groups to exclude (packages with any of these groups)")
-	flag.StringVar(&exclude, "exclude", "", "e2e: comma-separated requirements to exclude")
+	flag.StringVar(&exclude, "exclude", "", "e2e: comma-separated fixtures to exclude")
 	flag.StringVar(&profile, "profile", "", "e2e: E2E_PROFILE_NAME to set on generated tasks")
 
 	flag.Parse()
@@ -70,12 +70,12 @@ func run() error {
 			return fmt.Errorf("%w: %s", ErrMissingOption, "variant")
 		}
 		if err := generate.E2ETasks(c, generate.E2EOptions{
-			Variant:             variant,
-			TaskPrefix:          taskPrefix,
-			Profile:             profile,
-			IncludeAnyGroups:    splitFlag(includeGroups),
-			ExcludeGroups:       splitFlag(excludeGroups),
-			ExcludeRequirements: splitFlag(exclude),
+			Variant:          variant,
+			TaskPrefix:       taskPrefix,
+			Profile:          profile,
+			IncludeAnyGroups: splitFlag(includeGroups),
+			ExcludeGroups:    splitFlag(excludeGroups),
+			ExcludeFixtures:  splitFlag(exclude),
 		}); err != nil {
 			return err
 		}

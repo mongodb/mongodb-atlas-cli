@@ -1,6 +1,6 @@
 groups:
   []
-requirements:
+fixtures:
   - aws_role
   - s3_bucket
   - flex_mtm

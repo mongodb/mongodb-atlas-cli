@@ -1,4 +1,4 @@
 groups:
   []
-requirements:
+fixtures:
   - m0_mtm

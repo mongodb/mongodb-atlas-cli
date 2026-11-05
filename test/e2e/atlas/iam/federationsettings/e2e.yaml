@@ -1,5 +1,5 @@
 groups:
   - pr
   - gov
-requirements:
+fixtures:
   - federation_settings

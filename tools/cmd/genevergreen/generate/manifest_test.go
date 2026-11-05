@@ -24,32 +24,32 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestE2ESidecarFilesAreValid(t *testing.T) {
-	sidecars, err := walkE2ESidecars(func(path string) error {
+func TestE2EManifestFilesAreValid(t *testing.T) {
+	manifests, err := walkE2EManifests(func(path string) error {
 		manifest, err := loade2eManifest(path)
 		if err != nil {
 			return err
 		}
 		if manifest == nil {
-			return fmt.Errorf("%s: empty %s", path, e2eSidecarName)
+			return fmt.Errorf("%s: empty %s", path, e2eManifestName)
 		}
 		return nil
 	})
 	require.NoError(t, err)
-	assert.Positive(t, sidecars)
+	assert.Positive(t, manifests)
 }
 
-func TestEveryE2EPackageHasSidecar(t *testing.T) {
-	packages, err := loade2ePackages()
+func TestEveryE2EPackageHasManifest(t *testing.T) {
+	packages, err := loade2eUnits()
 	require.NoError(t, err)
 
-	sidecars, err := walkE2ESidecars(func(string) error { return nil })
+	manifests, err := walkE2EManifests(func(string) error { return nil })
 	require.NoError(t, err)
 
-	assert.Equal(t, len(packages), sidecars, "every e2e package must have exactly one "+e2eSidecarName+" and there must be no orphan "+e2eSidecarName+" files")
+	assert.Equal(t, len(packages), manifests, "every e2e unit must have exactly one "+e2eManifestName+" and there must be no orphan "+e2eManifestName+" files")
 }
 
-func walkE2ESidecars(visit func(path string) error) (int, error) {
+func walkE2EManifests(visit func(path string) error) (int, error) {
 	repoRoot, err := e2eRepoRoot()
 	if err != nil {
 		return 0, err
@@ -60,7 +60,7 @@ func walkE2ESidecars(visit func(path string) error) (int, error) {
 		if err != nil {
 			return err
 		}
-		if entry.IsDir() || entry.Name() != e2eSidecarName {
+		if entry.IsDir() || entry.Name() != e2eManifestName {
 			return nil
 		}
 		found++

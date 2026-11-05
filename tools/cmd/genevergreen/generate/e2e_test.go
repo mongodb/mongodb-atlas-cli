@@ -23,8 +23,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestLoadE2EPackages(t *testing.T) {
-	packages, err := loade2ePackages()
+func TestLoade2eUnits(t *testing.T) {
+	packages, err := loade2eUnits()
 	require.NoError(t, err)
 	assert.NotEmpty(t, packages)
 
@@ -64,19 +64,23 @@ func TestValidateE2EManifest(t *testing.T) {
 }
 
 func TestValidateE2ENeeds(t *testing.T) {
-	a := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
-	b := e2ePackage{path: "test/e2e/b"}
-	require.NoError(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": a, "test/e2e/b": b}, "v"))
+	a := e2eUnit{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
+	b := e2eUnit{path: "test/e2e/b"}
+	all := map[string]bool{"test/e2e/a": true, "test/e2e/b": true}
+	require.NoError(t, validateE2ENeeds(map[string]e2eUnit{"test/e2e/a": a, "test/e2e/b": b}, all, "v"))
 
-	missing := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/gone"}}}
-	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": missing}, "v"), "which is not generated")
+	noManifest := e2eUnit{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/gone"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2eUnit{"test/e2e/a": noManifest}, map[string]bool{"test/e2e/a": true}, "v"), "which has no e2e.yaml")
 
-	self := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
-	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": self}, "v"), "cannot need itself")
+	notSelected := e2eUnit{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2eUnit{"test/e2e/a": notSelected}, all, "v"), "which is not generated")
 
-	c1 := e2ePackage{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
-	c2 := e2ePackage{path: "test/e2e/b", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
-	require.ErrorContains(t, validateE2ENeeds(map[string]e2ePackage{"test/e2e/a": c1, "test/e2e/b": c2}, "v"), "circular")
+	self := e2eUnit{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2eUnit{"test/e2e/a": self}, map[string]bool{"test/e2e/a": true}, "v"), "cannot need itself")
+
+	c1 := e2eUnit{path: "test/e2e/a", manifest: e2eManifest{Needs: []string{"test/e2e/b"}}}
+	c2 := e2eUnit{path: "test/e2e/b", manifest: e2eManifest{Needs: []string{"test/e2e/a"}}}
+	require.ErrorContains(t, validateE2ENeeds(map[string]e2eUnit{"test/e2e/a": c1, "test/e2e/b": c2}, all, "v"), "circular")
 }
 
 func TestE2EWaterfallTasks(t *testing.T) {
@@ -84,7 +88,7 @@ func TestE2EWaterfallTasks(t *testing.T) {
 		Variant:       e2eWaterfallVariant,
 		TaskPrefix:    e2eWaterfallTaskPrefix,
 		ExcludeGroups: []string{"pr"},
-	}, func(pkg e2ePackage) bool {
+	}, func(pkg e2eUnit) bool {
 		return !pkg.hasGroup("pr")
 	}, "")
 }
@@ -94,7 +98,7 @@ func TestE2EPRTasks(t *testing.T) {
 		Variant:          e2ePRVariant,
 		TaskPrefix:       e2ePRTaskPrefix,
 		IncludeAnyGroups: []string{"pr"},
-	}, func(pkg e2ePackage) bool {
+	}, func(pkg e2eUnit) bool {
 		return pkg.hasGroup("pr")
 	}, "")
 }
@@ -105,18 +109,18 @@ func TestE2EGovTasks(t *testing.T) {
 		TaskPrefix:       e2eGovTaskPrefix,
 		Profile:          e2eGovProfile,
 		IncludeAnyGroups: []string{"gov"},
-	}, func(pkg e2ePackage) bool {
+	}, func(pkg e2eUnit) bool {
 		return pkg.hasGroup("gov")
 	}, e2eGovProfile)
 }
 
-func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool, profile string) {
+func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2eUnit) bool, profile string) {
 	t.Helper()
 
-	packages, err := loade2ePackages()
+	packages, err := loade2eUnits()
 	require.NoError(t, err)
 
-	expected := make(map[string]e2ePackage)
+	expected := make(map[string]e2eUnit)
 	nameByPath := make(map[string]string, len(packages))
 	for _, pkg := range packages {
 		if !selected(pkg) {
@@ -224,7 +228,7 @@ func testE2ETasks(t *testing.T, opts E2EOptions, selected func(e2ePackage) bool,
 }
 
 func TestE2EExclusions(t *testing.T) {
-	packages, err := loade2ePackages()
+	packages, err := loade2eUnits()
 	require.NoError(t, err)
 
 	prCount := 0

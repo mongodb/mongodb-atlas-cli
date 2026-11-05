@@ -35,7 +35,7 @@ var (
 	errCreateDefaultPluginDir = errors.New("failed to create default plugin directory")
 	minimumPluginVersions     = map[Github]string{
 		{Owner: "mongodb", Name: "atlas-cli-plugin-kubernetes"}: "v1.1.7",
-		{Owner: "mongodb", Name: "atlas-cli-plugin-gsa"}:        "v0.0.2", // TODO: ensure this version is correct version after work in CLOUDP-333246
+		{Owner: "mongodb", Name: "atlas-cli-plugin-gsa"}:        "v0.0.3", // Includes config-v3 User Account OAuth support.
 	}
 )
 

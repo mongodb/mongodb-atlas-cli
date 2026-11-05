@@ -17,6 +17,7 @@ package generate
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -81,11 +82,14 @@ var e2eFixtureVars = map[string]map[string]string{
 }
 
 var e2eStructuralFixtures = map[string]bool{
-	"docker":              true,
-	"flex_mtm":            true,
-	"m0_mtm":              true,
-	"flex_snapshot":       true,
-	"federation_settings": true,
+	"docker":                 true,
+	"flex_mtm":               true,
+	"m0_mtm":                 true,
+	"flex_snapshot":          true,
+	"federation_settings":    true,
+	"mongohouse":             true,
+	"sls":                    true,
+	"dedicated_search_nodes": true,
 }
 
 var e2eDockerFunctions = []string{
@@ -123,29 +127,22 @@ type E2EOptions struct {
 	ExcludeFixtures  []string
 }
 
-func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
-	if opts.Variant == "" {
-		return errors.New("e2e generation requires a variant")
-	}
-	if opts.TaskPrefix == "" {
-		opts.TaskPrefix = opts.Variant + "_"
-	}
-
+func e2eSelectedUnits(opts E2EOptions) ([]e2eUnit, map[string]bool, error) {
 	units, err := loade2eUnits()
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	for _, group := range append(opts.IncludeAnyGroups, opts.ExcludeGroups...) {
 		if !e2eGroups[group] {
-			return fmt.Errorf("unknown e2e group: %s", group)
+			return nil, nil, fmt.Errorf("unknown e2e group: %s", group)
 		}
 	}
 
 	for _, fixture := range opts.ExcludeFixtures {
 		if !e2eStructuralFixtures[fixture] {
 			if _, ok := e2eFixtureVars[fixture]; !ok {
-				return fmt.Errorf("unknown e2e fixture to exclude: %s", fixture)
+				return nil, nil, fmt.Errorf("unknown e2e fixture to exclude: %s", fixture)
 			}
 		}
 	}
@@ -160,7 +157,61 @@ func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
 		selected = append(selected, unit)
 	}
 	if len(selected) == 0 {
-		return fmt.Errorf("no e2e packages selected for variant %s", opts.Variant)
+		return nil, nil, errors.New("no e2e packages selected")
+	}
+
+	return selected, allPaths, nil
+}
+
+type e2eUnitManifest struct {
+	Path     string   `json:"path"`
+	Groups   []string `json:"groups"`
+	Fixtures []string `json:"fixtures"`
+	Needs    []string `json:"needs"`
+	Timeout  string   `json:"timeout,omitempty"`
+}
+
+func E2EManifests(opts E2EOptions) ([]byte, error) {
+	selected, _, err := e2eSelectedUnits(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	units := make([]e2eUnitManifest, 0, len(selected))
+	for _, unit := range selected {
+		out := e2eUnitManifest{
+			Path:     unit.path,
+			Groups:   unit.manifest.Groups,
+			Fixtures: unit.manifest.Fixtures,
+			Needs:    unit.manifest.Needs,
+			Timeout:  unit.manifest.Timeout,
+		}
+		if out.Groups == nil {
+			out.Groups = []string{}
+		}
+		if out.Fixtures == nil {
+			out.Fixtures = []string{}
+		}
+		if out.Needs == nil {
+			out.Needs = []string{}
+		}
+		units = append(units, out)
+	}
+
+	return json.MarshalIndent(units, "", "  ")
+}
+
+func E2ETasks(c *shrub.Configuration, opts E2EOptions) error {
+	if opts.Variant == "" {
+		return errors.New("e2e generation requires a variant")
+	}
+	if opts.TaskPrefix == "" {
+		opts.TaskPrefix = opts.Variant + "_"
+	}
+
+	selected, allPaths, err := e2eSelectedUnits(opts)
+	if err != nil {
+		return err
 	}
 
 	byPath := make(map[string]e2eUnit, len(selected))

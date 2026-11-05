@@ -2,3 +2,5 @@ groups:
   []
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags
+fixtures:
+  - dedicated_search_nodes

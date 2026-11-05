@@ -15,6 +15,7 @@
 package generate
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 
@@ -50,7 +51,7 @@ func TestLoade2eUnits(t *testing.T) {
 func TestValidateE2EManifest(t *testing.T) {
 	valid := e2eManifest{
 		Groups:   []string{"pr", "gov", "noapi"},
-		Fixtures: []string{"docker", "aws_role", "flex_mtm"},
+		Fixtures: []string{"docker", "aws_role", "flex_mtm", "mongohouse", "sls", "dedicated_search_nodes"},
 		Needs:    []string{"test/e2e/atlas/clusters/flags/clustersflags"},
 		Timeout:  "3h",
 	}
@@ -61,6 +62,54 @@ func TestValidateE2EManifest(t *testing.T) {
 	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"cluster"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Needs: []string{"wat"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Timeout: "forever"}))
+}
+
+func TestE2EManifests(t *testing.T) {
+	out, err := E2EManifests(E2EOptions{IncludeAnyGroups: []string{"pr"}})
+	require.NoError(t, err)
+
+	var manifests []e2eUnitManifest
+	require.NoError(t, json.Unmarshal(out, &manifests))
+
+	units, err := loade2eUnits()
+	require.NoError(t, err)
+	expected := 0
+	for _, unit := range units {
+		if unit.hasGroup("pr") {
+			expected++
+		}
+	}
+	require.Positive(t, expected)
+	assert.Len(t, manifests, expected)
+
+	var sawFederation bool
+	for _, m := range manifests {
+		assert.True(t, strings.HasPrefix(m.Path, e2eTreePrefix), m.Path)
+		if m.Path == "test/e2e/atlas/iam/federationsettings" {
+			sawFederation = true
+			assert.Contains(t, m.Groups, "pr")
+			assert.Contains(t, m.Groups, "gov")
+			assert.Contains(t, m.Fixtures, "federation_settings")
+		}
+	}
+	assert.True(t, sawFederation)
+
+	out, err = E2EManifests(E2EOptions{
+		ExcludeGroups:   []string{"noapi"},
+		ExcludeFixtures: []string{"docker", "kms_aws", "kms_azure", "kms_gcp"},
+	})
+	require.NoError(t, err)
+	manifests = nil
+	require.NoError(t, json.Unmarshal(out, &manifests))
+	for _, m := range manifests {
+		assert.NotContains(t, m.Groups, "noapi", m.Path)
+		for _, fixture := range m.Fixtures {
+			assert.NotContains(t, []string{"docker", "kms_aws", "kms_azure", "kms_gcp"}, fixture, m.Path)
+		}
+	}
+
+	_, err = E2EManifests(E2EOptions{ExcludeGroups: []string{"pr"}, IncludeAnyGroups: []string{"pr"}})
+	require.ErrorContains(t, err, "no e2e packages selected")
 }
 
 func TestValidateE2ENeeds(t *testing.T) {

@@ -79,6 +79,17 @@ func run() error {
 		}); err != nil {
 			return err
 		}
+	case "e2e-manifests":
+		manifests, err := generate.E2EManifests(generate.E2EOptions{
+			IncludeAnyGroups: splitFlag(includeGroups),
+			ExcludeGroups:    splitFlag(excludeGroups),
+			ExcludeFixtures:  splitFlag(exclude),
+		})
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(manifests))
+		return nil
 	default:
 		return errors.New("-tasks is invalid")
 	}

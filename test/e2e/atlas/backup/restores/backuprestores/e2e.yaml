@@ -1,6 +1,3 @@
 groups:
   []
-fixtures:
-  - aws_role
-  - s3_bucket
 timeout: 3h

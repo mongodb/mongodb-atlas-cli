@@ -1,8 +1,6 @@
 groups:
   []
 fixtures:
-  - aws_role
-  - s3_bucket
   - flex_mtm
   - flex_instance
   - flex_snapshot

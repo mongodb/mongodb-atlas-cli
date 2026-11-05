@@ -33,7 +33,6 @@ func TestLoadE2EPackages(t *testing.T) {
 		assert.True(t, strings.HasPrefix(pkg.path, "test/e2e/"), pkg.path)
 		if pkg.path == "test/e2e/atlas/clusters/flags/clustersflags" {
 			flags++
-			assert.True(t, pkg.hasFixture("cluster"))
 			assert.True(t, pkg.hasGroup("gov"))
 		}
 		if pkg.hasGroup("pr") {
@@ -51,7 +50,7 @@ func TestLoadE2EPackages(t *testing.T) {
 func TestValidateE2EManifest(t *testing.T) {
 	valid := e2eManifest{
 		Groups:   []string{"pr", "gov", "noapi"},
-		Fixtures: []string{"cluster", "docker", "aws_role", "flex_mtm"},
+		Fixtures: []string{"docker", "aws_role", "flex_mtm"},
 		Needs:    []string{"test/e2e/atlas/clusters/flags/clustersflags"},
 		Timeout:  "3h",
 	}
@@ -59,6 +58,7 @@ func TestValidateE2EManifest(t *testing.T) {
 
 	require.Error(t, validateE2EManifest(e2eManifest{Groups: []string{"wat"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"wat"}}))
+	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"cluster"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Needs: []string{"wat"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Timeout: "forever"}))
 }

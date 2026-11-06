@@ -58,6 +58,67 @@ func TestTrackCommand(t *testing.T) {
 	require.NoError(t, tr.trackCommand(TrackOptions{}))
 }
 
+func TestTrackCommandEmitsLoginCommandPath(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+		want string
+	}{
+		{
+			name: "auth login",
+			args: []string{"auth", "login"},
+			want: "atlas-auth-login",
+		},
+		{
+			name: "top-level login shortcut",
+			args: []string{"login"},
+			want: "atlas-login",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			mockStore := NewMockEventsSender(ctrl)
+			rootCmd := &cobra.Command{Use: "atlas"}
+			loginCmd := &cobra.Command{
+				Use: "login",
+				Run: func(_ *cobra.Command, _ []string) {},
+			}
+			if len(tt.args) == 2 {
+				authCmd := &cobra.Command{Use: "auth"}
+				authCmd.AddCommand(loginCmd)
+				rootCmd.AddCommand(authCmd)
+			} else {
+				rootCmd.AddCommand(loginCmd)
+			}
+			rootCmd.SetArgs(tt.args)
+			cmd, err := rootCmd.ExecuteContextC(NewContext())
+			require.NoError(t, err)
+
+			mockStore.EXPECT().SendEvents(gomock.Any()).DoAndReturn(
+				func(body any) error {
+					events, ok := body.([]Event)
+					require.True(t, ok)
+					require.Len(t, events, 1)
+					assert.Equal(t, tt.want, events[0].Properties["command"])
+					return nil
+				},
+			)
+
+			tr := &tracker{
+				fs:               afero.NewMemMapFs(),
+				maxCacheFileSize: defaultMaxCacheFileSize,
+				store:            mockStore,
+				storeSet:         true,
+				cmd:              cmd,
+				args:             tt.args,
+			}
+			require.NoError(t, tr.trackCommand(TrackOptions{}))
+		})
+	}
+}
+
 func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockEventsSender(ctrl)

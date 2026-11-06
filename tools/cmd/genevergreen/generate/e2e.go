@@ -52,9 +52,8 @@ const (
 )
 
 var e2eGroups = map[string]bool{
-	"pr":    true,
-	"gov":   true,
-	"noapi": true,
+	"pr":  true,
+	"gov": true,
 }
 
 var e2eFixtureVars = map[string]map[string]string{
@@ -82,6 +81,7 @@ var e2eFixtureVars = map[string]map[string]string{
 }
 
 var e2eStructuralFixtures = map[string]bool{
+	"api":                    true,
 	"docker":                 true,
 	"flex_mtm":               true,
 	"m0_mtm":                 true,
@@ -124,6 +124,7 @@ type E2EOptions struct {
 	Profile          string
 	IncludeAnyGroups []string
 	ExcludeGroups    []string
+	RequireFixtures  []string
 	ExcludeFixtures  []string
 }
 
@@ -139,10 +140,10 @@ func e2eSelectedUnits(opts E2EOptions) ([]e2eUnit, map[string]bool, error) {
 		}
 	}
 
-	for _, fixture := range opts.ExcludeFixtures {
+	for _, fixture := range append(opts.RequireFixtures, opts.ExcludeFixtures...) {
 		if !e2eStructuralFixtures[fixture] {
 			if _, ok := e2eFixtureVars[fixture]; !ok {
-				return nil, nil, fmt.Errorf("unknown e2e fixture to exclude: %s", fixture)
+				return nil, nil, fmt.Errorf("unknown e2e fixture: %s", fixture)
 			}
 		}
 	}
@@ -308,6 +309,11 @@ func e2eSelected(unit e2eUnit, opts E2EOptions) bool {
 	}
 	for _, fixture := range opts.ExcludeFixtures {
 		if unit.hasFixture(fixture) {
+			return false
+		}
+	}
+	for _, fixture := range opts.RequireFixtures {
+		if !unit.hasFixture(fixture) {
 			return false
 		}
 	}

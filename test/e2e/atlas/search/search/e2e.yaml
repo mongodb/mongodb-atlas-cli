@@ -1,5 +1,7 @@
 groups:
   - gov
+fixtures:
+  - api
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags
 timeout: 3h

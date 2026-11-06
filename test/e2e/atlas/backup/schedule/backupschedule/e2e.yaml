@@ -1,2 +1,4 @@
 groups:
   []
+fixtures:
+  - api

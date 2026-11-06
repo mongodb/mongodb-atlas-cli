@@ -3,4 +3,5 @@ groups:
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags
 fixtures:
+  - api
   - dedicated_search_nodes

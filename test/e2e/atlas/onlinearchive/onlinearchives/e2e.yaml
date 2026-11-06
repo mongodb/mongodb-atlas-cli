@@ -3,4 +3,5 @@ groups:
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags
 fixtures:
+  - api
   - mongohouse

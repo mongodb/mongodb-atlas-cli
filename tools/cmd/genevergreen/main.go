@@ -36,6 +36,7 @@ func run() error {
 	var taskPrefix string
 	var includeGroups string
 	var excludeGroups string
+	var requireFixtures string
 	var exclude string
 	var profile string
 
@@ -44,6 +45,7 @@ func run() error {
 	flag.StringVar(&taskPrefix, "task-prefix", "", "e2e: prefix for generated task names (defaults to variant + \"_\")")
 	flag.StringVar(&includeGroups, "include-groups", "", "e2e: comma-separated groups to include (packages with any of these groups)")
 	flag.StringVar(&excludeGroups, "exclude-groups", "", "e2e: comma-separated groups to exclude (packages with any of these groups)")
+	flag.StringVar(&requireFixtures, "require-fixtures", "", "e2e: comma-separated fixtures a package must declare to be selected")
 	flag.StringVar(&exclude, "exclude", "", "e2e: comma-separated fixtures to exclude")
 	flag.StringVar(&profile, "profile", "", "e2e: E2E_PROFILE_NAME to set on generated tasks")
 
@@ -75,6 +77,7 @@ func run() error {
 			Profile:          profile,
 			IncludeAnyGroups: splitFlag(includeGroups),
 			ExcludeGroups:    splitFlag(excludeGroups),
+			RequireFixtures:  splitFlag(requireFixtures),
 			ExcludeFixtures:  splitFlag(exclude),
 		}); err != nil {
 			return err
@@ -83,6 +86,7 @@ func run() error {
 		manifests, err := generate.E2EManifests(generate.E2EOptions{
 			IncludeAnyGroups: splitFlag(includeGroups),
 			ExcludeGroups:    splitFlag(excludeGroups),
+			RequireFixtures:  splitFlag(requireFixtures),
 			ExcludeFixtures:  splitFlag(exclude),
 		})
 		if err != nil {

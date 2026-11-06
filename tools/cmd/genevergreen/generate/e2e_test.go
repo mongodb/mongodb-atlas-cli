@@ -50,14 +50,15 @@ func TestLoade2eUnits(t *testing.T) {
 
 func TestValidateE2EManifest(t *testing.T) {
 	valid := e2eManifest{
-		Groups:   []string{"pr", "gov", "noapi"},
-		Fixtures: []string{"docker", "aws_role", "flex_mtm", "mongohouse", "sls", "dedicated_search_nodes"},
+		Groups:   []string{"pr", "gov"},
+		Fixtures: []string{"api", "docker", "aws_role", "flex_mtm", "mongohouse", "sls", "dedicated_search_nodes"},
 		Needs:    []string{"test/e2e/atlas/clusters/flags/clustersflags"},
 		Timeout:  "3h",
 	}
 	require.NoError(t, validateE2EManifest(valid))
 
 	require.Error(t, validateE2EManifest(e2eManifest{Groups: []string{"wat"}}))
+	require.Error(t, validateE2EManifest(e2eManifest{Groups: []string{"noapi"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"wat"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Fixtures: []string{"cluster"}}))
 	require.Error(t, validateE2EManifest(e2eManifest{Needs: []string{"wat"}}))
@@ -95,18 +96,30 @@ func TestE2EManifests(t *testing.T) {
 	assert.True(t, sawFederation)
 
 	out, err = E2EManifests(E2EOptions{
-		ExcludeGroups:   []string{"noapi"},
+		RequireFixtures: []string{"api"},
 		ExcludeFixtures: []string{"docker", "kms_aws", "kms_azure", "kms_gcp"},
 	})
 	require.NoError(t, err)
 	manifests = nil
 	require.NoError(t, json.Unmarshal(out, &manifests))
+	require.NotEmpty(t, manifests)
 	for _, m := range manifests {
-		assert.NotContains(t, m.Groups, "noapi", m.Path)
+		assert.Contains(t, m.Fixtures, "api", m.Path)
+		assert.False(t, strings.HasPrefix(m.Path, "test/e2e/noapi/"), m.Path)
 		for _, fixture := range m.Fixtures {
 			assert.NotContains(t, []string{"docker", "kms_aws", "kms_azure", "kms_gcp"}, fixture, m.Path)
 		}
 	}
+
+	out, err = E2EManifests(E2EOptions{RequireFixtures: []string{"flex_snapshot"}})
+	require.NoError(t, err)
+	manifests = nil
+	require.NoError(t, json.Unmarshal(out, &manifests))
+	require.Len(t, manifests, 1)
+	assert.Equal(t, "test/e2e/atlas/backup/flex/backupflex", manifests[0].Path)
+
+	_, err = E2EManifests(E2EOptions{RequireFixtures: []string{"wat"}})
+	require.ErrorContains(t, err, "unknown e2e fixture: wat")
 
 	_, err = E2EManifests(E2EOptions{ExcludeGroups: []string{"pr"}, IncludeAnyGroups: []string{"pr"}})
 	require.ErrorContains(t, err, "no e2e packages selected")
@@ -321,7 +334,7 @@ func TestE2EExclusions(t *testing.T) {
 		ExcludeGroups:   []string{"pr"},
 		ExcludeFixtures: []string{"wat"},
 	})
-	require.ErrorContains(t, err, "unknown e2e fixture to exclude: wat")
+	require.ErrorContains(t, err, "unknown e2e fixture: wat")
 
 	err = E2ETasks(&shrub.Configuration{}, E2EOptions{
 		Variant:          e2ePRVariant,

@@ -1,4 +1,6 @@
 groups:
   []
+fixtures:
+  - api
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags

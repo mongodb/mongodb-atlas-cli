@@ -1,4 +1,5 @@
 groups:
   []
 fixtures:
+  - api
   - m0_mtm

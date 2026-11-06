@@ -1,2 +1,4 @@
 groups:
   - pr
+fixtures:
+  - api

@@ -1,0 +1,7 @@
+groups:
+  []
+fixtures:
+  - api
+  - m0_mtm
+needs:
+  - test/e2e/atlas/clusters/flags/clustersflags

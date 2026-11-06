@@ -38,9 +38,9 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"8.3": {"suse16"},
+		"8.3": {"ubuntu2604", "suse16"},
 		"8.2": {"ubuntu2604", "suse16"},
-		"8.0": {"suse16"},
+		"8.0": {"ubuntu2604", "suse16"},
 		"7.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"}, // TODO: CLOUDP-452016
 		"6.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"},
 	}
@@ -173,10 +173,6 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		if os == "ubuntu26.04" {
-			continue // TODO: CLOUDP-451347
-		}
-
 		for _, sv := range serverVersions {
 			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
 				continue

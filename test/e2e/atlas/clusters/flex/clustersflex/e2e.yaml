@@ -2,6 +2,6 @@ groups:
   []
 fixtures:
   - api
-  - flex_cluster
+  - flex_mtm
 needs:
   - test/e2e/atlas/clusters/flags/clustersflags

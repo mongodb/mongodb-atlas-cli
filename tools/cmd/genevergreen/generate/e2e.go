@@ -83,8 +83,8 @@ var e2eFixtureVars = map[string]map[string]string{
 var e2eStructuralFixtures = map[string]bool{
 	"api":                    true,
 	"docker":                 true,
-	"flex_cluster":           true,
-	"m0_cluster":             true,
+	"flex_mtm":               true,
+	"m0_mtm":                 true,
 	"flex_snapshot":          true,
 	"federation_settings":    true,
 	"mongohouse":             true,

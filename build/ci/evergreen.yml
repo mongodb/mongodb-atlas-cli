@@ -502,6 +502,7 @@ tasks:
         vars:
           task_type: e2e
           e2e_variant: e2e_waterfall
+          e2e_task_prefix: "e2e_"
           e2e_exclude_groups: pr
   - name: e2e_pr_generate
     stepback: false

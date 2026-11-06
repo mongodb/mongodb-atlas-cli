@@ -40,7 +40,7 @@ const (
 	e2ePRVariant        = "e2e_pr"
 	e2eGovVariant       = "e2e_gov"
 
-	e2eWaterfallTaskPrefix = "e2e_waterfall_"
+	e2eWaterfallTaskPrefix = "e2e_"
 	e2ePRTaskPrefix        = "e2e_pr_"
 	e2eGovTaskPrefix       = "e2e_gov_"
 

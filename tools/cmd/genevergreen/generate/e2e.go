@@ -488,7 +488,7 @@ func e2eIsSubdir(child, parent string) bool {
 }
 
 func e2eRelPath(repoRoot, dir string) string {
-	return strings.TrimPrefix(dir, repoRoot+string(filepath.Separator))
+	return filepath.ToSlash(strings.TrimPrefix(dir, repoRoot+string(filepath.Separator)))
 }
 
 func loade2eManifest(path string) (*e2eManifest, error) {

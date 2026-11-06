@@ -646,7 +646,7 @@ buildvariants:
   - name: e2e_pr
     display_name: "E2E PR"
     run_on:
-      - rhel80-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
     tasks:

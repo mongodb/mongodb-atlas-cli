@@ -24,7 +24,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -41,20 +41,18 @@ func TestSnapshots(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
 
 	mdbVersion, err := internal.MongoDBMajorVersion()
 	r.NoError(err)
 
 	var snapshotID string
 
-	g.Run("Create cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -81,7 +79,7 @@ func TestSnapshots(t *testing.T) {
 	})
 	require.NoError(t, internal.WatchCluster("", clusterName))
 
-	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -104,7 +102,7 @@ func TestSnapshots(t *testing.T) {
 		snapshotID = snapshot.GetId()
 	})
 
-	g.Run("Watch creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Watch creation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -120,7 +118,7 @@ func TestSnapshots(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -139,7 +137,7 @@ func TestSnapshots(t *testing.T) {
 		assert.NotEmpty(t, backups)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -161,7 +159,7 @@ func TestSnapshots(t *testing.T) {
 		assert.Equal(t, snapshotID, result.GetId())
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -178,11 +176,7 @@ func TestSnapshots(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	if internal.SkipCleanup() {
-		return
-	}
-
-	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

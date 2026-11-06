@@ -241,7 +241,7 @@ func TestListOrgs_ErrorResponse(t *testing.T) {
 		Times(1)
 
 	_, err := ListOrgs(context.Background(), executor, ListOrgsOptions{})
-	require.Error(t, err)
+	require.ErrorIs(t, err, ErrUnauthorized)
 	assert.Contains(t, err.Error(), "401")
 	assert.Contains(t, err.Error(), "nope")
 }

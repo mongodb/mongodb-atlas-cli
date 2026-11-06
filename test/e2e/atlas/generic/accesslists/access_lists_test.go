@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -37,10 +37,10 @@ func TestAccessList(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("accessList")
 
-	n := g.MemoryRand("rand", 255)
+	n := internal.Must(internal.RandInt(255))
 	req := require.New(t)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)

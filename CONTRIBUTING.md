@@ -50,7 +50,7 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Prerequisite Tools
 
 - [Git](https://git-scm.com/)
-- [Go (at least Go 1.26.0)](https://golang.org/dl/)
+- [Go (at least Go 1.26.10)](https://golang.org/dl/)
 
 #### Environment
 
@@ -129,7 +129,6 @@ Review and replace the atlas settings.
 ```json
 {
   "go.testEnvVars": {
-    "TEST_MODE": "live", // optional default is 'live'
     "GOCOVERDIR": "${workspaceFolder}/cov", // optional used for coverage counting
     "MONGODB_ATLAS_SKIP_UPDATE_CHECK": "yes", // optional but recommended
     "E2E_CLOUD_ROLE_ID": "<value here>", // needed just for a few tests

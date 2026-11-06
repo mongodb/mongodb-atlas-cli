@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -36,8 +36,6 @@ func TestExportBuckets(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -49,7 +47,7 @@ func TestExportBuckets(t *testing.T) {
 	r.NoError(err)
 	var bucketID string
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -75,7 +73,7 @@ func TestExportBuckets(t *testing.T) {
 		bucketID = exportBucket.GetId()
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -93,7 +91,7 @@ func TestExportBuckets(t *testing.T) {
 		assert.NotEmpty(t, buckets)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -113,7 +111,7 @@ func TestExportBuckets(t *testing.T) {
 		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,

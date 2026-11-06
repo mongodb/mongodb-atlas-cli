@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -36,8 +36,6 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -46,7 +44,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	var ID string
 
 	// This test must run first to grab the ID of the org to later describe
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		desc := "e2e-test-atlas-org"
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -69,7 +67,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 	require.NotEmpty(t, ID)
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -86,7 +84,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys.Results)
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -105,7 +103,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys)
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update", func(t *testing.T) {
 		const newDesc = "e2e-test-atlas-org-updated"
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -127,7 +125,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.Equal(t, newDesc, *key.Desc)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -145,7 +143,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.Equal(t, ID, *key.Id)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,

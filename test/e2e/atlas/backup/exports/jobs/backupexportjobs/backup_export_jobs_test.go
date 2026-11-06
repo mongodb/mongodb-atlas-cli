@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -45,13 +45,11 @@ func TestExportJobs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
 	fmt.Println(clusterName)
 
 	mdbVersion, err := internal.MongoDBMajorVersion()
@@ -66,7 +64,7 @@ func TestExportJobs(t *testing.T) {
 	var exportJobID string
 	var snapshotID string
 
-	g.Run("Create cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -93,7 +91,7 @@ func TestExportJobs(t *testing.T) {
 	})
 	require.NoError(t, internal.WatchCluster("", clusterName))
 
-	g.Run("Create bucket", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create bucket", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -117,7 +115,7 @@ func TestExportJobs(t *testing.T) {
 		bucketID = exportBucket.GetId()
 	})
 
-	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -141,7 +139,7 @@ func TestExportJobs(t *testing.T) {
 		snapshotID = snapshot.GetId()
 	})
 
-	g.Run("Watch snapshot creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Watch snapshot creation", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -157,7 +155,7 @@ func TestExportJobs(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	g.Run("Create job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create job", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -183,7 +181,7 @@ func TestExportJobs(t *testing.T) {
 		exportJobID = job.GetId()
 	})
 
-	g.Run("Watch create job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Watch create job", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -200,7 +198,7 @@ func TestExportJobs(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	g.Run("Describe job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe job", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -224,7 +222,7 @@ func TestExportJobs(t *testing.T) {
 		assert.Equal(t, job.GetExportBucketId(), bucketID)
 	})
 
-	g.Run("List jobs", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List jobs", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -244,7 +242,7 @@ func TestExportJobs(t *testing.T) {
 		assert.NotEmpty(t, jobs)
 	})
 
-	g.Run("Delete snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -261,11 +259,7 @@ func TestExportJobs(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	if internal.SkipCleanup() {
-		return
-	}
-
-	g.Run("Watch snapshot deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Watch snapshot deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

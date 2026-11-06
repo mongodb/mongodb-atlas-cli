@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -36,8 +36,6 @@ func TestAtlasUsers(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	var (
@@ -46,7 +44,7 @@ func TestAtlasUsers(t *testing.T) {
 		orgID    string
 	)
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			usersEntity,
@@ -65,7 +63,7 @@ func TestAtlasUsers(t *testing.T) {
 		userID = users.GetResults()[0].GetId()
 	})
 
-	g.Run("Describe by username", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe by username", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"describe",
@@ -90,7 +88,7 @@ func TestAtlasUsers(t *testing.T) {
 		require.NotEmpty(t, orgID)
 	})
 
-	g.Run("Describe by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"describe",
@@ -108,12 +106,12 @@ func TestAtlasUsers(t *testing.T) {
 		assert.Equal(t, userID, user.GetId())
 	})
 
-	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite", func(t *testing.T) {
 		if internal.IsGov() {
 			t.Skip("Skipping test in Gov environment")
 		}
 
-		n := g.MemoryRand("rand", 10000)
+		n := internal.Must(internal.RandInt(10000))
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {
 			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)

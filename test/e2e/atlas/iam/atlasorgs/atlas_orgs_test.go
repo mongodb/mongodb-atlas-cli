@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -36,14 +36,12 @@ func TestAtlasOrgs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var orgID string
 	// This test must run first to grab the ID of the org to later describe
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"ls",
@@ -62,7 +60,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, orgID)
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"describe",
@@ -77,7 +75,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 
 	var userID string
-	g.Run("List Org Users", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Org Users", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			usersEntity,
@@ -98,13 +96,13 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, userID)
 
-	n := g.MemoryRand("rand", 255)
+	n := internal.Must(internal.RandInt(255))
 	orgName := fmt.Sprintf("e2e-org-%v", n)
 	var (
 		publicAPIKey  string
 		privateAPIKey string
 	)
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		t.Skip("Skipping create org e2e test, exceeded max number of linked orgs. Will reenable post cleanup")
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -133,7 +131,7 @@ func TestAtlasOrgs(t *testing.T) {
 		require.NotEmpty(t, privateAPIKey)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will re-enable post cleanup")
 		if internal.IsGov() {
 			t.Skip("not available for gov")

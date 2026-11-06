@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -43,14 +43,12 @@ func TestAlertConfig(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	var alertID string
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -87,7 +85,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -104,7 +102,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.Equal(t, alertID, config.GetId())
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -120,7 +118,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.NotEmpty(t, config.Results)
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -137,7 +135,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.NotEmpty(t, config)
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -169,8 +167,8 @@ func TestAlertConfig(t *testing.T) {
 		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
-	g.Run("Update Setting using file input", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("rand", 1000)
+	t.Run("Update Setting using file input", func(t *testing.T) {
+		n := internal.Must(internal.RandInt(1000))
 		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
 			"eventTypeName": %q,
@@ -216,14 +214,14 @@ func TestAlertConfig(t *testing.T) {
 		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force", "-P", internal.ProfileName())
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("List Matcher Fields", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Matcher Fields", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,

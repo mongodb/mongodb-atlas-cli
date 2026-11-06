@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -43,17 +43,17 @@ func TestIntegrations(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("integrations")
 
-	n := g.MemoryRand("rand", 255)
+	n := internal.Must(internal.RandInt(255))
 	key := "51c0ef87e9951c3e147accf0e12" + n.String()
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create DATADOG", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("datadog_rand", 9)
+		n := internal.Must(internal.RandInt(9))
 		datadogKey := "000000000000000000000000000000" + n.String() + n.String()
 		if internal.IsGov() {
 			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
@@ -80,7 +80,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create OPSGENIE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("opsgenie_rand", 9)
+		n := internal.Must(internal.RandInt(9))
 		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -105,7 +105,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create PAGER_DUTY", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("pager_duty_rand", 9)
+		n := internal.Must(internal.RandInt(9))
 		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -130,7 +130,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create VICTOR_OPS", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.MemoryRand("victor_ops_rand", 9)
+		n := internal.Must(internal.RandInt(9))
 		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,

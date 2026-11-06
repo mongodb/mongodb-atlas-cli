@@ -1,0 +1,27 @@
+{
+  "format": "atlas-cli-paste",
+  "version": "1",
+  "vectors": [
+    {
+      "name": "prod-issuer-with-opaque-code",
+      "state": "mock-state-1234567890",
+      "code": "mock.authorization.code+with/slash=",
+      "issuer": "https://authorize.mongodb.com",
+      "paste": "BRBo_BSc5LUZ2dcBu64rIiMpxKTOree1qX1FqemBKSyAgNkK1RH"
+    },
+    {
+      "name": "localhost-synthetic-callback",
+      "state": "synthetic",
+      "code": "synthetic",
+      "issuer": "https://authorize.mongodb.com",
+      "paste": "21seXi9ws0Cos8wE"
+    },
+    {
+      "name": "callback-without-issuer",
+      "state": "mock-state-no-issuer-1234567890",
+      "code": "code-without-issuer",
+      "issuer": "",
+      "paste": "UJhmQMD4fe37EMsncZcm4goY0Qvlka"
+    }
+  ]
+}

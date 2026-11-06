@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -36,12 +36,10 @@ func TestAtlasTeamUsers(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 
 	teamName := fmt.Sprintf("teams%v", n)
 	teamID, err := internal.CreateTeam(teamName)
@@ -56,7 +54,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	username, userID, err := internal.OrgNUser(1)
 	require.NoError(t, err, "atlasteamusers needs at least two users in the org")
 
-	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Add", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -85,7 +83,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.True(found)
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -105,7 +103,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.NotEmpty(teams.Results)
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -126,7 +124,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.NotEmpty(teams)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,

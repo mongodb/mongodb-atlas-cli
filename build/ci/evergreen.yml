@@ -56,6 +56,45 @@ functions:
       type: setup
       params:
         directory: src/github.com/mongodb/mongodb-atlas-cli
+  # Downloads the Go modules once in compile and caches them for the e2e tasks, in the
+  # documented restore-then-produce-then-save order: the restore populates pkg/mod from the
+  # cache (a no-op go mod download on a hit), the save skips when the restore hit. Keyed by
+  # the checkout's go.mod/go.sum contents, so pin bumps that don't change dependencies reuse
+  # the cache; v1 is a manual flush knob (bump it to invalidate every cached module set, e.g.
+  # after a GOPATH layout change) and distro_arch scopes it per platform, since GOTOOLCHAIN=auto
+  # puts a compiled toolchain inside the cached dir. Uses the project's existing
+  # mongodb-mongocli-build bucket credentials (same as the s3.put for generated tasks) rather
+  # than a role assumed from another project, under ${project}/go-mod-cache without version
+  # scoping so the same content is shared across versions.
+  "cache go modules":
+    - command: cache.restore
+      type: setup
+      params: &go_mod_cache_params
+        name: go-mods
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mongodb-mongocli-build
+        remote_path: ${project}/go-mod-cache
+        key_files:
+          - src/github.com/mongodb/mongodb-atlas-cli/go.mod
+          - src/github.com/mongodb/mongodb-atlas-cli/go.sum
+        key_expansions: [ "v1", "${distro_arch}" ]
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        binary: go
+        args: [ "mod", "download" ]
+    - command: cache.save
+      type: setup
+      params:
+        <<: *go_mod_cache_params
+        paths:
+          - pkg/mod
+  "restore go modules":
+    - command: cache.restore
+      type: setup
+      params: *go_mod_cache_params
   "build":
     - command: subprocess.exec
       type: test
@@ -190,7 +229,6 @@ functions:
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           MONGODB_ATLAS_SILENCE_STORAGE_WARNING: "true"
           DO_NOT_TRACK: "1"
-          TEST_MODE: live
           LOCALDEV_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/dockerhub/mongodb/mongodb-atlas-local
         command: make e2e-test
   "generate evergreen":
@@ -286,6 +324,7 @@ tasks:
   - name: compile
     tags: ["code_health"]
     commands:
+      - func: "cache go modules"
       - func: "build"
   # If your e2e tests depend on a cluster running please consider setting it on its own task
   - name: atlas_generic_e2e
@@ -296,9 +335,10 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/... ./test/e2e/noapi/brew/... ./test/e2e/noapi/config/autocomplete/... ./test/e2e/noapi/config/config/... ./test/e2e/noapi/profile/...
   - name: atlas_gov_generic_e2e
     tags: ["e2e","generic","atlas","foliage_check_task_only"]
     must_have_test_results: true
@@ -307,6 +347,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -320,6 +361,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
@@ -331,6 +373,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/infinite/...
@@ -342,6 +385,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration/...
@@ -349,10 +393,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
@@ -360,10 +408,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
@@ -371,10 +423,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex/...
@@ -382,74 +438,116 @@ tasks:
     tags: ["e2e","clusters","atlas", "iss","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss/...
   - name: atlas_plugin_install
     tags: ["e2e","atlas","plugin","install","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/install/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/install/...
   - name: atlas_plugin_run
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/run/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/run/...
   - name: atlas_plugin_uninstall
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/uninstall/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/uninstall/...
   - name: atlas_plugin_update
     tags: ["e2e","atlas","plugin","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/plugin/update/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/update/...
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0/...
   - name: atlas_kubernetes_plugin
     tags: ["e2e","atlas","plugin","kubernetes","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/kubernetes/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/kubernetes/...
   - name: atlas_local_plugin
     tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
     must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
-          E2E_TEST_PACKAGES: ./test/e2e/local/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/local/...
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade/...
@@ -461,6 +559,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
@@ -472,9 +571,22 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
+  - name: atlas_auth_login_e2e
+    tags: ["e2e","generic","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "restore go modules"
+      - func: "e2e test"
+        vars:
+          E2E_TEST_PACKAGES: ./test/e2e/atlas/auth/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
@@ -483,6 +595,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -491,10 +604,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -503,10 +620,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -516,10 +637,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap/...
@@ -528,10 +653,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
@@ -539,10 +668,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -552,10 +685,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
@@ -563,10 +700,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -576,10 +717,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
@@ -587,10 +732,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -600,10 +749,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive/...
@@ -612,10 +765,14 @@ tasks:
     tags: ["e2e","clusters","atlas","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
@@ -623,10 +780,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -637,10 +798,14 @@ tasks:
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
@@ -649,10 +814,14 @@ tasks:
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_gov_clusters_flags_e2e
         variant: "e2e_atlas_gov_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -661,10 +830,14 @@ tasks:
     tags: ["e2e","clusters","atlas", "foliage_check_task_only"]
     must_have_test_results: true
     depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
       - name: atlas_clusters_flags_e2e
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes/...
@@ -677,6 +850,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/networking/...
@@ -689,6 +863,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/db/...
@@ -703,6 +878,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/privatenetwork/...
@@ -717,6 +893,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/querylimits/...
@@ -731,6 +908,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
@@ -742,6 +920,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_PROFILE_NAME: __e2e_gov
@@ -755,6 +934,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/livemigrations/...
@@ -767,6 +947,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/streams/...
@@ -778,6 +959,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/streams_with_cluster/...
@@ -789,6 +971,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "build"
       - func: "e2e test"
         vars:
@@ -813,6 +996,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/snapshot/...
@@ -826,6 +1010,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/schedule/...
@@ -839,6 +1024,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/buckets/...
@@ -852,6 +1038,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/jobs/...
@@ -866,6 +1053,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/flex/...
@@ -882,6 +1070,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -898,6 +1087,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -915,6 +1105,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -931,6 +1122,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -947,6 +1139,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -956,10 +1149,15 @@ tasks:
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -969,10 +1167,15 @@ tasks:
     tags: ["e2e","deployments","local","seed"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -982,10 +1185,15 @@ tasks:
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -995,10 +1203,15 @@ tasks:
     tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1008,10 +1221,15 @@ tasks:
     tags: ["e2e","deployments","local","auth","deprecated"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1037,7 +1255,6 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
-  # 
   - name: atlas_config_migration_e2e
     tags: ["e2e","config-migration"]
     must_have_test_results: true
@@ -1046,6 +1263,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
@@ -1054,7 +1272,7 @@ tasks:
           MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
-          E2E_TEST_PACKAGES: ./test/e2e/config/migration/...
+          E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
 buildvariants:
   - name: code_health
     display_name: "Code Health"

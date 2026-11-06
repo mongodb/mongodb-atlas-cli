@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -40,18 +40,16 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 
 	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string
 	var orgInvitationIDFile string // For the file-based invite test
 
-	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -76,10 +74,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationID = invitation.GetId()
 	})
 
-	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite with File", func(t *testing.T) {
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.MemoryRand("randFile", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -110,10 +108,10 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
 	})
 
-	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Invite with File", func(t *testing.T) {
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.MemoryRand("randFile2", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -144,7 +142,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -164,7 +162,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.NotEmpty(invitations)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -186,7 +184,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 	})
 
-	g.Run("Update by email", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update by email", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -211,7 +209,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	g.Run("Update by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update by ID", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -236,11 +234,11 @@ func TestAtlasOrgInvitations(t *testing.T) {
 
 	const OrgGroupCreator = "ORG_GROUP_CREATOR"
 
-	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update with File", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.MemoryRand("randFile3", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -271,11 +269,11 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		// Add assertions for GroupRoleAssignments if included in updateData
 	})
 
-	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update with File", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.MemoryRand("randFile4", 1000)
+		nFile := internal.Must(internal.RandInt(1000))
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -306,7 +304,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		// Add assertions for GroupRoleAssignments if included in updateData
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -324,7 +322,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	g.Run("Delete Invitation from File Test", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete Invitation from File Test", func(t *testing.T) {
 		require.NotEmpty(t, orgInvitationIDFile, "orgInvitationIDFile must be set by Invite with File test")
 		cmd := exec.Command(cliPath,
 			orgEntity,

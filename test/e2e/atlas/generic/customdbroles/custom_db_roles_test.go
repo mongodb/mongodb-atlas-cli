@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -46,16 +46,14 @@ func TestDBRoles(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	n := g.MemoryRand("rand", 1000)
+	n := internal.Must(internal.RandInt(1000))
 
 	roleName := fmt.Sprintf("role-%v", n)
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"create",
@@ -83,7 +81,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"ls",
@@ -100,7 +98,7 @@ func TestDBRoles(t *testing.T) {
 		assert.NotEmpty(t, roles)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"describe",
@@ -125,7 +123,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	g.Run("Update with append", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update with append", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"update",
@@ -155,7 +153,7 @@ func TestDBRoles(t *testing.T) {
 			[]string{role.GetInheritedRoles()[0].Role, role.GetInheritedRoles()[1].Role})
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"update",
@@ -180,7 +178,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"delete",

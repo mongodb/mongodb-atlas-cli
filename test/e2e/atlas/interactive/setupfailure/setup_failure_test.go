@@ -33,7 +33,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)

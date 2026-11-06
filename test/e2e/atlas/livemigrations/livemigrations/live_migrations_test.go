@@ -31,8 +31,6 @@ func TestLinkToken(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -52,7 +50,7 @@ func TestLinkToken(t *testing.T) {
 	}
 	t.Logf("Cleanup complete.")
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			liveMigrationsEntity,
 			"link",
@@ -67,7 +65,7 @@ func TestLinkToken(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			liveMigrationsEntity,
 			"link",

@@ -15,17 +15,19 @@
 package clustersiss
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -40,21 +42,26 @@ const (
 	e2eClusterProvider = "AWS"
 )
 
+const (
+	pauseTimeout       = 20 * time.Minute
+	pauseRetryInterval = 30 * time.Second
+)
+
 func TestIndependendShardScalingCluster(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
 	g.GenerateProject("clustersIss")
 
-	issClusterName := g.Memory("issClusterName", internal.Must(internal.RandClusterName())).(string)
+	issClusterName := internal.Must(internal.RandClusterName())
 
-	issDbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	issDbUserUsername := internal.Must(internal.RandUsername())
 
 	issDbUserPassword := issDbUserUsername + "~PwD"
 
@@ -138,23 +145,40 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		assert.Len(t, cluster.GetReplicationSpecs(), 2)
 	})
 
-	g.Run("Pause ISS cluster with the wrong flag", func(_ *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"pause",
-			issClusterName,
-			"--autoScalingMode",
-			"clusterWideScaling",
-			"--projectId", g.ProjectID,
-			"--output",
-			"json",
-			"-P",
-			internal.ProfileName(),
-		)
+	g.Run("Pause ISS cluster with the wrong flag", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		// A freshly provisioned ISS cluster can still report replication lag on a secondary
+		// after it reaches the IDLE state, and Atlas refuses to pause until that clears
+		// (OPERATION_INVALID_MEMBER_REPLICATION_LAG). This has been observed to take around 10 minutes.
+		var resp []byte
+		require.EventuallyWithT(t, func(c *assert.CollectT) {
+			cmd := exec.Command(cliPath,
+				clustersEntity,
+				"pause",
+				issClusterName,
+				"--autoScalingMode",
+				"clusterWideScaling",
+				"--projectId", g.ProjectID,
+				"--output",
+				"json",
+				"-P",
+				internal.ProfileName(),
+			)
+			cmd.Env = os.Environ()
 
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
+			var out, stderr bytes.Buffer
+			cmd.Stdout = &out
+			cmd.Stderr = &stderr
+			err := cmd.Run()
+			if err != nil {
+				// EventuallyWithT discards the errors it collects once the condition
+				// eventually holds, so log every rejection to keep the wait diagnosable.
+				t.Logf("pause was rejected, retrying in %s: %s", pauseRetryInterval, stderr.String())
+				assert.NoError(c, err, stderr.String())
+
+				return
+			}
+			resp = out.Bytes()
+		}, pauseTimeout, pauseRetryInterval)
 
 		var cluster admin.ClusterDescription20240805
 		req.NoError(json.Unmarshal(resp, &cluster))
@@ -264,13 +288,6 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		connectionString := strings.TrimSpace(string(resp))
 		req.NotEmpty(connectionString, "connection string should not be empty")
 		assert.Contains(t, connectionString, "mongodb", "connection string should contain mongodb URI")
-
-		mode, err := internal.TestRunMode()
-		req.NoError(err)
-
-		if mode != internal.TestModeLive {
-			t.Skip("skipping actual MongoDB connection in snapshot mode")
-		}
 
 		client, err = mongo.Connect(
 			ctx,

@@ -1,0 +1,46 @@
+arch: arm64
+
+security:
+  dataClassification: Confidential
+  dataDesignation:
+    - MI
+ownership:
+  driEmail: api-experience@mongodb.com
+
+services:
+  - name: http
+    ingress: true
+    probes: true
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+    type: ClusterIP
+
+ingress:
+  enabled: true
+  path: /
+
+mesh:
+  enabled: true
+
+probes:
+  enabled: true
+  path: /healthz
+  liveness:
+    initialDelaySeconds: 5
+    periodSeconds: 30
+    timeoutSeconds: 2
+    failureThreshold: 3
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

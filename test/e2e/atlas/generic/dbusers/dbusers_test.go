@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -53,16 +53,14 @@ func TestDBUserWithFlags(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+	username := internal.Must(internal.RandUsername())
 
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -81,7 +79,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
-	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
@@ -101,7 +99,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		}
 	})
 
-	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
@@ -122,11 +120,11 @@ func TestDBUserWithFlags(t *testing.T) {
 		}
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update", func(t *testing.T) {
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -147,7 +145,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	g.Run("Update only password", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update only password", func(t *testing.T) {
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -164,7 +162,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})
 }
@@ -174,8 +172,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
+	username := internal.Must(internal.RandUsername())
 
 	scopeClusterDataLake := fmt.Sprintf("%s,%s:%s", clusterName1, clusterName2, clusterType)
 
@@ -186,7 +183,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create", func(t *testing.T) {
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -206,7 +203,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
-	g.Run("Create OIDC user", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create OIDC user", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"create",
@@ -223,12 +220,12 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, oidcUsername)
 	})
 
-	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Describe", func(t *testing.T) {
 		testDescribeUser(t, cliPath, username)
 		testDescribeUser(t, cliPath, oidcUsername)
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"update",
@@ -245,7 +242,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})

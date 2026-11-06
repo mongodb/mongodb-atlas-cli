@@ -23,7 +23,7 @@ import (
 
 	"github.com/mongodb/atlas-cli-core/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"golang.org/x/oauth2"
 )

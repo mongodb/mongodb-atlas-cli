@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -41,15 +41,13 @@ func TestFlexCluster(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	flexClusterName := g.Memory("flexClusterName", internal.Must(internal.RandClusterName())).(string)
+	flexClusterName := internal.Must(internal.RandClusterName())
 
-	g.Run("Create flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Create flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -72,7 +70,7 @@ func TestFlexCluster(t *testing.T) {
 		internal.EnsureFlexCluster(t, &cluster, flexClusterName, 5, false)
 	})
 
-	g.Run("Get flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Get flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"get",
@@ -92,7 +90,7 @@ func TestFlexCluster(t *testing.T) {
 		internal.EnsureFlexCluster(t, &cluster, flexClusterName, 5, false)
 	})
 
-	g.Run("List flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"list",
@@ -112,7 +110,7 @@ func TestFlexCluster(t *testing.T) {
 		assert.NotEmpty(t, clusters.Results)
 	})
 
-	g.Run("Delete flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("Delete flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",

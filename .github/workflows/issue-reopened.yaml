@@ -1,0 +1,17 @@
+# synced from apix-actions/.github/workflows/issue-reopened.yaml
+name: Reopen Jira Ticket on Issue Reopen
+
+on:
+  issues:
+    types: [reopened]
+
+permissions: {}
+
+jobs:
+  reopen-jira:
+    permissions:
+      contents: read
+      issues: read
+    uses: mongodb/apix-action/.github/workflows/_issue-reopened.yaml@82fcb87b9fb3c764337b88b3da492b4b51d3f4d1
+    secrets:
+      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

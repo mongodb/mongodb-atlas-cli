@@ -35,20 +35,14 @@ func TestDeploymentsAtlasISS(t *testing.T) {
 	}
 
 	req := require.New(t)
-	mode, err := internal.TestRunMode()
-	req.NoError(err)
 
-	if mode != internal.TestModeLive {
-		t.Skip("skipping test in snapshot mode")
-	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
-	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
+	clusterName := internal.Must(internal.RandClusterName())
+	dbUserUsername := internal.Must(internal.RandUsername())
 
 	dbUserPassword := dbUserUsername + "~PwD"
 

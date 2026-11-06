@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -37,13 +37,13 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	g.GenerateProject("dataFederationPrivateEndpointsAWS")
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.MemoryRand("rand", int64(8000))
+	n := internal.Must(internal.RandInt(int64(8000)))
 	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n.Int64())
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

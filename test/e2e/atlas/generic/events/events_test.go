@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312026/admin"
+	"go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 const (
@@ -37,11 +37,9 @@ func TestEvents(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
 	}
-
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
-	g.Run("List Project Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Project Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			projectEntity,
@@ -60,7 +58,7 @@ func TestEvents(t *testing.T) {
 		assert.NotEmpty(t, events.GetResults())
 	})
 
-	g.Run("List Organization Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	t.Run("List Organization Events", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			orgEntity,

@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312026/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
 )
 
 func TestStreams(t *testing.T) {
@@ -34,7 +34,7 @@ func TestStreams(t *testing.T) {
 		t.Skip("skipping test in short mode")
 	}
 
-	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t)
 	if internal.IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
@@ -46,9 +46,9 @@ func TestStreams(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName := g.Memory("instanceName", internal.Must(internal.RandEntityWithRevision("instance"))).(string)
+	instanceName := internal.Must(internal.RandEntityWithRevision("instance"))
 
-	connectionName := g.Memory("connectionName", internal.Must(internal.RandEntityWithRevision("connection"))).(string)
+	connectionName := internal.Must(internal.RandEntityWithRevision("connection"))
 
 	g.Run("List all streams in the e2e project", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

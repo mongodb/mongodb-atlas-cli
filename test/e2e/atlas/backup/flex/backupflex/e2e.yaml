@@ -2,7 +2,6 @@ groups:
   []
 fixtures:
   - api
-  - flex_mtm
   - flex_instance
   - flex_snapshot
 timeout: 3h

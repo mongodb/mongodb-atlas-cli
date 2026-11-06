@@ -51,7 +51,7 @@ func TestLoade2eUnits(t *testing.T) {
 func TestValidateE2EManifest(t *testing.T) {
 	valid := e2eManifest{
 		Groups:   []string{"pr", "gov"},
-		Fixtures: []string{"api", "docker", "aws_role", "flex_mtm", "mongohouse", "sls", "dedicated_search_nodes"},
+		Fixtures: []string{"api", "docker", "aws_role", "flex_cluster", "m0_cluster", "mongohouse", "sls", "dedicated_search_nodes"},
 		Needs:    []string{"test/e2e/atlas/clusters/flags/clustersflags"},
 		Timeout:  "3h",
 	}

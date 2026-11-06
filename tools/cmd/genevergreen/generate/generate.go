@@ -38,9 +38,9 @@ var (
 	}
 
 	unsupportedNewOsByVersion = map[string][]string{
-		"8.3": {"ubuntu2604", "suse16"}, // TODO: SERVER-129219
+		"8.3": {"ubuntu2604", "suse16"},
 		"8.2": {"ubuntu2604", "suse16"},
-		"8.0": {"ubuntu2604", "suse16"},                                     // TODO: SERVER-129219
+		"8.0": {"ubuntu2604", "suse16"},
 		"7.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"}, // TODO: CLOUDP-452016
 		"6.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"},
 	}

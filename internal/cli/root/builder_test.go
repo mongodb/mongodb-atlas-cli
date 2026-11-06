@@ -17,6 +17,7 @@ package root
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/google/go-github/v61/github"
@@ -26,6 +27,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
@@ -141,6 +143,35 @@ func TestShouldSetService(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, shouldSetService(tt.cmd))
+		})
+	}
+}
+
+func TestBuilderLoginCommandTelemetryPaths(t *testing.T) {
+	rootCmd := Builder()
+	tests := []struct {
+		name string
+		args []string
+		want string
+	}{
+		{
+			name: "auth login",
+			args: []string{"auth", "login"},
+			want: "atlas-auth-login",
+		},
+		{
+			name: "top-level login shortcut",
+			args: []string{"login"},
+			want: "atlas-login",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cmd, _, err := rootCmd.Find(tt.args)
+			require.NoError(t, err)
+
+			assert.Equal(t, tt.want, strings.ReplaceAll(cmd.CommandPath(), " ", "-"))
 		})
 	}
 }

@@ -188,15 +188,6 @@ functions:
           ops_manager_url = '${mcli_cloud_gov_ops_manager_url}'
           service = 'cloudgov'
           output = 'plaintext'
-
-          [__e2e_snapshot]
-          org_id = 'a0123456789abcdef012345a'
-          project_id = 'b0123456789abcdef012345b'
-          public_api_key = 'ABCDEF01'
-          private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
-          ops_manager_url = 'http://localhost:8080/'
-          service = 'cloud'
-          output = 'plaintext'
           EOF
     - command: subprocess.exec
       type: test

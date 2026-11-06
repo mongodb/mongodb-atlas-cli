@@ -1,5 +1,4 @@
 groups:
   []
 fixtures:
-  - api
   - kms_aws

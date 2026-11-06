@@ -1,6 +1,5 @@
 groups:
   []
 fixtures:
-  - api
   - docker
 timeout: 3h

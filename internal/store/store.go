@@ -118,7 +118,7 @@ type CredentialsGetter interface {
 // WithAuthentication sets the store credentials.
 func WithAuthentication() Option {
 	return func(s *Store) error {
-		client, err := transport.HTTPClient(version.Version, s.transport())
+		client, err := transport.HTTPClientFromProfile(config.Default(), version.Version, s.transport())
 		if err != nil {
 			return err
 		}

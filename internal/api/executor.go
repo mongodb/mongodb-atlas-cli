@@ -114,7 +114,6 @@ func newDefaultHTTPClient(profile transport.ProfileProvider, command shared_api.
 	if command.Unauthenticated {
 		return &http.Client{Transport: transport.Default()}, nil
 	}
-
 	return transport.HTTPClientFromProfile(profile, version.Version, transport.Default())
 }
 

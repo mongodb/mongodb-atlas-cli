@@ -168,7 +168,7 @@ func NoOtherCredentials(store ProfileValueGetter, profile string, authType confi
 		return alreadyAuthenticated(ErrAlreadyAuthenticatedAPIKeys, profile, value(publicAPIKeyField))
 	case authType != config.ServiceAccount && isSaved(config.ClientSecretField):
 		return alreadyAuthenticated(ErrAlreadyAuthenticatedSA, profile, value(config.ClientIDField))
-	case authType != config.UserAccount && isSaved(config.RefreshTokenField):
+	case authType != config.UserAccount && authType != config.UserAccountLegacy && isSaved(config.RefreshTokenField):
 		return alreadyAuthenticated(ErrAlreadyAuthenticatedToken, profile, "")
 	}
 	return nil

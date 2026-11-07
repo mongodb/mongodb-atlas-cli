@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -24,9 +25,11 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/atlas-cli-core/config"
+	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
@@ -36,6 +39,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312027/admin"
+	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 	"golang.org/x/oauth2"
@@ -75,7 +79,11 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	}
 }
 
-func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
+func Test_loginOpts_LoginRun_UserAccountLegacy(t *testing.T) {
+	t.Setenv("MCLI_CLIENT_ID", "")
+	profile := setDefaultProfile(t, "", "")
+	profile.SetOpsManagerURL("https://cloud-dev.mongodb.com/")
+
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	mockConfig := NewMockLoginConfig(ctrl)
@@ -98,7 +106,7 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 		TrackAskOne(gomock.Any(), gomock.Any()).
 		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
 			if s, ok := answer.(*string); ok {
-				*s = userAccountAuth
+				*s = userAccountLegacyAuth
 			}
 			return nil
 		})
@@ -131,10 +139,11 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 		Return(expectedToken, nil, nil).
 		Times(1)
 
-	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().SetAuthType(config.UserAccountLegacy).Times(1)
 	mockConfig.EXPECT().SetService("cloud").Times(1)
 	mockConfig.EXPECT().SetAccessToken("asdf").Times(1)
 	mockConfig.EXPECT().SetRefreshToken("querty").Times(1)
+	mockConfig.EXPECT().SetClientID(gomock.Any()).Times(0)
 	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
 	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
 	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
@@ -145,6 +154,108 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 
 	err := opts.LoginRun(ctx)
 	require.NoError(t, err)
+}
+
+// completeAuthCodeCallback hits the loopback server with the expected state and code, in place of a browser.
+func completeAuthCodeCallback(ctx context.Context, authorizationCode string) func(*authcode.AuthServerMetadata, string, string, string) (string, error) {
+	return func(_ *authcode.AuthServerMetadata, redirectURI, state, _ string) (string, error) {
+		callbackURL, err := url.Parse(redirectURI)
+		if err != nil {
+			return "", err
+		}
+		if callbackURL.Hostname() != "127.0.0.1" || callbackURL.Path != authCodeCallbackPath {
+			return "", fmt.Errorf("unexpected redirect URI %q", redirectURI)
+		}
+		q := callbackURL.Query()
+		q.Set("state", state)
+		q.Set("code", authorizationCode)
+		callbackURL.RawQuery = q.Encode()
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, callbackURL.String(), nil)
+		if err != nil {
+			return "", err
+		}
+		resp, err := http.DefaultClient.Do(req) //nolint:gosec // test loopback URL
+		if err != nil {
+			return "", err
+		}
+		defer resp.Body.Close()
+		return "https://authorize.mongodb.com/authorize", nil
+	}
+}
+
+func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockAuthCode := NewMockAuthorizationCodeFlow(ctrl)
+	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
+	mockAsker := NewMockTrackAsker(ctrl)
+
+	buf := new(bytes.Buffer)
+
+	opts := &LoginOpts{
+		config:    mockConfig,
+		Asker:     mockAsker,
+		NoBrowser: true,
+		authCode:  mockAuthCode,
+	}
+	opts.OutWriter = buf
+	opts.Store = mockStore
+
+	mockAsker.EXPECT().
+		TrackAskOne(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ survey.Prompt, answer any, _ ...survey.AskOpt) error {
+			if s, ok := answer.(*string); ok {
+				*s = userAccountAuth
+			}
+			return nil
+		})
+
+	ctx := t.Context()
+	issuer := &url.URL{Scheme: "https", Host: "authorize.mongodb.com"}
+	metadata := &authcode.AuthServerMetadata{
+		Issuer:      issuer.String(),
+		CacheExpiry: time.Now().Add(time.Hour),
+	}
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).Times(1)
+	mockAuthCode.EXPECT().ResolveAuthServerMetadata(ctx, nil).Return(metadata, nil).Times(1)
+	mockConfig.EXPECT().SetAuthServerMetadata(metadata).Times(1)
+
+	const authorizationCode = "auth-code-123"
+	mockAuthCode.EXPECT().
+		AuthorizationURL(metadata, gomock.Any(), gomock.Any(), gomock.Any()).
+		DoAndReturn(completeAuthCodeCallback(ctx, authorizationCode)).
+		Times(1)
+
+	tokenExpiry := time.Now().Add(time.Hour).UTC()
+	token := &authcode.Token{
+		AccessToken:  "asdf",
+		RefreshToken: "querty",
+		Expiry:       tokenExpiry,
+	}
+	mockAuthCode.EXPECT().
+		ExchangeCode(ctx, metadata, authorizationCode, gomock.Any(), gomock.Any()).
+		Return(token, nil).
+		Times(1)
+
+	mockConfig.EXPECT().SetAuthType(config.UserAccount).Times(1)
+	mockConfig.EXPECT().SetService("cloud").AnyTimes()
+	mockConfig.EXPECT().SetAccessToken("asdf").AnyTimes()
+	mockConfig.EXPECT().SetRefreshToken("querty").AnyTimes()
+	mockConfig.EXPECT().SetTokenExpiry(tokenExpiry.Format(time.RFC3339)).Times(1)
+	mockConfig.EXPECT().SetAuthServerIssuer(metadata.Issuer).Times(1)
+	mockConfig.EXPECT().SetOpsManagerURL(gomock.Any()).Times(0)
+	mockConfig.EXPECT().OrgID().Return("").AnyTimes()
+	mockConfig.EXPECT().ProjectID().Return("").AnyTimes()
+	mockConfig.EXPECT().AccessTokenSubject().Return("test@10gen.com", nil).Times(1)
+	mockConfig.EXPECT().Save().Return(nil).Times(2)
+
+	opts.SkipConfig = true
+
+	err := opts.LoginRun(ctx)
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), authCodeLoginNotice)
+	assert.Contains(t, buf.String(), "To continue, go to https://authorize.mongodb.com/authorize")
+	assert.Contains(t, buf.String(), "Successfully logged in as test@10gen.com")
 }
 
 func TestLoginRun_APIKeys_Success(t *testing.T) {
@@ -594,9 +705,9 @@ func orgsResponse(t *testing.T, mockExecutor *api.MockCommandExecutor, orgs ...a
 		Times(1)
 }
 
-func apiError(code int) error {
+func apiError(status int) error {
 	err := &admin.GenericOpenAPIError{}
-	err.SetModel(admin.ApiError{Error: code})
+	err.SetModel(admin.ApiError{Error: status})
 	return err
 }
 
@@ -844,6 +955,117 @@ func TestLoginOpts_setUpProfile_Programmatic_InvalidClient(t *testing.T) {
 
 	err := opts.setUpProfile(t.Context())
 	require.ErrorIs(t, err, commonerrors.ErrUnauthorized)
+}
+
+func Test_newLoginAuthServer(t *testing.T) {
+	tests := []struct {
+		name          string
+		service       string
+		opsManagerURL string
+		envIssuer     string
+		want          string
+		wantErr       bool
+	}{
+		{name: "prod", service: config.CloudService, opsManagerURL: "https://cloud.mongodb.com/", want: "https://authorize.mongodb.com"},
+		{name: "dev", service: config.CloudService, opsManagerURL: "https://cloud-dev.mongodb.com/", want: "https://authorize-dev.mongodb.com"},
+		{name: "qa", service: config.CloudService, opsManagerURL: "https://cloud-qa.mongodb.com/", want: "https://authorize-qa.mongodb.com"},
+		{name: "stage", service: config.CloudService, opsManagerURL: "https://cloud-stage.mongodb.com/", want: "https://authorize-stage.mongodb.com"},
+		{name: "gov", service: config.CloudGovService, opsManagerURL: "https://cloud.mongodbgov.com/", want: "https://authorize.mongodbgov.com"},
+		{name: "gov-qa", service: config.CloudGovService, opsManagerURL: "https://cloud-qa.mongodbgov.com/", want: "https://authorize-qa.mongodbgov.com"},
+		{name: "gov-dev", service: config.CloudGovService, opsManagerURL: "https://cloud-dev.mongodbgov.com/", want: "https://authorize-dev.mongodbgov.com"},
+		{name: "env var overrides ops_manager_url", service: config.CloudService, opsManagerURL: "https://cloud-dev.mongodb.com/", envIssuer: "https://authorize-qa.mongodb.com", want: "https://authorize-qa.mongodb.com"},
+		{name: "env var with non-cloud host", service: config.CloudService, opsManagerURL: "https://atlas.example.com/", envIssuer: "https://authorize-qa.mongodb.com", want: "https://authorize-qa.mongodb.com"},
+		{name: "non-cloud host", service: config.CloudService, opsManagerURL: "https://atlas.example.com/", wantErr: true},
+		{name: "cloud prefix without separator", service: config.CloudService, opsManagerURL: "https://cloudy.example.com/", wantErr: true},
+		{name: "no scheme", service: config.CloudService, opsManagerURL: "cloud-dev.mongodb.com", wantErr: true},
+		{name: "empty ops_manager_url prod", service: config.CloudService, want: "https://authorize.mongodb.com"},
+		{name: "empty ops_manager_url gov", service: config.CloudGovService, want: "https://authorize.mongodbgov.com"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", tt.envIssuer)
+			authServer, err := newLoginAuthServer(tt.service, tt.opsManagerURL)
+			if tt.wantErr {
+				require.ErrorContains(t, err, "MONGODB_ATLAS_AUTH_SERVER_URL")
+				return
+			}
+			require.NoError(t, err)
+			cfg, err := transport.FlowForAuthServer(authServer, http.DefaultClient, "test")
+			require.NoError(t, err)
+			assert.Equal(t, tt.want, cfg.AuthServerURL.String())
+		})
+	}
+}
+
+func Test_loginOpts_authCodeFlow_ignoresStoredIssuer(t *testing.T) {
+	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockConfig.EXPECT().Service().Return(config.CloudService).AnyTimes()
+	mockConfig.EXPECT().OpsManagerURL().Return("https://cloud-dev.mongodb.com/").AnyTimes()
+	mockConfig.EXPECT().AuthServerIssuer().Return("https://authorize.mongodb.com").AnyTimes()
+	mockConfig.EXPECT().AuthServerMetadata().Return(nil).AnyTimes()
+	opts := &LoginOpts{config: mockConfig}
+
+	// A cancelled context stops discovery before any request is sent.
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+	require.Error(t, opts.authCodeFlow(ctx, nil))
+
+	flow, ok := opts.authCode.(authCodeConfig)
+	require.True(t, ok)
+	assert.Equal(t, "https://authorize-dev.mongodb.com", flow.cfg.AuthServerURL.String())
+}
+
+func Test_loginOpts_authCodeFlow_nonCloudHost(t *testing.T) {
+	t.Setenv("MONGODB_ATLAS_AUTH_SERVER_URL", "")
+	ctrl := gomock.NewController(t)
+	mockConfig := NewMockLoginConfig(ctrl)
+	mockConfig.EXPECT().Service().Return(config.CloudService).AnyTimes()
+	mockConfig.EXPECT().OpsManagerURL().Return("https://atlas.example.com/").AnyTimes()
+	opts := &LoginOpts{config: mockConfig}
+
+	require.ErrorContains(t, opts.authCodeFlow(t.Context(), nil), "MONGODB_ATLAS_AUTH_SERVER_URL")
+	assert.Nil(t, opts.authCode)
+}
+
+func Test_loginOpts_LoginPreRun_UserAccountRefresh(t *testing.T) {
+	tests := []struct {
+		name       string
+		refreshErr error
+		wantErr    bool
+	}{
+		{name: "refreshed"},
+		{name: "credentials cleared", refreshErr: fmt.Errorf("refresh: %w", transport.ErrNotLoggedIn)},
+		{name: "other failure", refreshErr: errors.New("network down"), wantErr: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			previous := config.Default()
+			profile := config.NewProfile("test-profile", config.NewInMemoryStore())
+			profile.SetAuthType(config.UserAccount)
+			profile.SetAccessToken(testAccessTokenWithExpiry(time.Now().Add(-time.Hour)))
+			profile.SetRefreshToken("refresh-token")
+			config.SetDefaultProfile(profile)
+			t.Cleanup(func() { config.SetDefaultProfile(previous) })
+
+			ctrl := gomock.NewController(t)
+			mockConfig := NewMockLoginConfig(ctrl)
+			opts := &LoginOpts{config: mockConfig}
+			opts.WithFlow(mocks.NewMockRefresher(ctrl))
+			opts.WithUserAccountRefresher(func(context.Context, *config.Profile) error { return tt.refreshErr })
+			if tt.refreshErr != nil {
+				mockConfig.EXPECT().SetAccessToken("").Times(1)
+			}
+
+			err := opts.LoginPreRun(t.Context())()
+			if tt.wantErr {
+				require.ErrorIs(t, err, tt.refreshErr)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
 }
 
 type savedProfileStub map[string]string

@@ -78,12 +78,13 @@ type TrackAsker interface {
 }
 
 const (
-	userAccountAuth        = "UserAccount"
-	userAccountLegacyAuth  = "UserAccountLegacy"
-	atlasName              = "atlas"
-	authCodeCallbackPath   = "/atlas-cli/callback"
-	authCodeLoginNotice    = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy --output plaintext`."
-	userAccountDeprecation = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
+	userAccountAuth         = "UserAccount"
+	userAccountLegacyAuth   = "UserAccountLegacy"
+	atlasName               = "atlas"
+	authCodeCallbackPath    = "/atlas-cli/callback"
+	authCodeLoginNotice     = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy --output plaintext`."
+	authCodeNoBrowserNotice = "Warning: `--noBrowser` does not support cross-device authentication yet. Complete authentication in a browser on the same device as the CLI, or use the deprecated device-code flow described above."
+	userAccountDeprecation  = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
 )
 
 var (
@@ -295,7 +296,7 @@ func (opts *LoginOpts) promptOutput() error {
 func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
 	switch opts.authType {
 	case userAccountAuth:
-		_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
+		opts.printAuthCodeLoginNotice()
 		if err := opts.authCodeFlow(ctx, nil); err != nil {
 			return err
 		}
@@ -324,6 +325,13 @@ func (opts *LoginOpts) setUserAccountCredentials(ctx context.Context) error {
 	_, _ = fmt.Fprintf(opts.OutWriter, "Successfully logged in as %s.\n", s)
 
 	return nil
+}
+
+func (opts *LoginOpts) printAuthCodeLoginNotice() {
+	_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeLoginNotice)
+	if opts.NoBrowser {
+		_, _ = fmt.Fprintf(opts.OutWriter, "%s\n\n", authCodeNoBrowserNotice)
+	}
 }
 
 // credentialsProvided reports whether the credential pair for opts.authType was fully

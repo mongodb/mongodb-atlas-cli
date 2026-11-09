@@ -254,8 +254,37 @@ func Test_loginOpts_LoginRun_UserAccount(t *testing.T) {
 	err := opts.LoginRun(ctx)
 	require.NoError(t, err)
 	assert.Contains(t, buf.String(), authCodeLoginNotice)
+	assert.Contains(t, buf.String(), authCodeNoBrowserNotice)
 	assert.Contains(t, buf.String(), "To continue, go to https://authorize.mongodb.com/authorize")
 	assert.Contains(t, buf.String(), "Successfully logged in as test@10gen.com")
+}
+
+func Test_loginOpts_printAuthCodeLoginNotice(t *testing.T) {
+	tests := []struct {
+		name             string
+		noBrowser        bool
+		wantNoBrowserMsg bool
+	}{
+		{name: "browser enabled"},
+		{name: "noBrowser enabled", noBrowser: true, wantNoBrowserMsg: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			buf := new(bytes.Buffer)
+			opts := &LoginOpts{NoBrowser: tt.noBrowser}
+			opts.OutWriter = buf
+
+			opts.printAuthCodeLoginNotice()
+
+			assert.Contains(t, buf.String(), authCodeLoginNotice)
+			if tt.wantNoBrowserMsg {
+				assert.Contains(t, buf.String(), authCodeNoBrowserNotice)
+			} else {
+				assert.NotContains(t, buf.String(), authCodeNoBrowserNotice)
+			}
+		})
+	}
 }
 
 func TestLoginRun_APIKeys_Success(t *testing.T) {

@@ -259,7 +259,7 @@ jobs:
       - name: Create release ticket
         id: create-release
         if: steps.find-release.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/create-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: CLOUDP
@@ -434,7 +434,7 @@ jobs:
       - name: Create release notes ticket
         id: create-notes
         if: steps.find-notes.outputs.found != 'true'
-        uses: mongodb/apix-action/create-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/create-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           project-key: DOCSP

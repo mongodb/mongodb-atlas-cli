@@ -82,7 +82,7 @@ const (
 	userAccountLegacyAuth   = "UserAccountLegacy"
 	atlasName               = "atlas"
 	authCodeCallbackPath    = "/atlas-cli/callback"
-	authCodeLoginNotice     = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy --output plaintext`."
+	authCodeLoginNotice     = "User Account login now uses Authorization Code + PKCE. To use the deprecated device-code flow, run `atlas auth login --authType=UserAccountLegacy`."
 	authCodeNoBrowserNotice = "Warning: `--noBrowser` does not support cross-device authentication yet. Complete authentication in a browser on the same device as the CLI, or use the deprecated device-code flow described above."
 	userAccountDeprecation  = "Warning: the device-code User Account flow is deprecated and will be removed in a future release."
 )

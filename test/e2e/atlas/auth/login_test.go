@@ -44,11 +44,10 @@ const (
 
 	authErrorCodeNone = "NONE"
 
-	authLoginUsernameEnv           = "ATLAS_AUTH_LOGIN_E2E_USERNAME"
-	authLoginPasswordEnv           = "ATLAS_AUTH_LOGIN_E2E_PASSWORD"
-	authLoginRequireCredentialsEnv = "ATLAS_AUTH_LOGIN_E2E_REQUIRE_CREDENTIALS"
-	authLoginProfile               = "auth-code-login"
-	authCodeCallbackPath           = "/atlas-cli/callback"
+	authLoginUsernameEnv = "ATLAS_AUTH_LOGIN_E2E_USERNAME"
+	authLoginPasswordEnv = "ATLAS_AUTH_LOGIN_E2E_PASSWORD"
+	authLoginProfile     = "auth-code-login"
+	authCodeCallbackPath = "/atlas-cli/callback"
 )
 
 var (
@@ -508,10 +507,7 @@ func TestLoginUserAccountAuthCode(t *testing.T) {
 	username := strings.TrimSpace(authLoginUsername)
 	password := authLoginPassword
 	if username == "" || password == "" {
-		if os.Getenv(authLoginRequireCredentialsEnv) == "true" {
-			t.Fatal("Evergreen auth E2E requires username and password expansions")
-		}
-		t.Skipf("set Evergreen expansions for %s and %s to run the cloud-dev User Account E2E", authLoginUsernameEnv, authLoginPasswordEnv)
+		t.Fatalf("set %s and %s to run the cloud-dev User Account E2E", authLoginUsernameEnv, authLoginPasswordEnv)
 	}
 
 	seed := readProfileSeed(t)

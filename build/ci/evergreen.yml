@@ -184,6 +184,9 @@ functions:
           - E2E_TIMEOUT
           - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
+          - ATLAS_AUTH_LOGIN_E2E_USERNAME
+          - ATLAS_AUTH_LOGIN_E2E_PASSWORD
+          - ATLAS_AUTH_LOGIN_E2E_REQUIRE_CREDENTIALS
           - revision
         env:
           <<: *go_env
@@ -476,6 +479,8 @@ tasks:
           E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
   - name: atlas_auth_login_e2e
     tags: ["e2e","generic","atlas"]
+    # Stateful User Account login is excluded from GitHub PR builds to avoid concurrent auth sessions.
+    allowed_requesters: ["commit", "patch", "ad_hoc"]
     must_have_test_results: true
     depends_on:
       - name: compile
@@ -484,6 +489,10 @@ tasks:
     commands:
       - func: "e2e test"
         vars:
+          ATLAS_AUTH_LOGIN_E2E_USERNAME: ${atlas_auth_login_e2e_username|}
+          ATLAS_AUTH_LOGIN_E2E_PASSWORD: ${atlas_auth_login_e2e_password|}
+          ATLAS_AUTH_LOGIN_E2E_REQUIRE_CREDENTIALS: "true"
+          E2E_PARALLEL: 1
           E2E_TEST_PACKAGES: ./test/e2e/atlas/auth/...
   - name: atlas_gov_clusters_flags_e2e
     tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]

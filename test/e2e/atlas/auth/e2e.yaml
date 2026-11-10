@@ -1,4 +1,4 @@
-# Uses shared cloud-dev user state; run on the waterfall, not in PR jobs.
+groups:
+  - pr
 fixtures:
   - api
-  - cloud_dev_user_account

@@ -29,7 +29,7 @@ const (
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 38)
+	assert.Len(t, c.Tasks, 34)
 	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
@@ -71,7 +71,7 @@ func TestPublishStableTasks(t *testing.T) {
 
 	assert.True(t, commandFound, "expected to find a push command")
 	assert.Len(t, c.Variants, 6)
-	assert.Len(t, c.Tasks, 194)
+	assert.Len(t, c.Tasks, 186)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
@@ -96,7 +96,15 @@ func TestPostPkgMetaTasks(t *testing.T) {
 		}
 	}
 	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 43)
+	assert.Len(t, c.Tasks, 44)
+
+	names := make([]string, 0, len(c.Tasks))
+	for _, task := range c.Tasks {
+		names = append(names, task.Name)
+	}
+	assert.Contains(t, names, "pkg_test_atlascli_meta_docker_9.0_ubuntu26.04")
+	assert.NotContains(t, names, "pkg_test_atlascli_meta_docker_8.0_ubuntu26.04")
+	assert.NotContains(t, names, "pkg_test_atlascli_meta_docker_8.3_ubuntu26.04")
 }
 
 func TestRepoTasks(t *testing.T) {
@@ -119,7 +127,7 @@ func TestRepoTasks(t *testing.T) {
 	}
 
 	assert.Len(t, c.Variants, 6)
-	assert.Len(t, c.Tasks, 92)
+	assert.Len(t, c.Tasks, 88)
 }
 
 func TestGetGpgServerVersion(t *testing.T) {

@@ -8,7 +8,7 @@ on:
 jobs:
   golangci:
     name: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -30,11 +30,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Enable long paths (Windows)
@@ -50,7 +50,7 @@ jobs:
           go-version-file: 'go.mod'
       - run: make unit-test
       - name: Send coverage
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         continue-on-error: true
         env:
           COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -60,10 +60,10 @@ jobs:
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5
         with:
           paths: tests.xml
-        if: always() && matrix.os == 'ubuntu-latest'
+        if: always() && matrix.os == 'ubuntu-24.04'
 
   coverage:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: unit-tests
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
@@ -82,7 +82,7 @@ jobs:
         run: go tool goveralls -parallel-finish -ignore=test/* -service=github
 
   libraryOwners:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -96,7 +96,7 @@ jobs:
       - name: Run check-library-owners
         run: make check-library-owners
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -123,7 +123,7 @@ jobs:
             exit 1
           fi
   api:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -151,7 +151,7 @@ jobs:
             exit 1
           fi
   actionlint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -167,7 +167,7 @@ jobs:
           ${{ steps.get_actionlint.outputs.executable }} -color
         shell: bash
   mocks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -195,7 +195,7 @@ jobs:
           fi
   shellcheck:
     name: shellcheck
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -221,7 +221,7 @@ jobs:
             | grep -v './docs/' \
             | xargs -r shellcheck --format=gcc
   tidy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -249,7 +249,7 @@ jobs:
           fi
   licensecheck:
     name: licensecheck
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -262,7 +262,7 @@ jobs:
       - run: ./build/ci/check-licenses.sh
   checktemplates:
     name: checktemplates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -275,7 +275,7 @@ jobs:
       - run: make check-templates
   verify_image:
     name: Build docker image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
     steps:

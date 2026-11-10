@@ -27,7 +27,7 @@ permissions: {}
 jobs:
   release:
     name: Release AtlasCLI
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
@@ -82,7 +82,7 @@ jobs:
             lint
             shellcheck
             unit-tests (macos-latest)
-            unit-tests (ubuntu-latest)
+            unit-tests (ubuntu-24.04)
             unit-tests (windows-latest)
             libraryOwners
             licensecheck

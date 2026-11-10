@@ -56,6 +56,45 @@ functions:
       type: setup
       params:
         directory: src/github.com/mongodb/mongodb-atlas-cli
+  # Downloads the Go modules once in compile and caches them for the e2e tasks, in the
+  # documented restore-then-produce-then-save order: the restore populates pkg/mod from the
+  # cache (a no-op go mod download on a hit), the save skips when the restore hit. Keyed by
+  # the checkout's go.mod/go.sum contents, so pin bumps that don't change dependencies reuse
+  # the cache; v1 is a manual flush knob (bump it to invalidate every cached module set, e.g.
+  # after a GOPATH layout change) and distro_arch scopes it per platform, since GOTOOLCHAIN=auto
+  # puts a compiled toolchain inside the cached dir. Uses the project's existing
+  # mongodb-mongocli-build bucket credentials (same as the s3.put for generated tasks) rather
+  # than a role assumed from another project, under ${project}/go-mod-cache without version
+  # scoping so the same content is shared across versions.
+  "cache go modules":
+    - command: cache.restore
+      type: setup
+      params: &go_mod_cache_params
+        name: go-mods
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mongodb-mongocli-build
+        remote_path: ${project}/go-mod-cache
+        key_files:
+          - src/github.com/mongodb/mongodb-atlas-cli/go.mod
+          - src/github.com/mongodb/mongodb-atlas-cli/go.sum
+        key_expansions: [ "v1", "${distro_arch}" ]
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        binary: go
+        args: [ "mod", "download" ]
+    - command: cache.save
+      type: setup
+      params:
+        <<: *go_mod_cache_params
+        paths:
+          - pkg/mod
+  "restore go modules":
+    - command: cache.restore
+      type: setup
+      params: *go_mod_cache_params
   "build":
     - command: subprocess.exec
       type: test
@@ -149,15 +188,6 @@ functions:
           ops_manager_url = '${mcli_cloud_gov_ops_manager_url}'
           service = 'cloudgov'
           output = 'plaintext'
-
-          [__e2e_snapshot]
-          org_id = 'a0123456789abcdef012345a'
-          project_id = 'b0123456789abcdef012345b'
-          public_api_key = 'ABCDEF01'
-          private_api_key = '12345678-abcd-ef01-2345-6789abcdef01'
-          ops_manager_url = 'http://localhost:8080/'
-          service = 'cloud'
-          output = 'plaintext'
           EOF
     - command: subprocess.exec
       type: test
@@ -201,6 +231,12 @@ functions:
           - go_base_path
           - workdir
           - task_type
+          - e2e_variant
+          - e2e_task_prefix
+          - e2e_include_groups
+          - e2e_exclude_groups
+          - e2e_exclude
+          - e2e_profile
         binary: build/ci/evergreen-generate-tasks.sh
     - command: s3.put
       params:
@@ -285,636 +321,8 @@ tasks:
   - name: compile
     tags: ["code_health"]
     commands:
+      - func: "cache go modules"
       - func: "build"
-  # If your e2e tests depend on a cluster running please consider setting it on its own task
-  - name: atlas_generic_e2e
-    tags: ["e2e","generic","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/... ./test/e2e/noapi/brew/... ./test/e2e/noapi/config/autocomplete/... ./test/e2e/noapi/config/config/... ./test/e2e/noapi/profile/...
-  - name: atlas_gov_generic_e2e
-    tags: ["e2e","generic","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/generic/...
-  # This is all about cluster which tends to be slow to get a healthy one
-  - name: atlas_clusters_flags_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
-  - name: atlas_clusters_infinite_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/infinite/...
-  - name: atlas_autogeneration_commands_e2e
-    tags: ["e2e","autogeneration","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/autogeneration/...
-  - name: atlas_clusters_file_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
-  - name: atlas_clusters_sharded_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
-  - name: atlas_clusters_flex_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flex/...
-  - name: atlas_clusters_iss_e2e
-    tags: ["e2e","clusters","atlas", "iss","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/iss/...
-  - name: atlas_plugin_install
-    tags: ["e2e","atlas","plugin","install","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/install/...
-  - name: atlas_plugin_run
-    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/run/...
-  - name: atlas_plugin_uninstall
-    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/uninstall/...
-  - name: atlas_plugin_update
-    tags: ["e2e","atlas","plugin","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/plugin/update/...
-  - name: atlas_clusters_m0_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/m0/...
-  - name: atlas_kubernetes_plugin
-    tags: ["e2e","atlas","plugin","kubernetes","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/kubernetes/...
-  - name: atlas_local_plugin
-    tags: ["e2e","atlas","plugin","local","foliage_check_task_only"]
-    must_have_test_results: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/noapi/local/...
-  - name: atlas_clusters_upgrade_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/upgrade/...
-  - name: atlas_interactive_e2e
-    tags: ["e2e","atlas", "interactive","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/interactive/...
-  - name: atlas_service_account_e2e
-    tags: ["e2e","generic","atlas"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/serviceAccount/...
-  - name: atlas_auth_login_e2e
-    tags: ["e2e","generic","atlas"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/auth/...
-  - name: atlas_gov_clusters_flags_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/flags/...
-  - name: atlas_gov_clusters_file_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/file/...
-  - name: atlas_gov_clusters_sharded_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/clusters/sharded/...
-  # LDAP Configuration depends on a cluster running
-  - name: atlas_ldap_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/ldap/...
-  # Logs depend on a cluster running to get logs from
-  - name: atlas_logs_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
-  - name: atlas_gov_logs_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/logs/...
-  # Metrics depend on a cluster running to get metrics from
-  - name: atlas_metrics_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
-  - name: atlas_gov_metrics_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/metrics/...
-  # Processes depend on a cluster running
-  - name: atlas_processes_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
-  - name: atlas_gov_processes_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/processes/...
-  # Online archives depend on a cluster to create the archive against
-  - name: atlas_online_archive_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/onlinearchive/...
-  # Performance Advisor depend on a cluster
-  - name: atlas_performance_advisor_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
-  - name: atlas_gov_performance_advisor_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/performanceAdvisor/...
-  # Search depend on a cluster to create the indexes against
-  - name: atlas_search_e2e
-    tags: ["e2e","clusters","atlas","foliage_check_task_only"]
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
-          E2E_TIMEOUT: 3h
-  - name: atlas_gov_search_e2e
-    tags: ["e2e","clusters","atlasgov","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_gov_clusters_flags_e2e
-        variant: "e2e_atlas_gov_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search/...
-  - name: atlas_search_nodes_e2e
-    tags: ["e2e","clusters","atlas", "foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/search_nodes/...
-  # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
-  - name: atlas_private_endpoint_e2e
-    tags: ["e2e","networking","atlas", "foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/networking/...
-  # datafederation requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datafederation_db_e2e
-    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/db/...
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-  # datafederation requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datafederation_privatenetwork_e2e
-    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/privatenetwork/...
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-  # datafederation requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datafederation_querylimits_e2e
-    tags: ["e2e","datafederation","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/datafederation/querylimits/...
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-  # IAM commands tests with an Atlas profile
-  - name: atlas_iam_e2e
-    tags: ["e2e","generic","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
-  - name: atlas_gov_iam_e2e
-    tags: ["e2e","generic","atlas","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_PROFILE_NAME: __e2e_gov
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/iam/...
-    # Live migration endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
-  - name: atlas_live_migrations_link_token_e2e
-    tags: ["e2e","atlas","livemigrations","foliage_check_task_only"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/livemigrations/...
-  # Streams commands tests
-  - name: atlas_streams
-    tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams/...
-  - name: atlas_streams_with_cluster
-    tags: [ "e2e","streams","atlas","assigned_to_jira_team_cloudp_atlas_streams"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/streams_with_cluster/...
-  - name: atlas_decrypt_e2e
-    tags: [ "e2e","decrypt" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "build"
-      - func: "e2e test"
-        vars:
-          MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
-          MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
-          MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MONGODB_ATLAS_SERVICE: cloud
-          GCP_CREDENTIALS: ${logs_decrypt_gcp_credentials}
-          AWS_ACCESS_KEY: ${logs_decrypt_aws_access_key}
-          AWS_SECRET_ACCESS_KEY: ${logs_decrypt_aws_secret_access_key}
-          AZURE_TENANT_ID: ${logs_decrypt_azure_tenant_id}
-          AZURE_CLIENT_ID: ${logs_decrypt_azure_client_id}
-          AZURE_CLIENT_SECRET: ${logs_decrypt_azure_client_secret}
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/decrypt/...
-  - name: atlas_backups_snapshots_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/snapshot/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_schedule_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/schedule/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_exports_buckets_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/buckets/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_exports_jobs_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/exports/jobs/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_flex_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/flex/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_FLEX_INSTANCE_NAME: ${e2e_flex_instance_name}
-          E2E_TIMEOUT: 3h
-  - name: atlas_backups_restores_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        timeout_secs: 11400 # 3 hours 10 minutes
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/restores/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
-  - name: atlas_backups_compliancepolicy_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "e2e test"
-        timeout_secs: 11400 # 3 hours 10 minutes
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/backup/compliancepolicy/...
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_TIMEOUT: 3h
   - name: atlas_cleanup_e2e
     tags: [ "e2e","cleanup", "foliage_check_task_only" ]
     must_have_test_results: true
@@ -925,6 +333,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -941,6 +350,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -948,8 +358,8 @@ tasks:
           E2E_TEST_PACKAGES: ./test/internal/...
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
-  - name: atlas_deployments_atlas_clusters_e2e
-    tags: ["e2e","deployments","atlas"]
+  - name: atlas_deployments_local_noauth_e2e
+    tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     depends_on:
@@ -957,19 +367,10 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "e2e test"
-        timeout_secs: 11400 # 3 hours 10 minutes
-        vars:
-          E2E_TEST_PACKAGES: ./test/e2e/atlas/deployments/atlasclusters/...
-          E2E_TIMEOUT: 3h
-  - name: atlas_deployments_local_noauth_e2e
-    tags: ["e2e","deployments","local","noauth"]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -979,10 +380,15 @@ tasks:
     tags: ["e2e","deployments","local","seed"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -992,10 +398,15 @@ tasks:
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1005,10 +416,15 @@ tasks:
     tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1018,10 +434,15 @@ tasks:
     tags: ["e2e","deployments","local","auth","deprecated"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
     commands:
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
       - func: "authenticate to ecr"
+      - func: "restore go modules"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1055,6 +476,7 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
+      - func: "restore go modules"
       - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
@@ -1064,6 +486,32 @@ tasks:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TEST_PACKAGES: ./test/e2e/noapi/config/migration/...
+  - name: e2e_waterfall_generate
+    stepback: false
+    commands:
+      - func: "generate evergreen"
+        vars:
+          task_type: e2e
+          e2e_variant: e2e_waterfall
+          e2e_task_prefix: "e2e_"
+          e2e_exclude_groups: pr
+  - name: e2e_pr_generate
+    stepback: false
+    commands:
+      - func: "generate evergreen"
+        vars:
+          task_type: e2e
+          e2e_variant: e2e_pr
+          e2e_include_groups: pr
+  - name: e2e_gov_generate
+    stepback: false
+    commands:
+      - func: "generate evergreen"
+        vars:
+          task_type: e2e
+          e2e_variant: e2e_gov
+          e2e_include_groups: gov
+          e2e_profile: __e2e_gov
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1073,102 +521,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: .code_health
-  - name: e2e_generic
-    display_name: "E2E Tests Generic"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .generic"
-  - name: e2e_autogeneration
-    display_name: "E2E Autogenerated commands tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .autogeneration"
-  - name: e2e_interactive
-    display_name: "E2E Interactive Commands"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .interactive"
-  - name: e2e_atlas_clusters
-    display_name: "E2E Atlas Cluster Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .clusters .atlas"
-  - name: e2e_atlas_kubernetes_plugin
-    display_name: "E2E Atlas Kubernetes Plugin Tests"
-    run_on:
-      - ubuntu2204-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .atlas .plugin .kubernetes"
-  - name: e2e_atlas_local_plugin
-    display_name: "E2E Atlas Local Plugin Tests"
-    run_on:
-      - ubuntu2204-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .atlas .plugin .local"
-  - name: e2e_decryption
-    display_name: "E2E Decryption Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .decrypt"
-  - name: e2e_atlas_gov_clusters
-    display_name: "E2E Atlas Gov Cluster Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .clusters .atlasgov"
-  - name: e2e_atlas_networking
-    display_name: "E2E Atlas Networking Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .networking .atlas"
-  - name: e2e_atlas_live_migrations
-    display_name: "E2E Atlas Live Migrations Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .livemigrations .atlas"
-  - name: e2e_atlas_datafederation
-    display_name: "E2E Atlas Data Federation Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .datafederation .atlas"
-  - name: e2e_atlas_backups
-    display_name: "E2E Atlas Backup Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .backup .atlas"
   - name: e2e_cleanup
     display_name: "E2E Cleanup Resources"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
@@ -1182,26 +534,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .cleanup"
-  - name: e2e_atlas_deployments
-    display_name: "E2E Atlas Deployments Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments_ubuntu22
-    display_name: "E2E Local Deployments Tests (ubuntu 22.04/docker)"
-    run_on:
-      - ubuntu2204-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_local_deployments_ubuntu24
     display_name: "E2E Local Deployments Tests (ubuntu 24.04/docker)"
     run_on:
@@ -1241,22 +573,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-  - name: e2e_atlas_streams_with_clusters
-    display_name: "E2E Atlas Streams with Clusters Tests"
-    run_on:
-      - ubuntu2204-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .atlas .streams"
-  - name: e2e_plugin
-    display_name: "E2E Plugin Tests"
-    run_on:
-      - rhel90-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .atlas .plugin"
   - name: e2e_local_deployments_rhel9
     display_name: "E2E Local Deployments Tests (rhel9/podman)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
@@ -1319,6 +635,30 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .config-migration"
+  - name: e2e_waterfall
+    display_name: "E2E Waterfall"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: e2e_waterfall_generate
+  - name: e2e_pr
+    display_name: "E2E PR"
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: e2e_pr_generate
+  - name: e2e_gov
+    display_name: "E2E Gov"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: e2e_gov_generate
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]
@@ -1332,8 +672,8 @@ patch_aliases:
 github_pr_aliases:
   - variant: "code_health"
     task_tags: ["code_health"]
-  - variant: "e2e_generic"
-    task_tags: ["e2e", "generic"]
+  - variant: "e2e_pr"
+    task: ".*"
 git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"

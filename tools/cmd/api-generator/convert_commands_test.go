@@ -20,6 +20,8 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const headerParam = "headerParam"
@@ -295,6 +297,80 @@ func testResponses() *openapi3.Responses {
 			"application/vnd.atlas.2025-01-01+json": &openapi3.MediaType{},
 		},
 	}}))
+}
+
+func testResponsesWithContentTypes(contentTypes ...string) *openapi3.Responses {
+	content := openapi3.Content{}
+	for _, contentType := range contentTypes {
+		content[contentType] = &openapi3.MediaType{}
+	}
+
+	return openapi3.NewResponses(openapi3.WithStatus(200, &openapi3.ResponseRef{Value: &openapi3.Response{
+		Content: content,
+	}}))
+}
+
+func TestBuildDescription(t *testing.T) {
+	const (
+		stableJSONContentType   = "application/vnd.atlas.2023-01-01+json"
+		upcomingJSONContentType = "application/vnd.atlas.2025-01-01.upcoming+json"
+		previewJSONContentType  = "application/vnd.atlas.preview+json"
+	)
+
+	const operationID = "listClusters"
+
+	tests := []struct {
+		name           string
+		contentTypes   []string
+		wantPreviewURL bool
+	}{
+		{
+			name:         "stable version keeps the stable API docs URL",
+			contentTypes: []string{stableJSONContentType},
+		},
+		{
+			name:         "upcoming version keeps the stable API docs URL",
+			contentTypes: []string{upcomingJSONContentType},
+		},
+		{
+			name:           "preview-only version uses the preview API docs URL",
+			contentTypes:   []string{previewJSONContentType},
+			wantPreviewURL: true,
+		},
+		{
+			name:         "mixed stable and preview versions keep the stable API docs URL",
+			contentTypes: []string{stableJSONContentType, previewJSONContentType},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			operation := testOperation(operationID, nil)
+			operation.Responses = testResponsesWithContentTypes(tt.contentTypes...)
+
+			versions, err := buildVersions(time.Now(), operation)
+			require.NoError(t, err)
+
+			description, err := buildDescription(operation, versions)
+			require.NoError(t, err)
+
+			apiDocsURL := "https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/operation/operation-listclusters"
+			previewAPIDocsURL := "https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2/preview/operation/operation-listclusters"
+
+			if tt.wantPreviewURL {
+				assert.Contains(t, description, previewAPIDocsURL)
+				assert.NotContains(t, description, apiDocsURL)
+				assert.Contains(t, description, "This endpoint is in preview.")
+			} else {
+				assert.Contains(t, description, apiDocsURL)
+				assert.NotContains(t, description, previewAPIDocsURL)
+				assert.NotContains(t, description, "This endpoint is in preview.")
+			}
+
+			cmdURL := "https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-root-" + operationID + "/"
+			assert.Contains(t, description, cmdURL)
+		})
+	}
 }
 
 func TestAddContentTypeToVersion_DeprecatedWithSunset(t *testing.T) {

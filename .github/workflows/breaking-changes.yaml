@@ -9,7 +9,7 @@ permissions:
 jobs:
   breaking-changes-manifest:
     name: Generate Breaking Changes Manifest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -35,7 +35,7 @@ jobs:
           path: main.json
   detect-breaking-changes:
     name: Detect Breaking Changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: breaking-changes-manifest
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1

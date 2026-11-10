@@ -20,6 +20,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/evergreen-ci/shrub"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/cmd/genevergreen/generate"
@@ -31,8 +32,22 @@ var (
 
 func run() error {
 	var taskType string
+	var variant string
+	var taskPrefix string
+	var includeGroups string
+	var excludeGroups string
+	var requireFixtures string
+	var exclude string
+	var profile string
 
 	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
+	flag.StringVar(&variant, "variant", "", "e2e: variant to append generated tasks to")
+	flag.StringVar(&taskPrefix, "task-prefix", "", "e2e: prefix for generated task names (defaults to variant + \"_\")")
+	flag.StringVar(&includeGroups, "include-groups", "", "e2e: comma-separated groups to include (packages with any of these groups)")
+	flag.StringVar(&excludeGroups, "exclude-groups", "", "e2e: comma-separated groups to exclude (packages with any of these groups)")
+	flag.StringVar(&requireFixtures, "require-fixtures", "", "e2e: comma-separated fixtures a package must declare to be selected")
+	flag.StringVar(&exclude, "exclude", "", "e2e: comma-separated fixtures to exclude")
+	flag.StringVar(&profile, "profile", "", "e2e: E2E_PROFILE_NAME to set on generated tasks")
 
 	flag.Parse()
 
@@ -52,6 +67,33 @@ func run() error {
 		generate.PublishSnapshotTasks(c)
 	case "publish":
 		generate.PublishStableTasks(c)
+	case "e2e":
+		if variant == "" {
+			return fmt.Errorf("%w: %s", ErrMissingOption, "variant")
+		}
+		if err := generate.E2ETasks(c, generate.E2EOptions{
+			Variant:          variant,
+			TaskPrefix:       taskPrefix,
+			Profile:          profile,
+			IncludeAnyGroups: splitFlag(includeGroups),
+			ExcludeGroups:    splitFlag(excludeGroups),
+			RequireFixtures:  splitFlag(requireFixtures),
+			ExcludeFixtures:  splitFlag(exclude),
+		}); err != nil {
+			return err
+		}
+	case "e2e-manifests":
+		manifests, err := generate.E2EManifests(generate.E2EOptions{
+			IncludeAnyGroups: splitFlag(includeGroups),
+			ExcludeGroups:    splitFlag(excludeGroups),
+			RequireFixtures:  splitFlag(requireFixtures),
+			ExcludeFixtures:  splitFlag(exclude),
+		})
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(manifests))
+		return nil
 	default:
 		return errors.New("-tasks is invalid")
 	}
@@ -65,6 +107,17 @@ func run() error {
 	fmt.Println(string(b))
 
 	return nil
+}
+
+func splitFlag(value string) []string {
+	values := make([]string, 0)
+	for _, entry := range strings.Split(value, ",") {
+		entry = strings.TrimSpace(entry)
+		if entry != "" {
+			values = append(values, entry)
+		}
+	}
+	return values
 }
 
 func main() {

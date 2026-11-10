@@ -16,4 +16,24 @@
 
 set -Eeou pipefail
 
-go run tools/cmd/genevergreen/main.go -tasks "${task_type:?}" >tasks.json
+args=(-tasks "${task_type:?}")
+if [[ -n "${e2e_variant:-}" ]]; then
+  args+=(-variant "${e2e_variant}")
+fi
+if [[ -n "${e2e_task_prefix:-}" ]]; then
+  args+=(-task-prefix "${e2e_task_prefix}")
+fi
+if [[ -n "${e2e_include_groups:-}" ]]; then
+  args+=(-include-groups "${e2e_include_groups}")
+fi
+if [[ -n "${e2e_exclude_groups:-}" ]]; then
+  args+=(-exclude-groups "${e2e_exclude_groups}")
+fi
+if [[ -n "${e2e_exclude:-}" ]]; then
+  args+=(-exclude "${e2e_exclude}")
+fi
+if [[ -n "${e2e_profile:-}" ]]; then
+  args+=(-profile "${e2e_profile}")
+fi
+
+go run tools/cmd/genevergreen/main.go "${args[@]}" >tasks.json

@@ -1,0 +1,6 @@
+groups:
+  []
+fixtures:
+  - api
+  - aws_role
+  - s3_bucket

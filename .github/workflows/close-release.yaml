@@ -27,7 +27,7 @@ jobs:
     # Only act on release tags in either supported format. On workflow_dispatch
     # the tag comes from the input instead of the release event.
     if: startsWith(github.event.release.tag_name || inputs.tag, 'v') || startsWith(github.event.release.tag_name || inputs.tag, 'atlascli/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:

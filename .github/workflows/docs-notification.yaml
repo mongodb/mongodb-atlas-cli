@@ -6,7 +6,7 @@ on:
 jobs:
   slack-notification-doc-team:
     name: Notify Docs Team on Slack
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event.requested_team.slug == 'docs-cloud-team'
     permissions:
       pull-requests: write # Needed by sticky-pull-request-comment

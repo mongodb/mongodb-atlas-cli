@@ -34,16 +34,7 @@ const (
 	loginEntity = "login"
 
 	loginTimeout = 2 * time.Minute
-
-	authLoginUsernameEnv = "ATLAS_AUTH_LOGIN_E2E_USERNAME"
-	authLoginPasswordEnv = "ATLAS_AUTH_LOGIN_E2E_PASSWORD"
 )
-
-func TestMain(m *testing.M) {
-	_ = os.Unsetenv(authLoginUsernameEnv)
-	_ = os.Unsetenv(authLoginPasswordEnv)
-	os.Exit(m.Run())
-}
 
 // isolateLoginEnv makes commands authenticate only with what login saved to the profile.
 func isolateLoginEnv(t *testing.T) {
@@ -52,10 +43,6 @@ func isolateLoginEnv(t *testing.T) {
 	// atlas-cli-core reads only MCLI_* variables when any is set.
 	for _, entry := range os.Environ() {
 		require.False(t, strings.HasPrefix(entry, "MCLI_"), "unset MCLI_* environment variables before running this test")
-		key, _, _ := strings.Cut(entry, "=")
-		if strings.HasPrefix(key, "MONGODB_ATLAS_AUTH_") {
-			t.Setenv(key, "")
-		}
 	}
 
 	_ = internal.TempConfigFolder(t)
@@ -69,8 +56,6 @@ func isolateLoginEnv(t *testing.T) {
 	t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
 	t.Setenv("MONGODB_ATLAS_CLIENT_ID", "")
 	t.Setenv("MONGODB_ATLAS_CLIENT_SECRET", "")
-	t.Setenv("MONGODB_ATLAS_ACCESS_TOKEN", "")
-	t.Setenv("MONGODB_ATLAS_REFRESH_TOKEN", "")
 }
 
 func runLogin(t *testing.T, cliPath string, args ...string) (string, error) {

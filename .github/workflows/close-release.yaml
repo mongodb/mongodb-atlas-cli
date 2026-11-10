@@ -27,11 +27,11 @@ jobs:
     # Only act on release tags in either supported format. On workflow_dispatch
     # the tag comes from the input instead of the release event.
     if: startsWith(github.event.release.tag_name || inputs.tag, 'v') || startsWith(github.event.release.tag_name || inputs.tag, 'atlascli/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      - uses: GitHubSecurityLab/actions-permissions/monitor@bf82d13b9b10051d224345ab9184f5ede0a94289 # v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
 

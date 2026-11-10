@@ -1635,6 +1635,23 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`createGroupMongosTopology`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
 	`createGroupPeer`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -3424,6 +3441,36 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`groupId`:             `32b6e34b3d91647abb20e7b8`,
 					`metricIntegrationId`: `[metricIntegrationId]`,
+				},
+			},
+			},
+		},
+	},
+	`deleteGroupMongosTopology`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the sharded cluster this topology belongs to.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6255,7 +6302,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2025-03-12`: {{
+			`preview`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7557,6 +7604,36 @@ var metadata = metadatatypes.Metadata{
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`instanceSize`: `M10`,
 					`itemsPerPage`: `100`,
+				},
+			},
+			},
+		},
+	},
+	`getGroupMongosTopology`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the sharded cluster this topology belongs to.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -12013,6 +12090,41 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
+	`listGroupMongosTopologies`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`preview`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
+	},
 	`listGroupPeers`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -13668,6 +13780,26 @@ var metadata = metadatatypes.Metadata{
 			},
 			},
 		},
+	},
+	`listSkuServices`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`includeCount`: {
+				Usage: `Flag that indicates whether MongoDB Cloud calculates the total number of items for the response. When set to ` + "`" + `false` + "`" + `, MongoDB Cloud may skip an additional count operation. The response may still include ` + "`" + `totalCount` + "`" + ` when the count is available without additional calculation.`,
+			},
+			`itemsPerPage`: {
+				Usage: `Number of items that the response returns per page.`,
+			},
+			`pageNum`: {
+				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
 	},
 	`listSkus`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -15509,6 +15641,26 @@ var metadata = metadatatypes.Metadata{
 			},
 			`metricIntegrationId`: {
 				Usage: `Unique identifier of the metric integration configuration.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`updateGroupMongosTopology`: {
+		OnlyPrivatePreview: true,
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies the sharded cluster this topology belongs to.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,

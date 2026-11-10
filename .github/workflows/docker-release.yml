@@ -7,7 +7,7 @@ on:
 jobs:
   build_and_publish_images:
     name: Build, sign and publish docker image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       id-token: write # needed to assume the DevProd Platforms ECR role via OIDC

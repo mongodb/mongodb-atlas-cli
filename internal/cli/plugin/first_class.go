@@ -46,7 +46,7 @@ var FirstClassPlugins = []*FirstClassPlugin{
 	// },
 	{
 		Name:       "atlas-cli-plugin-kubernetes",
-		MinVersion: "1.2.4",
+		MinVersion: "1.2.10",
 		Github: &Github{
 			Owner: "mongodb",
 			Name:  "atlas-cli-plugin-kubernetes",

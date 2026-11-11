@@ -141,9 +141,11 @@ func IsGov() bool {
 	return profile["service"] == cloudgov
 }
 
-// LocalDevMDBVersionPrefix is the MongoDB version the local deployment e2e tests expect
-// LocalDevImage to report. Bump it when mongodb-atlas-local ships a new minor version of MDB.
+// LocalDevMDBVersionPrefix is the MongoDB version reported by the major-8 local deployment image.
 const LocalDevMDBVersionPrefix = "8.3."
+
+// LocalDevLatestMDBVersionPrefix is the MongoDB version reported by the untagged (latest) LocalDevImage.
+const LocalDevLatestMDBVersionPrefix = "9.0."
 
 func LocalDevImage() string {
 	image, ok := os.LookupEnv("LOCALDEV_IMAGE")

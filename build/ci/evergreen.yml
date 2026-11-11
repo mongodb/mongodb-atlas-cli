@@ -214,6 +214,8 @@ functions:
           - E2E_TIMEOUT
           - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
+          - ATLAS_AUTH_LOGIN_E2E_USERNAME
+          - ATLAS_AUTH_LOGIN_E2E_PASSWORD
           - revision
         env:
           <<: *go_env

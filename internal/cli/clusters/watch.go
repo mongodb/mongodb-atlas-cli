@@ -166,7 +166,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
-				opts.InitFlow(config.Default()),
+				opts.InitLegacyDeviceCodeFlow(config.Default()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

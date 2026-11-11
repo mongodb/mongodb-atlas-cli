@@ -31,6 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20250312027/auth/clientcredentials"
+	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -48,6 +49,9 @@ type ConfigDeleter interface {
 	SetPrivateAPIKey(string)
 	SetClientID(string)
 	SetClientSecret(string)
+	SetTokenExpiry(string)
+	SetAuthServerIssuer(string)
+	SetAuthServerMetadata(*authcode.AuthServerMetadata)
 	AuthType() config.AuthMechanism
 	PublicAPIKey() string
 	ClientID() string
@@ -69,15 +73,19 @@ type logoutOpts struct {
 	flow                      Revoker
 	keepConfig                bool
 	revokeServiceAccountToken func() error
+	revokeUserAccountToken    func() error
 }
 
-func (opts *logoutOpts) initFlow(ctx context.Context) error {
+func (opts *logoutOpts) initFlow(ctx context.Context, profile *config.Profile) error {
 	var err error
 	client := http.DefaultClient
 	client.Transport = transport.Default()
-	opts.flow, err = transport.FlowWithConfig(config.Default(), client, version.Version)
+	opts.flow, err = transport.FlowWithConfig(profile, client, version.Version)
 	opts.revokeServiceAccountToken = func() error {
 		return revokeServiceAccountToken(ctx, opts.config.ClientID(), opts.config.ClientSecret())
+	}
+	opts.revokeUserAccountToken = func() error {
+		return transport.RevokeUserAccountToken(ctx, profile, version.Version)
 	}
 	return err
 }
@@ -104,7 +112,11 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 
 	switch opts.config.AuthType() {
 	case config.UserAccount:
-		_, err := opts.flow.RevokeToken(ctx, config.RefreshToken(), "refresh_token")
+		if err := opts.revokeUserAccountToken(); err != nil {
+			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
+		}
+	case config.UserAccountLegacy:
+		_, err := opts.flow.RevokeToken(ctx, opts.config.RefreshToken(), "refresh_token")
 		if err != nil {
 			_, _ = log.Warningf("Warning: unable to revoke user account token: %v, proceeding with logout\n", err)
 		}
@@ -122,6 +134,9 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 	opts.config.SetRefreshToken("")
 	opts.config.SetClientID("")
 	opts.config.SetClientSecret("")
+	opts.config.SetTokenExpiry("")
+	opts.config.SetAuthServerIssuer("")
+	opts.config.SetAuthServerMetadata(nil)
 	opts.config.SetProjectID("")
 	opts.config.SetOrgID("")
 
@@ -137,10 +152,12 @@ func (opts *logoutOpts) Run(ctx context.Context) error {
 }
 
 func LogoutBuilder() *cobra.Command {
-	opts := &logoutOpts{
+	return newLogoutBuilder(&logoutOpts{
 		DeleteOpts: cli.NewDeleteOpts("Successfully logged out of '%s'\n", " "),
-	}
+	})
+}
 
+func newLogoutBuilder(opts *logoutOpts) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "logout",
 		Short: "Log out of the CLI.",
@@ -151,15 +168,16 @@ func LogoutBuilder() *cobra.Command {
 			opts.OutWriter = cmd.OutOrStdout()
 			// If the profile is set in the context, use it instead of the default profile
 			profile, ok := config.ProfileFromContext(cmd.Context())
-			if ok {
-				opts.config = profile
-			} else {
-				opts.config = config.Default()
+			if !ok {
+				profile = config.Default()
 			}
+			opts.config = profile
 
 			// Only initialize OAuth flow if we have OAuth-based auth
-			if opts.config.AuthType() == config.UserAccount || opts.config.AuthType() == config.ServiceAccount {
-				return opts.initFlow(cmd.Context())
+			switch opts.config.AuthType() {
+			case config.UserAccount, config.UserAccountLegacy, config.ServiceAccount:
+				return opts.initFlow(cmd.Context(), profile)
+			case config.APIKeys, config.NoAuth:
 			}
 
 			return nil
@@ -180,7 +198,7 @@ func LogoutBuilder() *cobra.Command {
 				message = logoutMessage + " with public API key " + opts.config.PublicAPIKey() + "?"
 			case config.ServiceAccount:
 				message = logoutMessage + " with service account " + opts.config.ClientID() + "?"
-			case config.UserAccount:
+			case config.UserAccount, config.UserAccountLegacy:
 				subject, err := opts.config.AccessTokenSubject()
 				if err != nil {
 					return err

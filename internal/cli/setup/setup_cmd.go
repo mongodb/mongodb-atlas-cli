@@ -437,7 +437,7 @@ func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error 
 	return opts.PreRunE(
 		opts.initStore(ctx),
 		opts.login.SyncWithOAuthAccessProfile(defaultProfile),
-		opts.login.InitFlow(defaultProfile),
+		opts.login.InitLegacyDeviceCodeFlow(defaultProfile),
 		opts.InitOutput(outWriter, ""),
 	)
 }
@@ -582,7 +582,7 @@ func (opts *Opts) PreRun(ctx context.Context) error {
 	switch config.AuthType() {
 	case config.APIKeys, config.ServiceAccount:
 		return nil
-	case config.UserAccount:
+	case config.UserAccount, config.UserAccountLegacy:
 		if err := opts.login.RefreshAccessToken(ctx); !commonerrors.IsInvalidRefreshToken(err) {
 			return nil
 		}
@@ -673,7 +673,7 @@ func Builder() *cobra.Command {
 			if err := opts.login.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
 				return err
 			}
-			if err := opts.login.InitFlow(defaultProfile)(); err != nil {
+			if err := opts.login.InitLegacyDeviceCodeFlow(defaultProfile)(); err != nil {
 				return err
 			}
 			if err := opts.PreRun(cmd.Context()); err != nil {

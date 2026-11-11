@@ -16,7 +16,10 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/url"
+	"strings"
 
 	"github.com/mongodb/atlas-cli-core/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -24,8 +27,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasauth "go.mongodb.org/atlas/auth"
 )
+
+var errUnexpectedRegistrationURL = errors.New("unexpected registration URL")
 
 type RegisterOpts struct {
 	LoginOpts
@@ -35,12 +39,24 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	if err := opts.checkNoOtherCredentials(config.UserAccount); err != nil {
 		return err
 	}
+	opts.config.SetAuthType(config.UserAccount)
 
 	c, _, err := opts.RegistrationConfig(ctx)
 	if err != nil {
 		return err
 	}
-	if err = opts.registerFlow(ctx, c); err != nil {
+	if c == nil {
+		return errUnexpectedRegistrationURL
+	}
+	registerURL, err := accountRegisterURL(c.RegistrationURL)
+	if err != nil {
+		return err
+	}
+	if err = opts.authCodeFlow(ctx, func(authURL string) string {
+		u := *registerURL
+		u.RawQuery = url.Values{"n": {authURL}}.Encode()
+		return u.String()
+	}); err != nil {
 		return err
 	}
 
@@ -49,9 +65,6 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	if err = opts.SyncWithOAuthAccessProfile(opts.config)(); err != nil {
 		return err
 	}
-
-	// Without this, the profile has no AuthType, and the HTTP client never attaches the token.
-	opts.config.SetAuthType(config.UserAccount)
 
 	s, err := opts.config.AccessTokenSubject()
 	if err != nil {
@@ -70,35 +83,14 @@ func (opts *RegisterOpts) RegisterRun(ctx context.Context) error {
 	return opts.setUpProfile(ctx)
 }
 
-func (opts *LoginOpts) registerFlow(ctx context.Context, conf *atlasauth.RegistrationConfig) error {
-	askedToOpenBrowser := false
-	for {
-		code, _, err := opts.RequestCode(ctx)
-		code.VerificationURI = conf.RegistrationURL
-		if err != nil {
-			return err
-		}
-
-		opts.printAuthInstructions(code)
-		if !askedToOpenBrowser {
-			opts.handleBrowser(code.VerificationURI)
-			askedToOpenBrowser = true
-		}
-
-		accessToken, _, err := opts.PollToken(ctx, code)
-		if retry, errRetry := opts.shouldRetryAuthenticate(err, newRegenerationPrompt()); errRetry != nil {
-			return errRetry
-		} else if retry {
-			continue
-		}
-		if err != nil {
-			return err
-		}
-
-		opts.AccessToken = accessToken.AccessToken
-		opts.RefreshToken = accessToken.RefreshToken
-		return nil
+// accountRegisterURL keeps only the account host, since /account/register/cli is the device-code sign-up and ignores n.
+func accountRegisterURL(registrationURL string) (*url.URL, error) {
+	u, err := url.Parse(registrationURL)
+	if err != nil || u.Scheme != "https" ||
+		(!strings.HasSuffix(u.Hostname(), ".mongodb.com") && !strings.HasSuffix(u.Hostname(), ".mongodbgov.com")) {
+		return nil, fmt.Errorf("%w: %q", errUnexpectedRegistrationURL, registrationURL)
 	}
+	return &url.URL{Scheme: u.Scheme, Host: u.Host, Path: "/account/register"}, nil
 }
 
 // Asker must be set, promptOutput calls it and a nil TrackAsker panics.
@@ -124,13 +116,13 @@ func RegisterBuilder() *cobra.Command {
 			defaultProfile := config.Default()
 			return prerun.ExecuteE(
 				opts.SyncWithOAuthAccessProfile(defaultProfile),
-				opts.InitFlow(defaultProfile),
+				opts.InitLegacyDeviceCodeFlow(defaultProfile),
 				opts.LoginPreRun(cmd.Context()),
 				validate.NoAPIKeys,
 				validate.NoAccessToken)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account from the web browser and return to Atlas CLI after activation.\n")
+			_, _ = fmt.Fprintf(opts.OutWriter, "Create and verify your MongoDB Atlas account in your browser. Atlas CLI continues automatically after you sign up.\n")
 
 			return opts.RegisterRun(cmd.Context())
 		},

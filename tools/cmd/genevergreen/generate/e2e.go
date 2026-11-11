@@ -66,6 +66,11 @@ var e2eFixtureVars = map[string]map[string]string{
 	"flex_instance": {
 		"E2E_FLEX_INSTANCE_NAME": "${e2e_flex_instance_name}",
 	},
+	"cloud_dev_user_account": { //nolint:gosec // Evergreen expansion references, not credentials
+		"ATLAS_AUTH_LOGIN_E2E_USERNAME": "${atlas_auth_login_e2e_username|}",
+		"ATLAS_AUTH_LOGIN_E2E_PASSWORD": "${atlas_auth_login_e2e_password|}",
+		"E2E_PARALLEL":                  "1",
+	},
 	"kms_aws": { //nolint:gosec // Evergreen expansion references, not credentials
 		"AWS_ACCESS_KEY":        "${logs_decrypt_aws_access_key}",
 		"AWS_SECRET_ACCESS_KEY": "${logs_decrypt_aws_secret_access_key}",

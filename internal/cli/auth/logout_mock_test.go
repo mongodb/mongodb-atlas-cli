@@ -14,6 +14,7 @@ import (
 	reflect "reflect"
 
 	config "github.com/mongodb/atlas-cli-core/config"
+	code "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -459,6 +460,78 @@ func (c *MockConfigDeleterSetAccessTokenCall) DoAndReturn(f func(string)) *MockC
 	return c
 }
 
+// SetAuthServerIssuer mocks base method.
+func (m *MockConfigDeleter) SetAuthServerIssuer(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAuthServerIssuer", arg0)
+}
+
+// SetAuthServerIssuer indicates an expected call of SetAuthServerIssuer.
+func (mr *MockConfigDeleterMockRecorder) SetAuthServerIssuer(arg0 any) *MockConfigDeleterSetAuthServerIssuerCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthServerIssuer", reflect.TypeOf((*MockConfigDeleter)(nil).SetAuthServerIssuer), arg0)
+	return &MockConfigDeleterSetAuthServerIssuerCall{Call: call}
+}
+
+// MockConfigDeleterSetAuthServerIssuerCall wrap *gomock.Call
+type MockConfigDeleterSetAuthServerIssuerCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterSetAuthServerIssuerCall) Return() *MockConfigDeleterSetAuthServerIssuerCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterSetAuthServerIssuerCall) Do(f func(string)) *MockConfigDeleterSetAuthServerIssuerCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterSetAuthServerIssuerCall) DoAndReturn(f func(string)) *MockConfigDeleterSetAuthServerIssuerCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetAuthServerMetadata mocks base method.
+func (m *MockConfigDeleter) SetAuthServerMetadata(arg0 *code.AuthServerMetadata) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetAuthServerMetadata", arg0)
+}
+
+// SetAuthServerMetadata indicates an expected call of SetAuthServerMetadata.
+func (mr *MockConfigDeleterMockRecorder) SetAuthServerMetadata(arg0 any) *MockConfigDeleterSetAuthServerMetadataCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthServerMetadata", reflect.TypeOf((*MockConfigDeleter)(nil).SetAuthServerMetadata), arg0)
+	return &MockConfigDeleterSetAuthServerMetadataCall{Call: call}
+}
+
+// MockConfigDeleterSetAuthServerMetadataCall wrap *gomock.Call
+type MockConfigDeleterSetAuthServerMetadataCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterSetAuthServerMetadataCall) Return() *MockConfigDeleterSetAuthServerMetadataCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterSetAuthServerMetadataCall) Do(f func(*code.AuthServerMetadata)) *MockConfigDeleterSetAuthServerMetadataCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterSetAuthServerMetadataCall) DoAndReturn(f func(*code.AuthServerMetadata)) *MockConfigDeleterSetAuthServerMetadataCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // SetClientID mocks base method.
 func (m *MockConfigDeleter) SetClientID(arg0 string) {
 	m.ctrl.T.Helper()
@@ -707,6 +780,42 @@ func (c *MockConfigDeleterSetRefreshTokenCall) Do(f func(string)) *MockConfigDel
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockConfigDeleterSetRefreshTokenCall) DoAndReturn(f func(string)) *MockConfigDeleterSetRefreshTokenCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// SetTokenExpiry mocks base method.
+func (m *MockConfigDeleter) SetTokenExpiry(arg0 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetTokenExpiry", arg0)
+}
+
+// SetTokenExpiry indicates an expected call of SetTokenExpiry.
+func (mr *MockConfigDeleterMockRecorder) SetTokenExpiry(arg0 any) *MockConfigDeleterSetTokenExpiryCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTokenExpiry", reflect.TypeOf((*MockConfigDeleter)(nil).SetTokenExpiry), arg0)
+	return &MockConfigDeleterSetTokenExpiryCall{Call: call}
+}
+
+// MockConfigDeleterSetTokenExpiryCall wrap *gomock.Call
+type MockConfigDeleterSetTokenExpiryCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockConfigDeleterSetTokenExpiryCall) Return() *MockConfigDeleterSetTokenExpiryCall {
+	c.Call = c.Call.Return()
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockConfigDeleterSetTokenExpiryCall) Do(f func(string)) *MockConfigDeleterSetTokenExpiryCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockConfigDeleterSetTokenExpiryCall) DoAndReturn(f func(string)) *MockConfigDeleterSetTokenExpiryCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

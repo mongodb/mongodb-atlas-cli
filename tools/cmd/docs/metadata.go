@@ -3959,7 +3959,7 @@ var metadata = metadatatypes.Metadata{
 	`deleteGroupStreamsWorkspacePrivateEndpoint`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`endpointId`: {
-				Usage: `Unique identifier of the customer's VPC endpoint.`,
+				Usage: `Unique identifier of your VPC endpoint.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -8518,7 +8518,7 @@ var metadata = metadatatypes.Metadata{
 	`getGroupStreamsWorkspacePrivateEndpoint`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`endpointId`: {
-				Usage: `Unique identifier of the customer's VPC endpoint.`,
+				Usage: `Unique identifier of your VPC endpoint.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,

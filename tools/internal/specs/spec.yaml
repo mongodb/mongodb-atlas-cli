@@ -15169,6 +15169,12 @@ components:
                           title: FTS Index Audit Types
                           type: string
                         - enum:
+                            - SEARCH_AUTO_MIGRATION_ADVISORY
+                            - SEARCH_AUTO_MIGRATION_STARTED
+                            - SEARCH_AUTO_MIGRATION_FAILED
+                          title: Search Auto Migration Event Types
+                          type: string
+                        - enum:
                             - USERS_WITHOUT_MULTI_FACTOR_AUTH
                             - ENCRYPTION_AT_REST_KMS_NETWORK_ACCESS_DENIED
                             - ENCRYPTION_AT_REST_CONFIG_NO_LONGER_VALID
@@ -15438,6 +15444,12 @@ components:
                             - FTS_INDEXES_RESTORE_FAILED
                             - FTS_INDEXES_SYNONYM_MAPPING_INVALID
                           title: FTS Index Audit Types
+                          type: string
+                        - enum:
+                            - SEARCH_AUTO_MIGRATION_ADVISORY
+                            - SEARCH_AUTO_MIGRATION_STARTED
+                            - SEARCH_AUTO_MIGRATION_FAILED
+                          title: Search Auto Migration Event Types
                           type: string
                         - enum:
                             - USERS_WITHOUT_MULTI_FACTOR_AUTH
@@ -16077,6 +16089,12 @@ components:
                             - STREAMS_PRIVATE_LINK_ENDPOINT_UNUSED_SECOND_WARNING
                             - STREAMS_PRIVATE_LINK_ENDPOINT_UNUSED_DELETED
                           title: Stream Processing Private Link Endpoint Event Types
+                          type: string
+                        - enum:
+                            - SEARCH_AUTO_MIGRATION_ADVISORY
+                            - SEARCH_AUTO_MIGRATION_STARTED
+                            - SEARCH_AUTO_MIGRATION_FAILED
+                          title: Search Auto Migration Event Types
                           type: string
                     type: object
                 groupId:
@@ -20001,6 +20019,12 @@ components:
                     - STREAMS_PRIVATE_LINK_ENDPOINT_UNUSED_SECOND_WARNING
                     - STREAMS_PRIVATE_LINK_ENDPOINT_UNUSED_DELETED
                   title: Stream Processing Private Link Endpoint Event Types
+                  type: string
+                - enum:
+                    - SEARCH_AUTO_MIGRATION_ADVISORY
+                    - SEARCH_AUTO_MIGRATION_STARTED
+                    - SEARCH_AUTO_MIGRATION_FAILED
+                  title: Search Auto Migration Event Types
                   type: string
             type: object
         EventTypeForOrg:
@@ -44888,18 +44912,18 @@ components:
                     $ref: '#/components/schemas/StreamConfig'
             type: object
         StreamsWorkspacePrivateEndpointRequest:
-            description: Customer VPC endpoint to register for inbound private connectivity to Atlas Stream Processing.
+            description: VPC endpoint to register for inbound private connectivity to Atlas Stream Processing.
             properties:
                 customerDnsName:
-                    description: DNS name of the customer's VPC endpoint.
+                    description: DNS name of your VPC endpoint.
                     example: vpce-0abc123def4567890-abc123.us-east-1.vpce.amazonaws.com
                     type: string
                 id:
-                    description: Unique identifier of the customer's VPC endpoint.
+                    description: Unique identifier of your VPC endpoint.
                     example: vpce-0abc123def4567890
                     type: string
                 region:
-                    description: Human-readable label identifying the region of the customer's VPC endpoint.
+                    description: Human-readable label identifying the region of your VPC endpoint.
                     example: US_EAST_1
                     type: string
             required:
@@ -44908,28 +44932,28 @@ components:
                 - region
             type: object
         StreamsWorkspacePrivateEndpointResponse:
-            description: Customer VPC endpoint registered for inbound private connectivity to Atlas Stream Processing.
+            description: VPC endpoint registered for inbound private connectivity to Atlas Stream Processing.
             properties:
                 customerDnsName:
-                    description: DNS name of the customer's VPC endpoint.
+                    description: DNS name of your VPC endpoint.
                     example: vpce-0abc123def4567890-abc123.us-east-1.vpce.amazonaws.com
                     type: string
                 endpointServiceName:
-                    description: Name of the Atlas endpoint service the customer's VPC endpoint connects to. Absent when no endpoint service is configured for the endpoint's region.
+                    description: Name of the Atlas endpoint service your VPC endpoint connects to. Absent when no endpoint service is configured for the endpoint's region.
                     example: com.amazonaws.vpce.us-east-1.vpce-svc-0123456789abcdef0
                     readOnly: true
                     type: string
                 id:
-                    description: Unique identifier of the customer's VPC endpoint.
+                    description: Unique identifier of your VPC endpoint.
                     example: vpce-0abc123def4567890
                     type: string
                 provider:
-                    description: Cloud provider hosting the customer's VPC endpoint.
+                    description: Cloud provider hosting the VPC endpoint.
                     example: AWS
                     readOnly: true
                     type: string
                 region:
-                    description: Human-readable label identifying the region of the customer's VPC endpoint.
+                    description: Human-readable label identifying the region of your VPC endpoint.
                     example: US_EAST_1
                     type: string
                 status:
@@ -48253,7 +48277,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 15cf1bbe30084b894134449f7148174d7113f7ca
+    x-xgen-sha: 4ac90cbee72e06d01c4e6930dcf52b7fe368b215
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -73199,7 +73223,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listGroupStreamsWorkspacePrivateEndpoints
             x-xgen-operation-id-override: listWorkspacePrivateEndpoints
         post:
-            description: Registers one customer VPC endpoint for Atlas Stream Processing in the specified project.
+            description: Registers one VPC endpoint for Atlas Stream Processing in the specified project.
             operationId: createGroupStreamsWorkspacePrivateEndpoint
             parameters:
                 - $ref: '#/components/parameters/groupId'
@@ -73218,7 +73242,7 @@ paths:
                         x-xgen-preview:
                             public: "true"
                         x-xgen-version: preview
-                description: Customer VPC endpoint to register for Atlas Stream Processing.
+                description: VPC endpoint to register for Atlas Stream Processing.
                 required: true
             responses:
                 "202":
@@ -73274,7 +73298,7 @@ paths:
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
-                - description: Unique identifier of the customer's VPC endpoint.
+                - description: Unique identifier of your VPC endpoint.
                   in: path
                   name: endpointId
                   required: true
@@ -73324,7 +73348,7 @@ paths:
             parameters:
                 - $ref: '#/components/parameters/groupId'
                 - $ref: '#/components/parameters/envelope'
-                - description: Unique identifier of the customer's VPC endpoint.
+                - description: Unique identifier of your VPC endpoint.
                   in: path
                   name: endpointId
                   required: true

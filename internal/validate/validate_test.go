@@ -555,6 +555,9 @@ func TestNoOtherCredentials(t *testing.T) {
 		{name: "private api key only", saved: savedProfileStub{privateAPIKeyField: "priv"}, authType: config.ServiceAccount, wantErr: ErrAlreadyAuthenticatedAPIKeys},
 		{name: "user account then service account", saved: userAccount, authType: config.ServiceAccount, wantErr: ErrAlreadyAuthenticatedToken},
 		{name: "user account then api keys", saved: userAccount, authType: config.APIKeys, wantErr: ErrAlreadyAuthenticatedToken},
+		{name: "user account legacy relogin", saved: userAccount, authType: config.UserAccountLegacy},
+		{name: "service account then user account legacy", saved: serviceAccount, authType: config.UserAccountLegacy, wantErr: ErrAlreadyAuthenticatedSA},
+		{name: "api keys then user account legacy", saved: apiKeys, authType: config.UserAccountLegacy, wantErr: ErrAlreadyAuthenticatedAPIKeys},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

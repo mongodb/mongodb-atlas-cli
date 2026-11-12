@@ -28,9 +28,14 @@ type whoOpts struct {
 	OutWriter   io.Writer
 	authSubject string
 	authType    string
+	tokenExpiry string
 }
 
 func (opts *whoOpts) Run() error {
+	if opts.tokenExpiry != "" {
+		_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s %s (token expires %s)\n", opts.authSubject, opts.authType, opts.tokenExpiry)
+		return nil
+	}
 	_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s %s\n", opts.authSubject, opts.authType)
 
 	return nil
@@ -38,23 +43,28 @@ func (opts *whoOpts) Run() error {
 
 var ErrUnauthenticated = errors.New("not logged in with an Atlas account, Service Account or API key")
 
-func authTypeAndSubject() (string, string, error) {
+func authTypeAndSubject() (string, string, string, error) {
 	switch config.AuthType() {
 	case config.APIKeys:
-		return "key", config.PublicAPIKey(), nil
+		return "key", config.PublicAPIKey(), "", nil
 	case config.ServiceAccount:
-		return "service account", config.ClientID(), nil
-	case config.UserAccount:
+		return "service account", config.ClientID(), "", nil
+	case config.UserAccount, config.UserAccountLegacy:
 		subject, _ := config.AccessTokenSubject()
 		if subject == "" {
-			return "", "", ErrUnauthenticated
+			return "", "", "", ErrUnauthenticated
 		}
-		return "account", subject, nil
+		// token_expiry is only written by the Authorization Code flow; a legacy profile may hold a stale one.
+		var tokenExpiry string
+		if config.AuthType() == config.UserAccount {
+			tokenExpiry = config.TokenExpiry()
+		}
+		return "account", subject, tokenExpiry, nil
 	case config.NoAuth:
-		return "", "", ErrUnauthenticated
+		return "", "", "", ErrUnauthenticated
 	}
 
-	return "", "", ErrUnauthenticated
+	return "", "", "", ErrUnauthenticated
 }
 
 func WhoAmIBuilder() *cobra.Command {
@@ -71,7 +81,7 @@ func WhoAmIBuilder() *cobra.Command {
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			var err error
-			if opts.authType, opts.authSubject, err = authTypeAndSubject(); err != nil {
+			if opts.authType, opts.authSubject, opts.tokenExpiry, err = authTypeAndSubject(); err != nil {
 				return err
 			}
 

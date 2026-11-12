@@ -1,0 +1,4 @@
+# Shared cloud-dev user state can collide across PR runs; run on the waterfall only.
+fixtures:
+  - api
+  - cloud_dev_user_account

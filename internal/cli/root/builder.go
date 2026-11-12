@@ -125,6 +125,7 @@ Use the --help flag with any command for more info on that command.`,
 			if err := config.InitProfile(profile); err != nil {
 				return err
 			}
+			auth.WarnOnTokenAuthTypeMismatch(config.Default())
 
 			telemetry.StartTrackingCommand(cmd, args)
 
@@ -134,7 +135,7 @@ Use the --help flag with any command for more info on that command.`,
 				config.SetService(config.CloudService)
 			}
 
-			return prerun.ExecuteE(opts.InitFlow(config.Default()))
+			return prerun.ExecuteE(opts.InitLegacyDeviceCodeFlow(config.Default()))
 		},
 		// PersistentPostRun only runs if the command is successful
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {

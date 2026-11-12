@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/atlas-cli-core/transport"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/atlas-sdk/v20250312027/auth/code"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )
@@ -47,6 +48,25 @@ func (*testProfileProvider) Save() error            { panic("Save should not be 
 func (*testProfileProvider) ClientID() string       { panic("ClientID should not be called") }
 func (*testProfileProvider) ClientSecret() string   { panic("ClientSecret should not be called") }
 func (*testProfileProvider) OpsManagerURL() string  { panic("OpsManagerURL should not be called") }
+func (*testProfileProvider) AccessToken() string    { panic("AccessToken should not be called") }
+func (*testProfileProvider) RefreshToken() string   { panic("RefreshToken should not be called") }
+func (*testProfileProvider) SetTokenExpiry(string)  { panic("SetTokenExpiry should not be called") }
+func (*testProfileProvider) Service() string        { panic("Service should not be called") }
+func (*testProfileProvider) AuthServerIssuer() string {
+	panic("AuthServerIssuer should not be called")
+}
+func (*testProfileProvider) SetAuthServerIssuer(string) {
+	panic("SetAuthServerIssuer should not be called")
+}
+func (*testProfileProvider) FreshRefreshToken() (string, error) {
+	panic("FreshRefreshToken should not be called")
+}
+func (*testProfileProvider) AuthServerMetadata() *code.AuthServerMetadata {
+	panic("AuthServerMetadata should not be called")
+}
+func (*testProfileProvider) SetAuthServerMetadata(*code.AuthServerMetadata) {
+	panic("SetAuthServerMetadata should not be called")
+}
 
 func TestExecutorHappyPathNoLogging(t *testing.T) {
 	// Setup

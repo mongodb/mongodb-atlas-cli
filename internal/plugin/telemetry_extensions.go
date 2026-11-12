@@ -15,11 +15,19 @@
 package plugin
 
 import (
+	"slices"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
+
+// PositionalArgCommandsAnnotation holds a comma-separated list of subcommand
+// paths (relative to the plugin root command, space-separated) that take
+// positional arguments, e.g. "setup" for `atlas local setup <deployment>`.
+// Arguments following such a command are ignored when recovering the telemetry
+// command path. Set it on the cobra command that forwards to the plugin.
+const PositionalArgCommandsAnnotation = "positionalArgCommands"
 
 // TelemetryForForwardedArgs reports the real command path and flags for plugin
 // commands that disable flag parsing and forward their arguments verbatim to the
@@ -27,7 +35,7 @@ import (
 // subcommand or flags itself in that case, so they are recovered from the raw
 // arguments.
 func TelemetryForForwardedArgs(cmd *cobra.Command, args []string) telemetry.EventOpt {
-	commandPath, flags := forwardedCommandAndFlags(cmd, args)
+	commandPath, flags := forwardedCommandAndFlags(cmd, args, positionalArgCommands(cmd))
 	return func(event telemetry.Event) {
 		event.Properties["command"] = strings.ReplaceAll(commandPath, " ", "-")
 		if len(flags) > 0 {
@@ -36,30 +44,50 @@ func TelemetryForForwardedArgs(cmd *cobra.Command, args []string) telemetry.Even
 	}
 }
 
+func positionalArgCommands(cmd *cobra.Command) []string {
+	value := cmd.Annotations[PositionalArgCommandsAnnotation]
+	if value == "" {
+		return nil
+	}
+	return strings.Split(value, ",")
+}
+
 // forwardedCommandAndFlags splits the args a plugin command forwards verbatim to
 // the plugin binary into the subcommand path and the set flag names. It assumes
 // subcommands precede flags (the CLI convention); a subcommand placed after a
 // flag is not recovered. Flag values are not distinguished from subcommands, so
-// a positional argument is reported as part of the subcommand path.
-func forwardedCommandAndFlags(cmd *cobra.Command, args []string) (commandPath string, flags []string) {
+// a positional argument is reported as part of the subcommand path unless its
+// command is listed in positionalArgCommands.
+func forwardedCommandAndFlags(cmd *cobra.Command, args []string, positionalArgCommands []string) (commandPath string, flags []string) {
 	commandPath = cmd.CommandPath()
+	subPath := ""
 
-	collectingFlags := false
+	stopSubcommands := false
 	for _, arg := range args {
 		switch {
 		case arg == "--":
 			// The terminator ends both subcommands and flags.
 			return commandPath, flags
 		case strings.HasPrefix(arg, "-"):
-			collectingFlags = true
+			stopSubcommands = true
 			if name := strings.TrimLeft(arg, "-"); name != "" {
 				if i := strings.IndexByte(name, '='); i >= 0 {
 					name = name[:i]
 				}
 				flags = append(flags, name)
 			}
-		case !collectingFlags:
+		case !stopSubcommands:
+			if subPath == "" {
+				subPath = arg
+			} else {
+				subPath += " " + arg
+			}
 			commandPath += " " + arg
+			// Once a command that takes positional arguments is reached, the
+			// remaining arguments are its values, not part of the command path.
+			if slices.Contains(positionalArgCommands, subPath) {
+				stopSubcommands = true
+			}
 		}
 	}
 

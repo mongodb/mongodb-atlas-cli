@@ -139,7 +139,9 @@ func RegisterCommands(rootCmd *cobra.Command) {
 		if _, needsUpdate := firstClassPluginsNeedingUpdate[p.Name]; needsUpdate {
 			continue
 		}
-		rootCmd.AddCommand(p.GetCobraCommands()...)
+		commands := p.GetCobraCommands()
+		annotatePositionalArgCommands(p.Name, commands)
+		rootCmd.AddCommand(commands...)
 	}
 
 	rootCmd.AddCommand(getFirstClassPluginCommands(plugins)...)

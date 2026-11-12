@@ -16,6 +16,7 @@ package plugin
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
@@ -72,6 +73,19 @@ var FirstClassPlugins = []*FirstClassPlugin{
 				Description: "Manage MongoDB Atlas local instances",
 			},
 		},
+		// These local subcommands take a deployment/index name as a positional
+		// argument, so the value must not be reported as part of the command path.
+		PositionalArgCommands: []string{
+			"setup",                   // [deployment-name]
+			"connect",                 // <deployment-name>
+			"start",                   // <deployment-name>
+			"stop",                    // <deployment-name>
+			"logs",                    // <deployment-name>
+			"delete",                  // <deployment-name>
+			"search indexes create",   // [index-name]
+			"search indexes describe", // [index-id]
+			"search indexes delete",   // [index-name]
+		},
 	},
 }
 
@@ -90,6 +104,11 @@ type FirstClassPlugin struct {
 	MinVersion string
 	Github     *Github
 	Commands   []*Command
+	// PositionalArgCommands lists subcommand paths (relative to the plugin root
+	// command, space-separated) that take positional arguments, e.g. "setup" for
+	// `atlas local setup <deployment>`. Used to keep positional argument values
+	// out of the telemetry command path.
+	PositionalArgCommands []string
 }
 
 func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
@@ -211,7 +230,8 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 			Use:   firstClassPluginCommand.Name,
 			Short: firstClassPluginCommand.Description,
 			Annotations: map[string]string{
-				sourceType: FirstClassSourceType,
+				sourceType:                             FirstClassSourceType,
+				plugin.PositionalArgCommandsAnnotation: strings.Join(fcp.PositionalArgCommands, ","),
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return fcp.runFirstClassPluginCommand(cmd, args, plugins)
@@ -223,6 +243,26 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 	}
 
 	return commands
+}
+
+// annotatePositionalArgCommands records, on the cobra commands of an installed
+// first-class plugin, which subcommands take positional arguments. Installed
+// plugins are registered through the regular plugin mechanism, which does not
+// carry the first-class configuration.
+func annotatePositionalArgCommands(pluginName string, commands []*cobra.Command) {
+	for _, firstClassPlugin := range FirstClassPlugins {
+		if firstClassPlugin.Name != pluginName || len(firstClassPlugin.PositionalArgCommands) == 0 {
+			continue
+		}
+
+		value := strings.Join(firstClassPlugin.PositionalArgCommands, ",")
+		for _, cmd := range commands {
+			if cmd.Annotations == nil {
+				cmd.Annotations = map[string]string{}
+			}
+			cmd.Annotations[plugin.PositionalArgCommandsAnnotation] = value
+		}
+	}
 }
 
 func getFirstClassPluginCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {

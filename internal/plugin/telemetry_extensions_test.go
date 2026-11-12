@@ -24,7 +24,12 @@ import (
 
 func TestTelemetryForForwardedArgs(t *testing.T) {
 	rootCmd := &cobra.Command{Use: "atlas"}
-	localCmd := &cobra.Command{Use: "local"}
+	localCmd := &cobra.Command{
+		Use: "local",
+		Annotations: map[string]string{
+			PositionalArgCommandsAnnotation: "setup,deployments delete",
+		},
+	}
 	rootCmd.AddCommand(localCmd)
 
 	tests := []struct {
@@ -70,6 +75,26 @@ func TestTelemetryForForwardedArgs(t *testing.T) {
 			args:            []string{"list", "-o", "json"},
 			expectedCommand: "atlas-local-list",
 			expectedFlags:   []string{"o"},
+		},
+		{
+			// `atlas local setup mydeploymentname` -> atlas-local-setup, the
+			// positional argument (potentially PII) is not reported.
+			name:            "positional argument ignored",
+			args:            []string{"setup", "mydeploymentname"},
+			expectedCommand: "atlas-local-setup",
+			expectedFlags:   nil,
+		},
+		{
+			name:            "positional argument before flag",
+			args:            []string{"setup", "mydeploymentname", "--force"},
+			expectedCommand: "atlas-local-setup",
+			expectedFlags:   []string{"force"},
+		},
+		{
+			name:            "nested positional argument command",
+			args:            []string{"deployments", "delete", "mydeploymentname"},
+			expectedCommand: "atlas-local-deployments-delete",
+			expectedFlags:   nil,
 		},
 	}
 

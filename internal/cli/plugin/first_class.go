@@ -19,6 +19,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -192,6 +193,11 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	if err := plugin.ValidateVersion(*installedPlugin.Github, installedPlugin.Version); err != nil {
 		return err
 	}
+
+	// Flag parsing is disabled for first-class plugin commands, so cobra only
+	// sees the root command and reports no flags. Recover the real subcommand
+	// path and flags from the forwarded arguments and report them to telemetry.
+	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args))
 
 	return installedPlugin.Run(cmd, args)
 }

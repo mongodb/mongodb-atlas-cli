@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path"
@@ -167,6 +168,18 @@ type Plugin struct {
 	Github              *Github
 }
 
+// ExitError is returned when a plugin binary exits with a non-zero status. It
+// wraps the underlying *exec.ExitError (which only carries "exit status N") with
+// the stderr the binary produced, so callers can report the real failure.
+type ExitError struct {
+	*exec.ExitError
+	Stderr string
+}
+
+func (e *ExitError) Error() string { return e.ExitError.Error() }
+
+func (e *ExitError) Unwrap() error { return e.ExitError }
+
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	if err := ValidateVersion(*p.Github, p.Version); err != nil {
 		return err
@@ -174,17 +187,21 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 
 	p.setTelemetry()
 
+	// Tee the plugin's stderr so it still reaches the user while also being
+	// captured: exec.Command only surfaces "exit status N".
+	var stderr strings.Builder
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
 	execCmd := exec.CommandContext(context.Background(), binaryPath, append([]string{cmd.Use}, args...)...)
 	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
-	execCmd.Stderr = cmd.OutOrStderr()
+	execCmd.Stderr = io.MultiWriter(&stderr, cmd.OutOrStderr())
 	execCmd.Env = os.Environ()
 	if err := execCmd.Run(); err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			cmd.SilenceErrors = true
 			_, _ = log.Debugf("Silenced error: %v", exitErr)
+			return &ExitError{ExitError: exitErr, Stderr: stderr.String()}
 		}
 		return err
 	}

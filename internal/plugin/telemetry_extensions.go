@@ -22,9 +22,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// PluginErrorForTelemetry reports the full stderr of a failed plugin binary
+// ErrorForTelemetry reports the full stderr of a failed plugin binary
 // alongside the terse "exit status N" error.
-func PluginErrorForTelemetry(exitErr *ExitError) telemetry.EventOpt {
+func ErrorForTelemetry(exitErr *ExitError) telemetry.EventOpt {
 	return func(event telemetry.Event) {
 		if exitErr == nil {
 			return

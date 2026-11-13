@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"context"
 	"os/exec"
 	"runtime"
 	"testing"
@@ -25,21 +26,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPluginErrorForTelemetry(t *testing.T) {
-	if runtime.GOOS == "windows" {
+func TestErrorForTelemetry(t *testing.T) {
+	if runtime.GOOS == windowsOS {
 		t.Skip("uses a shell command to produce an *exec.ExitError")
 	}
 
 	exitErr := exitError(t, "exit 2")
 	event := telemetry.Event{Properties: map[string]any{"result": "ERROR", "error": "exit status 2"}}
-	PluginErrorForTelemetry(&ExitError{ExitError: exitErr, Stderr: "boom\nsecond line"})(event)
+	ErrorForTelemetry(&ExitError{ExitError: exitErr, Stderr: "boom\nsecond line"})(event)
 
 	assert.Equal(t, "exit status 2\nboom\nsecond line", event.Properties["error"])
 }
 
-func TestPluginErrorForTelemetry_nil(t *testing.T) {
+func TestErrorForTelemetry_nil(t *testing.T) {
 	event := telemetry.Event{Properties: map[string]any{"error": "exit status 2"}}
-	PluginErrorForTelemetry(nil)(event)
+	ErrorForTelemetry(nil)(event)
 
 	assert.Equal(t, "exit status 2", event.Properties["error"])
 }
@@ -47,7 +48,7 @@ func TestPluginErrorForTelemetry_nil(t *testing.T) {
 func exitError(t *testing.T, script string) *exec.ExitError {
 	t.Helper()
 	var exitErr *exec.ExitError
-	err := exec.Command("sh", "-c", script).Run()
+	err := exec.CommandContext(context.Background(), "sh", "-c", script).Run()
 	require.ErrorAs(t, err, &exitErr)
 
 	return exitErr

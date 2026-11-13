@@ -15,17 +15,19 @@
 package plugin
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+const windowsOS = "windows"
 
 func getTestManifest() *Manifest {
 	return &Manifest{
@@ -103,15 +105,16 @@ func Test_createPluginFromManifest_sanitizesGithubValues(t *testing.T) {
 }
 
 func TestPluginRun_wrapsExitErrorWithStderr(t *testing.T) {
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == windowsOS {
 		t.Skip("uses a shell script as the plugin binary")
 	}
 
 	dir := t.TempDir()
-	require.NoError(t, os.WriteFile(
+	require.NoError(t, afero.WriteFile(
+		afero.NewOsFs(),
 		filepath.Join(dir, "fake"),
 		[]byte("#!/bin/sh\necho 'boom: docker not running' >&2\nexit 3\n"),
-		0o755,
+		0o700,
 	))
 
 	p := &Plugin{

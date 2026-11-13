@@ -72,8 +72,6 @@ var FirstClassPlugins = []*FirstClassPlugin{
 				Description: "Manage MongoDB Atlas local instances",
 			},
 		},
-		// These local subcommands take a deployment/index name as a positional
-		// argument, so the value must not be reported as part of the command path.
 		PositionalArgCommands: []string{
 			"setup",                   // [deployment-name]
 			"connect",                 // <deployment-name>
@@ -103,10 +101,8 @@ type FirstClassPlugin struct {
 	MinVersion string
 	Github     *Github
 	Commands   []*Command
-	// PositionalArgCommands lists subcommand paths (relative to the plugin root
-	// command, space-separated) that take positional arguments, e.g. "setup" for
-	// `atlas local setup <deployment>`. Used to keep positional argument values
-	// out of the telemetry command path.
+	// PositionalArgCommands lists the subcommand paths, relative to the plugin
+	// root command, that take positional arguments, e.g. "search indexes delete".
 	PositionalArgCommands []string
 }
 
@@ -212,9 +208,9 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 		return err
 	}
 
-	// Flag parsing is disabled for first-class plugin commands, so cobra only
-	// sees the root command and reports no flags. Recover the real subcommand
-	// path and flags from the forwarded arguments and report them to telemetry.
+	// First run (install/update) must report telemetry manually. Subsequent runs
+	// take the installed-plugin path, which attaches the hook in
+	// applyFirstClassTelemetry.
 	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, fcp.PositionalArgCommands))
 
 	return installedPlugin.Run(cmd, args)
@@ -243,10 +239,9 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 	return commands
 }
 
-// applyFirstClassTelemetry makes the commands of an installed first-class plugin
-// report the forwarded subcommand path and flags to telemetry, excluding the
-// positional arguments listed for the plugin. Installed plugins are registered
-// through the regular plugin mechanism, which does not report them.
+// applyFirstClassTelemetry attaches the telemetry hook to the commands of an
+// installed first-class plugin. They are registered through the regular plugin
+// mechanism, which does not report the forwarded subcommand path and flags.
 func applyFirstClassTelemetry(pluginName string, commands []*cobra.Command) {
 	for _, firstClassPlugin := range FirstClassPlugins {
 		if firstClassPlugin.Name != pluginName {

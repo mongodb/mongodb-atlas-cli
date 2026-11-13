@@ -22,14 +22,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// TelemetryForForwardedArgs reports the real command path and flags for
-// first-class plugin commands that disable flag parsing and forward their
-// arguments verbatim to the plugin binary. cobra cannot resolve the subcommand
-// or flags itself in that case, so they are recovered from the raw arguments.
-// positionalArgCommands lists the subcommand paths (relative to the plugin root
-// command, space-separated) that take positional arguments, e.g. "setup" for
-// `atlas local setup <deployment>`; arguments following them are excluded from
-// the command path.
+// TelemetryForForwardedArgs reports the real command path and flags for a
+// first-class plugin command, recovered from the arguments it forwards verbatim
+// to the plugin binary (cobra cannot resolve them because flag parsing is
+// disabled). positionalArgCommands lists the subcommand paths that take
+// positional arguments; their arguments are excluded from the command path.
 func TelemetryForForwardedArgs(cmd *cobra.Command, args []string, positionalArgCommands []string) telemetry.EventOpt {
 	commandPath, flags := forwardedCommandAndFlags(cmd, args, positionalArgCommands)
 	return func(event telemetry.Event) {
@@ -71,8 +68,6 @@ func forwardedCommandAndFlags(cmd *cobra.Command, args []string, positionalArgCo
 				subPath += " " + arg
 			}
 			commandPath += " " + arg
-			// Once a command that takes positional arguments is reached, the
-			// remaining arguments are its values, not part of the command path.
 			if slices.Contains(positionalArgCommands, subPath) {
 				stopSubcommands = true
 			}

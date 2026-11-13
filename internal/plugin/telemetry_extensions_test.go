@@ -15,12 +15,44 @@
 package plugin
 
 import (
+	"context"
+	"os/exec"
+	"runtime"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestErrorForTelemetry(t *testing.T) {
+	if runtime.GOOS == windowsOS {
+		t.Skip("uses a shell command to produce an *exec.ExitError")
+	}
+
+	exitErr := exitError(t, "exit 2")
+	event := telemetry.Event{Properties: map[string]any{"result": "ERROR", "error": "exit status 2"}}
+	ErrorForTelemetry(&ExitError{ExitError: exitErr, Stderr: "boom\nsecond line"})(event)
+
+	assert.Equal(t, "exit status 2\nboom\nsecond line", event.Properties["error"])
+}
+
+func TestErrorForTelemetry_nil(t *testing.T) {
+	event := telemetry.Event{Properties: map[string]any{"error": "exit status 2"}}
+	ErrorForTelemetry(nil)(event)
+
+	assert.Equal(t, "exit status 2", event.Properties["error"])
+}
+
+func exitError(t *testing.T, script string) *exec.ExitError {
+	t.Helper()
+	var exitErr *exec.ExitError
+	err := exec.CommandContext(context.Background(), "sh", "-c", script).Run()
+	require.ErrorAs(t, err, &exitErr)
+
+	return exitErr
+}
 
 func TestTelemetryForForwardedArgs(t *testing.T) {
 	rootCmd := &cobra.Command{Use: "atlas"}

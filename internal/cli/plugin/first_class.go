@@ -19,6 +19,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -71,6 +72,17 @@ var FirstClassPlugins = []*FirstClassPlugin{
 				Description: "Manage MongoDB Atlas local instances",
 			},
 		},
+		PositionalArgCommands: []string{
+			"setup",                   // [deployment-name]
+			"connect",                 // <deployment-name>
+			"start",                   // <deployment-name>
+			"stop",                    // <deployment-name>
+			"logs",                    // <deployment-name>
+			"delete",                  // <deployment-name>
+			"search indexes create",   // [index-name]
+			"search indexes describe", // [index-id]
+			"search indexes delete",   // [index-name]
+		},
 	},
 }
 
@@ -89,6 +101,9 @@ type FirstClassPlugin struct {
 	MinVersion string
 	Github     *Github
 	Commands   []*Command
+	// PositionalArgCommands lists the subcommand paths, relative to the plugin
+	// root command, that take positional arguments, e.g. "search indexes delete".
+	PositionalArgCommands []string
 }
 
 func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
@@ -193,6 +208,11 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 		return err
 	}
 
+	// First run (install/update) must report telemetry manually. Subsequent runs
+	// take the installed-plugin path, which attaches the hook in
+	// applyFirstClassTelemetry.
+	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, fcp.PositionalArgCommands))
+
 	return installedPlugin.Run(cmd, args)
 }
 
@@ -217,6 +237,25 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 	}
 
 	return commands
+}
+
+// applyFirstClassTelemetry attaches the telemetry hook to the commands of an
+// installed first-class plugin. They are registered through the regular plugin
+// mechanism, which does not report the forwarded subcommand path and flags.
+func applyFirstClassTelemetry(pluginName string, commands []*cobra.Command) {
+	for _, firstClassPlugin := range FirstClassPlugins {
+		if firstClassPlugin.Name != pluginName {
+			continue
+		}
+
+		for _, cmd := range commands {
+			runE := cmd.RunE
+			cmd.RunE = func(cmd *cobra.Command, args []string) error {
+				telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, firstClassPlugin.PositionalArgCommands))
+				return runE(cmd, args)
+			}
+		}
+	}
 }
 
 func getFirstClassPluginCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {

@@ -16,7 +16,6 @@ package plugin
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
@@ -216,7 +215,7 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	// Flag parsing is disabled for first-class plugin commands, so cobra only
 	// sees the root command and reports no flags. Recover the real subcommand
 	// path and flags from the forwarded arguments and report them to telemetry.
-	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args))
+	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, fcp.PositionalArgCommands))
 
 	return installedPlugin.Run(cmd, args)
 }
@@ -230,8 +229,7 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 			Use:   firstClassPluginCommand.Name,
 			Short: firstClassPluginCommand.Description,
 			Annotations: map[string]string{
-				sourceType:                             FirstClassSourceType,
-				plugin.PositionalArgCommandsAnnotation: strings.Join(fcp.PositionalArgCommands, ","),
+				sourceType: FirstClassSourceType,
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return fcp.runFirstClassPluginCommand(cmd, args, plugins)
@@ -245,22 +243,22 @@ func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*co
 	return commands
 }
 
-// annotatePositionalArgCommands records, on the cobra commands of an installed
-// first-class plugin, which subcommands take positional arguments. Installed
-// plugins are registered through the regular plugin mechanism, which does not
-// carry the first-class configuration.
-func annotatePositionalArgCommands(pluginName string, commands []*cobra.Command) {
+// applyFirstClassTelemetry makes the commands of an installed first-class plugin
+// report the forwarded subcommand path and flags to telemetry, excluding the
+// positional arguments listed for the plugin. Installed plugins are registered
+// through the regular plugin mechanism, which does not report them.
+func applyFirstClassTelemetry(pluginName string, commands []*cobra.Command) {
 	for _, firstClassPlugin := range FirstClassPlugins {
-		if firstClassPlugin.Name != pluginName || len(firstClassPlugin.PositionalArgCommands) == 0 {
+		if firstClassPlugin.Name != pluginName {
 			continue
 		}
 
-		value := strings.Join(firstClassPlugin.PositionalArgCommands, ",")
 		for _, cmd := range commands {
-			if cmd.Annotations == nil {
-				cmd.Annotations = map[string]string{}
+			runE := cmd.RunE
+			cmd.RunE = func(cmd *cobra.Command, args []string) error {
+				telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, firstClassPlugin.PositionalArgCommands))
+				return runE(cmd, args)
 			}
-			cmd.Annotations[plugin.PositionalArgCommandsAnnotation] = value
 		}
 	}
 }

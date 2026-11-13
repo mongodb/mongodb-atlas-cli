@@ -174,11 +174,6 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 
 	p.setTelemetry()
 
-	// Flag parsing is disabled for plugin commands, so cobra only sees the root
-	// command. Recover the real subcommand path and flags from the forwarded
-	// arguments and report them to telemetry.
-	telemetry.AppendOption(TelemetryForForwardedArgs(cmd, args))
-
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
 	execCmd := exec.CommandContext(context.Background(), binaryPath, append([]string{cmd.Use}, args...)...)
 	execCmd.Stdin = cmd.InOrStdin()

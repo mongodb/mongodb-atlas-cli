@@ -22,34 +22,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// PositionalArgCommandsAnnotation holds a comma-separated list of subcommand
-// paths (relative to the plugin root command, space-separated) that take
-// positional arguments, e.g. "setup" for `atlas local setup <deployment>`.
-// Arguments following such a command are ignored when recovering the telemetry
-// command path. Set it on the cobra command that forwards to the plugin.
-const PositionalArgCommandsAnnotation = "positionalArgCommands"
-
-// TelemetryForForwardedArgs reports the real command path and flags for plugin
-// commands that disable flag parsing and forward their arguments verbatim to the
-// plugin binary (first-class and regular plugins). cobra cannot resolve the
-// subcommand or flags itself in that case, so they are recovered from the raw
-// arguments.
-func TelemetryForForwardedArgs(cmd *cobra.Command, args []string) telemetry.EventOpt {
-	commandPath, flags := forwardedCommandAndFlags(cmd, args, positionalArgCommands(cmd))
+// TelemetryForForwardedArgs reports the real command path and flags for
+// first-class plugin commands that disable flag parsing and forward their
+// arguments verbatim to the plugin binary. cobra cannot resolve the subcommand
+// or flags itself in that case, so they are recovered from the raw arguments.
+// positionalArgCommands lists the subcommand paths (relative to the plugin root
+// command, space-separated) that take positional arguments, e.g. "setup" for
+// `atlas local setup <deployment>`; arguments following them are excluded from
+// the command path.
+func TelemetryForForwardedArgs(cmd *cobra.Command, args []string, positionalArgCommands []string) telemetry.EventOpt {
+	commandPath, flags := forwardedCommandAndFlags(cmd, args, positionalArgCommands)
 	return func(event telemetry.Event) {
 		event.Properties["command"] = strings.ReplaceAll(commandPath, " ", "-")
 		if len(flags) > 0 {
 			event.Properties["flags"] = flags
 		}
 	}
-}
-
-func positionalArgCommands(cmd *cobra.Command) []string {
-	value := cmd.Annotations[PositionalArgCommandsAnnotation]
-	if value == "" {
-		return nil
-	}
-	return strings.Split(value, ",")
 }
 
 // forwardedCommandAndFlags splits the args a plugin command forwards verbatim to

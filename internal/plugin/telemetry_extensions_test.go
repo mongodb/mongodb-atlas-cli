@@ -24,13 +24,9 @@ import (
 
 func TestTelemetryForForwardedArgs(t *testing.T) {
 	rootCmd := &cobra.Command{Use: "atlas"}
-	localCmd := &cobra.Command{
-		Use: "local",
-		Annotations: map[string]string{
-			PositionalArgCommandsAnnotation: "setup,deployments delete",
-		},
-	}
+	localCmd := &cobra.Command{Use: "local"}
 	rootCmd.AddCommand(localCmd)
+	positionalArgCommands := []string{"setup", "deployments delete"}
 
 	tests := []struct {
 		name            string
@@ -101,7 +97,7 @@ func TestTelemetryForForwardedArgs(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			event := telemetry.Event{Properties: map[string]any{}}
-			TelemetryForForwardedArgs(localCmd, tt.args)(event)
+			TelemetryForForwardedArgs(localCmd, tt.args, positionalArgCommands)(event)
 
 			assert.Equal(t, tt.expectedCommand, event.Properties["command"])
 			if tt.expectedFlags == nil {

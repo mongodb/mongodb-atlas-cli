@@ -140,7 +140,7 @@ func RegisterCommands(rootCmd *cobra.Command) {
 			continue
 		}
 		commands := p.GetCobraCommands()
-		annotatePositionalArgCommands(p.Name, commands)
+		applyFirstClassTelemetry(p.Name, commands)
 		rootCmd.AddCommand(commands...)
 	}
 

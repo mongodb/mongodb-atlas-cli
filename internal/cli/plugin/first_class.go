@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
@@ -213,7 +214,17 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	// applyFirstClassTelemetry.
 	telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, fcp.PositionalArgCommands))
 
-	return installedPlugin.Run(cmd, args)
+	err = installedPlugin.Run(cmd, args)
+	trackVerbosePluginError(err)
+
+	return err
+}
+
+func trackVerbosePluginError(err error) {
+	var exitErr *plugin.ExitError
+	if errors.As(err, &exitErr) {
+		telemetry.AppendOption(plugin.ErrorForTelemetry(exitErr))
+	}
 }
 
 func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {
@@ -252,7 +263,10 @@ func applyFirstClassTelemetry(pluginName string, commands []*cobra.Command) {
 			runE := cmd.RunE
 			cmd.RunE = func(cmd *cobra.Command, args []string) error {
 				telemetry.AppendOption(plugin.TelemetryForForwardedArgs(cmd, args, firstClassPlugin.PositionalArgCommands))
-				return runE(cmd, args)
+				err := runE(cmd, args)
+				trackVerbosePluginError(err)
+
+				return err
 			}
 		}
 	}

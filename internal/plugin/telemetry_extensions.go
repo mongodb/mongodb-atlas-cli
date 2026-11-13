@@ -22,6 +22,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ErrorForTelemetry reports the full stderr of a failed plugin binary
+// alongside the terse "exit status N" error.
+func ErrorForTelemetry(exitErr *ExitError) telemetry.EventOpt {
+	return func(event telemetry.Event) {
+		if exitErr == nil {
+			return
+		}
+		event.Properties["error"] = exitErr.Error() + "\n" + exitErr.Stderr
+	}
+}
+
 // TelemetryForForwardedArgs reports the real command path and flags for a
 // first-class plugin command, recovered from the arguments it forwards verbatim
 // to the plugin binary (cobra cannot resolve them because flag parsing is

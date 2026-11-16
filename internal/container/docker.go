@@ -247,6 +247,8 @@ func runFlags(flags *RunFlags) []string {
 		}
 	}
 
+	args = append(args, flags.ExtraOptions...)
+
 	return args
 }
 

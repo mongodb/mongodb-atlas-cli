@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -53,6 +54,7 @@ import (
 
 const (
 	internalMongodPort         = 27017
+	dockerParamsEnvVar         = "MONGODB_ATLAS_LOCAL_DOCKER_PARAMS"
 	mdb70                      = "7.0"
 	mdb80                      = "8.0"
 	mdb8                       = "8"
@@ -243,7 +245,27 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	return nil
 }
 
+func parseDockerParams(params string) ([]string, error) {
+	if strings.TrimSpace(params) == "" {
+		return nil, nil
+	}
+
+	var args []string
+	if err := json.Unmarshal([]byte(params), &args); err != nil {
+		return nil, fmt.Errorf("%s must be a JSON array of strings: %w", dockerParamsEnvVar, err)
+	}
+	if args == nil {
+		return nil, fmt.Errorf("%s must be a JSON array of strings", dockerParamsEnvVar)
+	}
+	return args, nil
+}
+
 func (opts *SetupOpts) configureContainer(ctx context.Context) error {
+	dockerParams, err := parseDockerParams(os.Getenv(dockerParamsEnvVar))
+	if err != nil {
+		return err
+	}
+
 	envVars := map[string]string{
 		"TOOL": "ATLASCLI",
 	}
@@ -265,6 +287,7 @@ func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	flags.Detach = pointer.Get(true)
 	flags.Name = pointer.Get(opts.LocalMongodHostname())
 	flags.Hostname = pointer.Get(opts.LocalMongodHostname())
+	flags.ExtraOptions = dockerParams
 	flags.Env = envVars
 	flags.BindIPAll = &opts.bindIPAll
 	flags.IP = &opts.mongodIP

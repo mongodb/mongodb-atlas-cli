@@ -119,6 +119,7 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 			}
 		}
 		podmanOpts.Args = flags.Args
+		podmanOpts.ExtraOptions = flags.ExtraOptions
 		podmanOpts.EnvVars = flags.Env
 	}
 

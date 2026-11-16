@@ -16,6 +16,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"testing"
 
@@ -31,6 +32,88 @@ import (
 
 const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8"
 const dockerImageNameFallback = "docker.io/mongodb/mongodb-atlas-local:8.0"
+
+func TestParseDockerParams(t *testing.T) {
+	testCases := []struct {
+		name         string
+		params       string
+		expected     []string
+		expectsError bool
+	}{
+		{
+			name: "unset",
+		},
+		{
+			name:   "empty",
+			params: "   ",
+		},
+		{
+			name:     "container options",
+			params:   `["--ulimit","nofile=64000:64000","--label","purpose=local deployment"]`,
+			expected: []string{"--ulimit", "nofile=64000:64000", "--label", "purpose=local deployment"},
+		},
+		{
+			name:         "malformed JSON",
+			params:       `["--label","purpose=local deployment"`,
+			expectsError: true,
+		},
+		{
+			name:         "not an array",
+			params:       `"--ulimit nofile=64000:64000"`,
+			expectsError: true,
+		},
+		{
+			name:         "null",
+			params:       "null",
+			expectsError: true,
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			got, err := parseDockerParams(testCase.params)
+			if testCase.expectsError {
+				require.Error(t, err)
+				assert.ErrorContains(t, err, dockerParamsEnvVar)
+				return
+			}
+
+			require.NoError(t, err)
+			assert.Equal(t, testCase.expected, got)
+		})
+	}
+}
+
+func TestSetupOpts_configureContainer_DockerParams(t *testing.T) {
+	t.Setenv(dockerParamsEnvVar, `["--ulimit","nofile=64000:64000"]`)
+
+	ctrl := gomock.NewController(t)
+	ctx := t.Context()
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
+	opts := &SetupOpts{DeploymentOpts: *deploymentTest.Opts}
+	opts.MdbVersion = "8"
+
+	deploymentTest.MockContainerEngine.EXPECT().ImageHealthCheck(ctx, dockerImageName).Return(&container.ImageHealthCheck{
+		Test: []string{"/bin/some-path"},
+	}, nil).Times(1)
+	deploymentTest.MockContainerEngine.EXPECT().ContainerRun(ctx, dockerImageName, gomock.Any()).DoAndReturn(
+		func(_ context.Context, _ string, flags *container.RunFlags) (string, error) {
+			assert.Equal(t, []string{"--ulimit", "nofile=64000:64000"}, flags.ExtraOptions)
+			return deploymentName, nil
+		},
+	).Times(1)
+	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusHealthy, nil).Times(1)
+
+	require.NoError(t, opts.configureContainer(ctx))
+}
+
+func TestSetupOpts_configureContainer_InvalidDockerParams(t *testing.T) {
+	t.Setenv(dockerParamsEnvVar, `["--label",]`)
+
+	opts := &SetupOpts{}
+	err := opts.configureContainer(t.Context())
+	require.ErrorContains(t, err, dockerParamsEnvVar)
+}
 
 func TestSetupOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)

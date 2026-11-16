@@ -46,6 +46,7 @@ type RunContainerOpts struct {
 	Network           string
 	EnvVars           map[string]string
 	Args              []string
+	ExtraOptions      []string
 	Entrypoint        string
 	Cmd               string
 	IP                string
@@ -181,8 +182,12 @@ func (o *client) ContainerHealthStatus(ctx context.Context, name string) (string
 	return strings.TrimSpace(string(buf)), nil
 }
 
-//nolint:gocyclo
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
+	return o.runPodman(ctx, runContainerArgs(opts)...)
+}
+
+//nolint:gocyclo
+func runContainerArgs(opts RunContainerOpts) []string {
 	arg := []string{"run",
 		"--name", opts.Name,
 		"--hostname", opts.Hostname,
@@ -253,6 +258,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 		arg = append(arg, "--health-startup-retries", strconv.Itoa(*opts.HealthRetries))
 	}
 
+	arg = append(arg, opts.ExtraOptions...)
 	arg = append(arg, opts.Image)
 
 	if opts.Cmd != "" {
@@ -260,8 +266,7 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	}
 
 	arg = append(arg, opts.Args...)
-
-	return o.runPodman(ctx, arg...)
+	return arg
 }
 
 func (o *client) RunHealthcheck(ctx context.Context, name string) error {

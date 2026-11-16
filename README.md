@@ -60,6 +60,18 @@ or check our documentation for more details.
 ### Configuring Atlas CLI
 To use `atlascli`, open your terminal, run `atlas auth login`, and follow the prompted steps.
 
+### Passing additional Atlas Local container options
+
+Set `MONGODB_ATLAS_LOCAL_DOCKER_PARAMS` to pass additional container creation options when you run `atlas local setup`. The value must be a JSON array of argument strings. Atlas CLI passes each array entry directly to the selected Docker-compatible container engine without invoking a shell.
+
+For example, to set the `nofile` ulimit:
+
+```bash
+MONGODB_ATLAS_LOCAL_DOCKER_PARAMS='["--ulimit","nofile=64000:64000"]' atlas local setup
+```
+
+Use only options supported by your installed Docker or Podman version, and avoid options that conflict with settings managed by Atlas CLI, such as the container name, hostname, ports, volumes, or image. If the variable is unset or empty, Atlas CLI uses its existing container creation options.
+
 ### Shell Completions
 
 If you install via [homebrew](#hombrew-on-macos) no additional actions are needed.

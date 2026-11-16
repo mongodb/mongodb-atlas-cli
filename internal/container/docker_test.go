@@ -101,6 +101,15 @@ func TestPortMappingFlag(t *testing.T) {
 	}
 }
 
+func TestRunFlagsExtraOptions(t *testing.T) {
+	flags := &RunFlags{
+		ExtraOptions: []string{"--ulimit", "nofile=64000:64000"},
+	}
+	if diff := deep.Equal(runFlags(flags), flags.ExtraOptions); diff != nil {
+		t.Fatalf("runFlags() did not preserve extra options: %v", diff)
+	}
+}
+
 func TestParsePortMapping(t *testing.T) {
 	tests := []struct {
 		name     string

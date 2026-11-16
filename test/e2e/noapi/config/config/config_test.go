@@ -89,11 +89,9 @@ func TestConfig(t *testing.T) {
 		if _, err = c.ExpectString("Select authentication type"); err != nil {
 			t.Fatal(err)
 		}
-		if _, err := c.Send("\x1B[B"); err != nil {
-			t.Fatalf("Send(Down) = %v", err)
-		}
-		if _, err := c.Send("\x1B[B"); err != nil {
-			t.Fatalf("Send(Down) = %v", err)
+		// Filter by name instead of relying on menu order as auth types are added.
+		if _, err := c.Send("APIKeys"); err != nil {
+			t.Fatalf("Send(APIKeys) = %v", err)
 		}
 		if _, err := c.SendLine(""); err != nil {
 			t.Fatalf("SendLine() = %v", err)

@@ -15,13 +15,19 @@
 package plugin
 
 import (
+	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+const windowsOS = "windows"
 
 func getTestManifest() *Manifest {
 	return &Manifest{
@@ -96,6 +102,39 @@ func Test_createPluginFromManifest_sanitizesGithubValues(t *testing.T) {
 	require.NotNil(t, plugin.Github)
 	assert.Equal(t, "mongodb", plugin.Github.Owner)
 	assert.Equal(t, "atlas-local-cli", plugin.Github.Name)
+}
+
+func TestPluginRun_wrapsExitErrorWithStderr(t *testing.T) {
+	if runtime.GOOS == windowsOS {
+		t.Skip("uses a shell script as the plugin binary")
+	}
+
+	dir := t.TempDir()
+	require.NoError(t, afero.WriteFile(
+		afero.NewOsFs(),
+		filepath.Join(dir, "fake"),
+		[]byte("#!/bin/sh\necho 'boom: docker not running' >&2\nexit 3\n"),
+		0o700,
+	))
+
+	p := &Plugin{
+		PluginDirectoryPath: dir,
+		BinaryName:          "fake",
+		Version:             semver.MustParse("1.0.0"),
+		Github:              &Github{},
+	}
+	cmd := &cobra.Command{Use: "fake"}
+	var out strings.Builder
+	cmd.SetOut(&out)
+	cmd.SetErr(&out)
+
+	err := p.Run(cmd, nil)
+
+	var exitErr *ExitError
+	require.ErrorAs(t, err, &exitErr)
+	assert.Contains(t, exitErr.Stderr, "boom: docker not running")
+	// The user-facing message stays terse.
+	assert.Equal(t, "exit status 3", err.Error())
 }
 
 func TestPluginVersion(t *testing.T) {

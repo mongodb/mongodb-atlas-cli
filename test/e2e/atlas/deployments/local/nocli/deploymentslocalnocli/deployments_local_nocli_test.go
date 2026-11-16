@@ -139,7 +139,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		cols := strings.Fields(outputLines[1])
 		assert.Equal(t, deploymentName, cols[0])
 		assert.Equal(t, "LOCAL", cols[1])
-		assert.Contains(t, cols[2], internal.LocalDevMDBVersionPrefix)
+		assert.Contains(t, cols[2], internal.LocalDevLatestMDBVersionPrefix)
 		assert.Equal(t, "IDLE", cols[3])
 	})
 

@@ -28,6 +28,15 @@ import (
 var errConnectFailed = errors.New("failed to connect to mongodb server")
 var errPingFailed = errors.New("failed to ping mongodb server")
 
+func isSystemDatabase(dbName string) bool {
+	switch dbName {
+	case "admin", "local", "config", "__mdb_internal_search":
+		return true
+	default:
+		return false
+	}
+}
+
 //go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks -source=client.go
 
 type MongoDBClient interface {
@@ -72,6 +81,9 @@ func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*SearchInde
 
 	// We search the index in all the databases
 	for _, db := range dbs {
+		if isSystemDatabase(db) {
+			continue
+		}
 		if index, err := o.Database(db).SearchIndex(ctx, id); err == nil && index != nil {
 			return index, nil
 		}

@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312028/admin"
 )
 
 const (

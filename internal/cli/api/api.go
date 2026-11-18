@@ -271,7 +271,7 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 				}
 
 				// Wait until we're in the desired state or until an error occures when watching
-				if err := watcher.Wait(cmd.Context(), time.Duration(watchTimeout)); err != nil {
+				if err := watcher.Wait(cmd.Context(), time.Duration(watchTimeout)*time.Second); err != nil {
 					return errors.Join(ErrRunningWatcher, err)
 				}
 			}

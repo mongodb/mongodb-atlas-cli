@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
@@ -39,6 +40,35 @@ const (
 	regionGCP   = "CENTRAL_US"
 )
 
+func disablePrivateEndpointConnectionStringSelection(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	// New cloud-dev projects are opted into per-connection-string endpoint selection.
+	// Opt out through project settings before exercising the legacy regional mode.
+	cmd := exec.Command(cliPath,
+		"api",
+		"projects",
+		"updateGroupSettings",
+		"--groupId",
+		projectID,
+		"--version",
+		"preview",
+		"-P",
+		internal.ProfileName(),
+	)
+	cmd.Env = os.Environ()
+	cmd.Stdin = strings.NewReader(`{"isPrivateEndpointConnectionStringsEnabled":false}`)
+
+	resp, err := internal.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+	var settings struct {
+		IsPrivateEndpointConnectionStringsEnabled *bool `json:"isPrivateEndpointConnectionStringsEnabled"`
+	}
+	require.NoError(t, json.Unmarshal(resp, &settings), string(resp))
+	require.NotNil(t, settings.IsPrivateEndpointConnectionStringsEnabled, string(resp))
+	assert.False(t, *settings.IsPrivateEndpointConnectionStringsEnabled)
+}
+
 func TestPrivateEndpointsAWS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping test in short mode")
@@ -49,6 +79,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
+	disablePrivateEndpointConnectionStringSelection(t, cliPath, g.ProjectID)
 
 	region := regionAWS
 	var id string
@@ -181,6 +212,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
+	disablePrivateEndpointConnectionStringSelection(t, cliPath, g.ProjectID)
 
 	region := regionAzure
 	g.Logf("region=%s", region)
@@ -317,6 +349,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
+	disablePrivateEndpointConnectionStringSelection(t, cliPath, g.ProjectID)
 	var id string
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -446,6 +479,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
+	disablePrivateEndpointConnectionStringSelection(t, cliPath, g.ProjectID)
 
 	g.Run("Enable regionalized private endpoint setting", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

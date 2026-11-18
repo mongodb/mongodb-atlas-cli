@@ -66,7 +66,7 @@ func disablePrivateEndpointConnectionStringSelection(t *testing.T, cliPath, proj
 	}
 	require.NoError(t, json.Unmarshal(resp, &settings), string(resp))
 	require.NotNil(t, settings.IsPrivateEndpointConnectionStringsEnabled, string(resp))
-	assert.False(t, *settings.IsPrivateEndpointConnectionStringsEnabled)
+	require.False(t, *settings.IsPrivateEndpointConnectionStringsEnabled)
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {

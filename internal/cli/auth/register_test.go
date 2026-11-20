@@ -32,8 +32,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20250312027/admin"
-	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
+	"go.mongodb.org/atlas-sdk/v20250312028/admin"
+	authcode "go.mongodb.org/atlas-sdk/v20250312028/auth/code"
 	"go.mongodb.org/atlas/auth"
 	"go.uber.org/mock/gomock"
 )

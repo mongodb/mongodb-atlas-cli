@@ -250,7 +250,7 @@ jobs:
 
       - name: Find existing release ticket
         id: find-release
-        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND issuetype = Story AND summary ~ "AtlasCLI ${{ inputs.version }} Release" AND component = "AtlasCLI" AND "Assigned Teams" = "APIx DevTools"'
@@ -315,7 +315,7 @@ jobs:
       - name: Move release ticket to In Progress
         # Skip when the ticket is already In Progress, so a re-run is a no-op.
         if: steps.release-status.outputs.status != 'In Progress'
-        uses: mongodb/apix-action/transition-jira@653549bea47615ca90da0a1282ecee8668e31e6f
+        uses: mongodb/apix-action/transition-jira@f3946b4a0d097fbb7a6a08352264f6f85d0d4e3c
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           issue-key: ${{ steps.release-ticket.outputs.key }}
@@ -333,7 +333,7 @@ jobs:
 
       - name: Find still-open tickets on the release fix version
         id: to-move
-        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           # Key off status, not resolution: a reopened ticket keeps its last
@@ -365,7 +365,7 @@ jobs:
 
       - name: Find shipped tickets still on the rolling next fix version
         id: to-move-shipped
-        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = CLOUDP AND fixVersion = "${{ steps.meta.outputs.next-fix-version }}" AND status IN (Resolved, Closed)'
@@ -396,7 +396,7 @@ jobs:
 
       - name: Extract release notes
         id: notes
-        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           # JQL has no `!=` for summary; exclude the release ticket by key instead.
@@ -426,7 +426,7 @@ jobs:
 
       - name: Find existing release notes ticket
         id: find-notes
-        uses: mongodb/apix-action/find-jira@f7d2400a387dea2661651b14bbaf8c8f46c8bf66
+        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
         with:
           token: ${{ steps.load-secrets.outputs.JIRA_API_TOKEN }}
           jql: 'project = DOCSP AND issuetype = Task AND summary ~ "AtlasCLI ${{ inputs.version }} Release Notes"'

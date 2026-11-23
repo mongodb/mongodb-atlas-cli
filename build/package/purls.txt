@@ -73,8 +73,8 @@ pkg:golang/github.com/mgutz/ansi@v0.0.0-20200706080929-d51e80ef957d
 pkg:golang/github.com/mholt/archives@v0.1.5
 pkg:golang/github.com/mikelolasagasti/xz@v1.0.1
 pkg:golang/github.com/minio/minlz@v1.0.1
-pkg:golang/github.com/mongodb-forks/digest@v1.1.0
-pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20261105112548-6b0ce86061ed
+pkg:golang/github.com/mongodb-forks/digest@v1.2.0
+pkg:golang/github.com/mongodb/atlas-cli-core@v0.0.0-20261123172402-99f8f58570fb
 pkg:golang/github.com/montanaflynn/stats@v0.7.1
 pkg:golang/github.com/nwaples/rardecode/v2@v2.2.0
 pkg:golang/github.com/pelletier/go-toml/v2@v2.2.4
@@ -104,7 +104,7 @@ pkg:golang/github.com/zalando/go-keyring@v0.2.8
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312006@v20250312006.1.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312024@v20250312024.0.0
-pkg:golang/go.mongodb.org/atlas-sdk/v20250312027@v20250312027.1.0
+pkg:golang/go.mongodb.org/atlas-sdk/v20250312028@v20250312028.1.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0
 pkg:golang/go.mongodb.org/mongo-driver@v1.17.10
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.2.1

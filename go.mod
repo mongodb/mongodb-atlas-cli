@@ -41,7 +41,7 @@ require (
 	github.com/mattn/go-isatty v0.0.24
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20261105112548-6b0ce86061ed
+	github.com/mongodb/atlas-cli-core v0.0.0-20261123172402-99f8f58570fb
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.10
@@ -94,7 +94,6 @@ require (
 	github.com/sergi/go-diff v1.4.0 // indirect
 	go.mongodb.org/atlas-sdk/v20250312006 v20250312006.1.0 // indirect
 	go.mongodb.org/atlas-sdk/v20250312024 v20250312024.0.0 // indirect
-	go.mongodb.org/atlas-sdk/v20250312027 v20250312027.1.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/otel v1.47.0 // indirect
 	go.opentelemetry.io/otel/log v1.47.0 // indirect

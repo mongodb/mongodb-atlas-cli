@@ -41,7 +41,7 @@ require (
 	github.com/mattn/go-isatty v0.0.24
 	github.com/mholt/archives v0.1.5
 	github.com/mongodb-labs/cobra2snooty v1.19.1
-	github.com/mongodb/atlas-cli-core v0.0.0-20261105112548-6b0ce86061ed
+	github.com/mongodb/atlas-cli-core v0.0.0-20261123172402-99f8f58570fb
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.26.10
@@ -56,7 +56,7 @@ require (
 	github.com/zalando/go-keyring v0.2.8
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312027 v20250312027.1.0
+	go.mongodb.org/atlas-sdk/v20250312028 v20250312028.1.0
 	go.mongodb.org/mongo-driver v1.17.10
 	go.uber.org/mock v0.6.0
 	golang.org/x/mod v0.43.0
@@ -87,7 +87,7 @@ require (
 	github.com/icholy/gomajor v0.14.0 // indirect
 	github.com/mattn/goveralls v0.0.12 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
-	github.com/mongodb-forks/digest v1.1.0 // indirect
+	github.com/mongodb-forks/digest v1.2.0 // indirect
 	github.com/otiai10/copy v1.14.1 // indirect
 	github.com/otiai10/mint v1.6.3 // indirect
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3 // indirect

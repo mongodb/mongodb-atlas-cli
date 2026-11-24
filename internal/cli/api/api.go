@@ -453,6 +453,15 @@ func defaultAPIVersion(command shared_api.Command) (string, error) {
 		return "", ErrAPICommandsHasNoVersions
 	}
 
+	// Default to the latest stable version.
+	for i := nVersions - 1; i >= 0; i-- {
+		version := command.Versions[i].Version
+		if version.StabilityLevel() == shared_api.StabilityLevelStable {
+			return version.String(), nil
+		}
+	}
+
+	// Fall back to the latest supported version when no stable version exists.
 	lastVersion := command.Versions[nVersions-1]
 	return lastVersion.Version.String(), nil
 }

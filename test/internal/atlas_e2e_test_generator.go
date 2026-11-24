@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312027/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312028/admin"
 )
 
 // AtlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.

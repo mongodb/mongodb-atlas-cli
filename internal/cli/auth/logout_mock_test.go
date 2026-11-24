@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 
 	config "github.com/mongodb/atlas-cli-core/config"
-	code "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
+	code "go.mongodb.org/atlas-sdk/v20250312028/auth/code"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 	gomock "go.uber.org/mock/gomock"
 )

@@ -26947,6 +26947,13 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`json`,
 						},
 					},
+					{
+						Version:            shared_api.NewPreviewVersion(),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 				},
 			},
 			{

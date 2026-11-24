@@ -48387,7 +48387,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 20b5de330b11119d458d33a3c090ef0e67854225
+    x-xgen-sha: 1b4e4b5231481bf19b4ed3004a09e767be4ac36c
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -75209,6 +75209,12 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/PaginatedOrganizationView'
                             x-xgen-version: "2023-01-01"
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedOrganizationView'
+                            x-xgen-preview:
+                                name: organization-discovery
+                            x-xgen-version: preview
                     description: OK
                     headers:
                         RateLimit-Limit:

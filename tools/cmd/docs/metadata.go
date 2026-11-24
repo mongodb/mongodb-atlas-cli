@@ -1089,7 +1089,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`createGroupClusterPrivateEndpointConnectionString`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -2833,7 +2832,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`deleteGroupClusterPrivateEndpointConnectionString`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -3187,8 +3185,8 @@ var metadata = metadatatypes.Metadata{
 | x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a group identifier from the IdP's configured ` + "`" + `groupsClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `GROUP` + "`" + `. The groups claim can be a custom claim, such as ` + "`" + `roles` + "`" + `. |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a user identifier from the IdP's configured ` + "`" + `userClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `USER` + "`" + `. |
 | SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
@@ -6075,7 +6073,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`getGroupClusterPrivateEndpointConnectionString`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -6869,8 +6866,8 @@ var metadata = metadatatypes.Metadata{
 | x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a group identifier from the IdP's configured ` + "`" + `groupsClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `GROUP` + "`" + `. The groups claim can be a custom claim, such as ` + "`" + `roles` + "`" + `. |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a user identifier from the IdP's configured ` + "`" + `userClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `USER` + "`" + `. |
 | SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
@@ -10743,7 +10740,6 @@ var metadata = metadatatypes.Metadata{
 		},
 	},
 	`listGroupClusterPrivateEndpointConnectionStrings`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -15199,7 +15195,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: nil,
 	},
 	`updateGroupClusterPrivateEndpointConnectionString`: {
-		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
 				Usage: `Human-readable label that identifies the cluster.`,
@@ -15478,8 +15473,8 @@ var metadata = metadatatypes.Metadata{
 | x.509 | ` + "`" + `x509Type` + "`" + ` | ` + "`" + `MANAGED` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
 | LDAP | ` + "`" + `ldapAuthType` + "`" + ` | ` + "`" + `GROUP` + "`" + ` | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |
-| OIDC Workforce | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
-| OIDC Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `IDP_GROUP` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a group identifier from the IdP's configured ` + "`" + `groupsClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `GROUP` + "`" + `. The groups claim can be a custom claim, such as ` + "`" + `roles` + "`" + `. |
+| OIDC Workforce or Workload | ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `USER` + "`" + ` | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by a user identifier from the IdP's configured ` + "`" + `userClaim` + "`" + `. Use when the IdP's ` + "`" + `authorizationType` + "`" + ` is ` + "`" + `USER` + "`" + `. |
 | SCRAM-SHA | ` + "`" + `awsIAMType` + "`" + `, ` + "`" + `x509Type` + "`" + `, ` + "`" + `ldapAuthType` + "`" + `, ` + "`" + `oidcAuthType` + "`" + ` | ` + "`" + `NONE` + "`" + ` | Alphanumeric string |
 `,
 			},
@@ -16176,6 +16171,28 @@ var metadata = metadatatypes.Metadata{
 	},
 	`upgradeGroupClusterTenantUpgradeToServerless`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
+			},
+		},
+		Examples: nil,
+	},
+	`validateGroupClusterConfigurations`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`Use-Effective-Fields-Replication-Specs`: {
+				Usage: `Controls how ` + "`" + `replicationSpecs` + "`" + ` are interpreted for auto-sharded clusters when validating an edit. When false (default), ` + "`" + `replicationSpecs` + "`" + ` is treated as the actual cluster state.`,
+			},
+			`Use-Effective-Instance-Fields`: {
+				Usage: `When true, hardware specification fields for autoscaling-enabled clusters are resolved to their effective (current operational) values before validating an edit. When false (default), the client-specified values are validated. Set this to match the header sent on the corresponding cluster update.`,
+			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},

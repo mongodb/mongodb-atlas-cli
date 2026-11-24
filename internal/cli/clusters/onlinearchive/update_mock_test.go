@@ -12,7 +12,7 @@ package onlinearchive
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312027/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312028/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

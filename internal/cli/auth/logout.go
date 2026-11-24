@@ -30,8 +30,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312027/auth/clientcredentials"
-	authcode "go.mongodb.org/atlas-sdk/v20250312027/auth/code"
+	"go.mongodb.org/atlas-sdk/v20250312028/auth/clientcredentials"
+	authcode "go.mongodb.org/atlas-sdk/v20250312028/auth/code"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

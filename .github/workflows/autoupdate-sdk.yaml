@@ -29,7 +29,7 @@ jobs:
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: mongodb/apix-action/find-jira@f38b50029361c9af7846889f34a02512e3fff34d
+        uses: mongodb/apix-action/find-jira@ca63bdc0f33a15da45755eb6a54c072ba65d3923
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP and summary ~ "Bump Atlas GO SDK to '${{ steps.version.outputs.VERSION }}'"

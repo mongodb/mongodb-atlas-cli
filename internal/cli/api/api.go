@@ -453,6 +453,16 @@ func defaultAPIVersion(command shared_api.Command) (string, error) {
 		return "", ErrAPICommandsHasNoVersions
 	}
 
+	// Prefer the latest stable version when one is available. Preview versions are sorted last,
+	// but should not become the default when the command also supports a stable version.
+	for i := nVersions - 1; i >= 0; i-- {
+		version := command.Versions[i].Version
+		if version.StabilityLevel() == shared_api.StabilityLevelStable {
+			return version.String(), nil
+		}
+	}
+
+	// Preserve the existing fallback for commands without a stable version.
 	lastVersion := command.Versions[nVersions-1]
 	return lastVersion.Version.String(), nil
 }

@@ -574,15 +574,41 @@ func TestConvertAPIToCobraCommand(t *testing.T) {
 					{
 						Version: api.NewStableVersion(2024, 1, 1),
 					},
+					{
+						Version: api.NewPreviewVersion(),
+					},
 				},
 			},
 			expectError: false,
 			validate: func(t *testing.T, cmd *cobra.Command) {
 				t.Helper()
-				require.NotNil(t, cmd.Flag(flag.Version))
-				// Version flag should have choices for both versions
+				// Preview remains available, but should not replace the latest stable default.
 				versionFlag := cmd.Flag(flag.Version)
 				require.NotNil(t, versionFlag)
+				require.Equal(t, "2024-01-01", versionFlag.DefValue)
+			},
+		},
+		{
+			name: "command with preview-only version",
+			command: api.Command{
+				OperationID: "getServerlessInstance",
+				Description: "Returns one serverless instance from the specified project.",
+				RequestParameters: api.RequestParameters{
+					URL:  "/api/atlas/v2/groups/{groupId}/serverless/{name}",
+					Verb: "http.MethodGet",
+				},
+				Versions: []api.CommandVersion{
+					{
+						Version: api.NewPreviewVersion(),
+					},
+				},
+			},
+			expectError: false,
+			validate: func(t *testing.T, cmd *cobra.Command) {
+				t.Helper()
+				versionFlag := cmd.Flag(flag.Version)
+				require.NotNil(t, versionFlag)
+				require.Equal(t, "preview", versionFlag.DefValue)
 			},
 		},
 		{

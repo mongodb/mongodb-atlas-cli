@@ -1,0 +1,432 @@
+arazzo: 1.0.1
+
+info:
+  title: Atlas Clusters Flags
+  summary: Arazzo port of the clusters flags end-to-end test.
+  description: |
+    Recreates test/e2e/atlas/clusters/flags/clustersflags/clusters_flags_test.go
+    as a sequence of Atlas Admin API operations. The source description points
+    at the checked-in tools/internal/specs/spec.yaml, which is the same document
+    as https://github.com/mongodb/openapi/raw/refs/heads/main/openapi/v2.yaml.
+
+    The workflow creates a project,
+    discovers a region and the default MongoDB version, creates a cluster,
+    exercises sample data, list, describe,
+    connection strings, advanced settings, rolling indexes, termination
+    protection, update, delete and project cleanup.
+
+    The create and update requests use the same media types as the CLI
+    (application/vnd.atlas.2023-02-01+json). Cluster create and delete include
+    polling steps that mirror the CLI `--watch` behavior.
+  version: 1.0.0
+
+sourceDescriptions:
+  - name: atlasAdminApi
+    url: ../../../../tools/internal/specs/spec.yaml
+    type: openapi
+
+workflows:
+  - workflowId: clustersFlags
+    summary: Run the clusters flags test flow.
+    description: |
+      Mirrors the CLI end-to-end test. Requires an organization ID that the
+      authenticated principal can create projects in. Values that are constants
+      in the test are hardcoded here; the only user-supplied inputs are the
+      organization, the service target, and the random name suffix. The MongoDB
+      versions are discovered from the project versions endpoint instead of the
+      private default-version endpoint used by the Go test.
+
+      Inputs marked with x-derived are resolved by the translator before the
+      steps are evaluated: a template substitutes embedded runtime expressions,
+      and a from/values mapping selects the value for the given service, or
+      leaves the input unset when the service has no mapping. Unset derived
+      inputs are omitted from request payloads.
+
+      Steps may declare x-derived-outputs, resolved right after the step
+      executes using the same template form plus an optional transform. The
+      previousMajorVersion transform decrements the major version and keeps the
+      minor version, mirroring getPreviousMajorVersion in the Go test.
+
+      Inputs marked with x-binding declare where the generated test sources
+      them: profile-org and profile-service read the CLI profile, and random
+      generates a random suffix. Steps marked with x-cleanup are re-run
+      best-effort when the generated test finishes, attached after the latest
+      step producing their inputs so LIFO ordering releases dependent
+      resources first. Generic Arazzo runners must supply the bound and
+      derived inputs, and the derived outputs, directly.
+    inputs:
+      type: object
+      properties:
+        orgId:
+          type: string
+          description: Organization ID used to create the test project.
+          x-binding: profile-org
+        service:
+          type: string
+          enum:
+            - cloud
+            - cloudgov
+          description: Target service, mirroring the CLI profile service value.
+          x-binding: profile-service
+        rand:
+          type: string
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9-]{0,14}$
+          description: Random suffix; the project and cluster names derive from it.
+          x-binding: random
+        projectName:
+          type: string
+          description: Name of the project to create.
+          x-derived:
+            template: clustersFlags-{$inputs.rand}
+        clusterName:
+          type: string
+          description: Name of the cluster to create.
+          x-derived:
+            template: cluster-{$inputs.rand}
+        tier:
+          type: string
+          description: Cluster tier; E2eTier() returns M10 for cloud and M20 for cloudgov.
+          x-derived:
+            from: service
+            values:
+              cloud: M10
+              cloudgov: M20
+        regionUsageRestrictions:
+          type: string
+          enum:
+            - GOV_REGIONS_ONLY
+          description: Region restriction for the project; only set for the cloudgov service.
+          x-derived:
+            from: service
+            values:
+              cloudgov: GOV_REGIONS_ONLY
+      required:
+        - orgId
+        - service
+        - rand
+    steps:
+      - stepId: createProject
+        description: Create the project that owns the test cluster.
+        operationId: createGroup
+        requestBody:
+          contentType: application/vnd.atlas.2023-01-01+json
+          payload:
+            name: $inputs.projectName
+            orgId: $inputs.orgId
+            regionUsageRestrictions: $inputs.regionUsageRestrictions
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/id != null"
+        outputs:
+          projectId: "$response.body#/id"
+
+      - stepId: discoverRegion
+        description: Find an available region for the requested provider and tier.
+        operationId: listGroupClusterProviderRegions
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: providers
+            in: query
+            value:
+              - AWS
+          - name: tier
+            in: query
+            value: $inputs.tier
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/results/0/instanceSizes/0/availableRegions/0/name != null"
+        outputs:
+          region: "$response.body#/results/0/instanceSizes/0/availableRegions/0/name"
+
+      - stepId: discoverMongoDBMajorVersion
+        description: |
+          Discover the default MongoDB major version for the provider and tier.
+          Replaces the private defaultMongoDBMajorVersion endpoint used by the
+          Go test with the public project versions endpoint.
+        operationId: getGroupMongoDbVersions
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: cloudProvider
+            in: query
+            value: AWS
+          - name: instanceSize
+            in: query
+            value: $inputs.tier
+          - name: defaultStatus
+            in: query
+            value: DEFAULT
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/results/0/version != null"
+        outputs:
+          mongoDBMajorVersion: "$response.body#/results/0/version"
+        x-derived-outputs:
+          previousMongoDBMajorVersion:
+            template: "{$steps.discoverMongoDBMajorVersion.outputs.mongoDBMajorVersion}"
+            transform: previousMajorVersion
+
+      - stepId: createCluster
+        description: Create a replica set with termination protection enabled.
+        operationId: createGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+        requestBody:
+          contentType: application/vnd.atlas.2023-02-01+json
+          payload:
+            name: $inputs.clusterName
+            clusterType: REPLICASET
+            diskSizeGB: 30
+            mongoDBMajorVersion: $steps.discoverMongoDBMajorVersion.outputs.previousMongoDBMajorVersion
+            terminationProtectionEnabled: true
+            replicationSpecs:
+              - numShards: 1
+                zoneName: Zone 1
+                regionConfigs:
+                  - providerName: AWS
+                    regionName: $steps.discoverRegion.outputs.region
+                    priority: 7
+                    electableSpecs:
+                      instanceSize: $inputs.tier
+                      nodeCount: 3
+                    readOnlySpecs:
+                      instanceSize: $inputs.tier
+                      nodeCount: 0
+            tags:
+              - key: env
+                value: test
+        successCriteria:
+          - condition: $statusCode == 201
+          - condition: "$response.body#/name == $inputs.clusterName"
+          - condition: "$response.body#/mongoDBMajorVersion == $steps.discoverMongoDBMajorVersion.outputs.previousMongoDBMajorVersion"
+          - condition: "$response.body#/diskSizeGB == 30"
+          - condition: "$response.body#/terminationProtectionEnabled == true"
+        outputs:
+          clusterName: "$response.body#/name"
+
+      - stepId: waitForClusterReady
+        description: Poll the cluster until it reaches the IDLE state.
+        operationId: getGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/stateName == 'IDLE'"
+        onFailure:
+          - name: retryUntilClusterIsIdle
+            type: retry
+            retryAfter: 30
+            retryLimit: 60
+
+      - stepId: loadSampleData
+        description: Load the sample dataset into the cluster.
+        operationId: requestGroupSampleDatasetLoad
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: name
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 201
+          - condition: "$response.body#/clusterName == $inputs.clusterName"
+        outputs:
+          sampleDatasetId: "$response.body#/_id"
+
+      - stepId: listClusters
+        description: List the project clusters.
+        operationId: listGroupClusters
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: includeCount
+            in: query
+            value: true
+          - name: itemsPerPage
+            in: query
+            value: 100
+          - name: pageNum
+            in: query
+            value: 1
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/results/0/id != null"
+
+      - stepId: describeCluster
+        description: Describe the cluster.
+        operationId: getGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/name == $inputs.clusterName"
+
+      - stepId: describeConnectionString
+        description: Read the standard and SRV connection strings from the cluster description.
+        operationId: getGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/connectionStrings/standard != null"
+          - condition: "$response.body#/connectionStrings/standardSrv != null"
+
+      - stepId: updateAdvancedSettings
+        description: Set the cluster default write concern.
+        operationId: updateGroupClusterProcessArgs
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        requestBody:
+          contentType: application/vnd.atlas.2023-01-01+json
+          payload:
+            defaultWriteConcern: majority
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/defaultWriteConcern == 'majority'"
+
+      - stepId: describeAdvancedSettings
+        description: Verify the advanced configuration values.
+        operationId: getGroupClusterProcessArgs
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/defaultWriteConcern == 'majority'"
+          - condition: "$response.body#/minimumEnabledTlsProtocol != null"
+
+      - stepId: createRollingIndex
+        description: Create a rolling index on the cluster.
+        operationId: createGroupClusterIndexRollingIndex
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        requestBody:
+          contentType: application/vnd.atlas.2023-01-01+json
+          payload:
+            db: tes
+            collection: tes
+            keys:
+              - name: "1"
+            options:
+              sparse: false
+        successCriteria:
+          - condition: $statusCode == 202
+
+      - stepId: failDeleteWithTerminationProtection
+        description: |
+          Verify that deletion fails while termination protection is enabled.
+          The API returns 400 for this request.
+        operationId: deleteGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 400
+
+      - stepId: updateCluster
+        description: |
+          Update disk size, MongoDB version and disable termination protection.
+          The CLI reads the cluster and PATCHes the merged body; this step sends
+          the equivalent partial PATCH.
+        operationId: updateGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        requestBody:
+          contentType: application/vnd.atlas.2023-02-01+json
+          payload:
+            diskSizeGB: 40
+            mongoDBMajorVersion: $steps.discoverMongoDBMajorVersion.outputs.mongoDBMajorVersion
+            terminationProtectionEnabled: false
+        successCriteria:
+          - condition: $statusCode == 200
+          - condition: "$response.body#/diskSizeGB == 40"
+          - condition: "$response.body#/mongoDBMajorVersion == $steps.discoverMongoDBMajorVersion.outputs.mongoDBMajorVersion"
+          - condition: "$response.body#/terminationProtectionEnabled == false"
+
+      - stepId: deleteCluster
+        description: Delete the cluster.
+        x-cleanup: run
+        operationId: deleteGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 202
+
+      - stepId: waitForClusterDeletion
+        description: Poll until the cluster is gone.
+        operationId: getGroupCluster
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+          - name: clusterName
+            in: path
+            value: $steps.createCluster.outputs.clusterName
+        successCriteria:
+          - condition: $statusCode == 404
+        onFailure:
+          - name: retryUntilClusterIsDeleted
+            type: retry
+            retryAfter: 30
+            retryLimit: 40
+
+      - stepId: deleteProject
+        description: Delete the test project.
+        x-cleanup: retry
+        operationId: deleteGroup
+        parameters:
+          - name: groupId
+            in: path
+            value: $steps.createProject.outputs.projectId
+        successCriteria:
+          - condition: $statusCode == 204

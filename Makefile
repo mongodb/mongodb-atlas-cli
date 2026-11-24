@@ -89,7 +89,7 @@ addcopy: ## Add missing license to files
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-api-commands gen-purls ## Generate docs, mocks, code, api commands, all auto generated assets
+generate: gen-docs gen-mocks gen-api-commands gen-purls gen-arazzo-tests ## Generate docs, mocks, code, api commands, arazzo tests, all auto generated assets
 
 .PHONY: apply-overlay
 apply-overlay: ## Apply overlay on openapi spec
@@ -109,6 +109,11 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	go run ./tools/cmd/gen-mocks
+
+.PHONY: gen-arazzo-tests
+gen-arazzo-tests: ## Generate `atlas api` based tests from the Arazzo specs
+	@echo "==> Generating arazzo tests"
+	go run ./tools/cmd/arazzo-generator
 
 .PHONY: gen-docs
 gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
@@ -155,6 +160,11 @@ e2e-test: build-debug ## Run E2E tests
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ${E2E_TEST_PACKAGES} $(E2E_EXTRA_ARGS)
 	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE)
+
+.PHONY: auto-e2e-test
+auto-e2e-test: build-debug ## Run the generated `atlas api` based E2E tests
+	@echo "==> Running generated API E2E tests..."
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) ./test/e2e/auto/... $(E2E_EXTRA_ARGS)
 
 .PHONY: unit-test
 unit-test: build-debug ## Run unit-tests

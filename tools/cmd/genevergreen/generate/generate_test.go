@@ -157,15 +157,22 @@ func TestRepoTasks(t *testing.T) {
 	RepoTasks(c)
 
 	expected := make([]string, 0, len(c.Tasks))
+	expectedDeps := map[string]shrub.TaskDependency{}
 	require.Len(t, c.Variants, len(serverVersions))
 	for i, sv := range serverVersions {
+		svNoDot := strings.ReplaceAll(sv, ".", "")
 		var svTasks []string
 		for _, os := range oses {
 			if !supported(sv, newOs[os]) {
 				continue
 			}
 			for _, r := range repos {
-				svTasks = append(svTasks, "test_repo_atlascli_"+os+"_"+r+"_"+sv)
+				name := "test_repo_atlascli_" + os + "_" + r + "_" + sv
+				svTasks = append(svTasks, name)
+				expectedDeps[name] = shrub.TaskDependency{
+					Name:    "push_atlascli_" + newOs[os] + "_" + r + "_" + x86_64 + "_" + svNoDot + "_stable",
+					Variant: buildNamePrefix + svNoDot,
+				}
 			}
 		}
 		expected = append(expected, svTasks...)
@@ -176,17 +183,15 @@ func TestRepoTasks(t *testing.T) {
 
 	stable := &shrub.Configuration{}
 	PublishStableTasks(stable)
-	stableTasks := taskNames(stable)
-	stableVariants := make([]string, 0, len(stable.Variants))
+	stableByVariant := map[string][]string{}
 	for _, v := range stable.Variants {
-		stableVariants = append(stableVariants, v.BuildName)
+		stableByVariant[v.BuildName] = variantTaskNames(v)
 	}
 
 	for _, task := range c.Tasks {
-		assert.NotEmpty(t, task.Dependencies, "%s has no dependency", task.Name)
+		assert.Equal(t, []shrub.TaskDependency{expectedDeps[task.Name]}, task.Dependencies, task.Name)
 		for _, d := range task.Dependencies {
-			assert.Contains(t, stableTasks, d.Name, "%s depends on missing task", task.Name)
-			assert.Contains(t, stableVariants, d.Variant, "%s depends on missing variant", task.Name)
+			assert.Contains(t, stableByVariant[d.Variant], d.Name, "%s depends on a task missing from %s", task.Name, d.Variant)
 		}
 		for _, c := range task.Commands {
 			if c.FunctionName == "docker build repo" {

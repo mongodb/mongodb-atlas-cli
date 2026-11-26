@@ -28,7 +28,7 @@ const (
 	FirstClassSourceType = "first-class"
 	sourceType           = "sourceType"
 
-	AtlasLocalPluginMinVersion = "0.11.3"
+	AtlasLocalPluginMinVersion = "0.11.4"
 )
 
 // uncomment example plugin to test first class plugin feature.

@@ -84,3 +84,12 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_NUMBER: ${{ steps.create-report-pr.outputs.pull-request-number }}
         run: gh pr edit "$PR_NUMBER" --add-label create_jira
+      - name: Enable auto-merge
+        if: steps.create-report-pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-report-pr.outputs.pull-request-number }}
+        run: |
+          if [ "$(gh pr view "$PR_NUMBER" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]; then
+            gh pr merge "$PR_NUMBER" --auto --squash
+          fi

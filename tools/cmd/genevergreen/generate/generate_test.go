@@ -48,6 +48,21 @@ func variantTaskNames(v *shrub.Variant) []string {
 	return names
 }
 
+// commandVars returns the vars of the task's only call to fn.
+func commandVars(t *testing.T, task *shrub.Task, fn string) map[string]string {
+	t.Helper()
+	var vars []map[string]string
+	for _, c := range task.Commands {
+		if c.FunctionName == fn {
+			vars = append(vars, c.Vars)
+		}
+	}
+	if !assert.Len(t, vars, 1, "%s should call %q once", task.Name, fn) {
+		return nil
+	}
+	return vars[0]
+}
+
 // expectedPublishTasks lists one push task per repo, supported distro and architecture.
 func expectedPublishTasks(sv, suffix string) []string {
 	var names []string
@@ -144,11 +159,7 @@ func TestPostPkgMetaTasks(t *testing.T) {
 	assert.ElementsMatch(t, expected, variantTaskNames(c.Variants[0]))
 
 	for _, task := range c.Tasks {
-		for _, c := range task.Commands {
-			if c.FunctionName == "docker build meta" {
-				assert.NotEmpty(t, c.Vars["pgp_server_version"])
-			}
-		}
+		assert.NotEmpty(t, commandVars(t, task, "docker build meta")["pgp_server_version"], task.Name)
 	}
 }
 
@@ -193,11 +204,7 @@ func TestRepoTasks(t *testing.T) {
 		for _, d := range task.Dependencies {
 			assert.Contains(t, stableByVariant[d.Variant], d.Name, "%s depends on a task missing from %s", task.Name, d.Variant)
 		}
-		for _, c := range task.Commands {
-			if c.FunctionName == "docker build repo" {
-				assert.NotEmpty(t, c.Vars["pgp_server_version"])
-			}
-		}
+		assert.NotEmpty(t, commandVars(t, task, "docker build repo")["pgp_server_version"], task.Name)
 	}
 }
 

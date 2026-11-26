@@ -126,4 +126,6 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+          if [ "$(gh pr view "${{ steps.pr.outputs.pull-request-url }}" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]; then
+            gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+          fi

@@ -55,14 +55,32 @@ jobs:
           VERSION: ${{ steps.extract.outputs.version }}
           AUGMENTED_REPORT: "false"
         run: ./build/package/gen-ssdlc-report.sh
-      - name: Commit and push
+      - name: Create compliance report pull request
+        id: create-report-pr
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          committer: >-
+            ${{ steps.app-token.outputs.user-name }}
+            <${{ steps.app-token.outputs.user-email }}>
+          author: >-
+            ${{ steps.app-token.outputs.user-name }}
+            <${{ steps.app-token.outputs.user-email }}>
+          add-paths: >-
+            compliance/v${{ steps.extract.outputs.version }}/ssdlc-compliance-${{ steps.extract.outputs.version }}.md
+          base: master
+          branch: "compliance/ssdlc-report-v${{ steps.extract.outputs.version }}"
+          title: >-
+            chore(compliance): update SSDLC report for v${{ steps.extract.outputs.version }}
+          commit-message: >-
+            chore(compliance): update SSDLC report for v${{ steps.extract.outputs.version }}
+          body: >-
+            Generated the SSDLC compliance report for release
+            v${{ steps.extract.outputs.version }}. Please review and merge this PR.
+          labels: compliance
+      - name: Request Jira ticket
+        if: steps.create-report-pr.outputs.pull-request-operation == 'created'
         env:
-          APP_TOKEN_USER_NAME: ${{ steps.app-token.outputs.user-name }}
-          APP_TOKEN_USER_EMAIL: ${{ steps.app-token.outputs.user-email }}
-          VERSION: ${{ steps.extract.outputs.version }}
-        run: |
-          git config user.name "$APP_TOKEN_USER_NAME"
-          git config user.email "$APP_TOKEN_USER_EMAIL"
-          git add .
-          git commit -m "Update compliance report for v$VERSION"
-          git push
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-report-pr.outputs.pull-request-number }}
+        run: gh pr edit "$PR_NUMBER" --add-label create_jira

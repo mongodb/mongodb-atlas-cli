@@ -86,4 +86,4 @@ with it. Review and merge that PR through the normal `master` branch process.
 
 ## Automated updates
 
-The **Update SDK** and **Update API Commands** workflows open pull requests when updates are available. These PRs require normal human review and merge on `master`; the workflows do not attempt to auto-merge them.
+The **Update SDK** and **Update API Commands** workflows open pull requests with auto-merge armed. They still require normal human/CODEOWNERS approval. Once approval is granted and required checks pass, GitHub merges them automatically.

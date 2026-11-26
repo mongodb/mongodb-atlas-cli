@@ -83,7 +83,7 @@ func TestPublishSnapshotTasks(t *testing.T) {
 
 	expected := expectedPublishTasks(snapshotServerVersion, "")
 	assert.ElementsMatch(t, expected, taskNames(c))
-	require.NotEmpty(t, c.Variants)
+	assert.NotEmpty(t, c.Variants)
 	for _, v := range c.Variants {
 		assert.Equal(t, "publish_atlascli_snapshot", v.BuildName)
 		assert.ElementsMatch(t, expected, variantTaskNames(v))

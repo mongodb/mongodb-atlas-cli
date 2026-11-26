@@ -15,43 +15,120 @@
 package generate
 
 import (
+	"slices"
 	"strings"
 	"testing"
 
 	"github.com/evergreen-ci/shrub"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
 	push = "push"
 )
 
+func supported(sv, distro string) bool {
+	return !slices.Contains(unsupportedNewOsByVersion[sv], distro)
+}
+
+func taskNames(c *shrub.Configuration) []string {
+	names := make([]string, 0, len(c.Tasks))
+	for _, t := range c.Tasks {
+		names = append(names, t.Name)
+	}
+	return names
+}
+
+func variantTaskNames(v *shrub.Variant) []string {
+	names := make([]string, 0, len(v.TaskSpecs))
+	for _, s := range v.TaskSpecs {
+		names = append(names, s.Name)
+	}
+	return names
+}
+
+// commandVars returns the vars of the task's only call to fn.
+func commandVars(t *testing.T, task *shrub.Task, fn string) map[string]string {
+	t.Helper()
+	var vars []map[string]string
+	for _, c := range task.Commands {
+		if c.FunctionName == fn {
+			vars = append(vars, c.Vars)
+		}
+	}
+	if !assert.Len(t, vars, 1, "%s should call %q once", task.Name, fn) {
+		return nil
+	}
+	return vars[0]
+}
+
+// expectedPublishTasks lists one push task per repo, supported distro and architecture.
+func expectedPublishTasks(sv, suffix string) []string {
+	var names []string
+	for _, r := range repos {
+		for d, p := range distros {
+			if !supported(sv, d) {
+				continue
+			}
+			for _, a := range p.architectures {
+				names = append(names, "push_atlascli_"+d+"_"+r+"_"+a+suffix)
+			}
+		}
+	}
+	return names
+}
+
+func TestGeneratorInputs(t *testing.T) {
+	for sv, skipped := range unsupportedNewOsByVersion {
+		assert.Contains(t, serverVersions, sv)
+		for _, d := range skipped {
+			assert.Contains(t, distros, d, "unknown distro %s skipped for %s", d, sv)
+		}
+	}
+	for _, os := range oses {
+		assert.Contains(t, distros, newOs[os], "os %s has no publish distro", os)
+		assert.Contains(t, postPkgImg, os)
+	}
+}
+
 func TestPublishSnapshotTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishSnapshotTasks(c)
-	assert.Len(t, c.Tasks, 34)
+
+	expected := expectedPublishTasks(snapshotServerVersion, "")
+	assert.ElementsMatch(t, expected, taskNames(c))
+	assert.NotEmpty(t, c.Variants)
+	for _, v := range c.Variants {
+		assert.Equal(t, "publish_atlascli_snapshot", v.BuildName)
+		assert.ElementsMatch(t, expected, variantTaskNames(v))
+	}
+
 	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
-			if c.FunctionName != push {
-				continue
+			if c.FunctionName == push {
+				commandFound = true
 			}
-			commandFound = true
-			distro := c.Vars["distro"]
-			serverVersion := c.Vars["server_version"]
-			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], distro)
-			assert.NotEmpty(t, distro)
 		}
 	}
-
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 2)
 }
 
 func TestPublishStableTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PublishStableTasks(c)
 
+	expected := make([]string, 0, len(c.Tasks))
+	require.Len(t, c.Variants, len(serverVersions))
+	for i, sv := range serverVersions {
+		svTasks := expectedPublishTasks(sv, "_"+strings.ReplaceAll(sv, ".", "")+"_stable")
+		expected = append(expected, svTasks...)
+		assert.Equal(t, buildNamePrefix+strings.ReplaceAll(sv, ".", ""), c.Variants[i].BuildName)
+		assert.ElementsMatch(t, svTasks, variantTaskNames(c.Variants[i]))
+	}
+	assert.ElementsMatch(t, expected, taskNames(c))
+
 	commandFound := false
 	for _, task := range c.Tasks {
 		for _, c := range task.Commands {
@@ -59,75 +136,76 @@ func TestPublishStableTasks(t *testing.T) {
 				continue
 			}
 			commandFound = true
-			distro := c.Vars["distro"]
-			serverVersion := c.Vars["server_version"]
-			pgpServerVersion := c.Vars["pgp_server_version"]
-			assert.NotEmpty(t, pgpServerVersion)
-			// ensure unsupportedNewOs is not used
-			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], distro)
-			assert.NotEmpty(t, distro)
+			assert.NotEmpty(t, c.Vars["pgp_server_version"])
 		}
 	}
-
 	assert.True(t, commandFound, "expected to find a push command")
-	assert.Len(t, c.Variants, 6)
-	assert.Len(t, c.Tasks, 186)
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	PostPkgMetaTasks(c)
-	// validate server / distro
-	for _, task := range c.Tasks {
-		for _, c := range task.Commands {
-			if !strings.Contains(c.FunctionName, "docker build meta") {
-				continue
-			}
-			image := c.Vars["image"]
-			serverVersion := c.Vars["server_version"]
-			pgpServerVersion := c.Vars["pgp_server_version"]
-			assert.NotEmpty(t, pgpServerVersion)
-			// find the key from the image
-			for key, value := range postPkgImg {
-				if value == image {
-					assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], newOs[key])
-				}
+
+	var expected []string
+	for _, os := range oses {
+		for _, sv := range serverVersions {
+			if supported(sv, newOs[os]) {
+				expected = append(expected, "pkg_test_atlascli_meta_docker_"+sv+"_"+os)
 			}
 		}
 	}
-	assert.Len(t, c.Variants, 1)
-	assert.Len(t, c.Tasks, 44)
+	assert.ElementsMatch(t, expected, taskNames(c))
+	require.Len(t, c.Variants, 1)
+	assert.ElementsMatch(t, expected, variantTaskNames(c.Variants[0]))
 
-	names := make([]string, 0, len(c.Tasks))
 	for _, task := range c.Tasks {
-		names = append(names, task.Name)
+		assert.NotEmpty(t, commandVars(t, task, "docker build meta")["pgp_server_version"], task.Name)
 	}
-	assert.Contains(t, names, "pkg_test_atlascli_meta_docker_9.0_ubuntu26.04")
-	assert.NotContains(t, names, "pkg_test_atlascli_meta_docker_8.0_ubuntu26.04")
-	assert.NotContains(t, names, "pkg_test_atlascli_meta_docker_8.3_ubuntu26.04")
 }
 
 func TestRepoTasks(t *testing.T) {
 	c := &shrub.Configuration{}
 	RepoTasks(c)
-	// validate server / distro
-	for _, task := range c.Tasks {
-		for _, c := range task.Commands {
-			if c.FunctionName != "docker build repo" {
+
+	expected := make([]string, 0, len(c.Tasks))
+	expectedDeps := map[string]shrub.TaskDependency{}
+	require.Len(t, c.Variants, len(serverVersions))
+	for i, sv := range serverVersions {
+		svNoDot := strings.ReplaceAll(sv, ".", "")
+		var svTasks []string
+		for _, os := range oses {
+			if !supported(sv, newOs[os]) {
 				continue
 			}
-			image := c.Vars["image"]
-			serverVersion := c.Vars["server_version"]
-			pgpServerVersion := c.Vars["pgp_server_version"]
-			assert.NotEmpty(t, pgpServerVersion)
-			// ensure unsupportedNewOs is not used
-			assert.NotContains(t, unsupportedNewOsByVersion[serverVersion], image)
-			assert.NotEmpty(t, image)
+			for _, r := range repos {
+				name := "test_repo_atlascli_" + os + "_" + r + "_" + sv
+				svTasks = append(svTasks, name)
+				expectedDeps[name] = shrub.TaskDependency{
+					Name:    "push_atlascli_" + newOs[os] + "_" + r + "_" + x86_64 + "_" + svNoDot + "_stable",
+					Variant: buildNamePrefix + svNoDot,
+				}
+			}
 		}
+		expected = append(expected, svTasks...)
+		assert.Equal(t, "test_repo_atlascli_"+sv, c.Variants[i].BuildName)
+		assert.ElementsMatch(t, svTasks, variantTaskNames(c.Variants[i]))
+	}
+	assert.ElementsMatch(t, expected, taskNames(c))
+
+	stable := &shrub.Configuration{}
+	PublishStableTasks(stable)
+	stableByVariant := map[string][]string{}
+	for _, v := range stable.Variants {
+		stableByVariant[v.BuildName] = variantTaskNames(v)
 	}
 
-	assert.Len(t, c.Variants, 6)
-	assert.Len(t, c.Tasks, 88)
+	for _, task := range c.Tasks {
+		assert.Equal(t, []shrub.TaskDependency{expectedDeps[task.Name]}, task.Dependencies, task.Name)
+		for _, d := range task.Dependencies {
+			assert.Contains(t, stableByVariant[d.Variant], d.Name, "%s depends on a task missing from %s", task.Name, d.Variant)
+		}
+		assert.NotEmpty(t, commandVars(t, task, "docker build repo")["pgp_server_version"], task.Name)
+	}
 }
 
 func TestGetGpgServerVersion(t *testing.T) {

@@ -210,7 +210,10 @@ func getGpgServerVersion(serverVersion string) string {
 	return major + ".0"
 }
 
-const buildNamePrefix = "generated_release_atlascli_publish_"
+const (
+	buildNamePrefix       = "generated_release_atlascli_publish_"
+	snapshotServerVersion = "8.0"
+)
 
 func PublishStableTasks(c *shrub.Configuration) {
 	dependency := []shrub.TaskDependency{
@@ -256,7 +259,7 @@ func PublishSnapshotTasks(c *shrub.Configuration) {
 	publishVariant(
 		c,
 		v,
-		"8.0",
+		snapshotServerVersion,
 		"",
 		dependency,
 		false,

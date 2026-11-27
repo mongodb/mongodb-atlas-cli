@@ -49,7 +49,6 @@ func LoadServerMatrix(path string) (ServerMatrix, error) {
 // ParseServerMatrix decodes and validates server matrix JSON.
 func ParseServerMatrix(b []byte) (ServerMatrix, error) {
 	dec := json.NewDecoder(bytes.NewReader(b))
-	dec.DisallowUnknownFields()
 	var m ServerMatrix
 	if err := dec.Decode(&m); err != nil {
 		return nil, err

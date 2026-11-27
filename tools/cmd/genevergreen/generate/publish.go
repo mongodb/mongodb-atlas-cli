@@ -16,7 +16,6 @@ package generate
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/evergreen-ci/shrub"
@@ -104,7 +103,7 @@ func newPublishTask(taskName, extension, edition, distro, taskServerVersion, arc
 	return t
 }
 
-func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
+func publishVariant(c *shrub.Configuration, m ServerMatrix, v *shrub.Variant, sv, stableSuffix string, dependency []shrub.TaskDependency, stable bool) {
 	taskServerVersion := sv + ".0"
 	taskSv := "_" + sv
 	if !stable {
@@ -113,7 +112,7 @@ func publishVariant(c *shrub.Configuration, v *shrub.Variant, sv, stableSuffix s
 	}
 	for _, r := range repos {
 		for k, d := range distros {
-			if slices.Contains(unsupportedNewOsByVersion[sv], k) {
+			if !m.Supports(sv, k) {
 				continue
 			}
 			for _, a := range d.architectures {

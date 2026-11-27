@@ -1,0 +1,64 @@
+{
+  "6.0": [
+    "amazon2023",
+    "debian12",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "ubuntu2204"
+  ],
+  "7.0": [
+    "amazon2023",
+    "debian12",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "ubuntu2204"
+  ],
+  "8.0": [
+    "amazon2023",
+    "debian12",
+    "debian13",
+    "rhel10",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "ubuntu2204",
+    "ubuntu2404"
+  ],
+  "8.2": [
+    "amazon2023",
+    "debian12",
+    "debian13",
+    "rhel10",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "ubuntu2204",
+    "ubuntu2404"
+  ],
+  "8.3": [
+    "amazon2023",
+    "debian12",
+    "debian13",
+    "rhel10",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "ubuntu2204",
+    "ubuntu2404"
+  ],
+  "9.0": [
+    "amazon2023",
+    "debian12",
+    "debian13",
+    "rhel10",
+    "rhel80",
+    "rhel90",
+    "suse15",
+    "suse16",
+    "ubuntu2204",
+    "ubuntu2404",
+    "ubuntu2604"
+  ]
+}

@@ -16,7 +16,6 @@ package generate
 
 import (
 	"fmt"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -28,23 +27,6 @@ const (
 )
 
 var (
-	serverVersions = []string{
-		"6.0",
-		"7.0",
-		"8.0",
-		"8.2",
-		"8.3",
-		"9.0",
-	}
-
-	unsupportedNewOsByVersion = map[string][]string{
-		"8.3": {"ubuntu2604", "suse16"},
-		"8.2": {"ubuntu2604", "suse16"},
-		"8.0": {"ubuntu2604", "suse16"},
-		"7.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"}, // TODO: CLOUDP-452016
-		"6.0": {"ubuntu2404", "ubuntu2604", "suse16", "debian13", "rhel10"},
-	}
-
 	oses = []string{
 		"suse15",
 		"suse16",
@@ -92,8 +74,8 @@ func newDependency(os, serverVersion, repo string) shrub.TaskDependency {
 	}
 }
 
-func RepoTasks(c *shrub.Configuration) {
-	for _, serverVersion := range serverVersions {
+func RepoTasks(c *shrub.Configuration, m ServerMatrix) {
+	for _, serverVersion := range m.Versions() {
 		v := &shrub.Variant{
 			BuildName:        fmt.Sprintf("test_repo_atlascli_%v", serverVersion),
 			BuildDisplayName: fmt.Sprintf("Test atlascli on repo %v", serverVersion),
@@ -109,7 +91,7 @@ func RepoTasks(c *shrub.Configuration) {
 				if repo == "org" {
 					mongoRepo = "https://repo.mongodb.org"
 				}
-				if slices.Contains(unsupportedNewOsByVersion[serverVersion], newOs[os]) {
+				if !m.Supports(serverVersion, newOs[os]) {
 					continue
 				}
 				t := &shrub.Task{
@@ -165,7 +147,7 @@ func PostPkgTasks(c *shrub.Configuration) {
 	c.Variants = append(c.Variants, v)
 }
 
-func PostPkgMetaTasks(c *shrub.Configuration) {
+func PostPkgMetaTasks(c *shrub.Configuration, m ServerMatrix) {
 	v := &shrub.Variant{
 		BuildName:        "pkg_smoke_tests_docker_meta_atlascli_generated",
 		BuildDisplayName: "Generated post packaging smoke tests (Meta / atlascli)",
@@ -173,8 +155,8 @@ func PostPkgMetaTasks(c *shrub.Configuration) {
 	}
 
 	for _, os := range oses {
-		for _, sv := range serverVersions {
-			if slices.Contains(unsupportedNewOsByVersion[sv], newOs[os]) {
+		for _, sv := range m.Versions() {
+			if !m.Supports(sv, newOs[os]) {
 				continue
 			}
 
@@ -215,7 +197,7 @@ const (
 	snapshotServerVersion = "8.0"
 )
 
-func PublishStableTasks(c *shrub.Configuration) {
+func PublishStableTasks(c *shrub.Configuration, m ServerMatrix) {
 	dependency := []shrub.TaskDependency{
 		{
 			Name:    "compile",
@@ -227,7 +209,7 @@ func PublishStableTasks(c *shrub.Configuration) {
 		},
 	}
 
-	for _, sv := range serverVersions {
+	for _, sv := range m.Versions() {
 		v := &shrub.Variant{
 			BuildName:        buildNamePrefix + strings.ReplaceAll(sv, ".", ""),
 			BuildDisplayName: "Publish atlascli yum/apt " + sv,
@@ -235,6 +217,7 @@ func PublishStableTasks(c *shrub.Configuration) {
 		}
 		publishVariant(
 			c,
+			m,
 			v,
 			sv,
 			"_stable",
@@ -244,7 +227,10 @@ func PublishStableTasks(c *shrub.Configuration) {
 	}
 }
 
-func PublishSnapshotTasks(c *shrub.Configuration) {
+func PublishSnapshotTasks(c *shrub.Configuration, m ServerMatrix) error {
+	if _, ok := m[snapshotServerVersion]; !ok {
+		return fmt.Errorf("server matrix has no snapshot version %s", snapshotServerVersion)
+	}
 	dependency := []shrub.TaskDependency{
 		{
 			Name:    "compile",
@@ -258,10 +244,12 @@ func PublishSnapshotTasks(c *shrub.Configuration) {
 	v := c.Variant("publish_atlascli_snapshot")
 	publishVariant(
 		c,
+		m,
 		v,
 		snapshotServerVersion,
 		"",
 		dependency,
 		false,
 	)
+	return nil
 }

@@ -81,4 +81,10 @@ Papertrail runs to record detailed metadata about the release for improved trace
 
 #### Step 6: Compliance Reporting
 
-A GitHub workflow generates a compliance report after the release and opens a PR with the report.
+A GitHub workflow generates a compliance report after the release and opens a PR
+with it. Auto-merge is armed, and GitHub merges it after a reviewer approves and
+required checks pass.
+
+## Automated updates
+
+The **Update SDK** and **Update API Commands** workflows open pull requests with auto-merge armed. They still require normal human/CODEOWNERS approval. Once approval is granted and required checks pass, GitHub merges them automatically.

@@ -114,7 +114,7 @@ jobs:
           echo "Changes to purls.txt:"
           if git diff --exit-code build/package/purls.txt; then
             echo "No changes to purls.txt"
-          else 
+          else
             git config --global user.name "${{ steps.app-token.outputs.user-name }}"
             git config --global user.email "${{ steps.app-token.outputs.user-email }}"
             git add build/package/purls.txt
@@ -126,4 +126,6 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+          if [ "$(gh pr view "${{ steps.pr.outputs.pull-request-url }}" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]; then
+            gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash
+          fi

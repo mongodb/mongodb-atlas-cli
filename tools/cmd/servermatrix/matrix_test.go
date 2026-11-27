@@ -20,6 +20,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/cmd/genevergreen/generate"
@@ -152,6 +153,9 @@ func TestParseExceptionsRejects(t *testing.T) {
 		"missing jira":   `- {version: "8.2", distro: debian13, action: add}`,
 		"invalid jira":   `- {version: "8.2", distro: debian13, action: add, jira: cloudp-1}`,
 		"unknown field":  `- {version: "8.2", distro: debian13, action: add, jira: CLOUDP-1, reason: x}`,
+		"second document": `- {version: "8.2", distro: debian13, action: add, jira: CLOUDP-1}
+---
+- {version: "7.0", distro: rhel10, action: remove, jira: CLOUDP-2}`,
 		"duplicate": `- {version: "8.2", distro: debian13, action: add, jira: CLOUDP-1}
 - {version: "8.2", distro: debian13, action: remove, jira: CLOUDP-2}`,
 	}
@@ -168,6 +172,18 @@ func TestFetchFeedNotFound(t *testing.T) {
 	defer srv.Close()
 	_, err := fetchFeed(t.Context(), srv.URL)
 	require.ErrorContains(t, err, "404")
+}
+
+func TestMarshalMatrixOrdersVersionsNumerically(t *testing.T) {
+	m := generate.ServerMatrix{"10.0": {"rhel80"}, "9.0": {"debian12", "rhel80"}}
+	out, err := marshalMatrix(m)
+	require.NoError(t, err)
+	s := string(out)
+	assert.Less(t, strings.Index(s, `"9.0"`), strings.Index(s, `"10.0"`))
+
+	parsed, err := generate.ParseServerMatrix(out)
+	require.NoError(t, err)
+	assert.Equal(t, m, parsed)
 }
 
 func TestCommittedExceptionsAreValid(t *testing.T) {

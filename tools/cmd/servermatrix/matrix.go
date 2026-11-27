@@ -272,6 +272,9 @@ func parseExceptions(b []byte) ([]exception, error) {
 	if err := dec.Decode(&exceptions); err != nil && !errors.Is(err, io.EOF) {
 		return nil, err
 	}
+	if err := dec.Decode(&struct{}{}); !errors.Is(err, io.EOF) {
+		return nil, errors.New("exceptions must be a single YAML document")
+	}
 	publish := generate.PublishDistros()
 	seen := map[pair]bool{}
 	for _, e := range exceptions {
@@ -303,10 +306,28 @@ func comparePairs(a, b pair) int {
 	return cmp.Compare(a.Distro, b.Distro)
 }
 
+// marshalMatrix writes versions oldest first, so 10.0 sorts after 9.0.
 func marshalMatrix(m generate.ServerMatrix) ([]byte, error) {
-	b, err := json.MarshalIndent(m, "", "  ")
-	if err != nil {
-		return nil, err
+	var b bytes.Buffer
+	b.WriteString("{\n")
+	for i, sv := range m.Versions() {
+		key, err := json.Marshal(sv)
+		if err != nil {
+			return nil, err
+		}
+		ds, err := json.MarshalIndent(m[sv], "  ", "  ")
+		if err != nil {
+			return nil, err
+		}
+		b.WriteString("  ")
+		b.Write(key)
+		b.WriteString(": ")
+		b.Write(ds)
+		if i < len(m)-1 {
+			b.WriteByte(',')
+		}
+		b.WriteByte('\n')
 	}
-	return append(b, '\n'), nil
+	b.WriteString("}\n")
+	return b.Bytes(), nil
 }

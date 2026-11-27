@@ -1,0 +1,99 @@
+{
+	"tasks": [
+		{
+			"name": "pkg_test_atlascli_meta_docker_8.0_centos8",
+			"depends_on": [
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build meta",
+					"vars": {
+						"image": "centos8-rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0"
+					}
+				}
+			]
+		},
+		{
+			"name": "pkg_test_atlascli_meta_docker_99.0_centos8",
+			"depends_on": [
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build meta",
+					"vars": {
+						"image": "centos8-rpm",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			]
+		},
+		{
+			"name": "pkg_test_atlascli_meta_docker_99.0_debian12",
+			"depends_on": [
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build meta",
+					"vars": {
+						"image": "debian12-deb",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			]
+		}
+	],
+	"buildvariants": [
+		{
+			"name": "pkg_smoke_tests_docker_meta_atlascli_generated",
+			"display_name": "Generated post packaging smoke tests (Meta / atlascli)",
+			"tasks": [
+				{
+					"name": "pkg_test_atlascli_meta_docker_8.0_centos8"
+				},
+				{
+					"name": "pkg_test_atlascli_meta_docker_99.0_centos8"
+				},
+				{
+					"name": "pkg_test_atlascli_meta_docker_99.0_debian12"
+				}
+			],
+			"run_on": [
+				"ubuntu2204-small"
+			]
+		}
+	]
+}

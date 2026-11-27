@@ -30,6 +30,13 @@ var (
 	ErrMissingOption = errors.New("missing option")
 )
 
+const (
+	taskRepo     = "repo"
+	taskPostPkg  = "postpkg"
+	taskSnapshot = "snapshot"
+	taskPublish  = "publish"
+)
+
 func run() error {
 	var taskType string
 	var variant string
@@ -39,6 +46,7 @@ func run() error {
 	var requireFixtures string
 	var exclude string
 	var profile string
+	var serverMatrix string
 
 	flag.StringVar(&taskType, "tasks", "", "type of task to be generated")
 	flag.StringVar(&variant, "variant", "", "e2e: variant to append generated tasks to")
@@ -48,6 +56,7 @@ func run() error {
 	flag.StringVar(&requireFixtures, "require-fixtures", "", "e2e: comma-separated fixtures a package must declare to be selected")
 	flag.StringVar(&exclude, "exclude", "", "e2e: comma-separated fixtures to exclude")
 	flag.StringVar(&profile, "profile", "", "e2e: E2E_PROFILE_NAME to set on generated tasks")
+	flag.StringVar(&serverMatrix, "server-matrix", "build/ci/server-matrix.json", "repo, postpkg, snapshot, publish: path to the server matrix")
 
 	flag.Parse()
 
@@ -57,16 +66,27 @@ func run() error {
 
 	c := &shrub.Configuration{}
 
+	var m generate.ServerMatrix
 	switch taskType {
-	case "repo":
-		generate.RepoTasks(c)
-	case "postpkg":
+	case taskRepo, taskPostPkg, taskSnapshot, taskPublish:
+		var err error
+		if m, err = generate.LoadServerMatrix(serverMatrix); err != nil {
+			return err
+		}
+	}
+
+	switch taskType {
+	case taskRepo:
+		generate.RepoTasks(c, m)
+	case taskPostPkg:
 		generate.PostPkgTasks(c)
-		generate.PostPkgMetaTasks(c)
-	case "snapshot":
-		generate.PublishSnapshotTasks(c)
-	case "publish":
-		generate.PublishStableTasks(c)
+		generate.PostPkgMetaTasks(c, m)
+	case taskSnapshot:
+		if err := generate.PublishSnapshotTasks(c, m); err != nil {
+			return err
+		}
+	case taskPublish:
+		generate.PublishStableTasks(c, m)
 	case "e2e":
 		if variant == "" {
 			return fmt.Errorf("%w: %s", ErrMissingOption, "variant")

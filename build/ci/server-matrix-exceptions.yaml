@@ -1,0 +1,10 @@
+# Version and distro pairs where Atlas CLI deliberately differs from the Server release feed.
+# Read by tools/cmd/servermatrix. Every entry needs a Jira ticket.
+- {version: "6.0", distro: amazon2023, action: add, jira: CLOUDP-248342}
+- {version: "6.0", distro: debian12, action: add, jira: CLOUDP-203246}
+# 7.0 signing key uses SHA-1, see CLOUDP-452016.
+- {version: "7.0", distro: rhel10, action: remove, jira: CLOUDP-452014}
+- {version: "8.0", distro: debian13, action: add, jira: CLOUDP-415313}
+- {version: "8.2", distro: debian13, action: add, jira: CLOUDP-415313}
+- {version: "8.2", distro: rhel10, action: add, jira: CLOUDP-415314}
+- {version: "8.3", distro: debian13, action: add, jira: CLOUDP-450255}

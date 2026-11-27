@@ -1,0 +1,180 @@
+{
+	"tasks": [
+		{
+			"name": "push_atlascli_rhel80_enterprise_aarch64",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0-rc1"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": false,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_enterprise_x86_64",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0-rc1"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": false,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_aarch64",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0-rc1"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": false,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_x86_64",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "goreleaser_atlascli_snapshot"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0-rc1"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": false,
+			"stepback": false
+		}
+	],
+	"buildvariants": [
+		{
+			"name": "publish_atlascli_snapshot",
+			"tasks": [
+				{
+					"name": "push_atlascli_rhel80_enterprise_aarch64"
+				},
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_aarch64"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_x86_64"
+				}
+			]
+		},
+		{
+			"name": "publish_atlascli_snapshot",
+			"tasks": [
+				{
+					"name": "push_atlascli_rhel80_enterprise_aarch64"
+				},
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_aarch64"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_x86_64"
+				}
+			]
+		}
+	]
+}

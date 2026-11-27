@@ -1,0 +1,63 @@
+{
+  "versions": [
+    {
+      "version": "10.0.0",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "amazon2023"},
+        {"arch": "x86_64", "target": "rhel9"},
+        {"arch": "x86_64", "target": "windows"}
+      ]
+    },
+    {
+      "version": "9.0.2",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "debian13"},
+        {"arch": "x86_64", "target": "newos1"},
+        {"arch": "s390x", "target": "newos2"}
+      ]
+    },
+    {
+      "version": "9.0.1",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "rhel8"},
+        {"arch": "aarch64", "target": "rhel93"},
+        {"arch": "x86_64", "target": "debian12"},
+        {"arch": "x86_64", "target": "macos"},
+        {"arch": "arm64", "target": "macos"}
+      ]
+    },
+    {
+      "version": "9.0.0-rc0",
+      "production_release": false,
+      "downloads": [
+        {"arch": "x86_64", "target": "ubuntu2604"}
+      ]
+    },
+    {
+      "version": "8.1.0",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "ubuntu2404"}
+      ]
+    },
+    {
+      "version": "8.0.5",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "rhel10"},
+        {"arch": "aarch64", "target": "rhel82"},
+        {"arch": "x86_64", "target": "ubuntu2004"}
+      ]
+    },
+    {
+      "version": "7.0.3",
+      "production_release": true,
+      "downloads": [
+        {"arch": "x86_64", "target": "rhel80"}
+      ]
+    }
+  ]
+}

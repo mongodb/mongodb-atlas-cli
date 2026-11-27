@@ -1,0 +1,480 @@
+{
+	"tasks": [
+		{
+			"name": "push_atlascli_debian12_enterprise_arm64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "arm64",
+						"distro": "debian12",
+						"edition": "enterprise",
+						"ext": "deb",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_debian12_enterprise_x86_64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "debian12",
+						"edition": "enterprise",
+						"ext": "deb",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_debian12_org_arm64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "arm64",
+						"distro": "debian12",
+						"edition": "org",
+						"ext": "deb",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_debian12_org_x86_64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "debian12",
+						"edition": "org",
+						"ext": "deb",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_enterprise_aarch64_80_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_enterprise_aarch64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_enterprise_x86_64_80_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_enterprise_x86_64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "enterprise",
+						"ext": "rpm",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_aarch64_80_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_aarch64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "aarch64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_x86_64_80_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "push_atlascli_rhel80_org_x86_64_990_stable",
+			"depends_on": [
+				{
+					"name": "compile",
+					"variant": "code_health"
+				},
+				{
+					"name": "package_goreleaser",
+					"variant": "release_atlascli_github"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "install curator"
+				},
+				{
+					"func": "push",
+					"vars": {
+						"arch": "x86_64",
+						"distro": "rhel80",
+						"edition": "org",
+						"ext": "rpm",
+						"pgp_server_version": "99",
+						"server_version": "99.0.0"
+					}
+				}
+			],
+			"patchable": true,
+			"git_tag_only": true,
+			"stepback": false
+		}
+	],
+	"buildvariants": [
+		{
+			"name": "generated_release_atlascli_publish_80",
+			"display_name": "Publish atlascli yum/apt 8.0",
+			"tasks": [
+				{
+					"name": "push_atlascli_rhel80_enterprise_aarch64_80_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64_80_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_aarch64_80_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_x86_64_80_stable"
+				}
+			],
+			"run_on": [
+				"rhel80-small"
+			]
+		},
+		{
+			"name": "generated_release_atlascli_publish_990",
+			"display_name": "Publish atlascli yum/apt 99.0",
+			"tasks": [
+				{
+					"name": "push_atlascli_debian12_enterprise_arm64_990_stable"
+				},
+				{
+					"name": "push_atlascli_debian12_enterprise_x86_64_990_stable"
+				},
+				{
+					"name": "push_atlascli_debian12_org_arm64_990_stable"
+				},
+				{
+					"name": "push_atlascli_debian12_org_x86_64_990_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_enterprise_aarch64_990_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64_990_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_aarch64_990_stable"
+				},
+				{
+					"name": "push_atlascli_rhel80_org_x86_64_990_stable"
+				}
+			],
+			"run_on": [
+				"rhel80-small"
+			]
+		}
+	]
+}

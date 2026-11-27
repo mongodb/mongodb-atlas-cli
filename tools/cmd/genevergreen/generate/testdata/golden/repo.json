@@ -1,0 +1,228 @@
+{
+	"tasks": [
+		{
+			"name": "test_repo_atlascli_centos8_enterprise_8.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64_80_stable",
+					"variant": "generated_release_atlascli_publish_80"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "centos8",
+						"mongo_package": "mongodb-enterprise",
+						"mongo_repo": "https://repo.mongodb.com",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "test_repo_atlascli_centos8_enterprise_99.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_rhel80_enterprise_x86_64_990_stable",
+					"variant": "generated_release_atlascli_publish_990"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "centos8",
+						"mongo_package": "mongodb-enterprise",
+						"mongo_repo": "https://repo.mongodb.com",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "test_repo_atlascli_centos8_org_8.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_rhel80_org_x86_64_80_stable",
+					"variant": "generated_release_atlascli_publish_80"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "centos8",
+						"mongo_package": "mongodb-org",
+						"mongo_repo": "https://repo.mongodb.org",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "8.0",
+						"server_version": "8.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "test_repo_atlascli_centos8_org_99.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_rhel80_org_x86_64_990_stable",
+					"variant": "generated_release_atlascli_publish_990"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "centos8",
+						"mongo_package": "mongodb-org",
+						"mongo_repo": "https://repo.mongodb.org",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "test_repo_atlascli_debian12_enterprise_99.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_debian12_enterprise_x86_64_990_stable",
+					"variant": "generated_release_atlascli_publish_990"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "debian12",
+						"mongo_package": "mongodb-enterprise",
+						"mongo_repo": "https://repo.mongodb.com",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		},
+		{
+			"name": "test_repo_atlascli_debian12_org_99.0",
+			"depends_on": [
+				{
+					"name": "push_atlascli_debian12_org_x86_64_990_stable",
+					"variant": "generated_release_atlascli_publish_990"
+				}
+			],
+			"commands": [
+				{
+					"func": "clone"
+				},
+				{
+					"func": "authenticate to ecr"
+				},
+				{
+					"func": "docker build repo",
+					"vars": {
+						"entrypoint": "atlas",
+						"image": "debian12",
+						"mongo_package": "mongodb-org",
+						"mongo_repo": "https://repo.mongodb.org",
+						"package": "mongodb-atlas-cli",
+						"pgp_server_version": "99",
+						"server_version": "99.0"
+					}
+				}
+			],
+			"git_tag_only": true,
+			"stepback": false
+		}
+	],
+	"buildvariants": [
+		{
+			"name": "test_repo_atlascli_8.0",
+			"display_name": "Test atlascli on repo 8.0",
+			"tasks": [
+				{
+					"name": "test_repo_atlascli_centos8_enterprise_8.0"
+				},
+				{
+					"name": "test_repo_atlascli_centos8_org_8.0"
+				}
+			],
+			"run_on": [
+				"ubuntu2204-small"
+			]
+		},
+		{
+			"name": "test_repo_atlascli_99.0",
+			"display_name": "Test atlascli on repo 99.0",
+			"tasks": [
+				{
+					"name": "test_repo_atlascli_centos8_enterprise_99.0"
+				},
+				{
+					"name": "test_repo_atlascli_centos8_org_99.0"
+				},
+				{
+					"name": "test_repo_atlascli_debian12_enterprise_99.0"
+				},
+				{
+					"name": "test_repo_atlascli_debian12_org_99.0"
+				}
+			],
+			"run_on": [
+				"ubuntu2204-small"
+			]
+		}
+	]
+}

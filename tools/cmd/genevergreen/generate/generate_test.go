@@ -15,7 +15,7 @@
 package generate
 
 import (
-	"slices"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -28,8 +28,14 @@ const (
 	push = "push"
 )
 
-func supported(sv, distro string) bool {
-	return !slices.Contains(unsupportedNewOsByVersion[sv], distro)
+// loadMatrix loads the committed build/ci/server-matrix.json.
+func loadMatrix(t *testing.T) ServerMatrix {
+	t.Helper()
+	root, err := e2eRepoRoot()
+	require.NoError(t, err)
+	m, err := LoadServerMatrix(filepath.Join(root, "build", "ci", "server-matrix.json"))
+	require.NoError(t, err)
+	return m
 }
 
 func taskNames(c *shrub.Configuration) []string {
@@ -64,11 +70,11 @@ func commandVars(t *testing.T, task *shrub.Task, fn string) map[string]string {
 }
 
 // expectedPublishTasks lists one push task per repo, supported distro and architecture.
-func expectedPublishTasks(sv, suffix string) []string {
+func expectedPublishTasks(m ServerMatrix, sv, suffix string) []string {
 	var names []string
 	for _, r := range repos {
 		for d, p := range distros {
-			if !supported(sv, d) {
+			if !m.Supports(sv, d) {
 				continue
 			}
 			for _, a := range p.architectures {
@@ -80,12 +86,6 @@ func expectedPublishTasks(sv, suffix string) []string {
 }
 
 func TestGeneratorInputs(t *testing.T) {
-	for sv, skipped := range unsupportedNewOsByVersion {
-		assert.Contains(t, serverVersions, sv)
-		for _, d := range skipped {
-			assert.Contains(t, distros, d, "unknown distro %s skipped for %s", d, sv)
-		}
-	}
 	for _, os := range oses {
 		assert.Contains(t, distros, newOs[os], "os %s has no publish distro", os)
 		assert.Contains(t, postPkgImg, os)
@@ -93,10 +93,11 @@ func TestGeneratorInputs(t *testing.T) {
 }
 
 func TestPublishSnapshotTasks(t *testing.T) {
+	m := loadMatrix(t)
 	c := &shrub.Configuration{}
-	PublishSnapshotTasks(c)
+	require.NoError(t, PublishSnapshotTasks(c, m))
 
-	expected := expectedPublishTasks(snapshotServerVersion, "")
+	expected := expectedPublishTasks(m, snapshotServerVersion, "")
 	assert.ElementsMatch(t, expected, taskNames(c))
 	assert.NotEmpty(t, c.Variants)
 	for _, v := range c.Variants {
@@ -116,13 +117,14 @@ func TestPublishSnapshotTasks(t *testing.T) {
 }
 
 func TestPublishStableTasks(t *testing.T) {
+	m := loadMatrix(t)
 	c := &shrub.Configuration{}
-	PublishStableTasks(c)
+	PublishStableTasks(c, m)
 
 	expected := make([]string, 0, len(c.Tasks))
-	require.Len(t, c.Variants, len(serverVersions))
-	for i, sv := range serverVersions {
-		svTasks := expectedPublishTasks(sv, "_"+strings.ReplaceAll(sv, ".", "")+"_stable")
+	require.Len(t, c.Variants, len(m))
+	for i, sv := range m.Versions() {
+		svTasks := expectedPublishTasks(m, sv, "_"+strings.ReplaceAll(sv, ".", "")+"_stable")
 		expected = append(expected, svTasks...)
 		assert.Equal(t, buildNamePrefix+strings.ReplaceAll(sv, ".", ""), c.Variants[i].BuildName)
 		assert.ElementsMatch(t, svTasks, variantTaskNames(c.Variants[i]))
@@ -143,13 +145,14 @@ func TestPublishStableTasks(t *testing.T) {
 }
 
 func TestPostPkgMetaTasks(t *testing.T) {
+	m := loadMatrix(t)
 	c := &shrub.Configuration{}
-	PostPkgMetaTasks(c)
+	PostPkgMetaTasks(c, m)
 
 	var expected []string
 	for _, os := range oses {
-		for _, sv := range serverVersions {
-			if supported(sv, newOs[os]) {
+		for _, sv := range m.Versions() {
+			if m.Supports(sv, newOs[os]) {
 				expected = append(expected, "pkg_test_atlascli_meta_docker_"+sv+"_"+os)
 			}
 		}
@@ -164,17 +167,18 @@ func TestPostPkgMetaTasks(t *testing.T) {
 }
 
 func TestRepoTasks(t *testing.T) {
+	m := loadMatrix(t)
 	c := &shrub.Configuration{}
-	RepoTasks(c)
+	RepoTasks(c, m)
 
 	expected := make([]string, 0, len(c.Tasks))
 	expectedDeps := map[string]shrub.TaskDependency{}
-	require.Len(t, c.Variants, len(serverVersions))
-	for i, sv := range serverVersions {
+	require.Len(t, c.Variants, len(m))
+	for i, sv := range m.Versions() {
 		svNoDot := strings.ReplaceAll(sv, ".", "")
 		var svTasks []string
 		for _, os := range oses {
-			if !supported(sv, newOs[os]) {
+			if !m.Supports(sv, newOs[os]) {
 				continue
 			}
 			for _, r := range repos {
@@ -193,7 +197,7 @@ func TestRepoTasks(t *testing.T) {
 	assert.ElementsMatch(t, expected, taskNames(c))
 
 	stable := &shrub.Configuration{}
-	PublishStableTasks(stable)
+	PublishStableTasks(stable, m)
 	stableByVariant := map[string][]string{}
 	for _, v := range stable.Variants {
 		stableByVariant[v.BuildName] = variantTaskNames(v)
